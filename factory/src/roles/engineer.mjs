@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import { chat, costReport } from '../llm/client.mjs';
+import { chat } from '../llm/client.mjs';
 import { extractJson } from '../llm/json.mjs';
 import { loadPrompt, loadSkill } from '../util/skills.mjs';
 import { lessonsFor } from '../memory/store.mjs';
@@ -27,6 +27,9 @@ function validateDesign(design) {
   if (/<\/script/i.test(design.js)) problems.push('js contains literal closing script tag');
   if (/https?:\/\//i.test(design.js) || /https?:\/\//i.test(design.css || '') || /https?:\/\//i.test(design.html || '')) {
     problems.push('external URLs are forbidden');
+  }
+  if (/\b(?:game|this\.game)\.hitStop\s*=(?!=)/.test(design.js)) {
+    problems.push('hitStop is a method and must not be overwritten');
   }
   if (!design.title) design.title = 'Untitled';
   for (const key of ['css', 'html']) {
@@ -68,7 +71,7 @@ export async function buildGame({ gdd }) {
     '10. If you add a "salvage" or similar scene, it MUST have a draw() that renders visible content.'
   ].join('\n');
 
-  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.8, maxTokens: 32000 });
+  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.8, maxTokens: 16000 });
   return validateDesign(extractJson(text));
 }
 
@@ -81,9 +84,8 @@ export async function repairGame({ gdd, design, failureSummary }) {
     'You MUST actually modify js/css/html so that every listed check passes.',
     'If a check measures score increase via simulated input, make sure the game',
     'auto-plays/responds to keyboard+mouse events and the __GF__ probe reports state=playing and a rising score.',
-    'VISUAL RENDERING: The playtester saw BLACK screenshots. Ensure Scene.draw(ctx) draws visible content:',
-    '- Draw background (gradient/shapes) every frame',
-    '- Draw player, enemies, projectiles, particles with contrasting colors',
+    'VISUAL RENDERING: Ensure Scene.draw(ctx) draws visible content:',
+    '- Draw background, player, enemies, projectiles and particles every frame',
     '- Do NOT use ctx.filter, CSS filters, or game.dt in draw()',
     '- game.hitStop() is a METHOD (call it), not a property',
     'Return the FULL corrected JSON (title/css/html/js).',
@@ -101,7 +103,7 @@ export async function repairGame({ gdd, design, failureSummary }) {
     engineSource()
   ].join('\n');
 
-  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.4, maxTokens: 32000 });
+  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.4, maxTokens: 16000 });
   return validateDesign(extractJson(text));
 }
 
@@ -125,6 +127,6 @@ export async function polishGame({ gdd, design, playtest }) {
     engineSource()
   ].join('\n');
 
-  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.6, maxTokens: 32000 });
+  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.6, maxTokens: 16000 });
   return validateDesign(extractJson(text));
 }
