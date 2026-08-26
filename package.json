@@ -1,0 +1,17 @@
+{
+  "name": "game-factory",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "produce": "node factory/src/index.mjs",
+    "test:verifier": "node factory/src/verify/test-verifier.mjs",
+    "site": "node factory/src/publish/site.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0"
+  }
+}

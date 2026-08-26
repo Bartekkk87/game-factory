@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Fixture Broken</title>
+<style>html,body{margin:0;height:100%;background:#20101a;display:grid;place-items:center}</style>
+</head>
+<body>
+<div style="color:#fff;font-family:sans-serif">broken fixture</div>
+<script>
+(function () {
+  setTimeout(() => {
+    throw new Error('deliberate defect: null dereference in broken fixture');
+  }, 600);
+  setInterval(() => {
+    undefinedFunctionCall();
+  }, 1500);
+})();
+</script>
+</body>
+</html>
