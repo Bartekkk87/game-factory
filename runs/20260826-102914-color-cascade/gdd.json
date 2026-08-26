@@ -1,0 +1,84 @@
+{
+  "title": "Color Cascade",
+  "tagline": "Match the falling colors before they overwhelm you!",
+  "genre": "puzzle",
+  "pitch": "Players rotate a multi-colored paddle to catch falling color-coded blocks. Match the block's color to the paddle segment to score and prevent overflow.",
+  "coreLoop": "Observe falling blocks, rotate paddle to match color, catch block, repeat.",
+  "mechanics": [
+    {
+      "name": "Paddle Rotation",
+      "description": "A circular paddle at the bottom of the screen has 3-4 segments, each a different color. Players rotate this paddle left or right."
+    },
+    {
+      "name": "Color Matching",
+      "description": "Blocks of various colors fall from the top. Catching a block with a matching paddle segment scores points and removes the block. Mismatching or missing a block adds to an 'overflow' meter."
+    },
+    {
+      "name": "Combo Multiplier",
+      "description": "Catching multiple blocks of the same color consecutively, or matching multiple blocks quickly, increases a score multiplier."
+    },
+    {
+      "name": "Special Blocks",
+      "description": "Occasionally, 'wildcard' blocks (match any color) or 'bomb' blocks (clear surrounding blocks on impact) will fall."
+    }
+  ],
+  "controls": {
+    "keyboard": "Left/Right arrow keys or A/D to rotate paddle.",
+    "mouse": "Mouse movement left/right rotates paddle; click to trigger a power-up (if applicable)."
+  },
+  "artDirection": {
+    "mood": "minimalist abstract with vibrant energy",
+    "palette": [
+      "#FF0077",
+      "#00FFDD",
+      "#AA00FF",
+      "#FFFF00",
+      "#FFFFFF",
+      "#222222"
+    ],
+    "shapes": "geometric",
+    "backgroundFx": "subtle, slow-moving abstract geometric patterns or color gradients that react subtly to gameplay events."
+  },
+  "audioDirection": {
+    "musicMood": "upbeat, rhythmic, synth-wave, increasing in tempo with difficulty",
+    "sfx": [
+      "block_catch_match",
+      "block_catch_mismatch",
+      "game_over",
+      "combo_start",
+      "combo_end",
+      "special_block_spawn",
+      "wildcard_activate",
+      "bomb_explode",
+      "paddle_rotate"
+    ]
+  },
+  "difficulty": {
+    "start": "Slow fall speed, 3 paddle segments, only single color blocks.",
+    "progression": "Increase fall speed, increase block density, introduce more paddle segments (up to 4), introduce special blocks, introduce 'multi-color' blocks that require two specific segments.",
+    "peak": "Extremely fast fall speed, dense block showers, complex block types, narrow 'safe' zones for catching."
+  },
+  "winLose": {
+    "win": "Score as many points as possible before the overflow meter fills.",
+    "lose": "The 'overflow' meter at the side of the screen fills up from missed blocks or mismatches."
+  },
+  "juice": {
+    "screenShake": "On bomb block explosion, on overflow meter filling significantly, on game over.",
+    "particles": "Vibrant color burst particles on successful match, dark 'splatter' particles on mismatch/miss, glowing particles for special blocks.",
+    "hitStop": "Brief moment on significant combo achievement or bomb block activation.",
+    "flash": "Paddle segment flashes brightly on successful match, screen briefly flashes red on overflow meter critical."
+  },
+  "scopeNotes": "Do not implement multiple paddle types or unlockable skins. Focus on core mechanics and block variety. No tutorial levels, brief on-screen instructions only.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing",
+      "game_over"
+    ],
+    "scoreEvents": [
+      "Player catches a matching color block (base score + combo multiplier)",
+      "Player catches a wildcard block (base score)",
+      "Player triggers a bomb block (score based on cleared blocks)"
+    ]
+  }
+}

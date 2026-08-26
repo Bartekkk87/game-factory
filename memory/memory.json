@@ -1,0 +1,12 @@
+{
+  "products": [],
+  "lessons": [],
+  "stats": {
+    "runs": 1,
+    "published": 0,
+    "rejected": 0,
+    "failed": 1,
+    "tokens": 0,
+    "costUsd": 0
+  }
+}

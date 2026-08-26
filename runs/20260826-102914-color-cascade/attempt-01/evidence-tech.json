@@ -1,0 +1,77 @@
+{
+  "attempt": 1,
+  "candidateSha": "d2f203a7851a5f2fc7f9cc72e98a6cb27321ff328307fe814eadc14d7001e3a5",
+  "fps": 61,
+  "states": {
+    "mid": {
+      "state": "playing",
+      "score": 0,
+      "best": 0,
+      "fps": 60,
+      "time": 3.533199999999996,
+      "flags": [],
+      "errors": []
+    },
+    "end": {
+      "state": "playing",
+      "score": 0,
+      "best": 0,
+      "fps": 60,
+      "time": 12.049499999999972,
+      "flags": [],
+      "errors": []
+    }
+  },
+  "contract": {
+    "passed": false,
+    "checks": [
+      {
+        "id": "probe_present",
+        "label": "Test-Hook __GF__ vorhanden",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "assets_ok",
+        "label": "Alle Assets geladen",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "started_playing",
+        "label": "Spiel verlässt den Titelbildschirm",
+        "pass": true,
+        "detail": "endState=playing"
+      },
+      {
+        "id": "interactivity",
+        "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+        "pass": false,
+        "detail": "score 0 -> 0, states playing->playing"
+      },
+      {
+        "id": "fps_ok",
+        "label": "Performance >= 30 FPS",
+        "pass": true,
+        "detail": "fps=61"
+      }
+    ],
+    "failures": [
+      {
+        "id": "interactivity",
+        "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+        "pass": false,
+        "detail": "score 0 -> 0, states playing->playing"
+      }
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "probeErrors": []
+}

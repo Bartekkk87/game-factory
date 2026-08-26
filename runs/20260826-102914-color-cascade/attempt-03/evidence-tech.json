@@ -1,0 +1,157 @@
+{
+  "attempt": 3,
+  "candidateSha": "a599c666e30cf1f4da767f39cb77c77705e65d1c1c6c14bfd876df093b31982c",
+  "fps": 61,
+  "states": {
+    "mid": {
+      "state": "playing",
+      "score": 0,
+      "best": 0,
+      "fps": 60,
+      "time": 3.533099999999996,
+      "flags": [],
+      "errors": [
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21ed07.219eb01e') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21eb52.d812acc') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e99c.e681e50a') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e7e8.6b4e84dc') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e635.e31c700a') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e488.5e487c3e') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e2db.2ad1596e') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e133.e59110ea') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21df8d.ee02b9d4') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21ddec.4c1eb2ba') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21dc51.ec1ae54e') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21dab7.e4fe9ca2') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21d928.6d7786c4') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21d79f.0c5f8ee') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21d617.92214ab2') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21d49e.03556f3a') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21d327.4b29d0de') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21d1b8.73327c7e') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21d051.e430a5ba') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21cef6.160c5506') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21cda1.3b71015e') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21cc55.d4d57446') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21cb16.2626715') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21c9de.b0c30ff2') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21c8b3.8759a2fa') could not be parsed as a color."
+      ]
+    },
+    "end": {
+      "state": "playing",
+      "score": 0,
+      "best": 0,
+      "fps": 60,
+      "time": 12.032799999999975,
+      "flags": [],
+      "errors": [
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21ed07.219eb01e') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21eb52.d812acc') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e99c.e681e50a') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e7e8.6b4e84dc') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e635.e31c700a') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e488.5e487c3e') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e2db.2ad1596e') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e133.e59110ea') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21df8d.ee02b9d4') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21ddec.4c1eb2ba') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21dc51.ec1ae54e') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21dab7.e4fe9ca2') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21d928.6d7786c4') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21d79f.0c5f8ee') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21d617.92214ab2') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21d49e.03556f3a') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21d327.4b29d0de') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21d1b8.73327c7e') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21d051.e430a5ba') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21cef6.160c5506') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21cda1.3b71015e') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21cc55.d4d57446') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21cb16.2626715') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21c9de.b0c30ff2') could not be parsed as a color.",
+        "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21c8b3.8759a2fa') could not be parsed as a color."
+      ]
+    }
+  },
+  "contract": {
+    "passed": false,
+    "checks": [
+      {
+        "id": "probe_present",
+        "label": "Test-Hook __GF__ vorhanden",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": false,
+        "detail": "pageerror: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21ed07.219eb01e') could not be parsed as a color. | pageerror: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21eb52.d812acc') could not be parsed as a color. | pageerror: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e99c.e681e50a') could not be parsed as a color. | pageerror: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e7e8.6b4e84dc') could not be parsed as a color. | pageerror: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e635.e31c700a') could not be parsed as a color."
+      },
+      {
+        "id": "assets_ok",
+        "label": "Alle Assets geladen",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "started_playing",
+        "label": "Spiel verlässt den Titelbildschirm",
+        "pass": true,
+        "detail": "endState=playing"
+      },
+      {
+        "id": "interactivity",
+        "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+        "pass": false,
+        "detail": "score 0 -> 0, states playing->playing"
+      },
+      {
+        "id": "fps_ok",
+        "label": "Performance >= 30 FPS",
+        "pass": true,
+        "detail": "fps=61"
+      }
+    ],
+    "failures": [
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": false,
+        "detail": "pageerror: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21ed07.219eb01e') could not be parsed as a color. | pageerror: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21eb52.d812acc') could not be parsed as a color. | pageerror: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e99c.e681e50a') could not be parsed as a color. | pageerror: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e7e8.6b4e84dc') could not be parsed as a color. | pageerror: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e635.e31c700a') could not be parsed as a color."
+      },
+      {
+        "id": "interactivity",
+        "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+        "pass": false,
+        "detail": "score 0 -> 0, states playing->playing"
+      }
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [
+    "Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21ed07.219eb01e') could not be parsed as a color.",
+    "Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21eb52.d812acc') could not be parsed as a color.",
+    "Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e99c.e681e50a') could not be parsed as a color.",
+    "Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e7e8.6b4e84dc') could not be parsed as a color.",
+    "Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e635.e31c700a') could not be parsed as a color.",
+    "Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e488.5e487c3e') could not be parsed as a color.",
+    "Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e2db.2ad1596e') could not be parsed as a color.",
+    "Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e133.e59110ea') could not be parsed as a color.",
+    "Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21df8d.ee02b9d4') could not be parsed as a color.",
+    "Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21ddec.4c1eb2ba') could not be parsed as a color."
+  ],
+  "probeErrors": [
+    "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21ed07.219eb01e') could not be parsed as a color.",
+    "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21eb52.d812acc') could not be parsed as a color.",
+    "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e99c.e681e50a') could not be parsed as a color.",
+    "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e7e8.6b4e84dc') could not be parsed as a color.",
+    "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e635.e31c700a') could not be parsed as a color.",
+    "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e488.5e487c3e') could not be parsed as a color.",
+    "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e2db.2ad1596e') could not be parsed as a color.",
+    "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21e133.e59110ea') could not be parsed as a color.",
+    "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21df8d.ee02b9d4') could not be parsed as a color.",
+    "Uncaught SyntaxError: Failed to execute 'addColorStop' on 'CanvasGradient': The value provided ('#21ddec.4c1eb2ba') could not be parsed as a color."
+  ]
+}

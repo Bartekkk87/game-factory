@@ -1,0 +1,20 @@
+{
+  "scores": {
+    "visuals": 0,
+    "uiClarity": 0,
+    "funProxy": 0,
+    "performance": 10
+  },
+  "overall": 1,
+  "critique": [
+    "The screenshots are completely black, offering no visual information about the game.",
+    "There is no UI visible, so it's impossible to assess clarity or game state.",
+    "No player avatar, enemies, or goals are visible, making it impossible to gauge potential for engaging interaction.",
+    "The game appears to be running at a perfect framerate, but this is the only positive aspect."
+  ],
+  "priorityFixes": [
+    "Ensure game elements (player, enemies, background, UI) are rendered and visible on screen.",
+    "Implement a basic UI to display score and other relevant game information.",
+    "Add placeholder art for all game objects to make them distinguishable."
+  ]
+}
