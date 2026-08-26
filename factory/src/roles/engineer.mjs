@@ -58,7 +58,7 @@ export async function buildGame({ gdd }) {
     '6. Player/enemy/projectile draw() methods must actually call ctx.fill/stroke with visible colors.',
     '7. Do NOT rely on engine HUD (score text) for visibility - that only draws in "playing" state.',
     '8. Auto-play logic for probe goes in Scene.update(dt), NOT in draw().',
-    '9. game.hitStop(dur) is a METHOD, not a property. Use game.hitStop(0.1) not game.hitStop = 0.1.',
+    '9. game.hitStop(dur) is a METHOD. Call it: game.hitStop(0.1). NEVER assign: game.hitStop = 0.1 (THIS BREAKS).',
     '10. If you add a "salvage" or similar scene, it MUST have a draw() that renders visible content.'
   ].join('\n');
 
