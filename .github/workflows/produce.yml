@@ -89,6 +89,7 @@ jobs:
           GF_LLM_PROVIDER: ${{ github.event.inputs.provider || 'openai' }}
           GF_MODEL_ENGINEER: 'gpt-4o'
           GF_MAX_POLISH_ROUNDS: '3'
+          GF_MIN_SCORE: '6.5'
           IDEA_B64: ${{ steps.prep.outputs.IDEA_B64 }}
           BUDGET: ${{ github.event.inputs.budget_usd || '10' }}
         run: |
