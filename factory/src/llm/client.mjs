@@ -75,10 +75,13 @@ export async function chat({
   const model = LLM.models[role] || LLM.defaultModel;
 
   let lastErr;
-  for (let attempt = 1; attempt <= 4; attempt++) {
+  const maxAttempts = 6;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 180000);
     try {
       const { url, headers, body } = buildRequest({ model, system, user, images, json, temperature, maxTokens });
-      const res = await fetch(url, { method: 'POST', headers, body });
+      const res = await fetch(url, { method: 'POST', headers, body, signal: controller.signal });
       if (!res.ok) {
         const t = await res.text();
         const err = new LlmError(`HTTP ${res.status}: ${t.slice(0, 400)}`);
@@ -96,8 +99,15 @@ export async function chat({
     } catch (e) {
       lastErr = e;
       if (e.fatal) throw e;
-      log.warn(`[llm:${role}] attempt ${attempt} failed: ${e.message}`);
-      if (attempt < 4) await sleep(1200 * attempt * attempt);
+      log.warn(`[llm:${role}] attempt ${attempt}/${maxAttempts} failed: ${e.message}`);
+      if (attempt < maxAttempts) {
+        // Longer backoff for rate limits / overload (503/429): 10s, 20s, 30s...
+        const wait = e.message.includes('503') || e.message.includes('429') ? 10000 * attempt : 1200 * attempt * attempt;
+        log.warn(`[llm:${role}] retrying in ${Math.round(wait / 1000)}s ...`);
+        await sleep(wait);
+      }
+    } finally {
+      clearTimeout(timeout);
     }
   }
   throw lastErr;
