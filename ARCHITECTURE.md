@@ -8,7 +8,7 @@ bis zum veröffentlichten Spiel, mit Human-in-the-Loop-Freigabe und lernendem Sy
 | Entscheidung | Wert |
 |---|---|
 | Runtime | GitHub Actions (öffentliches Repo), kein eigener Server |
-| LLM-Zugang | Konfigurierbarer OpenAI-kompatibler Endpoint (OpenRouter / Gemini / beliebig) via `GF_LLM_BASE_URL` + `GF_LLM_API_KEY` |
+| LLM-Zugang | 4 Provider via `GF_LLM_PROVIDER`: openai, openrouter, googleai, huggingface (Fallback-Kette) |
 | Spiele-Technologie | Eigene Micro-Engine (`engine/gf-engine.js`, Canvas + WebAudio, 0 Dependencies) |
 | Spiel-Format | Eine einzige `index.html` pro Spiel (deterministisch assembliert) |
 | Hosting | GitHub Pages (Galerie unter `/`, Drafts unter `/drafts/<name>`) |
@@ -29,7 +29,7 @@ L1 CONTROL KERNEL     Evidence-first · fail-closed · Candidate-SHA-Binding ·
                       State in Git (runs/, memory/)
 ```
 
-Kerninvarianten (aus dem Canary-Projekt übernommen):
+Kerninvarianten:
 
 1. KI-Output ist ein **Claim**, niemals Wahrheit. Fortschritt nur mit maschineller Evidence.
 2. **Fail-closed:** Jeder Fehlschlag wird als Evidence persistiert (`runs/<id>/FAILURE.json`), nie still übersprungen.
@@ -89,19 +89,61 @@ docs/strategy/             Strategie-Dokumente des Owners (Notion-Export)
 | Variable | Zweck | Default |
 |---|---|---|
 | `GF_LLM_API_KEY` | API-Key (Secret) | — (Pflicht) |
-| `GF_LLM_BASE_URL` | OpenAI-kompatibler Endpoint | `https://openrouter.ai/api/v1` |
-| `GF_MODEL` | Modell für alle Rollen | `google/gemini-2.5-flash` |
-| `GF_MODEL_ENGINEER/DIRECTOR/...` | Override je Rolle | `GF_MODEL` |
+| `GF_LLM_PROVIDER` | Provider-Auswahl | `openai` |
+| `GF_LLM_BASE_URL` | OpenAI-kompatibler Endpoint | providerabhängig |
+| `GF_MODEL` | Modell für alle Rollen | providerabhängig |
+| `GF_MODEL_ENGINEER` | Override Engineer | `gpt-4o` |
+| `GF_MODEL_DIRECTOR/PLAYTESTER/AUDITOR` | Override je Rolle | `GF_MODEL` |
 | `GF_BUDGET_USD` | Kostenlimit pro Spiel | `10` |
-| `GF_MIN_SCORE` | Playtest-Score-Gate (0–10) | `7` |
+| `GF_MIN_SCORE` | Playtest-Score-Gate (0–10) | `6.5` |
 | `GF_MAX_DEBUG_ROUNDS` | Technische Reparaturrunden | `4` |
-| `GF_MAX_POLISH_ROUNDS` | Visuelle Polish-Runden | `2` |
+| `GF_MAX_POLISH_ROUNDS` | Visuelle Polish-Runden | `3` |
+
+## Kritische Implementation-Details (für LLMs/Entwickler)
+
+### 1. Micro-Engine: hitStop ist eine METHODE
+
+**Richtig:** `game.hitStop(0.15)` — Aufruf als Methode  
+**Falsch:** `game.hitStop = 0.15` — Property-Zuweisung (bricht Engine)
+
+Die Engine nutzt intern `_hitStopRemaining` (private). Der Engineer-Validator in
+`factory/src/roles/engineer.mjs:30` lehnt jede Zuweisung `game.hitStop = ...` ab.
+
+### 2. Engineer-Validierung (engineer.mjs:22-41)
+
+Alle Engineer-Outputs werden validiert:
+- JSON mit exakt `title, css, html, js`
+- `js` muss `new GF.Game` enthalten
+- Keine externen URLs in js/css/html
+- `game.hitStop` darf nicht als Property zugewiesen werden
+- Score muss innerhalb 4 Sekunden durch Interaktion steigen
+- Spiel muss Background + Player + Enemies pro Frame zeichnen
+
+### 3. Provider-Fallback (config.mjs:42-43)
+
+```javascript
+const providerKey = env('GF_LLM_PROVIDER', 'openai').toLowerCase();
+const provider = PROVIDERS[providerKey] || PROVIDERS.openai;
+```
+
+Fallback-Reihenfolge bei Fehler: `openai` → `googleai` → `huggingface` → `openrouter`
+
+### 4. Completion-Token-Limits
+
+- `gpt-4o-mini` (Director/Playtester/Auditor): 16.384 → intern auf 16.000 begrenzt
+- `gpt-4o` (Engineer): 16.384 → intern auf 12.000 begrenzt
+
+### 5. Frühe Punktevergabe (Playtest-Check)
+
+Score muss innerhalb **4 Sekunden** simulierten Gameplays steigen
+(via Survival-Ticks, Hit-Punkte, Pickup-Punkte — keine präzisen Klicks nötig)
 
 ## Roadmap
 
-- **M0** Repo-Skeleton ✔ (dieses Commit)
-- **M1** Agent-Runtime + LLM-Client
-- **M2** Engine v1 + Verification inkl. Fixtures
-- **M3** Proof: erster vollautonomer End-to-End-Lauf (Gratis-Tier möglich)
-- **M4** Galerie/Pages/Review-Flow
+- **M0** Repo-Skeleton ✔
+- **M1** Agent-Runtime + LLM-Client ✔
+- **M2** Engine v1 + Verification inkl. Fixtures ✔
+- **M3** Proof: erster vollautonomer End-to-End-Lauf ✔
+- **M4** Galerie/Pages/Review-Flow ✔
 - **M5** Post-Mortem-Automatisierung, parallele Tracks, Issue-Formular-Intake
+- **M6** Multi-Idee-Batch-Produktion, A/B-Testing verschiedener Prompts
