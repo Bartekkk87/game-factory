@@ -5,9 +5,9 @@ on:
     paths:
       - 'engine/**'
       - 'examples/**'
-      - 'factory/src/verify/**'
-      - 'factory/src/config.mjs'
+      - 'factory/src/**'
       - 'package.json'
+      - 'package-lock.json'
       - '.github/workflows/verify.yml'
   workflow_dispatch:
 
@@ -28,8 +28,46 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
 
+      - name: Check all Node modules
+        run: find factory/src -name '*.mjs' -print0 | xargs -0 -n1 node --check
+
       - name: Install browser
         run: npx playwright install --with-deps chromium
 
       - name: Prove verifier accepts good and rejects bad products
         run: npm run test:verifier
+
+      - name: Prove publishing gates and gallery escaping
+        run: |
+          TEST_ROOT=$(mktemp -d)
+          cp -R factory "$TEST_ROOT/factory"
+          mkdir -p "$TEST_ROOT/drafts/sha-fixture" "$TEST_ROOT/drafts/tampered-fixture" "$TEST_ROOT/products/xss-fixture" "$TEST_ROOT/memory"
+          printf '%s' '<!doctype html><title>verified</title>' > "$TEST_ROOT/drafts/sha-fixture/index.html"
+          GOOD_SHA=$(sha256sum "$TEST_ROOT/drafts/sha-fixture/index.html" | cut -d' ' -f1)
+          printf '{"slug":"sha-fixture","title":"SHA Fixture","status":"awaiting-review","candidateSha":"%s","overall":7,"date":"2026-08-26"}\n' "$GOOD_SHA" > "$TEST_ROOT/drafts/sha-fixture/meta.json"
+          cp "$TEST_ROOT/drafts/sha-fixture/index.html" "$TEST_ROOT/drafts/tampered-fixture/index.html"
+          printf '{"slug":"tampered-fixture","title":"Tampered Fixture","status":"awaiting-review","candidateSha":"%s","overall":7,"date":"2026-08-26"}\n' "$GOOD_SHA" > "$TEST_ROOT/drafts/tampered-fixture/meta.json"
+          printf '%s' '<!-- changed after review -->' >> "$TEST_ROOT/drafts/tampered-fixture/index.html"
+          printf '{"products":[],"lessons":[],"stats":{}}\n' > "$TEST_ROOT/memory/memory.json"
+
+          (
+            cd "$TEST_ROOT"
+            node factory/src/publish/finalize.mjs --slug sha-fixture --action approve
+            test -s products/sha-fixture/index.html
+            if node factory/src/publish/finalize.mjs --slug tampered-fixture --action approve; then
+              echo 'Tampered candidate was incorrectly published' >&2
+              exit 1
+            fi
+          )
+
+          printf '%s' '<!doctype html><title>xss</title>' > "$TEST_ROOT/products/xss-fixture/index.html"
+          printf '%s\n' '{"title":"<script>alert(1)</script>","tagline":"<img src=x onerror=alert(1)>","overall":8,"date":"2026-08-26"}' > "$TEST_ROOT/products/xss-fixture/meta.json"
+          (
+            cd "$TEST_ROOT"
+            node factory/src/publish/site.mjs --out "$TEST_ROOT/site"
+          )
+          if grep -F '<script>alert(1)</script>' "$TEST_ROOT/site/index.html"; then
+            echo 'Unescaped gallery content detected' >&2
+            exit 1
+          fi
+          grep -F '&lt;script&gt;alert(1)&lt;/script&gt;' "$TEST_ROOT/site/index.html"
