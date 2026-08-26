@@ -27,7 +27,7 @@ const PROVIDERS = {
   googleai: {
     // Google AI Studio OpenAI-compatible endpoint (v1beta/openai)
     baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai',
-    defaultModel: 'gemini-2.5-flash'
+    defaultModel: 'gemini-3.6-flash'
   },
   huggingface: {
     // HF Inference Router (OpenAI-compatible)
