@@ -4,7 +4,7 @@
 automatisches Testen und Debugging bis zur Veröffentlichung – du entscheidest nur, welche
 Spiele live gehen.
 
-> Architektur & Entscheidungen: siehe [ARCHITECTURE.md](ARCHITECTURE.md)
+> Architektur & Entscheidungen: [ARCHITECTURE.md](ARCHITECTURE.md)
 
 ---
 
@@ -22,72 +22,78 @@ Idee → Director schreibt Spielkonzept → Engineer baut das Spiel
 ## Setup (einmalig, ~10 Minuten)
 
 1. **Repo anlegen:** Neues öffentliches GitHub-Repo erstellen und diesen Projektordner hochladen
-   (am einfachsten gemeinsam im Chat mit deinem KI-Assistenten – Git wird einmalig benötigt).
 2. **API-Key hinterlegen:**
-   - *OpenRouter:* Konto auf openrouter.ai → **Keys** → Key erstellen.
-   - *Alternativ Google Gemini:* aistudio.google.com → **Get API key** (kostenloser Einstieg möglich).
+   - **OpenAI (empfohlen):** platform.openai.com → API Keys
+   - **OpenRouter:** openrouter.ai → Keys
+   - **Google AI Studio:** aistudio.google.com → Get API key
+   - **Hugging Face:** huggingface.co → Settings → API Tokens
    - Im Repo: **Settings → Secrets and variables → Actions → New repository secret**
      - Name: `GF_LLM_API_KEY` · Wert: dein Key
-3. **Optional (Repo-*Variables*, gleiche Seite):**
-   - `GF_MODEL` – z.B. `google/gemini-2.5-flash` (Default), später z.B. ein stärkeres Modell
-   - `GF_LLM_BASE_URL` – nur nötig, wenn nicht OpenRouter genutzt wird
-4. **Pages aktivieren:** Settings → Pages → Build and deployment → Source: **GitHub Actions**
+3. **Pages aktivieren:** Settings → Pages → Build and deployment → Source: **GitHub Actions**
 
 ## Ein Spiel produzieren lassen
 
 1. Repo → Tab **Actions** → links **Produce Game** → **Run workflow**
-2. Optional eine Idee eintragen (oder leer lassen = freie Konzeption) und Budget bestätigen
-3. Nach ~5–15 Minuten erscheint automatisch ein **Review-Issue** mit:
-   - spielbarem Preview-Link (`…/drafts/<name>/index.html`)
+2. Optional eine Idee eintragen (oder leer lassen = freie Konzeption)
+3. Provider wählen (Standard: `openai`)
+4. Budget bestätigen (Standard: $10)
+5. Nach ~5–15 Minuten erscheint automatisch ein **Review-Issue** mit:
+   - spielbarem Preview-Link
    - Screenshots, Scores, Kosten des Laufs
 
 ### Deine Entscheidung im Review-Issue
 
 | Kommentar | Wirkung |
 |---|---|
-| `/approve` | Spiel wandert in die Game Library (Galerie) |
-| `/reject Grund...` | Spiel wird archiviert, der Grund fließt als Lektion in künftige Läufe ein |
+| `/approve` | Spiel wandert in die Game Library |
+| `/reject Grund...` | Spiel wird archiviert, der Grund fließt als Lektion ein |
+
+## Die vier LLM-Provider
+
+Das System unterstützt dynamische Provider-Auswahl:
+
+| Provider | Modell (Standard) | Endpoint |
+|---|---|---|
+| `openai` | `gpt-4o-mini` | `api.openai.com/v1` |
+| `openrouter` | `google/gemini-2.5-flash` | `openrouter.ai/api/v1` |
+| `googleai` | `gemini-1.5-flash` | `generativelanguage.googleapis.com/v1beta/openai` |
+| `huggingface` | `meta-llama/Llama-3.3-70B-Instruct` | `router.huggingface.co/v1` |
+
+**Fallback-Kette:** `openai` → `googleai` → `huggingface` → `openrouter`
 
 ## Ideen einreichen
 
-- **Chat:** Idee dem Assistenten nennen → landet als Datei unter `ideas/`
-- **Datei:** `ideas/meine-idee.md` (Vorlage: `ideas/_TEMPLATE.md`) → beim Workflow-Start als Text einfügen oder leer lassen
+- **Datei:** `ideas/meine-idee.md` (Vorlage: `ideas/_TEMPLATE.md`)
+- **Workflow:** Beim Run-Start als Text einfügen oder leer lassen
+
+## Konfiguration (Umgebungsvariablen)
+
+| Variable | Default | Bedeutung |
+|---|---|---|
+| `GF_LLM_API_KEY` | – (Pflicht) | API-Key des Providers |
+| `GF_LLM_PROVIDER` | `openai` | Provider: openai/openrouter/googleai/huggingface |
+| `GF_MODEL` | providerabhängig | Modell für alle Rollen |
+| `GF_MODEL_ENGINEER` | `GF_MODEL` | Override: Engineer nutzt gpt-4o |
+| `GF_MIN_SCORE` | `6.5` | Playtest-Score-Gate (0–10) |
+| `GF_MAX_DEBUG_ROUNDS` | `4` | max. automatische Reparaturrunden |
+| `GF_MAX_POLISH_ROUNDS` | `3` | max. visuelle Polish-Runden |
+| `GF_BUDGET_USD` | `10` | Kostenlimit pro Spiel |
 
 ## Was kostet was?
 
 | Posten | Kosten |
 |---|---|
-| GitHub Actions + Pages (öffentliches Repo) | 0 € |
-| Engine, Verifikation, alle Tools | 0 € (Open Source) |
-| LLM-API pro fertigen Spiel | ~0 € mit Gratis-Tier (Gemini) · typ. $1–5 mit starken Modellen · Hartlimit via `budget_usd` |
-
-## Konfiguration (Übersicht)
-
-| Variable | Art | Default | Bedeutung |
-|---|---|---|---|
-| `GF_LLM_API_KEY` | Secret | – (Pflicht) | API-Key des Anbieters |
-| `GF_LLM_BASE_URL` | Variable | OpenRouter | beliebiger OpenAI-kompatibler Endpoint |
-| `GF_MODEL` | Variable | `google/gemini-2.5-flash` | Modell für alle Rollen |
-| `GF_MODEL_ENGINEER` etc. | Variable | `GF_MODEL` | Override je Rolle (Director/Engineer/Playtester/Auditor) |
-| `GF_MIN_SCORE` | Env | `7` | Playtest-Gate 0–10 |
-| `GF_MAX_DEBUG_ROUNDS` | Env | `4` | max. automatische Reparaturrunden |
-| `GF_MAX_POLISH_ROUNDS` | Env | `2` | max. visuelle Polish-Runden |
+| GitHub Actions + Chain (öffentliche Repo) | 0 € |
+| LLM-API mit gpt-4o-mini | ~$0.50–2 pro Spiel |
+| LLM-API mit gpt-4o (Engineer) | ~$0.30–1 pro Spiel |
 
 ## Die Lernschleife
 
 Jede Rolle hat Skill-Dateien unter [`skills/`](skills/) – das ist das Gedächtnis der Fabrik.
-Bei jeder Ablehnung/Fehlfahrt werden daraus neue Regeln abgeleitet (Post-Mortem, Meilenstein M5
-vollautomatisch). Du kannst jede Regel jederzeit selbst bearbeiten – alles ist normales,
-versioniertes Markdown.
-
-## Sicherheit & Selbsttest
-
-Der Verifizierer beweist sich selbst: Workflow **Verifier Selftest** spielt zwei Testspiele –
-ein korrektes (muss bestehen) und ein absichtlich kaputtes (muss scheitern). Nur wenn beide
-Erwartungen erfüllt sind, ist die Prüfstelle vertrauenswürdig.
+Bei jeder Ablehnung werden daraus neue Regeln abgeleitet.
 
 ## Troubleshooting
 
 - **Run scheitert sofort** → Prüfe Secret `GF_LLM_API_KEY`
-- **`debug_exhausted` in runs/** → Alles normal dokumentiert unter `runs/<lauf>/FAILURE.json`; Modell-Stärke erhöhen oder Idee präzisieren
-- **Review-Link tot** → Warte bis der *Deploy Site*-Workflow fertig ist; Pages-Source muss auf "GitHub Actions" stehen
+- **Provider-Fehler** → System fällt automatisch auf nächsten Provider zurück
+- **Review-Link tot** → Warte auf Deploy-Workflow; Pages-Source muss auf "GitHub Actions" stehen
