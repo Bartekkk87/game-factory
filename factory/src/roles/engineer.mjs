@@ -51,6 +51,11 @@ export async function buildGame({ gdd }) {
     '- Write minimal, complete code: NO comments, NO blank lines, short variable names.',
     '- Aim for max ~350 lines of js total. A complete small game beats an incomplete big one.',
     '- Keep css/html tiny. Put all effort into a playable core loop that actually renders.',
+    '- Keep JavaScript MULTILINE and readable. Never minify the entire game onto one line.',
+    '- Use exactly: const game = new GF.Game({...}); then game.add(...); then game.titleScreen(...).',
+    '- Never chain new GF.Game(...).add(...). Every object method must close with } before its comma.',
+    '- Scene methods call game.addScore(), game.hitStop(), game.shake() and game.burst(); never this.addScore().',
+    '- Check all braces, parentheses and commas before returning the JSON.',
     '',
     '=== GAME DESIGN BRIEFING ===',
     JSON.stringify(gdd, null, 2),
@@ -71,7 +76,7 @@ export async function buildGame({ gdd }) {
     '10. If you add a "salvage" or similar scene, it MUST have a draw() that renders visible content.'
   ].join('\n');
 
-  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.8, maxTokens: 16000 });
+  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.35, maxTokens: 16000 });
   return validateDesign(extractJson(text));
 }
 
@@ -88,6 +93,9 @@ export async function repairGame({ gdd, design, failureSummary }) {
     '- Draw background, player, enemies, projectiles and particles every frame',
     '- Do NOT use ctx.filter, CSS filters, or game.dt in draw()',
     '- game.hitStop() is a METHOD (call it), not a property',
+    '- Keep the corrected JavaScript multiline. Check every brace, parenthesis and comma.',
+    '- Define const game = new GF.Game({...}); do not chain .add() onto the constructor.',
+    '- Scene methods must use game.addScore(), game.hitStop(), game.shake() and game.burst().',
     'Return the FULL corrected JSON (title/css/html/js).',
     '',
     '=== FAILURE EVIDENCE ===',
