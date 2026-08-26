@@ -1,0 +1,66 @@
+{
+  "title": "Core Awakening",
+  "tagline": "Rebuild your identity from the ruins of your enemies.",
+  "genre": "action",
+  "pitch": "Step into the role of a Titan AI, maneuvering a compact salvage mech to dismantle enemies and reclaim your power. Engage in tactical combat where every decision impacts your survival and capabilities.",
+  "coreLoop": "Evade attacks from enemies while identifying and targeting their subsystems. Defeat them to secure components that allow for immediate tactical decisions.",
+  "mechanics": [
+    {
+      "name": "Tactical Dismantling",
+      "description": "Players can choose how to defeat enemies based on their visible subsystems, affecting the loot gained."
+    },
+    {
+      "name": "Three-Way Decision",
+      "description": "After defeating an enemy, players must quickly choose to install, secure, or dismantle the salvaged component."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD for movement, E to interact",
+    "mouse": "Aim with mouse, left click to attack"
+  },
+  "artDirection": {
+    "mood": "stylized isometric sci-fi",
+    "palette": [
+      "#1C1F24",
+      "#00B2A9",
+      "#FFB100",
+      "#FF5F00"
+    ],
+    "shapes": "clean vector shapes",
+    "backgroundFx": "faint moving silhouettes of larger machines"
+  },
+  "audioDirection": {
+    "musicMood": "ambient tension with mechanical undertones",
+    "sfx": [
+      "enemy_attack",
+      "component_extraction",
+      "successful_hit",
+      "evade"
+    ]
+  },
+  "difficulty": {
+    "start": "Introduce the telegraphed attack patterns of the enemy with slow speed.",
+    "progression": "Increase the frequency and complexity of enemy telegraphs as health decreases.",
+    "peak": "Players face a final decision point where their survival choices dramatically impact the outcome."
+  },
+  "winLose": {
+    "win": "Successfully extract a usable component and escape the arena.",
+    "lose": "Deplete your core integrity through enemy attacks without successfully salvaging."
+  },
+  "juice": {
+    "screenShake": "when the player successfully evades an attack",
+    "particles": "when an enemy is dismantled or a component is extracted",
+    "hitStop": "when the player hits an enemy's subsystem",
+    "flash": "when the player makes a decision on the salvaged component"
+  },
+  "scopeNotes": "No procedural dungeons, economy/shop, multiple enemy types, bosses, inventory management, crafting, upgrades between runs, narrative scenes beyond one line of flavor text, or save systems beyond engine defaults.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing"
+    ],
+    "scoreEvents": [
+      "score increases on evasion, subsystem hits, successful dismantling, and component decisions"
+    ]
+  }
+}
