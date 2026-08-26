@@ -1,0 +1,81 @@
+{
+  "title": "Core Awakening",
+  "tagline": "Dismantle rogue Titans, salvage subsystems, and rebuild your core.",
+  "genre": "action",
+  "pitch": "Awaken as a surviving Titan core inside a modular salvage mech. Read telegraphed enemy attacks, target specific subsystems to preserve precious salvage, and instantly decide whether to install, secure, or dismantle recovered components.",
+  "coreLoop": "Evade telegraphed enemy attacks while aiming at specific subsystems. Defeat enemies to claim intact components, then decide to Install, Secure, or Dismantle them before choosing to Extract or press deeper.",
+  "mechanics": [
+    {
+      "name": "Subsystem Targeting",
+      "description": "Aim cursor directly at glowing enemy parts (Weapon Arm vs Main Core). Destroying the core first leaves the weapon intact for high-tier salvage."
+    },
+    {
+      "name": "Telegraphed Evasion",
+      "description": "Dash through red-orange threat sectors right before attacks execute to trigger invulnerability and counter-attack bonuses."
+    },
+    {
+      "name": "Three-Way Salvage Decision",
+      "description": "Picking up components opens an immediate choice overlay: INSTALL (new firepower/stat boost), SECURE (high score bonus), or DISMANTLE (instant hull repair)."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD or Arrow Keys to move mech, Space/Shift to Dash, 1/2/3 keys for quick salvage choice",
+    "mouse": "Aim reticle, Left Click to fire primary weapon / select targets, Right Click to dash",
+    "touch": "Virtual joystick on left, tap right to fire, swipe to dash, tap UI buttons for salvage choices"
+  },
+  "artDirection": {
+    "mood": "isometric cyber-salvage",
+    "palette": [
+      "#0b132b",
+      "#1c2541",
+      "#00f5d4",
+      "#ff5400"
+    ],
+    "shapes": "smooth-vector",
+    "backgroundFx": "Pulsing energy conduits, floor grid shimmers, ambient glowing spark particles in dark industrial titan vault"
+  },
+  "audioDirection": {
+    "musicMood": "Dark pulsing industrial synth with heavy bass impact",
+    "sfx": [
+      "plasma_shot",
+      "dash_hum",
+      "telegraph_ping",
+      "explosion_crunch",
+      "salvage_install",
+      "heal_chime"
+    ]
+  },
+  "difficulty": {
+    "start": "Single automaton Titan with readable 1.5s telegraphed arc slash attacks.",
+    "progression": "Enemies attack faster, cycle attack patterns, and add hazard zones upon subsystem failure.",
+    "peak": "Relentless aggressor Titans with overlapping laser sector telegraphs and rapid shield regenerations."
+  },
+  "winLose": {
+    "win": "Defeat the room threat, salvage key components, and safely choose EXTRACT with high salvage score.",
+    "lose": "Core Integrity drops to 0% due to unmitigated enemy damage."
+  },
+  "juice": {
+    "screenShake": "Heavy screen shake on subsystem breakdown and enemy core explosion",
+    "particles": "Cyan energy trail on player dash, directional orange spark bursts on kinetic impacts",
+    "hitStop": "100ms freeze-frame when destroying an enemy subsystem",
+    "flash": "Red telegraph warning flashes before attacks; cyan flash across player mech upon installing component"
+  },
+  "scopeNotes": "Excluded procedural dungeons, persistent meta-upgrades shop, complex inventory screens, and story cutscenes. Single single-screen isometric arena with dynamic component drop flow.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing",
+      "salvage_overlay",
+      "extraction_choice",
+      "game_over",
+      "extracted"
+    ],
+    "scoreEvents": [
+      "damaging_subsystem",
+      "destroying_subsystem",
+      "salvage_installed",
+      "salvage_secured",
+      "salvage_dismantled"
+    ]
+  }
+}

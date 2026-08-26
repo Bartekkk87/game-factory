@@ -1,0 +1,10 @@
+{
+  "reason": "engineer_invalid_output",
+  "closedAt": "2026-08-26T13:36:30.835Z",
+  "cost": {
+    "costUsd": 0,
+    "tokens": 4107
+  },
+  "error": "fetch failed",
+  "attempt": 1
+}
