@@ -35,36 +35,39 @@ jobs:
       - name: Install browser
         run: npx playwright install --with-deps chromium
 
-- name: Prepare idea
+      - name: Prepare idea
         id: prep
+        env:
+          MANUAL_IDEA: ${{ github.event.inputs.idea }}
         run: |
-          if [ -n "${{ github.event.inputs.idea }}" ]; then
-            # Write idea to temp file to handle multiline content
-            cat > /tmp/idea.txt <<'EOF'
-${{ github.event.inputs.idea }}
-EOF
-            echo "IDEA=$(cat /tmp/idea.txt | sed ':a;N;$!ba;s/\n/\\n/g')"
-            echo "IDEA=$(cat /tmp/idea.txt | sed ':a;N;$!ba;s/\n/\\n/g')" >> $GITHUB_OUTPUT
+          if [ -n "$MANUAL_IDEA" ]; then
+            printf '%s\n' "$MANUAL_IDEA" > /tmp/idea.txt
             echo "Using manual trigger idea"
           else
             LATEST=$(ls -t ideas/*.md 2>/dev/null | head -n1)
-            if [ -n "$LATEST" ]; then
-              cat "$LATEST" > /tmp/idea.txt
-              echo "IDEA=$(cat /tmp/idea.txt | sed ':a;N;$!ba;s/\n/\\n/g')" >> $GITHUB_OUTPUT
-              echo "Using latest idea: $LATEST"
+            if [ -z "$LATEST" ]; then
+              echo "No idea file found in ideas/" >&2
+              exit 1
             fi
+            cp "$LATEST" /tmp/idea.txt
+            echo "Using latest idea: $LATEST"
           fi
+          B64=$(base64 -w0 /tmp/idea.txt)
+          {
+            echo 'IDEA_B64<<GF_EOF'
+            echo "$B64"
+            echo 'GF_EOF'
+          } >> "$GITHUB_OUTPUT"
 
       - name: Run production pipeline
         env:
           GF_LLM_API_KEY: ${{ secrets.GF_LLM_API_KEY }}
           GF_LLM_BASE_URL: ${{ vars.GF_LLM_BASE_URL }}
           GF_MODEL: ${{ vars.GF_MODEL }}
-          IDEA: ${{ steps.prep.outputs.IDEA }}
+          IDEA_B64: ${{ steps.prep.outputs.IDEA_B64 }}
           BUDGET: ${{ github.event.inputs.budget_usd || '10' }}
         run: |
-          # Decode the escaped newlines
-          echo "${{ steps.prep.outputs.IDEA }}" | sed 's/\\n/\n/g' > /tmp/idea-decoded.txt
+          printf '%s' "$IDEA_B64" | base64 -d > /tmp/idea-decoded.txt
           node factory/src/index.mjs --idea-file /tmp/idea-decoded.txt --budget "$BUDGET"
 
       - name: Identify latest draft
