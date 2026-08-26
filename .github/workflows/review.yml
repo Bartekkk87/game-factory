@@ -12,6 +12,7 @@ jobs:
   gate:
     if: >
       github.event.issue.pull_request == null &&
+      github.event.comment.user.login == github.repository_owner &&
       (startsWith(github.event.comment.body, '/approve') || startsWith(github.event.comment.body, '/reject'))
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -20,7 +21,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - id: parse
         env:
@@ -28,8 +29,13 @@ jobs:
           COMMENT: ${{ github.event.comment.body }}
         run: |
           SLUG=$(printf '%s' "$ISSUE_BODY" | grep -oE '\[slug:[a-z0-9-]+\]' | head -n 1 | tr -d '[]' | sed 's/^slug://')
-          if printf '%s' "$COMMENT" | grep -q '^/approve'; then ACTION=approve; else ACTION=reject; fi
-          REASON=$(printf '%s' "$COMMENT" | tail -n +2 | head -n 3 | tr '\n' ' ')
+          if printf '%s' "$COMMENT" | grep -q '^/approve'; then
+            ACTION=approve
+            REASON=''
+          else
+            ACTION=reject
+            REASON=$(printf '%s' "$COMMENT" | sed -E '1s#^/reject[[:space:]]*##' | head -n 3 | tr '\n' ' ' | sed -E 's/[[:space:]]+$//')
+          fi
           echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
           echo "action=$ACTION" >> "$GITHUB_OUTPUT"
           echo "reason=$REASON" >> "$GITHUB_OUTPUT"
@@ -52,7 +58,7 @@ jobs:
           git push
 
       - name: Close review issue
-        if: always() && steps.parse.outputs.slug != ''
+        if: success() && steps.parse.outputs.slug != ''
         env:
           GH_TOKEN: ${{ github.token }}
           ACTION: ${{ steps.parse.outputs.action }}

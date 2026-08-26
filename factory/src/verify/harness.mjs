@@ -62,7 +62,7 @@ export async function runSession({ root, entry = '/index.html', seconds = 10, sc
 
   try {
     await page.goto(url + entry, { waitUntil: 'load', timeout: 20000 });
-    const pageTitle = await page.title();
+    pageTitle = await page.title();
     await page
       .waitForFunction(() => window.__GF__ && typeof window.__GF__.getScore === 'function', null, {
         timeout: 8000,

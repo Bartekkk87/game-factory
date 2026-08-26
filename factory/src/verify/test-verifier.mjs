@@ -13,7 +13,7 @@ let ok = true;
 for (const fx of FIXTURES) {
   console.log(`\n--- fixture: ${fx.name} ---`);
   const report = await runSession({ root: fx.dir, seconds: 5 });
-  const verdict = evaluateContract(report, { minFps: 10 });
+  const verdict = await evaluateContract(report, { minFps: 10 });
   for (const c of verdict.checks) {
     console.log(` ${c.pass ? 'PASS' : 'FAIL'}  ${c.id}${c.detail ? '  (' + c.detail + ')' : ''}`);
   }
