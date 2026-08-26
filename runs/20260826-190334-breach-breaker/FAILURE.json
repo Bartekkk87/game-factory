@@ -1,0 +1,18 @@
+{
+  "reason": "audit_rejected",
+  "closedAt": "2026-08-26T19:07:16.132Z",
+  "cost": {
+    "costUsd": 0,
+    "tokens": 345500
+  },
+  "audit": {
+    "verdict": "FAIL",
+    "findings": [
+      {
+        "severity": "HIGH",
+        "note": "Budget was not exceeded, but the overall score (5.1) is below the gate (6.5)."
+      }
+    ],
+    "summary": "The production run for 'Breach Breaker' has failed due to the overall playtest score not meeting the required gate. While all technical checks passed, the score indicates that the game did not meet quality expectations."
+  }
+}

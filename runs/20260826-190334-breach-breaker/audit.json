@@ -1,0 +1,74 @@
+{
+  "digest": {
+    "product": {
+      "title": "Breach Breaker",
+      "genre": "strategy"
+    },
+    "attemptsTotal": 5,
+    "debugRepairRounds": 1,
+    "polishRounds": 3,
+    "finalTechnicalChecks": [
+      {
+        "id": "probe_present",
+        "label": "Test-Hook __GF__ vorhanden",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "assets_ok",
+        "label": "Alle Assets geladen",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "started_playing",
+        "label": "Spiel verlässt den Titelbildschirm",
+        "pass": true,
+        "detail": "endState=playing"
+      },
+      {
+        "id": "interactivity",
+        "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+        "pass": true,
+        "detail": "score 50 -> 250, states playing->playing"
+      },
+      {
+        "id": "fps_ok",
+        "label": "Performance >= 30 FPS",
+        "pass": true,
+        "detail": "fps=61"
+      },
+      {
+        "id": "visual_content",
+        "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+        "pass": true,
+        "detail": "shot-2-gameplay: VISIBLE (75.32% diff) | shot-3-gameplay: VISIBLE (75.1% diff)"
+      }
+    ],
+    "playtestScores": {
+      "visuals": 4,
+      "uiClarity": 5,
+      "funProxy": 4,
+      "performance": 10
+    },
+    "playtestOverall": 5.1,
+    "scoreGate": 6.5,
+    "budgetUsd": 10,
+    "spentUsd": 0,
+    "tokensUsed": 344735
+  },
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "HIGH",
+      "note": "Budget was not exceeded, but the overall score (5.1) is below the gate (6.5)."
+    }
+  ],
+  "summary": "The production run for 'Breach Breaker' has failed due to the overall playtest score not meeting the required gate. While all technical checks passed, the score indicates that the game did not meet quality expectations."
+}

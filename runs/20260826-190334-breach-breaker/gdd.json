@@ -1,0 +1,69 @@
+{
+  "title": "Breach Breaker",
+  "tagline": "Defend the world one turn at a time!",
+  "genre": "strategy",
+  "pitch": "Players control an array of customizable units to fend off waves of enemies in a tactical grid-based battlefield. Each turn allows for strategic movements and attacks, while the pressure of incoming threats keeps the gameplay intense.",
+  "coreLoop": "Players navigate a grid, positioning units to attack or defend against incoming enemies for each turn. Swift decision-making and tactical planning are key to surviving successive waves.",
+  "mechanics": [
+    {
+      "name": "Unit Movement",
+      "description": "Players click to move units within a limited range on the grid."
+    },
+    {
+      "name": "Attack Mechanics",
+      "description": "Select enemies in range; each unit has a distinct attack pattern that triggers effects based on enemy type."
+    },
+    {
+      "name": "Combo System",
+      "description": "Perform combo attacks by positioning units strategically, increasing score and dealing bonus damage."
+    }
+  ],
+  "controls": {
+    "keyboard": "Arrow keys or WASD to navigate grid, Space to confirm actions",
+    "mouse": "Click to select and move units"
+  },
+  "artDirection": {
+    "mood": "sci-fi strategy",
+    "palette": [
+      "#2c3e50",
+      "#3498db",
+      "#e67e22",
+      "#ecf0f1"
+    ],
+    "shapes": "geometric",
+    "backgroundFx": "subtle grid animations"
+  },
+  "audioDirection": {
+    "musicMood": "tense and strategic",
+    "sfx": [
+      "move",
+      "attack",
+      "enemy-damage"
+    ]
+  },
+  "difficulty": {
+    "start": "easy enemy waves with predictable movement patterns",
+    "progression": "introduce varied enemy types and movement patterns",
+    "peak": "multiple powerful enemies with unique abilities in later waves"
+  },
+  "winLose": {
+    "win": "survive a set number of enemy waves",
+    "lose": "all units are destroyed or a key structure is compromised"
+  },
+  "juice": {
+    "screenShake": "when units take damage or enemies are defeated",
+    "particles": "upon successful attacks or combos",
+    "hitStop": "when a unit lands a critical hit",
+    "flash": "when the player wins a round or loses the game"
+  },
+  "scopeNotes": "no complex AI systems, no multiplayer features, no in-depth story elements, no different terrains or environments, no lengthy tutorials, no intricate resource management",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing"
+    ],
+    "scoreEvents": [
+      "score increases by 100 points for each enemy destroyed, 50 points for surviving a turn, combo bonuses give additional score"
+    ]
+  }
+}
