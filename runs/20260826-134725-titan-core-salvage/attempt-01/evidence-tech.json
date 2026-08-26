@@ -1,0 +1,89 @@
+{
+  "attempt": 1,
+  "candidateSha": "7a09d7048b3a4e5fb2f0b574b89bdcf58f6170396402fd39d8506999c2499f1d",
+  "fps": 61,
+  "states": {
+    "mid": {
+      "state": "playing",
+      "score": 80,
+      "best": 80,
+      "fps": 60,
+      "time": 3.5330999999999975,
+      "flags": [],
+      "errors": []
+    },
+    "end": {
+      "state": "playing",
+      "score": 440,
+      "best": 440,
+      "fps": 60,
+      "time": 12.049499999999979,
+      "flags": [],
+      "errors": [
+        "Uncaught TypeError: game.hitStop is not a function"
+      ]
+    }
+  },
+  "contract": {
+    "passed": false,
+    "checks": [
+      {
+        "id": "probe_present",
+        "label": "Test-Hook __GF__ vorhanden",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": false,
+        "detail": "pageerror: game.hitStop is not a function | probe: Uncaught TypeError: game.hitStop is not a function"
+      },
+      {
+        "id": "assets_ok",
+        "label": "Alle Assets geladen",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "started_playing",
+        "label": "Spiel verlässt den Titelbildschirm",
+        "pass": true,
+        "detail": "endState=playing"
+      },
+      {
+        "id": "interactivity",
+        "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+        "pass": true,
+        "detail": "score 80 -> 440, states playing->playing"
+      },
+      {
+        "id": "fps_ok",
+        "label": "Performance >= 30 FPS",
+        "pass": true,
+        "detail": "fps=61"
+      },
+      {
+        "id": "visual_content",
+        "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+        "pass": true,
+        "detail": "shot-2-gameplay: VISIBLE (8.77% diff) | shot-3-gameplay: VISIBLE (8.81% diff)"
+      }
+    ],
+    "failures": [
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": false,
+        "detail": "pageerror: game.hitStop is not a function | probe: Uncaught TypeError: game.hitStop is not a function"
+      }
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [
+    "game.hitStop is not a function"
+  ],
+  "probeErrors": [
+    "Uncaught TypeError: game.hitStop is not a function"
+  ]
+}

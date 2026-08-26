@@ -1,0 +1,20 @@
+{
+  "scores": {
+    "visuals": 2,
+    "uiClarity": 3,
+    "funProxy": 1,
+    "performance": 10
+  },
+  "overall": 2.7,
+  "critique": [
+    "The camera or canvas capture appears severely cropped or misconfigured, showing only a extreme top-left corner HUD element.",
+    "In the first frame, 'CORE INTEGRITY 300 HP' text and the bar fill have almost zero contrast against the dark background.",
+    "No player ship, enemies, action, or score counters are visible anywhere in the frame.",
+    "The faint grid texture in frame 2 lacks ambient lighting or visual polish."
+  ],
+  "priorityFixes": [
+    "Fix viewport scaling/camera framing so the entire game canvas is visible instead of a cropped HUD corner.",
+    "Ensure UI text and health bar fills maintain high contrast (#00f0ff or #ffffff) in all render states.",
+    "Add visible player/enemy sprites and glowing particle trails into the gameplay area."
+  ]
+}

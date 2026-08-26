@@ -1,0 +1,82 @@
+{
+  "title": "Titan Core: Salvage",
+  "tagline": "Dismantle hostile machine Titans, salvage modular components, and rebuild your core.",
+  "genre": "action",
+  "pitch": "Awaken as a cyan identity core in a modular salvage mech inside a giant fallen Titan chamber. Read enemy attack telegraphs, strategically blast enemy subsystems, and instantly decide whether to Install, Secure, or Dismantle dropped components.",
+  "coreLoop": "Dodge telegraphed attacks and shoot enemy subsystems. Destroyed enemies drop intact components for instant tactical choices that alter your mech.",
+  "mechanics": [
+    {
+      "name": "Subsystem Targeting",
+      "description": "Aim reticle directly at enemy Weapon or Core subsystems. Destroying the Weapon makes the fight safer but destroys weapon drops; preserving it drops high-tier armaments."
+    },
+    {
+      "name": "Telegraphed Evasion",
+      "description": "Red-orange floor Cones/Beams telegraph incoming heavy attacks. Dash out of danger zones before the burst."
+    },
+    {
+      "name": "3-Way Salvage Decision",
+      "description": "When a component drops, choose INSTALL (instant weapon/armor upgrade), SECURE (high score bonus for extraction), or DISMANTLE (instant HP restoration)."
+    },
+    {
+      "name": "Extraction Choice",
+      "description": "After clearing the chamber, choose to EXTRACT with accumulated loot or VENTURE DEEPER for a higher score multiplier."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD or Arrow Keys to move, Space to dash",
+    "mouse": "Mouse cursor to aim reticle, Left Click to fire primary weapon"
+  },
+  "artDirection": {
+    "mood": "industrial neon-cyber isometric arcade",
+    "palette": [
+      "#0d131a",
+      "#00f0ff",
+      "#ff4400",
+      "#ffc800"
+    ],
+    "shapes": "isometric geometric vector shapes, clean glowing linework",
+    "backgroundFx": "pulsing cyber-conduits and ambient drifting scrap embers"
+  },
+  "audioDirection": {
+    "musicMood": "pounding dark synthwave pulse",
+    "sfx": [
+      "laser_shot",
+      "telegraph_alarm",
+      "part_explode",
+      "salvage_equip",
+      "dash_thruster"
+    ]
+  },
+  "difficulty": {
+    "start": "Single heavy mech enemy firing slow telegraphed laser sweeps",
+    "progression": "Enemy attack telegraphs speed up and alternate with missile barrages as subsystems take damage",
+    "peak": "Enraged core meltdown state with rapid multi-directional hazard zones"
+  },
+  "winLose": {
+    "win": "Defeat the Titan unit and reach the Extraction terminal to secure score",
+    "lose": "Core Integrity drops to 0%"
+  },
+  "juice": {
+    "screenShake": "Heavy shake when telegraph attacks detonate or enemy subsystems collapse",
+    "particles": "Cyan jet trails on dash, orange spark bursts on hit, amber scrap fragments on target destruction",
+    "hitStop": "60ms frame pause when severing an enemy subsystem",
+    "flash": "Red screen edge flash on taking damage, bright cyan radial flash when installing new components"
+  },
+  "scopeNotes": "Build only 1 single-screen isometric chamber, 1 modular player mech, 1 multi-subsystem enemy, and the 3-way salvage decision modal. No multiple levels, shops, or complex inventories.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing",
+      "salvage_choice",
+      "extraction_prompt",
+      "extracted",
+      "gameover"
+    ],
+    "scoreEvents": [
+      "damage_dealt (+10 score per shot hit)",
+      "subsystem_destroyed (+250 score)",
+      "component_secured (+500 score)",
+      "extraction_completed (+1000 score)"
+    ]
+  }
+}

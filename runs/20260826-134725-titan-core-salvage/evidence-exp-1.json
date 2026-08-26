@@ -1,0 +1,20 @@
+{
+  "scores": {
+    "visuals": 5,
+    "uiClarity": 5.5,
+    "funProxy": 4.5,
+    "performance": 10
+  },
+  "overall": 5.4,
+  "critique": [
+    "Both captured screenshots are frozen on the 'COMPONENT SEVERED!' modal selection screen, hiding active gameplay.",
+    "The top-left 'CORE INTEGRITY' HUD text is dark teal on dark blue, making it almost illegible.",
+    "Particle explosions drift directly behind the translucent modal popup and buttons, creating visual noise behind text.",
+    "Color coding on the directive buttons (cyan, gold, orange) is punchy and keyboard shortcuts [1], [2], [3] are clearly labeled."
+  ],
+  "priorityFixes": [
+    "Increase contrast on the Core Integrity HUD frame and text by using bright white or cyan text.",
+    "Add a semi-opaque dark backdrop blur to the salvage modal so background particles do not clash with button text.",
+    "Scale down or offset the salvage pop-up so the combat arena and player ship remain clearly visible during choices."
+  ]
+}

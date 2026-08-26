@@ -1,0 +1,83 @@
+{
+  "attempt": 2,
+  "candidateSha": "c5a467a46c2cac5b845d0649947228595cd4a740fec7e290bdf6b0ffe9d80177",
+  "fps": 61,
+  "states": {
+    "mid": {
+      "state": "playing",
+      "score": 850,
+      "best": 850,
+      "fps": 60,
+      "time": 3.533199999999995,
+      "flags": [],
+      "errors": []
+    },
+    "end": {
+      "state": "playing",
+      "score": 830,
+      "best": 2500,
+      "fps": 60,
+      "time": 3.0998999999999994,
+      "flags": [],
+      "errors": []
+    }
+  },
+  "contract": {
+    "passed": false,
+    "checks": [
+      {
+        "id": "probe_present",
+        "label": "Test-Hook __GF__ vorhanden",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "assets_ok",
+        "label": "Alle Assets geladen",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "started_playing",
+        "label": "Spiel verlässt den Titelbildschirm",
+        "pass": true,
+        "detail": "endState=playing"
+      },
+      {
+        "id": "interactivity",
+        "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+        "pass": false,
+        "detail": "score 850 -> 830, states playing->playing"
+      },
+      {
+        "id": "fps_ok",
+        "label": "Performance >= 30 FPS",
+        "pass": true,
+        "detail": "fps=61"
+      },
+      {
+        "id": "visual_content",
+        "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+        "pass": true,
+        "detail": "shot-2-gameplay: BLACK (1.17% diff) | shot-3-gameplay: VISIBLE (100% diff)"
+      }
+    ],
+    "failures": [
+      {
+        "id": "interactivity",
+        "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+        "pass": false,
+        "detail": "score 850 -> 830, states playing->playing"
+      }
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "probeErrors": []
+}

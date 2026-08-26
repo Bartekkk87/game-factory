@@ -1,8 +1,17 @@
 {
-  "products": [],
+  "products": [
+    {
+      "slug": "titan-core-salvage",
+      "title": "Titan Core: Salvage",
+      "genre": "action",
+      "date": "2026-08-26T13:58:40.074Z",
+      "status": "draft",
+      "score": 7.5
+    }
+  ],
   "lessons": [],
   "stats": {
-    "runs": 10,
+    "runs": 11,
     "published": 0,
     "rejected": 0,
     "failed": 5,
