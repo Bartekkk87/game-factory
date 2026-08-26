@@ -1,0 +1,108 @@
+{
+  "attempt": 2,
+  "candidateSha": "4d2459d5c641599eab5ebf791233015dc55e683e8a974804ee50db01af144c68",
+  "fps": 61,
+  "states": {
+    "mid": {
+      "state": "playing",
+      "score": 45,
+      "best": 45,
+      "fps": 60,
+      "time": 3.5332999999999952,
+      "flags": [],
+      "errors": [
+        "Uncaught TypeError: this.game.hitStop is not a function"
+      ]
+    },
+    "end": {
+      "state": "playing",
+      "score": 780,
+      "best": 780,
+      "fps": 60,
+      "time": 12.032999999999967,
+      "flags": [],
+      "errors": [
+        "Uncaught TypeError: this.game.hitStop is not a function",
+        "Uncaught TypeError: Cannot read properties of null (reading 'x')"
+      ]
+    }
+  },
+  "contract": {
+    "passed": false,
+    "checks": [
+      {
+        "id": "probe_present",
+        "label": "Test-Hook __GF__ vorhanden",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": false,
+        "detail": "pageerror: this.game.hitStop is not a function | pageerror: this.game.hitStop is not a function | pageerror: this.game.hitStop is not a function | pageerror: this.game.hitStop is not a function | pageerror: this.game.hitStop is not a function"
+      },
+      {
+        "id": "assets_ok",
+        "label": "Alle Assets geladen",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "started_playing",
+        "label": "Spiel verlässt den Titelbildschirm",
+        "pass": true,
+        "detail": "endState=playing"
+      },
+      {
+        "id": "interactivity",
+        "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+        "pass": true,
+        "detail": "score 45 -> 780, states playing->playing"
+      },
+      {
+        "id": "fps_ok",
+        "label": "Performance >= 30 FPS",
+        "pass": true,
+        "detail": "fps=61"
+      },
+      {
+        "id": "visual_content",
+        "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+        "pass": false,
+        "detail": "shot-2-gameplay: BLACK (0% diff) [require is not defined] | shot-3-gameplay: BLACK (0% diff) [require is not defined]"
+      }
+    ],
+    "failures": [
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": false,
+        "detail": "pageerror: this.game.hitStop is not a function | pageerror: this.game.hitStop is not a function | pageerror: this.game.hitStop is not a function | pageerror: this.game.hitStop is not a function | pageerror: this.game.hitStop is not a function"
+      },
+      {
+        "id": "visual_content",
+        "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+        "pass": false,
+        "detail": "shot-2-gameplay: BLACK (0% diff) [require is not defined] | shot-3-gameplay: BLACK (0% diff) [require is not defined]"
+      }
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [
+    "this.game.hitStop is not a function",
+    "this.game.hitStop is not a function",
+    "this.game.hitStop is not a function",
+    "this.game.hitStop is not a function",
+    "this.game.hitStop is not a function",
+    "this.game.hitStop is not a function",
+    "this.game.hitStop is not a function",
+    "this.game.hitStop is not a function",
+    "this.game.hitStop is not a function",
+    "this.game.hitStop is not a function"
+  ],
+  "probeErrors": [
+    "Uncaught TypeError: this.game.hitStop is not a function",
+    "Uncaught TypeError: Cannot read properties of null (reading 'x')"
+  ]
+}

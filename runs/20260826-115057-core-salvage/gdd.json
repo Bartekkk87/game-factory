@@ -1,0 +1,86 @@
+{
+  "title": "Core Salvage",
+  "tagline": "Rebuild your identity, one fallen mech at a time.",
+  "genre": "action",
+  "pitch": "As a reawakened AI core, pilot a modular mech through the remains of giant Titans. Tactically dismantle enemy machines, choosing between immediate power, future salvage, or emergency repairs, all to uncover your past.",
+  "coreLoop": "Player engages a single enemy, reads its attacks, evades, targets and dismantles subsystems, then makes a critical decision on salvaged components.",
+  "mechanics": [
+    {
+      "name": "Tactical Dismantling",
+      "description": "Target specific enemy subsystems (weapon, locomotion, power core) to disable them. Destroying a subsystem early makes the fight easier but sacrifices that component for salvage. Preserving it for the final blow yields the component intact."
+    },
+    {
+      "name": "Component Decision",
+      "description": "Upon defeating an enemy and salvaging a component, the player chooses: INSTALL (gain immediate, visible mech enhancement), SECURE (keep for end-run extraction), or DISMANTLE (convert to instant health repair)."
+    },
+    {
+      "name": "Telegraphed Combat",
+      "description": "Enemies clearly telegraph their attacks with visual cues, allowing players to react with evasion or counter-targeting."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD/Arrow Keys for movement. Q/E for subsystem targeting. Spacebar for special action (contextual based on installed components).",
+    "mouse": "Aiming and firing primary weapon (left click). Mouse wheel for scrolling through targetable subsystems."
+  },
+  "artDirection": {
+    "mood": "Brutalist industrial, stark, high-tech ruins with an emphasis on functional forms.",
+    "palette": [
+      "#0A0A0A",
+      "#00BFFF",
+      "#FF4500",
+      "#D3D3D3"
+    ],
+    "shapes": "geometric",
+    "backgroundFx": "Slowly shifting, abstract machinery silhouettes and subtle energy flows in the background."
+  },
+  "audioDirection": {
+    "musicMood": "Minimalist, synth-driven, tension-building ambient tracks with dynamic intensity changes.",
+    "sfx": [
+      "mech_move_loop",
+      "weapon_fire",
+      "enemy_telegraph",
+      "enemy_hit",
+      "subsystem_destroy",
+      "mech_hit",
+      "component_drop",
+      "decision_select",
+      "health_repair",
+      "install_confirm",
+      "win_jingle",
+      "lose_jingle"
+    ]
+  },
+  "difficulty": {
+    "start": "One enemy with two clearly telegraphed, slow attacks. Player starts with basic movement and a primary weapon.",
+    "progression": "Enemy attack patterns become slightly faster and more complex. Player gains options through component installation, requiring strategic choices.",
+    "peak": "The core loop remains challenging as players weigh risk/reward of preserving components versus safe dismantling. Success relies on mastery of evasion and targeting."
+  },
+  "winLose": {
+    "win": "Player successfully defeats the enemy, makes a component decision, and chooses to 'EXTRACT' with salvaged components.",
+    "lose": "Player's mech integrity reaches zero (HP falls to 0)."
+  },
+  "juice": {
+    "screenShake": "On mech taking heavy damage, enemy subsystem destruction, critical hits.",
+    "particles": "Sparks and debris on enemy hits, larger explosions on subsystem destruction, glow effects on component drops and installation.",
+    "hitStop": "Brief pause on player taking damage, or on enemy subsystem destruction.",
+    "flash": "White flash on player taking damage. Color-coded flashes on successful hits/criticals on enemies. UI flashes on decision prompt."
+  },
+  "scopeNotes": "No multiple enemy types, no bosses, no inventory screen, no crafting, no progression between runs beyond the immediate install/secure/dismantle decision. One single arena room. One enemy archetype. Focus solely on the core combat and component decision loop for a 60-second experience.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing",
+      "component_decision_prompt",
+      "extraction_prompt",
+      "win_screen",
+      "lose_screen"
+    ],
+    "scoreEvents": [
+      "Enemy_Damage_Dealt: Score increases based on damage dealt to enemy.",
+      "Subsystem_Destroyed: Score increases significantly upon destroying an enemy subsystem.",
+      "Enemy_Defeated: Score increases on enemy destruction.",
+      "Component_Installed: Score increases if player chooses to INSTALL a component.",
+      "Component_Secured: Score increases if player chooses to SECURE a component."
+    ]
+  }
+}
