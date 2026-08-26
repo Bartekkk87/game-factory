@@ -74,7 +74,7 @@ async function verifyAttempt({ runDir, attempt, design }) {
     seconds: LIMITS.playSeconds,
     screenshotDir: path.join(dir, 'shots')
   });
-  const verdict = evaluateContract(report, { bgColor });
+  const verdict = await evaluateContract(report, { bgColor });
   const evidence = {
     attempt,
     candidateSha: sha256(html),
