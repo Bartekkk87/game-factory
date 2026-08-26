@@ -65,3 +65,4 @@ and gets the extract-or-deeper prompt.
 EXPLICITLY OUT OF SCOPE: procedural dungeons, economy/shop, multiple enemy types, bosses,
 inventory management, crafting, upgrades between runs, narrative scenes (one line of flavor
 text maximum), save systems beyond engine defaults.
+\n
