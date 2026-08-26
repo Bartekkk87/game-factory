@@ -50,7 +50,7 @@ export async function buildGame({ gdd }) {
     engineSource()
   ].join('\n');
 
-  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.8 });
+  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.8, maxTokens: 20000 });
   return validateDesign(extractJson(text));
 }
 
@@ -74,7 +74,7 @@ export async function repairGame({ gdd, design, failureSummary }) {
     engineSource()
   ].join('\n');
 
-  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.4 });
+  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.4, maxTokens: 20000 });
   return validateDesign(extractJson(text));
 }
 
@@ -98,6 +98,6 @@ export async function polishGame({ gdd, design, playtest }) {
     engineSource()
   ].join('\n');
 
-  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.6 });
+  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.6, maxTokens: 20000 });
   return validateDesign(extractJson(text));
 }
