@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, PATHS } from '../config.mjs';
 import { log } from '../util/log.mjs';
-import { readJson } from '../util/fsx.mjs';
+import { readJson, ensureDir } from '../util/fsx.mjs';
 
 function arg(name) {
   const i = process.argv.indexOf(name);
@@ -106,6 +106,7 @@ footer{text-align:center;color:#4b5578;font-size:12px;padding:40px 0 28px}
 
 OUT = path.resolve(ROOT, arg('--out') || '_site');
 fs.rmSync(OUT, { recursive: true, force: true });
+ensureDir(OUT);
 
 const drafts = scan(PATHS.drafts);
 const products = scan(PATHS.products);
