@@ -1,0 +1,74 @@
+{
+  "title": "Core Awakening",
+  "tagline": "Rebuild your identity from fallen Titans.",
+  "genre": "action",
+  "pitch": "As the surviving core of a Titan AI, navigate a compact, modular mech through a tactical arena. Engage in real-time combat, dismantling enemies for components that enhance your power and identity.",
+  "coreLoop": "Read enemy intentions, evade attacks, manipulate combat outcomes, and strategically dismantle foes to rebuild yourself. Every decision shapes your mech's capabilities and survival.",
+  "mechanics": [
+    {
+      "name": "Read Intent",
+      "description": "Observe and interpret the enemy's attack telegraphs to prepare for evasion or counter."
+    },
+    {
+      "name": "Evasion",
+      "description": "Use WASD or arrow keys to dodge incoming attacks based on red-orange telegraphs."
+    },
+    {
+      "name": "Subsystem Targeting",
+      "description": "Aim with the mouse to target specific subsystems of the enemy for dismantling."
+    },
+    {
+      "name": "Component Decision",
+      "description": "After defeating an enemy, choose to install, secure, or dismantle the dropped component."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD/arrows for movement, mouse for aiming",
+    "mouse": "Click to target and interact"
+  },
+  "artDirection": {
+    "mood": "futuristic industrial",
+    "palette": [
+      "#00FFFF",
+      "#A0A0A0",
+      "#FF8000",
+      "#404040"
+    ],
+    "shapes": "smooth-vector",
+    "backgroundFx": "animated machinery silhouettes subtly moving in the background"
+  },
+  "audioDirection": {
+    "musicMood": "tense and mechanical, with rhythmic pulsing",
+    "sfx": [
+      "weapon_hit",
+      "component_install",
+      "damage_received",
+      "evade"
+    ]
+  },
+  "difficulty": {
+    "start": "Easy, with simple telegraphed attacks and clear targets.",
+    "progression": "Smooth ramp-up as enemies introduce more attack patterns and tougher subsystem choices.",
+    "peak": "Moderate difficulty where players must balance evasion and target selection under pressure."
+  },
+  "winLose": {
+    "win": "Successfully dismantle the enemy and make a meaningful choice regarding the component.",
+    "lose": "The mech's core integrity reaches zero through damage."
+  },
+  "juice": {
+    "screenShake": "when a powerful attack lands or an enemy is defeated",
+    "particles": "when dismantling an enemy or installing a component",
+    "hitStop": "when successfully evading a critical attack",
+    "flash": "when an enemy's subsystem is targeted or destroyed"
+  },
+  "scopeNotes": "Do NOT build procedural dungeons, additional enemy types, bosses, inventory management, upgrades between runs, or narrative scenes beyond a single line of text.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing"
+    ],
+    "scoreEvents": [
+      "score increases by successfully reading enemy intent, evading attacks, dismantling subsystems, and making component decisions"
+    ]
+  }
+}

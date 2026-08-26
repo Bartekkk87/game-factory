@@ -1,0 +1,13 @@
+{
+  "reason": "audit_rejected",
+  "closedAt": "2026-08-26T18:18:03.631Z",
+  "cost": {
+    "costUsd": 0,
+    "tokens": 354399
+  },
+  "audit": {
+    "verdict": "FAIL",
+    "findings": [],
+    "summary": "The production run for 'Core Awakening' has passed all technical checks and stayed within budget. However, the final overall score of 4.5 is below the required gate of 6.5, resulting in a failure to meet the release criteria."
+  }
+}
