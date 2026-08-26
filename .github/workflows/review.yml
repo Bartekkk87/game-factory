@@ -1,0 +1,74 @@
+name: Review Gate
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  gate:
+    if: >
+      github.event.issue.pull_request == null &&
+      (startsWith(github.event.comment.body, '/approve') || startsWith(github.event.comment.body, '/reject'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - id: parse
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          COMMENT: ${{ github.event.comment.body }}
+        run: |
+          SLUG=$(printf '%s' "$ISSUE_BODY" | grep -oE '\[slug:[a-z0-9-]+\]' | head -n 1 | tr -d '[]' | sed 's/^slug://')
+          if printf '%s' "$COMMENT" | grep -q '^/approve'; then ACTION=approve; else ACTION=reject; fi
+          REASON=$(printf '%s' "$COMMENT" | tail -n +2 | head -n 3 | tr '\n' ' ')
+          echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
+          echo "action=$ACTION" >> "$GITHUB_OUTPUT"
+          echo "reason=$REASON" >> "$GITHUB_OUTPUT"
+
+      - name: Finalize verdict
+        if: steps.parse.outputs.slug != ''
+        env:
+          SLUG: ${{ steps.parse.outputs.slug }}
+          ACTION: ${{ steps.parse.outputs.action }}
+          REASON: ${{ steps.parse.outputs.reason }}
+        run: node factory/src/publish/finalize.mjs --slug "$SLUG" --action "$ACTION" --reason "$REASON"
+
+      - name: Commit publication state
+        if: steps.parse.outputs.slug != ''
+        run: |
+          git config user.name "game-factory-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "review: ${{ steps.parse.outputs.action }} ${{ steps.parse.outputs.slug }}"
+          git push
+
+      - name: Close review issue
+        if: always() && steps.parse.outputs.slug != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ACTION: ${{ steps.parse.outputs.action }}
+          SLUG: ${{ steps.parse.outputs.slug }}
+          REASON: ${{ steps.parse.outputs.reason }}
+        run: |
+          if [ "$ACTION" = "approve" ]; then
+            MSG="Published to the Game Library under \`products/$SLUG/\`. Thanks for playing!"
+          else
+            MSG="Archived. The rejection reason was recorded as a lesson for future runs.${REASON:+ Reason: }$REASON"
+          fi
+          gh issue comment ${{ github.event.issue.number }} --body "$MSG"
+          gh issue close ${{ github.event.issue.number }}
+
+      - name: Warn about missing slug
+        if: steps.parse.outputs.slug == ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue comment ${{ github.event.issue.number }} --body "Could not find a `[slug:...]` marker in this issue body - nothing was changed."
