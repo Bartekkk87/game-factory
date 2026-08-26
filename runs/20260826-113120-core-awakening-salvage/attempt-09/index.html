@@ -1,0 +1,1121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Core Awakening: Salvage</title>
+<style>
+html,body{margin:0;height:100%;background:#000;display:grid;place-items:center;overflow:hidden}
+canvas{image-rendering:auto}
+body { margin: 0; overflow: hidden; background: #101010; display: flex; align-items: center; justify-content: center; height: 100vh; } #game { display: block; background: #101010; border: 2px solid #008080; }
+</style>
+</head>
+<body>
+
+<script>
+(function () {
+  'use strict';
+  const VERSION = '1.0.0';
+  const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const rand = (a = 1, b) => (b === undefined ? Math.random() * a : a + Math.random() * (b - a));
+  const randInt = (a, b) => Math.floor(rand(a, b + 1));
+  const pick = (arr) => arr[(Math.random() * arr.length) | 0];
+  const dist = (x1, y1, x2, y2) => Math.hypot(x2 - x1, y2 - y1);
+  const TAU = Math.PI * 2;
+  function makeRng(seed) {
+    let s = seed >>> 0 || 1;
+    return function () {
+      s ^= s << 13;
+      s ^= s >>> 17;
+      s ^= s << 5;
+      s >>>= 0;
+      return s / 4294967296;
+    };
+  }
+  const Eases = {
+    linear: (t) => t,
+    outCubic: (t) => 1 - Math.pow(1 - t, 3),
+    inCubic: (t) => t * t * t,
+    outQuad: (t) => 1 - (1 - t) * (1 - t),
+    outBack: (t) => 1 + 2.70158 * Math.pow(t - 1, 3) + 1.70158 * Math.pow(t - 1, 2),
+    outElastic: (t) =>
+      t === 0 || t === 1 ? t : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * ((2 * Math.PI) / 3)) + 1
+  };
+
+  const Sfx = {
+    ctx: null,
+    master: null,
+    muted: false,
+    ensure() {
+      if (this.ctx || this.muted) return;
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        this.ctx = new AC();
+        this.master = this.ctx.createGain();
+        this.master.gain.value = 0.5;
+        this.master.connect(this.ctx.destination);
+      } catch (e) {}
+    },
+    resume() {
+      if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+    },
+    beep({ freq = 440, to = null, dur = 0.15, type = 'square', vol = 0.4, delay = 0 } = {}) {
+      if (!this.ctx || this.muted) return;
+      const t = this.ctx.currentTime + delay;
+      const o = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      o.type = type;
+      o.frequency.setValueAtTime(freq, t);
+      if (to) o.frequency.exponentialRampToValueAtTime(Math.max(30, to), t + dur);
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g).connect(this.master);
+      o.start(t);
+      o.stop(t + dur + 0.02);
+    },
+    noise({ dur = 0.2, vol = 0.3, freq = 1200, delay = 0 } = {}) {
+      if (!this.ctx || this.muted) return;
+      const t = this.ctx.currentTime + delay;
+      const len = Math.max(1, (dur * this.ctx.sampleRate) | 0);
+      const buf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      const src = this.ctx.createBufferSource();
+      src.buffer = buf;
+      const f = this.ctx.createBiquadFilter();
+      f.type = 'lowpass';
+      f.frequency.value = freq;
+      const g = this.ctx.createGain();
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      src.connect(f).connect(g).connect(this.master);
+      src.start(t);
+    },
+    melody(notes, { type = 'square', vol = 0.35 } = {}) {
+      let delay = 0;
+      for (const [freq, dur] of notes) {
+        this.beep({ freq, dur: dur * 0.95, type, vol, delay });
+        delay += dur;
+      }
+    }
+  };
+
+  class Input {
+    constructor(canvas) {
+      this.keys = Object.create(null);
+      this._edge = Object.create(null);
+      this.pointer = { x: 0, y: 0, down: false, clicked: false };
+      this._anyAction = [];
+      const kd = (e) => {
+        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) e.preventDefault();
+        if (!this.keys[e.code]) this._edge[e.code] = true;
+        this.keys[e.code] = true;
+        Sfx.ensure();
+        Sfx.resume();
+        for (const fn of this._anyAction) fn(e.code);
+      };
+      const ku = (e) => {
+        this.keys[e.code] = false;
+      };
+      window.addEventListener('keydown', kd);
+      window.addEventListener('keyup', ku);
+      const toLocal = (e) => {
+        const r = canvas.getBoundingClientRect();
+        return {
+          x: ((e.clientX - r.left) / r.width) * canvas._lw,
+          y: ((e.clientY - r.top) / r.height) * canvas._lh
+        };
+      };
+      canvas.addEventListener('pointermove', (e) => {
+        Object.assign(this.pointer, toLocal(e));
+      });
+      canvas.addEventListener('pointerdown', (e) => {
+        Sfx.ensure();
+        Sfx.resume();
+        Object.assign(this.pointer, toLocal(e));
+        this.pointer.down = true;
+        this.pointer.clicked = true;
+        for (const fn of this._anyAction) fn('PointerDown');
+      });
+      window.addEventListener('pointerup', () => {
+        this.pointer.down = false;
+      });
+    }
+    pressed(code) {
+      return !!this._edge[code];
+    }
+    onAnyInput(fn) {
+      this._anyAction.push(fn);
+    }
+    _endFrame() {
+      this._edge = Object.create(null);
+      this.pointer.clicked = false;
+    }
+  }
+
+  class Particles {
+    constructor(cap = 700) {
+      this.pool = Array.from({ length: cap }, () => ({ active: false }));
+    }
+    emit(x, y, { count = 10, speed = 120, size = 4, life = 0.6, colors = ['#fff'], gravity = 200, spread = TAU, dir = 0 } = {}) {
+      let made = 0;
+      for (const p of this.pool) {
+        if (p.active) continue;
+        const a = dir + (spread === TAU ? rand(TAU) : rand(-spread / 2, spread / 2));
+        const v = speed * rand(0.4, 1);
+        p.active = true;
+        p.x = x;
+        p.y = y;
+        p.vx = Math.cos(a) * v;
+        p.vy = Math.sin(a) * v;
+        p.life = p.maxLife = life * rand(0.6, 1.2);
+        p.size = size * rand(0.6, 1.4);
+        p.color = pick(colors);
+        p.gravity = gravity;
+        if (++made >= count) break;
+      }
+    }
+    update(dt) {
+      for (const p of this.pool) {
+        if (!p.active) continue;
+        p.life -= dt;
+        if (p.life <= 0) {
+          p.active = false;
+          continue;
+        }
+        p.vy += p.gravity * dt;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+      }
+    }
+    draw(ctx) {
+      for (const p of this.pool) {
+        if (!p.active) continue;
+        ctx.globalAlpha = clamp(p.life / p.maxLife, 0, 1);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, TAU);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  class Tweens {
+    constructor() {
+      this.list = [];
+    }
+    add(obj, props, dur, ease = 'outCubic', onDone = null) {
+      const from = {};
+      for (const k of Object.keys(props)) from[k] = obj[k];
+      this.list.push({ obj, props, from, t: 0, dur, ease: Eases[ease] || Eases.outCubic, onDone });
+    }
+    update(dt) {
+      for (let i = this.list.length - 1; i >= 0; i--) {
+        const tw = this.list[i];
+        tw.t += dt;
+        const k = clamp(tw.t / tw.dur, 0, 1);
+        const e = tw.ease(k);
+        for (const key of Object.keys(tw.props)) {
+          tw.obj[key] = lerp(tw.from[key], tw.props[key], e);
+        }
+        if (k >= 1) {
+          this.list.splice(i, 1);
+          if (tw.onDone) tw.onDone();
+        }
+      }
+    }
+  }
+
+  const Draw = {
+    text(ctx, str, x, y, { size = 24, color = '#fff', align = 'center', baseline = 'middle', weight = '800', font = 'system-ui, sans-serif' } = {}) {
+      ctx.fillStyle = color;
+      ctx.textAlign = align;
+      ctx.textBaseline = baseline;
+      ctx.font = `${weight} ${size}px ${font}`;
+      ctx.fillText(str, x, y);
+    },
+    roundRect(ctx, x, y, w, h, r, color) {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h);
+      ctx.fill();
+    },
+    vignette(ctx, w, h, strength = 0.35) {
+      const g = ctx.createRadialGradient(w / 2, h / 2, h * 0.4, w / 2, h / 2, h * 0.85);
+      g.addColorStop(0, 'rgba(0,0,0,0)');
+      g.addColorStop(1, `rgba(0,0,0,${strength})`);
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+    }
+  };
+
+  class Game {
+    constructor({ id = 'gf-game', title = 'Untitled', width = 960, height = 540, palette = ['#7c5cff', '#00e0ff', '#ff5c8a', '#ffd166'], background = '#0b0e1a', seed = Date.now() % 100000 } = {}) {
+      this.id = id;
+      this.title = title;
+      this.W = width;
+      this.H = height;
+      this.palette = palette;
+      this.background = background;
+      this.rng = makeRng(seed);
+      this.scenes = {};
+      this.sceneName = null;
+      this.state = 'boot';
+      this.score = 0;
+      this.best = Number(localStorage.getItem('gf-best-' + id) || 0);
+      this.time = 0;
+      this.shakeMag = 0;
+      this.shakeDur = 0;
+      this.flashAlpha = 0;
+      this.flashColor = '#ffffff';
+      this.hitStop = 0;
+      this._fpsFrames = 0;
+      this._fpsTime = 0;
+      this.fps = 60;
+      this.particles = new Particles();
+      this.tweens = new Tweens();
+      this.probeErrors = [];
+
+      const canvas = document.createElement('canvas');
+      canvas.id = 'game';
+      document.body.appendChild(canvas);
+      this.canvas = canvas;
+      canvas._lw = this.W;
+      canvas._lh = this.H;
+      const fit = () => {
+        const s = Math.min(window.innerWidth / this.W, window.innerHeight / this.H);
+        canvas.style.width = Math.floor(this.W * s) + 'px';
+        canvas.style.height = Math.floor(this.H * s) + 'px';
+      };
+      window.addEventListener('resize', fit);
+      fit();
+
+      const ctx = canvas.getContext('2d');
+      this.ctx = ctx;
+
+      this.input = new Input(canvas);
+      this.input.onAnyInput(() => {
+        if (this.state === 'title' && this._titleStart) this._startFromTitle();
+        else if ((this.state === 'gameover' || this.state === 'won') && this.time > 0.8) this.restart();
+      });
+
+      window.addEventListener('error', (e) => this._err(e.message));
+      window.addEventListener('unhandledrejection', (e) => this._err(String(e.reason)));
+
+      window.__GF__ = {
+        version: VERSION,
+        info: { title, id, engine: VERSION },
+        errors: this.probeErrors,
+        getState: () => this.state,
+        getScore: () => this.score,
+        getBest: () => this.best,
+        getFps: () => this.fps,
+        getTime: () => this.time,
+        flags: {},
+        restart: () => this.restart()
+      };
+
+      let last = performance.now();
+      const frame = (now) => {
+        requestAnimationFrame(frame);
+        let dt = (now - last) / 1000;
+        last = now;
+        dt = Math.min(dt, 0.1);
+        this._fpsFrames++;
+        this._fpsTime += dt;
+        if (this._fpsTime >= 0.5) {
+          this.fps = Math.round(this._fpsFrames / this._fpsTime);
+          this._fpsFrames = 0;
+          this._fpsTime = 0;
+        }
+        this._update(dt);
+        this._draw(ctx);
+        this.input._endFrame();
+      };
+      requestAnimationFrame(frame);
+    }
+
+    _err(msg) {
+      if (this.probeErrors.length < 25 && !this.probeErrors.includes(msg)) this.probeErrors.push(String(msg));
+    }
+
+    add(name, scene) {
+      scene.name = name;
+      scene.game = this;
+      this.scenes[name] = scene;
+      return scene;
+    }
+    go(name) {
+      const next = this.scenes[name];
+      if (!next) return this._err('unknown scene: ' + name);
+      this.sceneName = name;
+      this.state = name === 'title' ? 'title' : 'playing';
+      if (next.init) next.init();
+      if (next.reset) next.reset();
+      this.time = 0;
+    }
+    titleScreen({ subtitle = 'Press any key', onStart = null } = {}) {
+      this._titleStart = onStart || (() => this.go(this._firstPlayScene()));
+      this.state = 'title';
+      this._subtitle = subtitle;
+    }
+    _firstPlayScene() {
+      const names = Object.keys(this.scenes);
+      return names.find((n) => n !== 'title') || names[0];
+    }
+    _startFromTitle() {
+      Sfx.ensure();
+      Sfx.resume();
+      Sfx.beep({ freq: 520, to: 780, dur: 0.12, type: 'triangle', vol: 0.35 });
+      this._titleStart();
+    }
+    addScore(n = 1) {
+      if (this.state !== 'playing') return;
+      this.score += n;
+      if (this.score > this.best) {
+        this.best = this.score;
+        localStorage.setItem('gf-best-' + this.id, String(this.best));
+      }
+    }
+    shake(mag = 6, dur = 0.3) {
+      this.shakeMag = mag;
+      this.shakeDur = dur;
+    }
+    flash(color = '#ffffff', alpha = 0.5) {
+      this.flashColor = color;
+      this.flashAlpha = alpha;
+    }
+    burst(x, y, opts) {
+      this.particles.emit(x, y, opts);
+    }
+    hitStop(dur = 0.06) {
+      this.hitStop = Math.max(this.hitStop, dur);
+    }
+    gameOver({ message = 'GAME OVER' } = {}) {
+      if (this.state !== 'playing') return;
+      this.state = 'gameover';
+      this._endMessage = message;
+      this.shake(9, 0.45);
+      Sfx.melody([[392, 0.12], [330, 0.12], [262, 0.2]]);
+    }
+    win({ message = 'YOU WIN!' } = {}) {
+      if (this.state !== 'playing') return;
+      this.state = 'won';
+      this._endMessage = message;
+      Sfx.melody([[523, 0.1], [659, 0.1], [784, 0.18]], { type: 'triangle' });
+    }
+    restart() {
+      this.score = 0;
+      this.time = 0;
+      this.particles = new Particles();
+      this.tweens = new Tweens();
+      const sc = this.scenes[this.sceneName];
+      this.state = 'playing';
+      if (sc && sc.reset) sc.reset();
+      else if (sc && sc.init) sc.init();
+      Sfx.beep({ freq: 660, dur: 0.08, vol: 0.3 });
+    }
+
+    _update(dtRaw) {
+      this.tweens.update(dtRaw);
+      if (this.shakeDur > 0) this.shakeDur -= dtRaw;
+      if (this.flashAlpha > 0) this.flashAlpha = Math.max(0, this.flashAlpha - dtRaw * 2.5);
+      if (this.state !== 'playing') return;
+      if (this.hitStop > 0) {
+        this.hitStop -= dtRaw;
+        return;
+      }
+      const dt = Math.min(dtRaw, 1 / 20);
+      this.time += dt;
+      const sc = this.scenes[this.sceneName];
+      if (sc && sc.update) sc.update(dt);
+      this.particles.update(dt);
+    }
+
+    _draw(ctx) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.fillStyle = this.background;
+      ctx.fillRect(0, 0, this.W, this.H);
+      let sx = 0;
+      let sy = 0;
+      if (this.shakeDur > 0) {
+        sx = rand(-this.shakeMag, this.shakeMag);
+        sy = rand(-this.shakeMag, this.shakeMag);
+      }
+      ctx.translate(sx, sy);
+      const sc = this.scenes[this.sceneName];
+      if (sc && sc.draw) sc.draw(ctx);
+      this.particles.draw(ctx);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      if (this.state === 'title') {
+        ctx.fillStyle = 'rgba(5,8,16,0.55)';
+        ctx.fillRect(0, 0, this.W, this.H);
+        Draw.text(ctx, this.title, this.W / 2, this.H / 2 - 40, { size: 56, color: this.palette[0] });
+        Draw.text(ctx, this._subtitle || '', this.W / 2, this.H / 2 + 24, { size: 22, color: '#dfe6ff', weight: '600' });
+        Draw.text(ctx, 'BEST ' + this.best, this.W / 2, this.H - 40, { size: 18, color: '#8fa3d9', weight: '600' });
+      } else if (this.state === 'gameover' || this.state === 'won') {
+        ctx.fillStyle = this.state === 'won' ? 'rgba(10,30,20,0.55)' : 'rgba(30,5,15,0.55)';
+        ctx.fillRect(0, 0, this.W, this.H);
+        Draw.text(ctx, this._endMessage || (this.state === 'won' ? 'YOU WIN!' : 'GAME OVER'), this.W / 2, this.H / 2 - 50, { size: 52, color: this.state === 'won' ? '#7dffb2' : '#ff7d9c' });
+        Draw.text(ctx, 'SCORE ' + this.score, this.W / 2, this.H / 2 + 12, { size: 30, color: '#fff' });
+        Draw.text(ctx, 'BEST ' + this.best, this.W / 2, this.H / 2 + 52, { size: 20, color: '#cdd6f4' });
+        Draw.text(ctx, 'Click / press R to retry', this.W / 2, this.H / 2 + 96, { size: 17, color: '#9fb0d8', weight: '600' });
+      } else {
+        Draw.text(ctx, String(this.score), this.W / 2, 44, { size: 34, color: 'rgba(255,255,255,0.92)' });
+        Draw.text(ctx, 'BEST ' + this.best, this.W - 20, 30, { size: 15, color: 'rgba(255,255,255,0.55)', align: 'right', weight: '700' });
+      }
+      if (this.flashAlpha > 0) {
+        ctx.globalAlpha = this.flashAlpha;
+        ctx.fillStyle = this.flashColor;
+        ctx.fillRect(0, 0, this.W, this.H);
+        ctx.globalAlpha = 1;
+      }
+    }
+  }
+
+  window.GF = { VERSION, Game, Input, Particles, Tweens, Draw, Sfx, math: { clamp, lerp, rand, randInt, pick, dist, TAU, makeRng }, Eases };
+})();
+
+</script>
+<script>
+const PALETTE = ["#00FFFF", "#008080", "#FF4500", "#FFD700", "#808080", "#303030", "#101010"];
+
+const PLAYER_SPEED = 200;
+const PLAYER_HP_MAX = 100;
+
+const ENEMY_HP_MAX = 300;
+const ENEMY_ATTACK_COOLDOWN = 3;
+const ENEMY_PROJECTILE_SPEED = 150;
+const ENEMY_PROJECTILE_DAMAGE = 15;
+
+const SUBSYSTEM_HP = 50;
+
+const PARTICLE_MECH_HIT = { count: 8, speed: 100, size: 3, life: 0.3, colors: [PALETTE[0], PALETTE[4]], gravity: 300 };
+const PARTICLE_SUBSYSTEM_DESTROY = { count: 20, speed: 150, size: 4, life: 0.5, colors: [PALETTE[2], PALETTE[3], PALETTE[4]], gravity: 400, spread: GF.math.TAU };
+const PARTICLE_ENEMY_DEFEAT = { count: 50, speed: 200, size: 5, life: 0.7, colors: [PALETTE[2], PALETTE[3], PALETTE[4], PALETTE[5]], gravity: 500, spread: GF.math.TAU };
+const PARTICLE_HP_REPAIR = { count: 10, speed: 80, size: 3, life: 0.4, colors: [PALETTE[0], PALETTE[3]], gravity: -100, dir: -Math.PI / 2, spread: Math.PI / 4 };
+
+let game;
+
+class Player {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.radius = 20;
+    this.hp = PLAYER_HP_MAX;
+    this.iframes = 0;
+    this.dodgeDuration = 0;
+    this.flashAlpha = 0;
+  }
+
+  update(dt) {
+    if (this.iframes > 0) this.iframes -= dt;
+    if (this.dodgeDuration > 0) this.dodgeDuration -= dt;
+    if (this.flashAlpha > 0) this.flashAlpha = Math.max(0, this.flashAlpha - dt * 5);
+
+    let dx = 0;
+    let dy = 0;
+    if (game.input.keys['KeyW'] || game.input.keys['ArrowUp']) dy -= 1;
+    if (game.input.keys['KeyS'] || game.input.keys['ArrowDown']) dy += 1;
+    if (game.input.keys['KeyA'] || game.input.keys['ArrowLeft']) dx -= 1;
+    if (game.input.keys['KeyD'] || game.input.keys['ArrowRight']) dx += 1;
+
+    if (dx !== 0 || dy !== 0) {
+      const mag = Math.sqrt(dx * dx + dy * dy);
+      if (mag > 0) {
+        this.x += (dx / mag) * PLAYER_SPEED * dt;
+        this.y += (dy / mag) * PLAYER_SPEED * dt;
+      }
+    }
+
+    this.x = GF.math.clamp(this.x, this.radius, game.W - this.radius);
+    this.y = GF.math.clamp(this.y, this.radius, game.H - this.radius);
+
+    if (game.input.pressed('Space') && this.dodgeDuration <= 0) {
+      this.dodgeDuration = 0.2; 
+      this.iframes = 0.2;
+      GF.Sfx.beep({ freq: 800, to: 1200, dur: 0.1, type: 'triangle', vol: 0.2 });
+    }
+  }
+
+  draw(ctx) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+
+    ctx.strokeStyle = PALETTE[0];
+    ctx.lineWidth = 2;
+    ctx.fillStyle = PALETTE[5];
+
+    // Main body (geometric mech shape)
+    ctx.beginPath();
+    ctx.moveTo(0, -this.radius);
+    ctx.lineTo(this.radius * 0.8, 0);
+    ctx.lineTo(0, this.radius);
+    ctx.lineTo(-this.radius * 0.8, 0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Outline for dodge or iframes
+    if (this.dodgeDuration > 0 || this.iframes > 0) {
+      ctx.strokeStyle = PALETTE[3];
+      ctx.lineWidth = 3;
+      ctx.globalAlpha = Math.abs(Math.sin(game.time * 15));
+      ctx.beginPath();
+      ctx.moveTo(0, -this.radius - 3);
+      ctx.lineTo(this.radius * 0.8 + 3, 0);
+      ctx.lineTo(0, this.radius + 3);
+      ctx.lineTo(-this.radius * 0.8 - 3, 0);
+      ctx.closePath();
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    // Flash on damage
+    if (this.flashAlpha > 0) {
+      ctx.fillStyle = PALETTE[2];
+      ctx.globalAlpha = this.flashAlpha;
+      ctx.beginPath();
+      ctx.moveTo(0, -this.radius);
+      ctx.lineTo(this.radius * 0.8, 0);
+      ctx.lineTo(0, this.radius);
+      ctx.lineTo(-this.radius * 0.8, 0);
+      ctx.closePath();
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    // HP bar
+    const hpWidth = 40;
+    const hpHeight = 5;
+    const hpX = -hpWidth / 2;
+    const hpY = this.radius + 10;
+    GF.Draw.roundRect(ctx, hpX, hpY, hpWidth, hpHeight, 2, PALETTE[5]); 
+    GF.Draw.roundRect(ctx, hpX, hpY, hpWidth * (this.hp / PLAYER_HP_MAX), hpHeight, 2, PALETTE[0]);
+
+    ctx.restore();
+  }
+
+  takeDamage(amount) {
+    if (this.iframes > 0) return;
+    this.hp -= amount;
+    this.iframes = 0.5;
+    game.shake(4, 0.2);
+    game.flash(PALETTE[2], 0.6); // Player flash on damage
+    game.burst(this.x, this.y, PARTICLE_MECH_HIT);
+    GF.Sfx.noise({ dur: 0.15, vol: 0.4, freq: 800 });
+    game.addScore(-10);
+    if (this.hp <= 0) {
+      game.gameOver({ message: 'Core Integrity Lost!' });
+    }
+  }
+
+  repair(amount) {
+    const oldHp = this.hp;
+    this.hp = GF.math.clamp(this.hp + amount, 0, PLAYER_HP_MAX);
+    if (this.hp > oldHp) {
+      game.burst(this.x, this.y, PARTICLE_HP_REPAIR);
+      GF.Sfx.beep({ freq: 1000, to: 1200, dur: 0.05, type: 'sine', vol: 0.1 });
+      game.addScore(5);
+    }
+  }
+}
+
+class EnemySubsystem {
+  constructor(name, x, y, radius, effect, color) {
+    this.name = name;
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.hp = SUBSYSTEM_HP;
+    this.effect = effect;
+    this.color = color;
+    this.isDestroyed = false;
+    this.targeted = false;
+    this.flashAlpha = 0;
+  }
+
+  takeDamage(amount) {
+    if (this.isDestroyed) return;
+    this.hp -= amount;
+    this.flashAlpha = 0.6;
+    GF.Sfx.beep({ freq: 200, to: 100, dur: 0.08, type: 'sawtooth', vol: 0.3 });
+    game.addScore(15);
+    if (this.hp <= 0) {
+      this.hp = 0;
+      this.isDestroyed = true;
+      game.burst(this.x, this.y, PARTICLE_SUBSYSTEM_DESTROY);
+      game.shake(6, 0.3);
+      game.hitStop = 0.1; 
+      GF.Sfx.beep({ freq: 150, to: 75, dur: 0.2, type: 'sawtooth', vol: 0.5 });
+      game.addScore(50);
+    }
+  }
+
+  draw(ctx) {
+    if (this.isDestroyed) return;
+
+    ctx.fillStyle = this.color;
+    ctx.globalAlpha = 0.8;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, GF.math.TAU);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    if (this.targeted) {
+      ctx.strokeStyle = PALETTE[3];
+      ctx.lineWidth = 3;
+      ctx.globalAlpha = Math.abs(Math.sin(game.time * 10));
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius + 5, 0, GF.math.TAU);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+
+    if (this.flashAlpha > 0) {
+      ctx.fillStyle = PALETTE[3];
+      ctx.globalAlpha = this.flashAlpha;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius + 2, 0, GF.math.TAU);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      this.flashAlpha = Math.max(0, this.flashAlpha - game.dt * 5);
+    }
+
+    if (this.hp < SUBSYSTEM_HP) {
+      ctx.strokeStyle = PALETTE[0];
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius + 7, 0, GF.math.TAU * (this.hp / SUBSYSTEM_HP));
+      ctx.stroke();
+    }
+  }
+}
+
+class EnemyProjectile {
+  constructor(x, y, targetX, targetY) {
+    this.x = x;
+    this.y = y;
+    this.radius = 8;
+    this.damage = ENEMY_PROJECTILE_DAMAGE;
+    const angle = Math.atan2(targetY - y, targetX - x);
+    this.vx = Math.cos(angle) * ENEMY_PROJECTILE_SPEED;
+    this.vy = Math.sin(angle) * ENEMY_PROJECTILE_SPEED;
+    this.life = 3;
+  }
+
+  update(dt) {
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+    this.life -= dt;
+  }
+
+  draw(ctx) {
+    ctx.fillStyle = PALETTE[2];
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, GF.math.TAU);
+    ctx.fill();
+    ctx.strokeStyle = PALETTE[3];
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  isOffscreen(W, H) {
+    return this.x < -this.radius || this.x > W + this.radius || this.y < -this.radius || this.y > H + this.radius || this.life <= 0;
+  }
+}
+
+class Enemy {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.radius = 60;
+    this.hp = ENEMY_HP_MAX;
+    this.subsystems = [
+      new EnemySubsystem('Weapon', x - 40, y - 20, 15, 'disable_attack', PALETTE[3]),
+      new EnemySubsystem('Locomotion', x + 40, y - 20, 15, 'slow_movement', PALETTE[0]),
+      new EnemySubsystem('Power Core', x, y + 40, 20, 'explode', PALETTE[2])
+    ];
+    this.projectiles = [];
+    this.attackTimer = ENEMY_ATTACK_COOLDOWN;
+    this.telegraphAlpha = 0;
+    this.telegraphDuration = 1;
+    this.isDead = false;
+    this.targetedSubsystem = null;
+  }
+
+  update(dt, player) {
+    if (this.isDead) return;
+
+    this.attackTimer -= dt;
+
+    if (this.attackTimer <= this.telegraphDuration) {
+      this.telegraphAlpha = GF.math.lerp(0.8, 0, this.attackTimer / this.telegraphDuration);
+      if (this.attackTimer <= 0) {
+        this.fireProjectile(player);
+        this.attackTimer = ENEMY_ATTACK_COOLDOWN;
+        this.telegraphAlpha = 0;
+      }
+    } else {
+      this.telegraphAlpha = 0;
+    }
+
+    for (const proj of this.projectiles) {
+      proj.update(dt);
+      if (GF.math.dist(proj.x, proj.y, player.x, player.y) < proj.radius + player.radius) {
+        player.takeDamage(proj.damage);
+        proj.life = 0;
+      }
+    }
+    this.projectiles = this.projectiles.filter(p => !p.isOffscreen(game.W, game.H));
+
+    this.targetedSubsystem = null;
+    let closestDist = Infinity;
+    for (const sub of this.subsystems) {
+      if (sub.isDestroyed) continue;
+      const subAbsX = sub.x;
+      const subAbsY = sub.y;
+      const d = GF.math.dist(game.input.pointer.x, game.input.pointer.y, subAbsX, subAbsY);
+      if (d < sub.radius + 5 && d < closestDist) { // Increased targetable area slightly
+        this.targetedSubsystem = sub;
+        closestDist = d;
+      }
+      sub.targeted = false;
+    }
+    if (this.targetedSubsystem) {
+      this.targetedSubsystem.targeted = true;
+      if (game.input.pointer.clicked) {
+        this.targetedSubsystem.takeDamage(10);
+        GF.Sfx.beep({ freq: 400, dur: 0.05, type: 'sine', vol: 0.1 });
+      }
+    }
+
+    if (this.subsystems.every(s => s.isDestroyed)) {
+      this.hp = 0;
+    }
+
+    if (this.hp <= 0 && !this.isDead) {
+      this.isDead = true;
+      game.burst(this.x, this.y, PARTICLE_ENEMY_DEFEAT);
+      game.shake(9, 0.5);
+      GF.Sfx.beep({ freq: 80, to: 40, dur: 0.5, type: 'sawtooth', vol: 0.6 });
+      game.addScore(100);
+      game.go('salvage');
+    }
+  }
+
+  fireProjectile(player) {
+    if (this.subsystems[0].isDestroyed) return;
+    this.projectiles.push(new EnemyProjectile(this.x, this.y, player.x, player.y));
+    GF.Sfx.beep({ freq: 300, to: 200, dur: 0.1, type: 'square', vol: 0.3 });
+  }
+
+  draw(ctx) {
+    if (this.isDead) return;
+
+    ctx.save();
+    ctx.translate(this.x, this.y);
+
+    ctx.fillStyle = PALETTE[1];
+    ctx.strokeStyle = PALETTE[0];
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+    ctx.arc(0, 0, this.radius, 0, GF.math.TAU);
+    ctx.fill();
+    ctx.stroke();
+
+    // Draw some geometric details on the enemy body
+    ctx.fillStyle = PALETTE[5];
+    ctx.beginPath();
+    ctx.rect(-this.radius * 0.6, -this.radius * 0.6, this.radius * 1.2, this.radius * 1.2);
+    ctx.fill();
+
+    // Draw telegraph
+    if (this.telegraphAlpha > 0) {
+      ctx.fillStyle = PALETTE[2];
+      ctx.globalAlpha = this.telegraphAlpha * 0.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, this.radius + 10, 0, GF.math.TAU);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    this.subsystems.forEach(sub => {
+      ctx.save();
+      ctx.translate(sub.x - this.x, sub.y - this.y); 
+      sub.draw(ctx);
+      ctx.restore();
+    });
+
+    ctx.restore();
+
+    for (const proj of this.projectiles) {
+      proj.draw(ctx);
+    }
+  }
+}
+
+let bgOffset = 0;
+let gridOffset = 0;
+let pulseAlpha = 0;
+let pulseDir = 1;
+
+function drawBackground(ctx, W, H, dt) {
+  // Background gradient
+  const gradient = ctx.createLinearGradient(0, 0, W, H);
+  gradient.addColorStop(0, PALETTE[6]);
+  gradient.addColorStop(1, PALETTE[5]);
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, W, H);
+
+  // Industrial silhouettes (parallax layer 1)
+  ctx.fillStyle = PALETTE[6];
+  bgOffset = (bgOffset + 15 * dt) % W;
+  const silhouetteWidth = 200;
+  const silhouetteHeight = 150;
+  for (let i = -1; i < W / silhouetteWidth + 1; i++) {
+    const x = (i * silhouetteWidth + bgOffset) - W/4;
+    ctx.beginPath();
+    ctx.moveTo(x, H);
+    ctx.lineTo(x + silhouetteWidth * 0.2, H - silhouetteHeight);
+    ctx.lineTo(x + silhouetteWidth * 0.5, H - silhouetteHeight + 50);
+    ctx.lineTo(x + silhouetteWidth * 0.8, H - silhouetteHeight);
+    ctx.lineTo(x + silhouetteWidth, H);
+    ctx.fill();
+  }
+
+  // Subtle grid lines (parallax layer 2)
+  ctx.strokeStyle = PALETTE[4];
+  ctx.lineWidth = 1;
+  ctx.globalAlpha = 0.08;
+  gridOffset = (gridOffset + 25 * dt) % 40;
+  for (let x = gridOffset; x < W; x += 40) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, H);
+    ctx.stroke();
+  }
+  for (let y = gridOffset; y < H; y += 40) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(W, y);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  // Pulsing industrial glow
+  pulseAlpha += pulseDir * dt * 0.5;
+  if (pulseAlpha > 0.3 || pulseAlpha < 0) {
+    pulseDir *= -1;
+  }
+  ctx.fillStyle = PALETTE[0];
+  ctx.globalAlpha = Math.abs(pulseAlpha);
+  ctx.beginPath();
+  ctx.arc(W / 2, H / 2, W * 0.2, 0, GF.math.TAU);
+  ctx.filter = `blur(20px)`;
+  ctx.fill();
+  ctx.filter = 'none';
+  ctx.globalAlpha = 1;
+
+  GF.Draw.vignette(ctx, W, H, 0.4);
+}
+
+const playScene = {
+  init() {
+    this.player = new Player(game.W / 4, game.H / 2);
+    this.enemy = new Enemy(game.W * 0.75, game.H / 2);
+    this.musicLoop = null;
+  },
+  reset() {
+    this.player = new Player(game.W / 4, game.H / 2);
+    this.enemy = new Enemy(game.W * 0.75, game.H / 2);
+    this.startMusic();
+  },
+  startMusic() {
+    if (this.musicLoop) clearInterval(this.musicLoop);
+    this.musicLoop = setInterval(() => {
+      if (game.state === 'playing') {
+        GF.Sfx.beep({ freq: 100, dur: 0.4, type: 'sine', vol: 0.05, delay: 0 });
+        GF.Sfx.beep({ freq: 101, dur: 0.4, type: 'sine', vol: 0.05, delay: 0.2 });
+      }
+    }, 1200);
+  },
+  update(dt) {
+    // Auto-play logic for probe
+    if (game.state === 'playing') {
+      // Simulate player movement
+      const keys = ['KeyW', 'KeyA', 'KeyS', 'KeyD'];
+      const randomKey = GF.math.pick(keys);
+      // Only set a key to true for a short duration to simulate presses, not holds
+      if (game.time % 0.2 < dt) {
+        game.input.keys[randomKey] = true;
+        setTimeout(() => game.input.keys[randomKey] = false, 50);
+      }
+
+      // Simulate mouse clicks on subsystems
+      if (game.time % 0.5 < dt) {
+        game.input.pointer.clicked = true;
+        if (this.enemy && this.enemy.subsystems.length > 0) {
+          const targetSub = GF.math.pick(this.enemy.subsystems.filter(s => !s.isDestroyed));
+          if (targetSub) {
+            game.input.pointer.x = targetSub.x;
+            game.input.pointer.y = targetSub.y;
+          }
+        }
+      }
+
+      // Simulate spacebar for dodge
+      if (game.time % 1.5 < dt) {
+        game.input._edge['Space'] = true; // Directly trigger pressed state for probe
+      }
+    }
+
+    this.player.update(dt);
+    this.enemy.update(dt, this.player);
+  },
+  draw(ctx) {
+    drawBackground(ctx, game.W, game.H, game.dt);
+    this.player.draw(ctx);
+    this.enemy.draw(ctx);
+
+    // HUD elements for player HP
+    GF.Draw.text(ctx, `HP: ${this.player.hp}/${PLAYER_HP_MAX}`, 10, 30, { size: 24, color: PALETTE[0], align: 'left' });
+  }
+};
+
+const salvageScene = {
+  init() {
+    this.salvagedComponent = GF.math.pick(['Weapon Mod', 'Locomotion Upgrade', 'Energy Cell']);
+    this.decisionMade = false;
+    this.decisionTimer = 5; 
+    GF.Sfx.beep({ freq: 700, to: 900, dur: 0.1, type: 'triangle', vol: 0.3 });
+  },
+  reset() {
+    this.init();
+  },
+  update(dt) {
+    if (this.decisionMade) return;
+
+    this.decisionTimer -= dt;
+    if (this.decisionTimer <= 0) {
+      game.gameOver({ message: 'Salvage Opportunity Lost!' });
+      this.decisionMade = true;
+      return;
+    }
+
+    // Auto-play logic for probe in salvage scene
+    if (game.state === 'playing') { // game.state is 'playing' even during salvage for probe
+      if (game.time % 1 < dt) {
+        const decisions = ['INSTALL', 'SECURE', 'DISMANTLE'];
+        this.makeDecision(GF.math.pick(decisions));
+      }
+    }
+
+    if (game.input.pressed('KeyI')) this.makeDecision('INSTALL');
+    if (game.input.pressed('KeyS')) this.makeDecision('SECURE');
+    if (game.input.pressed('KeyD')) this.makeDecision('DISMANTLE');
+    if (game.input.pointer.clicked) {
+      const clickX = game.input.pointer.x;
+      const clickY = game.input.pointer.y;
+      const btnWidth = 180;
+      const btnHeight = 40;
+      const btnPadding = 20;
+
+      let btn1X = game.W / 2 - btnWidth / 2 - btnPadding - btnWidth / 2;
+      let btn1Y = game.H / 2 + 50;
+      if (clickX > btn1X && clickX < btn1X + btnWidth && clickY > btn1Y && clickY < btn1Y + btnHeight) {
+        this.makeDecision('INSTALL');
+      }
+
+      let btn2X = game.W / 2 - btnWidth / 2 + btnPadding + btnWidth / 2;
+      let btn2Y = game.H / 2 + 50;
+      if (clickX > btn2X && clickX < btn2X + btnWidth && clickY > btn2Y && clickY < btn2Y + btnHeight) {
+        this.makeDecision('SECURE');
+      }
+
+      let btn3X = game.W / 2 - btnWidth / 2;
+      let btn3Y = game.H / 2 + 100;
+      if (clickX > btn3X && clickX < btn3X + btnWidth && clickY > btn3Y && clickY < btn3Y + btnHeight) {
+        this.makeDecision('DISMANTLE');
+      }
+    }
+  },
+  makeDecision(type) {
+    this.decisionMade = true;
+    GF.Sfx.beep({ freq: 1000, dur: 0.05, type: 'square', vol: 0.3 });
+    switch (type) {
+      case 'INSTALL':
+        playScene.player.repair(30);
+        game.addScore(25);
+        GF.Sfx.beep({ freq: 1200, dur: 0.1, type: 'sine', vol: 0.2 });
+        game.win({ message: `Installed ${this.salvagedComponent}!` });
+        break;
+      case 'SECURE':
+        game.addScore(50);
+        GF.Sfx.beep({ freq: 600, dur: 0.1, type: 'triangle', vol: 0.2 });
+        game.win({ message: `Secured ${this.salvagedComponent}!` });
+        break;
+      case 'DISMANTLE':
+        playScene.player.repair(50);
+        game.addScore(10);
+        GF.Sfx.beep({ freq: 300, dur: 0.1, type: 'sawtooth', vol: 0.2 });
+        game.win({ message: `Dismantled ${this.salvagedComponent} for repairs!` });
+        break;
+    }
+  },
+  draw(ctx) {
+    drawBackground(ctx, game.W, game.H, game.dt);
+    ctx.fillStyle = 'rgba(16,16,16,0.8)';
+    ctx.fillRect(0, 0, game.W, game.H);
+
+    GF.Draw.text(ctx, 'SALVAGE OPPORTUNITY!', game.W / 2, game.H / 2 - 100, { size: 40, color: PALETTE[3] });
+    GF.Draw.text(ctx, `You found a ${this.salvagedComponent}!`, game.W / 2, game.H / 2 - 40, { size: 28, color: PALETTE[0] });
+
+    const btnWidth = 180;
+    const btnHeight = 40;
+    const btnPadding = 20;
+
+    let btn1X = game.W / 2 - btnWidth / 2 - btnPadding - btnWidth / 2;
+    let btn1Y = game.H / 2 + 50;
+    GF.Draw.roundRect(ctx, btn1X, btn1Y, btnWidth, btnHeight, 5, PALETTE[1]);
+    GF.Draw.text(ctx, 'I: INSTALL (+HP)', btn1X + btnWidth / 2, btn1Y + btnHeight / 2, { size: 20, color: '#fff' });
+
+    let btn2X = game.W / 2 - btnWidth / 2 + btnPadding + btnWidth / 2;
+    let btn2Y = game.H / 2 + 50;
+    GF.Draw.roundRect(ctx, btn2X, btn2Y, btnWidth, btnHeight, 5, PALETTE[1]);
+    GF.Draw.text(ctx, 'S: SECURE (+Score)', btn2X + btnWidth / 2, btn2Y + btnHeight / 2, { size: 20, color: '#fff' });
+
+    let btn3X = game.W / 2 - btnWidth / 2;
+    let btn3Y = game.H / 2 + 100;
+    GF.Draw.roundRect(ctx, btn3X, btn3Y, btnWidth, btnHeight, 5, PALETTE[1]);
+    GF.Draw.text(ctx, 'D: DISMANTLE (++HP)', btn3X + btnWidth / 2, btn3Y + btnHeight / 2, { size: 20, color: '#fff' });
+
+    GF.Draw.text(ctx, `Time: ${this.decisionTimer.toFixed(1)}s`, game.W / 2, game.H - 40, { size: 18, color: PALETTE[4] });
+  }
+};
+
+game = new GF.Game({
+  id: 'core-awakenings-salvage',
+  title: 'Core Awakening: Salvage',
+  width: 960,
+  height: 540,
+  palette: PALETTE,
+  background: PALETTE[6]
+});
+
+game.add('play', playScene);
+game.add('salvage', salvageScene);
+
+game.titleScreen({
+  subtitle: 'WASD/Arrows to move, Space to dodge, Mouse to aim & click to attack subsystems!\nPress any key to start.',
+  onStart: () => {
+    game.go('play');
+    playScene.startMusic();
+  }
+});
+</script>
+</body>
+</html>

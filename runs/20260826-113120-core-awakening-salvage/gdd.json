@@ -1,0 +1,93 @@
+{
+  "title": "Core Awakening: Salvage",
+  "tagline": "Rebuild your identity, one salvaged component at a time.",
+  "genre": "action",
+  "pitch": "As a nascent AI core within a modular mech, players delve into fallen Titan bodies. Engage in tactical arena combat, dismantle enemies subsystem by subsystem, and salvage components to rebuild your mech and uncover your past.",
+  "coreLoop": "Dodge and disrupt enemy attacks, strategically target and destroy enemy subsystems, salvage components, and make crucial decisions to enhance your mech or secure loot.",
+  "mechanics": [
+    {
+      "name": "Subsystem Targeting",
+      "description": "Players can target specific enemy subsystems (e.g., weapon, locomotion, power core) to disable their functions. The order of destruction influences salvaged components."
+    },
+    {
+      "name": "Component Salvage & Decision",
+      "description": "Upon defeating an enemy, specific components can be salvaged. Players choose to INSTALL immediately for an instant effect, SECURE for end-of-run rewards, or DISMANTLE for emergency repairs."
+    },
+    {
+      "name": "Telegraphed Attacks",
+      "description": "Enemies clearly indicate their attack intent with visible telegraphs (e.g., red-orange zones), allowing players to evade or interrupt."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD/Arrow keys for movement, Spacebar for dodge/special action.",
+    "mouse": "Aiming and targeting subsystems, Left-click to fire/interact, Right-click for secondary action/menu."
+  },
+  "artDirection": {
+    "mood": "brutalist arcade, cold industrial, emergent vitality",
+    "palette": [
+      "#00FFFF",
+      "#008080",
+      "#FF4500",
+      "#FFD700",
+      "#808080",
+      "#303030",
+      "#101010"
+    ],
+    "shapes": "geometric",
+    "backgroundFx": "Slowly panning and pulsing industrial machinery silhouettes, subtle grid lines, occasional power surges."
+  },
+  "audioDirection": {
+    "musicMood": "minimalist synth, pulsing, industrial ambience with sudden percussive bursts during combat",
+    "sfx": [
+      "mech_move_step",
+      "mech_impact_light",
+      "mech_impact_heavy",
+      "enemy_telegraph_charge",
+      "enemy_projectile_fire",
+      "enemy_subsystem_hit",
+      "enemy_subsystem_destroy",
+      "enemy_explosion_final",
+      "salvage_pickup",
+      "decision_install",
+      "decision_secure",
+      "decision_dismantle",
+      "ui_click",
+      "ui_confirm",
+      "hp_regen"
+    ]
+  },
+  "difficulty": {
+    "start": "One simple enemy with clear telegraphs and easily targetable subsystems, allowing for strategic choices without overwhelming the player.",
+    "progression": "The enemy's attack patterns become slightly more complex, requiring more precise dodging or timely interruptions to preserve high-value subsystems.",
+    "peak": "The single enemy archetype demands near-perfect execution to secure its most valuable component, pushing players to master evasion, timing, and targeting."
+  },
+  "winLose": {
+    "win": "Player successfully defeats the enemy, salvages a component, and reaches the 'extraction' prompt, securing the component for the run. This is a partial victory within the scope of the proof.",
+    "lose": "Mech's core integrity reaches zero, or player fails to make a decision within a set time limit during the salvage phase."
+  },
+  "juice": {
+    "screenShake": "On mech taking heavy damage, on enemy subsystem destruction, on final enemy explosion.",
+    "particles": "Sparks and shrapnel on mech hit, large burst of energy particles on subsystem destruction, cascading debris on enemy defeat, small 'power' particles on HP repair/component install.",
+    "hitStop": "Brief pause on enemy subsystem destruction, on player taking heavy damage.",
+    "flash": "White flash on player damage, bright color flash (e.g., green for HP gain, blue for shield proc, amber for critical hit) on specific interactions, subsystem outline flash on targeting."
+  },
+  "scopeNotes": "Explicitly out of scope for this vertical slice: multiple enemy types, additional arena rooms, comprehensive inventory system, meta-progression, narrative beyond initial flavor text. Focus exclusively on the single-enemy, single-room core combat and salvage loop.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing",
+      "salvage_decision",
+      "end_screen_extracted",
+      "end_screen_lost"
+    ],
+    "scoreEvents": [
+      "player_damage_taken_penalty",
+      "enemy_subsystem_hit_score",
+      "enemy_subsystem_destroyed_score",
+      "enemy_defeated_score",
+      "component_secured_score_multiplier",
+      "component_installed_score_bonus",
+      "hp_restored_score_bonus"
+    ]
+  }
+}

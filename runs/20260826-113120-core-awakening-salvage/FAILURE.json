@@ -1,0 +1,18 @@
+{
+  "reason": "audit_rejected",
+  "closedAt": "2026-08-26T11:37:59.732Z",
+  "cost": {
+    "costUsd": 0.2237,
+    "tokens": 218556
+  },
+  "audit": {
+    "verdict": "FAIL",
+    "findings": [
+      {
+        "severity": "HIGH",
+        "note": "Playtest overall score (1) is below the required gate (7)."
+      }
+    ],
+    "summary": "The production run failed due to the final playtest score not meeting the required gate. All technical checks passed, and the budget was not exceeded. Further iteration is needed to improve the game's quality."
+  }
+}
