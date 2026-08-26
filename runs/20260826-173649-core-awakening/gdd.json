@@ -1,0 +1,71 @@
+{
+  "title": "Core Awakening",
+  "tagline": "Rebuild your identity from the wreckage of fallen Titans.",
+  "genre": "action",
+  "pitch": "As the last remnant of a Titan AI, players navigate a compact modular mech to tactically dismantle enemies and recover valuable components. Each battle is a strategic puzzle where every decision impacts your survival and power.",
+  "coreLoop": "Players read enemy attack intents, dodge or intercept, target subsystems, and dismantle foes for salvage. Every victory brings a meaningful choice to install, secure, or dismantle components.",
+  "mechanics": [
+    {
+      "name": "Read and Evade",
+      "description": "Players interpret clear enemy telegraphs to dodge or interrupt attacks, maintaining control of the flow of battle."
+    },
+    {
+      "name": "Subsystem Targeting",
+      "description": "Combat allows targeting of specific enemy subsystems to destroy or preserve them for salvage."
+    },
+    {
+      "name": "Three-Way Decision Making",
+      "description": "After defeating an enemy, players must choose between installing, securing, or dismantling a salvaged component, each with distinct immediate effects."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD for movement, mouse for aiming and targeting",
+    "mouse": "Click to target and interact",
+    "touch": "optional"
+  },
+  "artDirection": {
+    "mood": "stylized isometric sci-fi",
+    "palette": [
+      "#0A4D68",
+      "#3E7C9D",
+      "#FFC93C",
+      "#FF6A13"
+    ],
+    "shapes": "clean vector shapes",
+    "backgroundFx": "large silhouettes of machinery add depth and context"
+  },
+  "audioDirection": {
+    "musicMood": "tense and atmospheric with mechanical undertones",
+    "sfx": [
+      "dodge",
+      "enemy hit",
+      "component salvage",
+      "decision prompt"
+    ]
+  },
+  "difficulty": {
+    "start": "simple enemy attack patterns make initial encounters manageable",
+    "progression": "enemy attacks become more complex, requiring sharper reflexes and tactical decisions",
+    "peak": "the challenge culminates in a tense decision-making moment after a tough battle"
+  },
+  "winLose": {
+    "win": "successfully extract salvaged components after a battle",
+    "lose": "defeated by the enemy before making a salvage decision"
+  },
+  "juice": {
+    "screenShake": "upon enemy defeat",
+    "particles": "when a component is salvaged",
+    "hitStop": "when sustaining significant damage",
+    "flash": "when a subsystem is destroyed or preserved"
+  },
+  "scopeNotes": "Do not implement procedural dungeons, economy/shop systems, multiple enemy types, bosses, inventory management, upgrades between runs, narrative scenes beyond one line of flavor text, or save systems.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing"
+    ],
+    "scoreEvents": [
+      "score increases when an enemy is defeated and when components are salvaged"
+    ]
+  }
+}
