@@ -255,7 +255,7 @@
       this.shakeDur = 0;
       this.flashAlpha = 0;
       this.flashColor = '#ffffff';
-      this.hitStop = 0;
+      this._hitStopRemaining = 0;
       this._fpsFrames = 0;
       this._fpsTime = 0;
       this.fps = 60;
@@ -376,7 +376,7 @@
       this.particles.emit(x, y, opts);
     }
     hitStop(dur = 0.06) {
-      this.hitStop = Math.max(this.hitStop, dur);
+      this._hitStopRemaining = Math.max(this._hitStopRemaining, dur);
     }
     gameOver({ message = 'GAME OVER' } = {}) {
       if (this.state !== 'playing') return;
@@ -408,8 +408,8 @@
       if (this.shakeDur > 0) this.shakeDur -= dtRaw;
       if (this.flashAlpha > 0) this.flashAlpha = Math.max(0, this.flashAlpha - dtRaw * 2.5);
       if (this.state !== 'playing') return;
-      if (this.hitStop > 0) {
-        this.hitStop -= dtRaw;
+      if (this._hitStopRemaining > 0) {
+        this._hitStopRemaining -= dtRaw;
         return;
       }
       const dt = Math.min(dtRaw, 1 / 20);
