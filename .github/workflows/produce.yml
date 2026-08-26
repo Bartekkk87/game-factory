@@ -12,7 +12,7 @@ on:
         required: false
         default: '10'
       provider:
-        description: 'LLM Provider (openai | openrouter | googleai | huggingface)'
+        description: 'LLM Provider'
         required: false
         default: 'openai'
         type: choice
@@ -32,6 +32,7 @@ jobs:
     timeout-minutes: 60
     permissions:
       contents: write
+      issues: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,7 +40,18 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
+
+      - name: Check API configuration
+        env:
+          GF_LLM_API_KEY: ${{ secrets.GF_LLM_API_KEY }}
+          GF_LLM_PROVIDER: ${{ github.event.inputs.provider || 'openai' }}
+        run: |
+          if [ -z "$GF_LLM_API_KEY" ]; then
+            echo "GF_LLM_API_KEY is missing in repository secrets" >&2
+            exit 1
+          fi
+          echo "Using provider: $GF_LLM_PROVIDER"
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
@@ -74,8 +86,6 @@ jobs:
       - name: Run production pipeline
         env:
           GF_LLM_API_KEY: ${{ secrets.GF_LLM_API_KEY }}
-          GF_LLM_BASE_URL: ${{ vars.GF_LLM_BASE_URL }}
-          GF_MODEL: ${{ vars.GF_MODEL }}
           GF_LLM_PROVIDER: ${{ github.event.inputs.provider || 'openai' }}
           IDEA_B64: ${{ steps.prep.outputs.IDEA_B64 }}
           BUDGET: ${{ github.event.inputs.budget_usd || '10' }}
@@ -87,11 +97,11 @@ jobs:
         id: meta
         if: success()
         run: |
-          SLUG=$(ls -t drafts | head -n 1)
+          SLUG=$(ls -t drafts | head -n1)
           echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
           echo "title=$(jq -r .title "drafts/$SLUG/meta.json")" >> "$GITHUB_OUTPUT"
 
-      - name: Commit results & evidence
+      - name: Commit results and evidence
         if: always()
         run: |
           git config user.name "game-factory-bot"
