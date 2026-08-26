@@ -12,17 +12,10 @@ export function costReport() {
   return { costUsd: Math.round(totalCostUsd * 10000) / 10000, tokens: totalTokens };
 }
 
-export async function chat({
-  role = 'engineer',
-  system,
-  user,
-  images = [],
-  json = false,
-  temperature = 0.7,
-  maxTokens = 8192
-}) {
-  if (!LLM.apiKey) throw new LlmError('GF_LLM_API_KEY is not set');
-  const model = LLM.models[role] || LLM.defaultModel;
+// Provider-specific request builders. All return {url, headers, body}.
+// Each provider speaks the OpenAI /chat/completions schema (Google AI Studio
+// exposes an OpenAI-compatible endpoint, HF Router is OpenAI-compatible too).
+function buildRequest({ model, system, user, images, json, temperature, maxTokens }) {
   const content = [{ type: 'text', text: user }];
   for (const img of images) {
     content.push({ type: 'image_url', image_url: { url: img } });
@@ -38,19 +31,54 @@ export async function chat({
   };
   if (json) body.response_format = { type: 'json_object' };
 
+  const headers = {
+    'content-type': 'application/json'
+  };
+
+  // Provider-specific auth + optional extra headers
+  switch (LLM.provider) {
+    case 'openrouter':
+      headers['authorization'] = `Bearer ${LLM.apiKey}`;
+      headers['http-referer'] = 'https://github.com/game-factory';
+      headers['x-title'] = 'Game Factory';
+      break;
+    case 'googleai':
+      // Google AI Studio OpenAI-compat endpoint accepts the key as Bearer token
+      headers['authorization'] = `Bearer ${LLM.apiKey}`;
+      break;
+    case 'huggingface':
+      headers['authorization'] = `Bearer ${LLM.apiKey}`;
+      break;
+    case 'openai':
+    default:
+      headers['authorization'] = `Bearer ${LLM.apiKey}`;
+      break;
+  }
+
+  return {
+    url: `${LLM.baseUrl}/chat/completions`,
+    headers,
+    body: JSON.stringify(body)
+  };
+}
+
+export async function chat({
+  role = 'engineer',
+  system,
+  user,
+  images = [],
+  json = false,
+  temperature = 0.7,
+  maxTokens = 8192
+}) {
+  if (!LLM.apiKey) throw new LlmError('GF_LLM_API_KEY is not set');
+  const model = LLM.models[role] || LLM.defaultModel;
+
   let lastErr;
   for (let attempt = 1; attempt <= 4; attempt++) {
     try {
-      const res = await fetch(`${LLM.baseUrl}/chat/completions`, {
-        method: 'POST',
-        headers: {
-          authorization: `Bearer ${LLM.apiKey}`,
-          'content-type': 'application/json',
-          'http-referer': 'https://github.com/game-factory',
-          'x-title': 'Game Factory'
-        },
-        body: JSON.stringify(body)
-      });
+      const { url, headers, body } = buildRequest({ model, system, user, images, json, temperature, maxTokens });
+      const res = await fetch(url, { method: 'POST', headers, body });
       if (!res.ok) {
         const t = await res.text();
         const err = new LlmError(`HTTP ${res.status}: ${t.slice(0, 400)}`);
@@ -63,7 +91,7 @@ export async function chat({
       if (typeof usage.cost === 'number') totalCostUsd += usage.cost;
       const msg = data.choices?.[0]?.message?.content ?? '';
       if (!msg.trim()) throw new LlmError('Empty completion');
-      log.info(`[llm:${role}] model=${model} tokens=${usage.total_tokens ?? '?'}`);
+      log.info(`[llm:${role}] provider=${LLM.provider} model=${model} tokens=${usage.total_tokens ?? '?'}`);
       return { text: msg, usage, model };
     } catch (e) {
       lastErr = e;
