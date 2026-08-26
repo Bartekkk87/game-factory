@@ -87,6 +87,7 @@ jobs:
         env:
           GF_LLM_API_KEY: ${{ secrets.GF_LLM_API_KEY }}
           GF_LLM_PROVIDER: ${{ github.event.inputs.provider || 'openai' }}
+          GF_MAX_POLISH_ROUNDS: '3'
           IDEA_B64: ${{ steps.prep.outputs.IDEA_B64 }}
           BUDGET: ${{ github.event.inputs.budget_usd || '10' }}
         run: |
