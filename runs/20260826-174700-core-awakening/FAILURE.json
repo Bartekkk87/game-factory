@@ -1,0 +1,18 @@
+{
+  "reason": "audit_rejected",
+  "closedAt": "2026-08-26T17:49:42.049Z",
+  "cost": {
+    "costUsd": 0,
+    "tokens": 337801
+  },
+  "audit": {
+    "verdict": "FAIL",
+    "findings": [
+      {
+        "severity": "HIGH",
+        "note": "Budget was not exceeded, but the overall playtest score (6.5) is below the score gate (7)."
+      }
+    ],
+    "summary": "The production run for 'Core Awakening' has failed due to the overall playtest score not meeting the required gate. All technical checks passed, but the insufficient playtest score indicates a quality issue."
+  }
+}

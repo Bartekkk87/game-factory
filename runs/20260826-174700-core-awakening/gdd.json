@@ -1,0 +1,70 @@
+{
+  "title": "Core Awakening",
+  "tagline": "Rebuild your identity from the remains of fallen Titans.",
+  "genre": "action",
+  "pitch": "Dive into real-time tactical combat as a surviving Titan core, maneuvering a mech to dismantle enemies and salvage components. Your choices define your power and identity in a cold yet vibrant Titan interior.",
+  "coreLoop": "Players read enemy intentions, evade or interrupt attacks, target subsystems for dismantling, and make critical decisions on salvaged components to enhance their capabilities.",
+  "mechanics": [
+    {
+      "name": "Read and Evade",
+      "description": "Players must observe enemy telegraphs and react by dodging or interrupting their attacks in real-time."
+    },
+    {
+      "name": "Subsystem Targeting",
+      "description": "Players can choose which subsystem of an enemy to target, affecting the outcome of the combat and the types of components that can be salvaged."
+    },
+    {
+      "name": "Dismantle and Decide",
+      "description": "After defeating an enemy, players face a three-way decision to install, secure, or dismantle salvageable components for various benefits."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD for movement, E for interaction",
+    "mouse": "Aim with mouse, click to target and activate decisions",
+    "touch": "optional"
+  },
+  "artDirection": {
+    "mood": "stylized isometric",
+    "palette": [
+      "#00FFFF",
+      "#FFA500",
+      "#808080",
+      "#FFD700"
+    ],
+    "shapes": "smooth-vector",
+    "backgroundFx": "silhouetted background machinery echoing the Titan interior"
+  },
+  "audioDirection": {
+    "musicMood": "ambient futuristic with mechanical undertones",
+    "sfx": [
+      "dodge",
+      "dismantle",
+      "component install"
+    ]
+  },
+  "difficulty": {
+    "start": "Introduction of a single enemy with simple attack patterns.",
+    "progression": "Enemies become slightly more complex with varied attack patterns, but manageable.",
+    "peak": "Players face a critical moment where their choices significantly affect combat difficulty."
+  },
+  "winLose": {
+    "win": "Secure enough components and extract successfully from the arena.",
+    "lose": "Failing to outmaneuver the enemy leads to defeat and loss of salvage."
+  },
+  "juice": {
+    "screenShake": "when dodging significant enemy attacks or during dismantling",
+    "particles": "when dismantling an enemy or installing a component",
+    "hitStop": "when an enemy is defeated",
+    "flash": "when a subsystem is successfully preserved for salvage"
+  },
+  "scopeNotes": "Do NOT build procedural dungeons, economy/shop, multiple enemy types, bosses, inventory management, crafting, upgrades between runs, narrative scenes, or save systems.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing"
+    ],
+    "scoreEvents": [
+      "score increases from successful evasion, subsystem targeting, component installation, and extraction outcomes"
+    ]
+  }
+}
