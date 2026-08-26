@@ -73,7 +73,12 @@ export async function buildGame({ gdd }) {
     '7. Do NOT rely on engine HUD (score text) for visibility - that only draws in "playing" state.',
     '8. Auto-play logic for probe goes in Scene.update(dt), NOT in draw().',
     '9. game.hitStop(dur) is a METHOD. Call it: game.hitStop(0.1). NEVER assign: game.hitStop = 0.1 (THIS BREAKS).',
-    '10. If you add a "salvage" or similar scene, it MUST have a draw() that renders visible content.'
+    '10. If you add a "salvage" or similar scene, it MUST have a draw() that renders visible content.',
+    '11. QUALITY GATE: target at least 7/10. A flat background with a few rectangles will fail.',
+    '12. Draw at least three environmental layers: base, patterned structure and animated detail.',
+    '13. Add a framed HUD with labeled health, score, objective and concise controls.',
+    '14. Use distinct silhouettes, outlines or glows, telegraphs, impact particles and screen feedback.',
+    '15. Implement the GDD core hook visibly; do not replace it with a generic dodge/shooter loop.'
   ].join('\n');
 
   const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.35, maxTokens: 16000 });
@@ -120,6 +125,10 @@ export async function polishGame({ gdd, design, playtest }) {
     '=== TASK ===',
     'POLISH MODE: The game works technically but the visual/experience review demands improvements.',
     'Apply the priorityFixes and address the critique while keeping all mechanics working.',
+    'Every priorityFix is mandatory and must cause an obvious screenshot-visible change.',
+    'Replace sparse flat scenes with layered environmental art, animated detail and strong composition.',
+    'Add framed HUD panels, labels, objective/control guidance, outlines, telegraphs and impact feedback.',
+    'Preserve and visibly emphasize the GDD core mechanic instead of simplifying to generic gameplay.',
     'Return the FULL corrected JSON (title/css/html/js).',
     '',
     '=== PLAYTEST REVIEW ===',
