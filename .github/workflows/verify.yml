@@ -1,0 +1,35 @@
+name: Verifier Selftest
+
+on:
+  push:
+    paths:
+      - 'engine/**'
+      - 'examples/**'
+      - 'factory/src/verify/**'
+      - 'factory/src/config.mjs'
+      - 'package.json'
+      - '.github/workflows/verify.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Prove verifier accepts good and rejects bad products
+        run: npm run test:verifier
