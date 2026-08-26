@@ -47,7 +47,19 @@ export async function buildGame({ gdd }) {
     JSON.stringify(gdd, null, 2),
     '',
     '=== MICRO-ENGINE SOURCE (injected automatically before your js - do NOT repeat it) ===',
-    engineSource()
+    engineSource(),
+    '',
+    '=== CRITICAL RENDERING RULES (violation = black screenshots = FAIL) ===',
+    '1. Scene.draw(ctx) receives ONLY ctx (canvas 2D context). Do NOT use game.dt, game.time, or any game.* inside draw().',
+    '2. Draw EVERY frame: background, all entities, particles, UI. The verifier takes screenshots mid-play.',
+    '3. Use ONLY Canvas 2D APIs that work in headless Chromium: NO ctx.filter (blur), NO CSS filters, NO offscreenCanvas.',
+    '4. Background must be drawn in Scene.draw (engine clears with game.background, then calls scene.draw).',
+    '5. Colors must contrast with background (engine background = game.background from constructor).',
+    '6. Player/enemy/projectile draw() methods must actually call ctx.fill/stroke with visible colors.',
+    '7. Do NOT rely on engine HUD (score text) for visibility - that only draws in "playing" state.',
+    '8. Auto-play logic for probe goes in Scene.update(dt), NOT in draw().',
+    '9. game.hitStop(dur) is a METHOD, not a property. Use game.hitStop(0.1) not game.hitStop = 0.1.',
+    '10. If you add a "salvage" or similar scene, it MUST have a draw() that renders visible content.'
   ].join('\n');
 
   const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.8, maxTokens: 32000 });
@@ -60,9 +72,14 @@ export async function repairGame({ gdd, design, failureSummary }) {
     'REPAIR MODE: The previous attempt failed automated verification.',
     'Fix exactly the listed failures while preserving everything that worked.',
     'IMPORTANT: Do NOT return the previous code unchanged or near-unchanged.',
-    'You must actually modify js/css/html so that every listed check passes.',
+    'You MUST actually modify js/css/html so that every listed check passes.',
     'If a check measures score increase via simulated input, make sure the game',
     'auto-plays/responds to keyboard+mouse events and the __GF__ probe reports state=playing and a rising score.',
+    'VISUAL RENDERING: The playtester saw BLACK screenshots. Ensure Scene.draw(ctx) draws visible content:',
+    '- Draw background (gradient/shapes) every frame',
+    '- Draw player, enemies, projectiles, particles with contrasting colors',
+    '- Do NOT use ctx.filter, CSS filters, or game.dt in draw()',
+    '- game.hitStop() is a METHOD (call it), not a property',
     'Return the FULL corrected JSON (title/css/html/js).',
     '',
     '=== FAILURE EVIDENCE ===',
