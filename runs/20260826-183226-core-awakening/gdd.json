@@ -1,0 +1,71 @@
+{
+  "title": "Core Awakening",
+  "tagline": "Rebuild yourself piece by piece in a tactical salvage battle.",
+  "genre": "action",
+  "pitch": "As a fragmented Titan AI, you must navigate a compact arena, tactically dismantling enemies to salvage components that enhance your mech and identity. Each choice affects your survival and strategic approach, creating a thrilling real-time combat experience.",
+  "coreLoop": "Read enemy attack patterns, dodge or interrupt, strategically target subsystems, defeat the enemy while preserving valuable components, and make decisions on how to use your salvage.",
+  "mechanics": [
+    {
+      "name": "Tactical Dismantling",
+      "description": "Defeating enemies through targeted attacks generates salvaged components that lead to immediate strategic decisions."
+    },
+    {
+      "name": "Subsystem Targeting",
+      "description": "Players can aim at specific parts of the enemy, changing the outcome of the battle based on which subsystem is destroyed or preserved."
+    },
+    {
+      "name": "Three-Way Decision",
+      "description": "After defeating an enemy, players must choose to install, secure, or dismantle the salvaged component, each with distinct consequences."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD for movement, mouse for aiming and targeting",
+    "mouse": "Left-click to attack, right-click to evade/interrupt"
+  },
+  "artDirection": {
+    "mood": "stylized isometric sci-fi",
+    "palette": [
+      "#00BFFF",
+      "#C0C0C0",
+      "#FFA500",
+      "#FF4500"
+    ],
+    "shapes": "clean vector shapes",
+    "backgroundFx": "large machinery silhouettes subtly moving in the background"
+  },
+  "audioDirection": {
+    "musicMood": "suspenseful and technological atmosphere",
+    "sfx": [
+      "swing",
+      "impact",
+      "component drop",
+      "decision prompt"
+    ]
+  },
+  "difficulty": {
+    "start": "basic enemy attacks with clear telegraphs",
+    "progression": "introducing more complex attack patterns as players become more adept",
+    "peak": "multiple decision points and intense enemy behavior toward the end of the 60 seconds"
+  },
+  "winLose": {
+    "win": "successfully extracting with salvaged components",
+    "lose": "failure to defeat the enemy resulting in a loss of the core integrity"
+  },
+  "juice": {
+    "screenShake": "upon impact when attacking or defeated enemy",
+    "particles": "when components are salvaged or destroyed",
+    "hitStop": "when a successful interrupt is performed",
+    "flash": "when making a crucial decision after battle"
+  },
+  "scopeNotes": "Do not build procedural dungeons, economy/shop systems, multiple enemy types, bosses, inventory management, upgrades between runs, narrative scenes beyond one line of text, or save systems beyond engine defaults.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing",
+      "end"
+    ],
+    "scoreEvents": [
+      "score increases when an enemy is dismantled, when a subsystem is targeted, and when a decision is made post-battle"
+    ]
+  }
+}
