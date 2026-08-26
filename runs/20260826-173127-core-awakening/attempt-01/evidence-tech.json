@@ -1,0 +1,106 @@
+{
+  "attempt": 1,
+  "candidateSha": "af62309b2789b182f6e8b753f907262b3c7331539bf6da5b2cc4901d3a49cbf4",
+  "fps": 61,
+  "states": {
+    "mid": {
+      "state": "playing",
+      "score": 0,
+      "best": 0,
+      "fps": 60,
+      "time": 3.533199999999997,
+      "flags": [],
+      "errors": [
+        "Uncaught ReferenceError: rand is not defined"
+      ]
+    },
+    "end": {
+      "state": "playing",
+      "score": 0,
+      "best": 0,
+      "fps": 60,
+      "time": 12.01619999999998,
+      "flags": [],
+      "errors": [
+        "Uncaught ReferenceError: rand is not defined"
+      ]
+    }
+  },
+  "contract": {
+    "passed": false,
+    "checks": [
+      {
+        "id": "probe_present",
+        "label": "Test-Hook __GF__ vorhanden",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": false,
+        "detail": "pageerror: rand is not defined | pageerror: rand is not defined | pageerror: rand is not defined | pageerror: rand is not defined | pageerror: rand is not defined"
+      },
+      {
+        "id": "assets_ok",
+        "label": "Alle Assets geladen",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "started_playing",
+        "label": "Spiel verlässt den Titelbildschirm",
+        "pass": true,
+        "detail": "endState=playing"
+      },
+      {
+        "id": "interactivity",
+        "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+        "pass": false,
+        "detail": "score 0 -> 0, states playing->playing"
+      },
+      {
+        "id": "fps_ok",
+        "label": "Performance >= 30 FPS",
+        "pass": true,
+        "detail": "fps=61"
+      },
+      {
+        "id": "visual_content",
+        "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+        "pass": true,
+        "detail": "shot-2-gameplay: VISIBLE (100% diff) | shot-3-gameplay: VISIBLE (100% diff)"
+      }
+    ],
+    "failures": [
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": false,
+        "detail": "pageerror: rand is not defined | pageerror: rand is not defined | pageerror: rand is not defined | pageerror: rand is not defined | pageerror: rand is not defined"
+      },
+      {
+        "id": "interactivity",
+        "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+        "pass": false,
+        "detail": "score 0 -> 0, states playing->playing"
+      }
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [
+    "rand is not defined",
+    "rand is not defined",
+    "rand is not defined",
+    "rand is not defined",
+    "rand is not defined",
+    "rand is not defined",
+    "rand is not defined",
+    "rand is not defined",
+    "rand is not defined",
+    "rand is not defined"
+  ],
+  "probeErrors": [
+    "Uncaught ReferenceError: rand is not defined"
+  ]
+}

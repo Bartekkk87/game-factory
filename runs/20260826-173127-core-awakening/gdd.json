@@ -1,0 +1,72 @@
+{
+  "title": "Core Awakening",
+  "tagline": "Rebuild yourself from the remnants of fallen Titans.",
+  "genre": "action",
+  "pitch": "As the core of a shattered Titan AI, you navigate a compact mech in a tactical arena, dismantling enemies to salvage vital components and unlock new abilities. Every choice affects your survival and identity, compelling you to rethink how you engage in combat.",
+  "coreLoop": "Read attack patterns, evade or interrupt enemy strikes, target subsystems for strategic dismantling, and make crucial decisions about salvaged components.",
+  "mechanics": [
+    {
+      "name": "Read & Evade",
+      "description": "Identify enemy attack intents based on telegraphed movements and evade or interrupt their strikes in real-time."
+    },
+    {
+      "name": "Subsystem Targeting",
+      "description": "Aim at specific enemy subsystems to dismantle them, affecting the battle's outcome and what loot can be salvaged."
+    },
+    {
+      "name": "Three-Way Decision",
+      "description": "After defeating an enemy, choose to install a component, secure it for extraction, or dismantle it for repair value."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD for movement, mouse for aiming and targeting",
+    "mouse": "Left click to interact and attack",
+    "touch": "optional"
+  },
+  "artDirection": {
+    "mood": "futuristic salvage",
+    "palette": [
+      "#00B2D2",
+      "#C0C0C0",
+      "#FFAA00",
+      "#FF5000"
+    ],
+    "shapes": "clean-vector",
+    "backgroundFx": "large machinery silhouettes slowly shifting"
+  },
+  "audioDirection": {
+    "musicMood": "tense and atmospheric, building anticipation",
+    "sfx": [
+      "dodge",
+      "impact",
+      "salvage"
+    ]
+  },
+  "difficulty": {
+    "start": "easy to understand enemy patterns, simple dodging mechanics",
+    "progression": "enemy attacks become more complex and require quicker reaction times",
+    "peak": "challenging yet fair mechanics that encourage strategic thinking and skillful dodges"
+  },
+  "winLose": {
+    "win": "Defeat the enemy and make a strategic decision about the salvaged component.",
+    "lose": "Failing to evade or interrupt attacks leads to mech destruction."
+  },
+  "juice": {
+    "screenShake": "upon a successful hit or dodging a significant enemy attack",
+    "particles": "when an enemy subsystem is dismantled or looted",
+    "hitStop": "when an attack connects with the mech",
+    "flash": "when a critical decision is made on salvaging components"
+  },
+  "scopeNotes": "No procedural dungeons, economy/shop, multiple enemy types, bosses, inventory management, crafting, narrative scenes, or save systems beyond engine defaults.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing",
+      "game over",
+      "outcome"
+    ],
+    "scoreEvents": [
+      "score increases with each successful evasion, subsystem targeted, and enemy dismantled"
+    ]
+  }
+}
