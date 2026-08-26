@@ -59,7 +59,7 @@ Das System unterstützt dynamische Provider-Auswahl:
 | `googleai` | `gemini-1.5-flash` | `generativelanguage.googleapis.com/v1beta/openai` |
 | `huggingface` | `meta-llama/Llama-3.3-70B-Instruct` | `router.huggingface.co/v1` |
 
-**Fallback-Kette:** `openai` → `googleai` → `huggingface` → `openrouter`
+**Fehlerbehandlung:** Requests werden mit Backoff beim ausgewählten Provider wiederholt. Ein automatischer Wechsel zwischen Providern findet nicht statt, weil jeder Provider eigene Zugangsdaten benötigt.
 
 ## Ideen einreichen
 
@@ -73,7 +73,7 @@ Das System unterstützt dynamische Provider-Auswahl:
 | `GF_LLM_API_KEY` | – (Pflicht) | API-Key des Providers |
 | `GF_LLM_PROVIDER` | `openai` | Provider: openai/openrouter/googleai/huggingface |
 | `GF_MODEL` | providerabhängig | Modell für alle Rollen |
-| `GF_MODEL_ENGINEER` | `GF_MODEL` | Override: Engineer nutzt gpt-4o |
+| `GF_MODEL_ENGINEER` | `GF_MODEL` | Optionaler Modell-Override für den Engineer |
 | `GF_MIN_SCORE` | `6.5` | Playtest-Score-Gate (0–10) |
 | `GF_MAX_DEBUG_ROUNDS` | `4` | max. automatische Reparaturrunden |
 | `GF_MAX_POLISH_ROUNDS` | `3` | max. visuelle Polish-Runden |
@@ -83,9 +83,10 @@ Das System unterstützt dynamische Provider-Auswahl:
 
 | Posten | Kosten |
 |---|---|
-| GitHub Actions + Chain (öffentliche Repo) | 0 € |
-| LLM-API mit gpt-4o-mini | ~$0.50–2 pro Spiel |
-| LLM-API mit gpt-4o (Engineer) | ~$0.30–1 pro Spiel |
+| GitHub Actions + Pages (öffentliches Repo) | innerhalb der GitHub-Free-Regeln 0 € |
+| LLM-Inferenz | provider-, modell- und laufabhängig; lange Repair-Loops können deutlich teurer werden |
+
+> `GF_BUDGET_USD` kann nur dann als hartes Dollar-Limit wirken, wenn der Provider Kosten in der Usage-Antwort liefert. Bis eine providerunabhängige Preiskalkulation implementiert ist, muss zusätzlich ein Spend-Limit beim Provider gesetzt werden.
 
 ## Die Lernschleife
 

@@ -20,7 +20,8 @@ export function serveDir(rootDir) {
     let urlPath = decodeURIComponent((req.url || '/').split('?')[0]);
     if (urlPath.endsWith('/')) urlPath += 'index.html';
     const file = path.normalize(path.join(root, urlPath));
-    if (!file.startsWith(root)) {
+    const relative = path.relative(root, file);
+    if (relative.startsWith('..') || path.isAbsolute(relative)) {
       res.writeHead(403);
       return res.end('forbidden');
     }

@@ -8,7 +8,7 @@ bis zum veröffentlichten Spiel, mit Human-in-the-Loop-Freigabe und lernendem Sy
 | Entscheidung | Wert |
 |---|---|
 | Runtime | GitHub Actions (öffentliches Repo), kein eigener Server |
-| LLM-Zugang | 4 Provider via `GF_LLM_PROVIDER`: openai, openrouter, googleai, huggingface (Fallback-Kette) |
+| LLM-Zugang | 4 explizit auswählbare Provider via `GF_LLM_PROVIDER`: openai, openrouter, googleai, huggingface; Retries beim gewählten Provider, kein automatischer Cross-Provider-Wechsel |
 | Spiele-Technologie | Eigene Micro-Engine (`engine/gf-engine.js`, Canvas + WebAudio, 0 Dependencies) |
 | Spiel-Format | Eine einzige `index.html` pro Spiel (deterministisch assembliert) |
 | Hosting | GitHub Pages (Galerie unter `/`, Drafts unter `/drafts/<name>`) |
@@ -92,7 +92,7 @@ docs/strategy/             Strategie-Dokumente des Owners (Notion-Export)
 | `GF_LLM_PROVIDER` | Provider-Auswahl | `openai` |
 | `GF_LLM_BASE_URL` | OpenAI-kompatibler Endpoint | providerabhängig |
 | `GF_MODEL` | Modell für alle Rollen | providerabhängig |
-| `GF_MODEL_ENGINEER` | Override Engineer | `gpt-4o` |
+| `GF_MODEL_ENGINEER` | Optionaler Override Engineer | `GF_MODEL` |
 | `GF_MODEL_DIRECTOR/PLAYTESTER/AUDITOR` | Override je Rolle | `GF_MODEL` |
 | `GF_BUDGET_USD` | Kostenlimit pro Spiel | `10` |
 | `GF_MIN_SCORE` | Playtest-Score-Gate (0–10) | `6.5` |
@@ -119,14 +119,14 @@ Alle Engineer-Outputs werden validiert:
 - Score muss innerhalb 4 Sekunden durch Interaktion steigen
 - Spiel muss Background + Player + Enemies pro Frame zeichnen
 
-### 3. Provider-Fallback (config.mjs:42-43)
+### 3. Provider-Auswahl (config.mjs)
 
 ```javascript
 const providerKey = env('GF_LLM_PROVIDER', 'openai').toLowerCase();
 const provider = PROVIDERS[providerKey] || PROVIDERS.openai;
 ```
 
-Fallback-Reihenfolge bei Fehler: `openai` → `googleai` → `huggingface` → `openrouter`
+Netz- und Rate-Limit-Fehler werden beim ausgewählten Provider mit Backoff wiederholt. Ein Cross-Provider-Fallback ist bewusst nicht aktiv, da dafür getrennte Zugangsdaten und eine explizite Kosten-/Modellkonfiguration erforderlich wären.
 
 ### 4. Completion-Token-Limits
 

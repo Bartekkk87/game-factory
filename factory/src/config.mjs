@@ -1,4 +1,3 @@
----
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -37,7 +36,7 @@ const providerKey = env('GF_LLM_PROVIDER', 'openai').toLowerCase();
 const provider = PROVIDERS[providerKey] || PROVIDERS.openai;
 const baseModel = env('GF_MODEL', provider.defaultModel);
 export const LLM = {
-  provider: providerKey,
+  provider: PROVIDERS[providerKey] ? providerKey : 'openai',
   baseUrl: env('GF_LLM_BASE_URL', provider.baseUrl).replace(/\/$/, ''),
   apiKey: env('GF_LLM_API_KEY', ''),
   defaultModel: baseModel,
@@ -51,7 +50,7 @@ export const LLM = {
 export const LIMITS = {
   maxDebugRounds: num('GF_MAX_DEBUG_ROUNDS', 4),
   maxPolishRounds: num('GF_MAX_POLISH_ROUNDS', 3),
-  minOverallScore: num('GF_MIN_SCORE', 5),
+  minOverallScore: num('GF_MIN_SCORE', 6.5),
   budgetUsd: num('GF_BUDGET_USD', 10),
   playSeconds: num('GF_PLAY_SECONDS', 12),
   minFps: num('GF_MIN_FPS', 30)
@@ -65,4 +64,3 @@ export const PATHS = {
   prompts: path.join(ROOT, 'factory', 'prompts'),
   engineFile: path.join(ROOT, 'engine', 'gf-engine.js')
 };
----

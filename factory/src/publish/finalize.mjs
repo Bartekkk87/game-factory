@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, PATHS } from '../config.mjs';
-import { readJson, writeJson } from '../util/fsx.mjs';
+import { readJson, writeJson, sha256 } from '../util/fsx.mjs';
 import { registerProduct, bumpStats, recordLesson } from '../memory/store.mjs';
 
 function arg(name) {
@@ -35,9 +35,18 @@ if (!['approve', 'reject'].includes(action)) throw new Error('action must be app
 const draftDir = path.join(PATHS.drafts, slug);
 const meta = readJson(path.join(draftDir, 'meta.json'));
 if (!meta) throw new Error(`no meta.json found under drafts/${slug}`);
+if (meta.status !== 'awaiting-review') throw new Error(`draft is not awaiting review: ${meta.status}`);
+
+const candidateFile = path.join(draftDir, 'index.html');
+if (!fs.existsSync(candidateFile)) throw new Error(`missing candidate: drafts/${slug}/index.html`);
+const actualSha = sha256(fs.readFileSync(candidateFile));
+if (!meta.candidateSha || actualSha !== meta.candidateSha) {
+  throw new Error(`candidate SHA mismatch for ${slug}: expected ${meta.candidateSha || 'missing'}, got ${actualSha}`);
+}
 
 if (action === 'approve') {
   const dest = path.join(PATHS.products, slug);
+  if (fs.existsSync(dest)) throw new Error(`product already exists: products/${slug}`);
   moveDir(draftDir, dest);
   meta.status = 'published';
   meta.publishedAt = new Date().toISOString();

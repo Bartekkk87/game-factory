@@ -213,6 +213,17 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     }
   }
 
+  if (!playtest || playtest.overall < LIMITS.minOverallScore) {
+    return failClosed(runDir, 'experience_gate_not_met', {
+      overall: playtest?.overall ?? null,
+      required: LIMITS.minOverallScore,
+      polishRounds
+    });
+  }
+  if (overBudget(budgetUsd)) {
+    return failClosed(runDir, 'budget_exceeded_before_audit', { budgetUsd, cost: costReport() });
+  }
+
   log.step('PHASE C - AUDIT');
   const cost = costReport();
   const digest = {

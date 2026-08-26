@@ -26,6 +26,10 @@ on:
       - 'ideas/**'
     branches: [main]
 
+concurrency:
+  group: game-factory-production
+  cancel-in-progress: false
+
 jobs:
   produce:
     runs-on: ubuntu-latest
@@ -54,7 +58,7 @@ jobs:
           echo "Using provider: $GF_LLM_PROVIDER"
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Install browser
         run: npx playwright install --with-deps chromium
@@ -87,7 +91,11 @@ jobs:
         env:
           GF_LLM_API_KEY: ${{ secrets.GF_LLM_API_KEY }}
           GF_LLM_PROVIDER: ${{ github.event.inputs.provider || 'openai' }}
-          GF_MODEL_ENGINEER: 'gpt-4o'
+          GF_MODEL: ${{ vars.GF_MODEL }}
+          GF_MODEL_DIRECTOR: ${{ vars.GF_MODEL_DIRECTOR }}
+          GF_MODEL_ENGINEER: ${{ vars.GF_MODEL_ENGINEER }}
+          GF_MODEL_PLAYTESTER: ${{ vars.GF_MODEL_PLAYTESTER }}
+          GF_MODEL_AUDITOR: ${{ vars.GF_MODEL_AUDITOR }}
           GF_MAX_POLISH_ROUNDS: '3'
           GF_MIN_SCORE: '6.5'
           IDEA_B64: ${{ steps.prep.outputs.IDEA_B64 }}
