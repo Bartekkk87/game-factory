@@ -59,13 +59,22 @@ async function verifyAttempt({ runDir, attempt, design }) {
   fs.writeFileSync(path.join(dir, 'index.html'), html);
   writeJson(path.join(dir, 'design.json'), design);
 
+  // Extract background color from design.js (Game constructor background: ...) or css
+  let bgColor = '#101010';
+  const bgMatch = design.js?.match(/background\s*:\s*['"`]([^'"`]+)['"`]/);
+  if (bgMatch) bgColor = bgMatch[1];
+  else {
+    const cssBg = design.css?.match(/background\s*:\s*([^;}]+)/);
+    if (cssBg) bgColor = cssBg[1].trim();
+  }
+
   log.info(`verifying attempt ${attempt} (sha ${sha256(html).slice(0, 12)}) ...`);
   const report = await runSession({
     root: dir,
     seconds: LIMITS.playSeconds,
     screenshotDir: path.join(dir, 'shots')
   });
-  const verdict = evaluateContract(report);
+  const verdict = evaluateContract(report, { bgColor });
   const evidence = {
     attempt,
     candidateSha: sha256(html),
