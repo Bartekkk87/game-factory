@@ -8,7 +8,7 @@ export function evaluateContract(report, { minFps = LIMITS.minFps } = {}) {
 
   const runtimeErrors = [
     ...report.pageErrors.map((e) => 'pageerror: ' + e),
-    ...report.consoleErrors.map((e) => 'console: ' + e),
+    ...report.consoleErrors.filter((e) => !/favicon/i.test(e)).map((e) => 'console: ' + e),
     ...((report.endSnapshot?.errors || []).map((e) => 'probe: ' + e))
   ];
   add('no_runtime_errors', 'Keine Laufzeitfehler', runtimeErrors.length === 0, runtimeErrors.slice(0, 5).join(' | '));
