@@ -1,0 +1,69 @@
+{
+  "digest": {
+    "product": {
+      "title": "Core Awakening",
+      "genre": "action"
+    },
+    "attemptsTotal": 4,
+    "debugRepairRounds": 0,
+    "polishRounds": 3,
+    "finalTechnicalChecks": [
+      {
+        "id": "probe_present",
+        "label": "Test-Hook __GF__ vorhanden",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "assets_ok",
+        "label": "Alle Assets geladen",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "started_playing",
+        "label": "Spiel verlässt den Titelbildschirm",
+        "pass": true,
+        "detail": "endState=playing"
+      },
+      {
+        "id": "interactivity",
+        "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+        "pass": true,
+        "detail": "score 3 -> 10, states playing->playing"
+      },
+      {
+        "id": "fps_ok",
+        "label": "Performance >= 30 FPS",
+        "pass": true,
+        "detail": "fps=61"
+      },
+      {
+        "id": "visual_content",
+        "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+        "pass": true,
+        "detail": "shot-2-gameplay: VISIBLE (19.01% diff) | shot-3-gameplay: VISIBLE (20.27% diff)"
+      }
+    ],
+    "playtestScores": {
+      "visuals": 3,
+      "uiClarity": 5,
+      "funProxy": 3,
+      "performance": 10
+    },
+    "playtestOverall": 4,
+    "scoreGate": 6.5,
+    "budgetUsd": 5,
+    "spentUsd": 0,
+    "tokensUsed": 340296
+  },
+  "verdict": "FAIL",
+  "findings": [],
+  "summary": "The production run for 'Core Awakening' has passed all technical checks, but the overall playtest score of 4 is below the required gate of 6.5, resulting in a failure to meet the quality standards for release."
+}

@@ -1,0 +1,66 @@
+{
+  "title": "Core Awakening",
+  "tagline": "Rebuild your identity from the ruins of battle.",
+  "genre": "action",
+  "pitch": "As the sentient core of a fallen Titan, you must tactically dismantle enemies to salvage components and restore your mech. Make strategic decisions that affect your capabilities and explore the consequences of your choices in fast-paced, real-time combat.",
+  "coreLoop": "Read the enemy's attack intent, evade or interrupt their strikes, target their subsystems, and dismantle them for salvage. Choose wisely how to handle your loot to shape your mech's abilities.",
+  "mechanics": [
+    {
+      "name": "Enemy Dismantling",
+      "description": "Target enemy subsystems to dismantle while considering the consequences of each choice."
+    },
+    {
+      "name": "Three-way Loot Decision",
+      "description": "Choose between installing components for immediate benefits, securing them for later, or dismantling for immediate repairs."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD for movement, Mouse for aiming and targeting",
+    "mouse": "Left click to interact and shoot"
+  },
+  "artDirection": {
+    "mood": "stylized isometric sci-fi",
+    "palette": [
+      "#00BFFF",
+      "#FFC30B",
+      "#FF5733",
+      "#C0C0C0"
+    ],
+    "shapes": "clean vector shapes",
+    "backgroundFx": "subtle moving machinery silhouettes"
+  },
+  "audioDirection": {
+    "musicMood": "ambient tech with mechanical undertones",
+    "sfx": [
+      "enemy attack",
+      "dismantle",
+      "salvage",
+      "decision prompt"
+    ]
+  },
+  "difficulty": {
+    "start": "Introduce one enemy with clear attack patterns.",
+    "progression": "Increase enemy speed and complexity of attack telegraphs.",
+    "peak": "Introduce the need for quick decision-making in the three-way loot choice."
+  },
+  "winLose": {
+    "win": "Secure the loot and extract successfully.",
+    "lose": "Fail to evade or dismantle the enemy, leading to loss of integrity."
+  },
+  "juice": {
+    "screenShake": "upon successful enemy dismantle",
+    "particles": "when components are salvaged",
+    "hitStop": "when evading an attack",
+    "flash": "after making a loot decision"
+  },
+  "scopeNotes": "Do not build procedural dungeons, economy/shop, multiple enemy types, bosses, inventory management, upgrades between runs, narrative scenes beyond one line of flavor text, or save systems beyond engine defaults.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing"
+    ],
+    "scoreEvents": [
+      "Score increases when successfully dismantling enemies and making loot decisions."
+    ]
+  }
+}

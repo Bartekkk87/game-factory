@@ -1,0 +1,13 @@
+{
+  "reason": "audit_rejected",
+  "closedAt": "2026-08-26T18:07:11.333Z",
+  "cost": {
+    "costUsd": 0,
+    "tokens": 341019
+  },
+  "audit": {
+    "verdict": "FAIL",
+    "findings": [],
+    "summary": "The production run for 'Core Awakening' has passed all technical checks, but the overall playtest score of 4 is below the required gate of 6.5, resulting in a failure to meet the quality standards for release."
+  }
+}
