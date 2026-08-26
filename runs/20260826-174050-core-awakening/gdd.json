@@ -1,0 +1,69 @@
+{
+  "title": "Core Awakening",
+  "tagline": "Rebuild yourself from the wreckage of fallen Titans.",
+  "genre": "action",
+  "pitch": "As the last remnant of a Titan AI, you navigate a hostile salvage arena, dodging attacks and dismantling enemies to reclaim your identity. Choose wisely how to salvage components to enhance your mech's capabilities while facing the challenges of tactical combat.",
+  "coreLoop": "Read the enemy's attack intent, evade or interrupt their move, target their subsystems, and decide how to salvage the defeated foe for your benefit.",
+  "mechanics": [
+    {
+      "name": "Read & Evade",
+      "description": "Observe enemy telegraphed attacks to either evade or interrupt them, maintaining your core's integrity."
+    },
+    {
+      "name": "Target Subsystems",
+      "description": "Aim at distinct subsystems of the enemy that can be disabled for tactical advantages or salvaged for components."
+    },
+    {
+      "name": "Three-Way Salvage Decision",
+      "description": "After defeating an enemy, promptly choose to INSTALL, SECURE, or DISMANTLE the acquired component, impacting your mech's capabilities."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD for movement, mouse for aiming and targeting",
+    "mouse": "Click to attack or interact with components"
+  },
+  "artDirection": {
+    "mood": "stylized isometric",
+    "palette": [
+      "#00BFFF",
+      "#FFA500",
+      "#A9A9A9",
+      "#800000"
+    ],
+    "shapes": "clean vector shapes",
+    "backgroundFx": "abstract machinery silhouettes slowly moving in the background"
+  },
+  "audioDirection": {
+    "musicMood": "suspenseful and mechanical",
+    "sfx": [
+      "evade",
+      "component salvage",
+      "enemy defeat"
+    ]
+  },
+  "difficulty": {
+    "start": "minimal enemy attacks with clear telegraphs to understand gameplay",
+    "progression": "attacks become more complex while providing clear signals, pushing the player to adapt",
+    "peak": "a balanced challenge where every decision directly affects the fight's outcome, keeping tension high"
+  },
+  "winLose": {
+    "win": "secure a component from the defeated enemy and successfully extract it",
+    "lose": "the core mech is destroyed losing the run"
+  },
+  "juice": {
+    "screenShake": "when an enemy is defeated or a subsystem is disabled",
+    "particles": "when components are salvaged or damaged",
+    "hitStop": "when the player successfully interrupts an enemy attack",
+    "flash": "when making the three-way decision after defeating an enemy"
+  },
+  "scopeNotes": "Do not include procedural dungeons, an economy/shop, multiple enemy types, bosses, inventory management, crafting, upgrades between runs, and narrative scenes beyond one line of flavor text.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing"
+    ],
+    "scoreEvents": [
+      "score increases when an enemy is defeated, when a subsystem is targeted and damaged, and when selecting salvage options"
+    ]
+  }
+}

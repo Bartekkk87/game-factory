@@ -1,0 +1,186 @@
+{
+  "reason": "debug_exhausted",
+  "closedAt": "2026-08-26T17:44:12.586Z",
+  "cost": {
+    "costUsd": 0,
+    "tokens": 51296
+  },
+  "attempts": 6,
+  "bundles": [
+    {
+      "attempt": 1,
+      "contractFailures": [
+        {
+          "id": "interactivity",
+          "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+          "pass": false,
+          "detail": "score 0 -> 0, states playing->playing"
+        }
+      ],
+      "consoleErrors": [],
+      "pageErrors": [],
+      "probeErrors": [],
+      "fps": 61,
+      "states": {
+        "mid": {
+          "state": "playing",
+          "score": 0,
+          "best": 0,
+          "fps": 60,
+          "time": 3.533199999999997,
+          "flags": [],
+          "errors": []
+        },
+        "end": {
+          "state": "playing",
+          "score": 0,
+          "best": 0,
+          "fps": 60,
+          "time": 12.04949999999998,
+          "flags": [],
+          "errors": []
+        }
+      }
+    },
+    {
+      "attempt": 2,
+      "contractFailures": [
+        {
+          "id": "interactivity",
+          "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+          "pass": false,
+          "detail": "score 0 -> 0, states playing->playing"
+        }
+      ],
+      "consoleErrors": [],
+      "pageErrors": [],
+      "probeErrors": [],
+      "fps": 61,
+      "states": {
+        "mid": {
+          "state": "playing",
+          "score": 0,
+          "best": 0,
+          "fps": 60,
+          "time": 3.5332999999999957,
+          "flags": [],
+          "errors": []
+        },
+        "end": {
+          "state": "playing",
+          "score": 0,
+          "best": 0,
+          "fps": 60,
+          "time": 11.949599999999977,
+          "flags": [],
+          "errors": []
+        }
+      }
+    },
+    {
+      "attempt": 3,
+      "contractFailures": [
+        {
+          "id": "interactivity",
+          "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+          "pass": false,
+          "detail": "score 0 -> 0, states playing->playing"
+        }
+      ],
+      "consoleErrors": [],
+      "pageErrors": [],
+      "probeErrors": [],
+      "fps": 61,
+      "states": {
+        "mid": {
+          "state": "playing",
+          "score": 0,
+          "best": 0,
+          "fps": 60,
+          "time": 3.533199999999995,
+          "flags": [],
+          "errors": []
+        },
+        "end": {
+          "state": "playing",
+          "score": 0,
+          "best": 0,
+          "fps": 60,
+          "time": 11.932999999999975,
+          "flags": [],
+          "errors": []
+        }
+      }
+    },
+    {
+      "attempt": 4,
+      "contractFailures": [
+        {
+          "id": "interactivity",
+          "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+          "pass": false,
+          "detail": "score 0 -> 0, states playing->playing"
+        }
+      ],
+      "consoleErrors": [],
+      "pageErrors": [],
+      "probeErrors": [],
+      "fps": 61,
+      "states": {
+        "mid": {
+          "state": "playing",
+          "score": 0,
+          "best": 0,
+          "fps": 60,
+          "time": 3.5330999999999957,
+          "flags": [],
+          "errors": []
+        },
+        "end": {
+          "state": "playing",
+          "score": 0,
+          "best": 0,
+          "fps": 60,
+          "time": 11.949499999999983,
+          "flags": [],
+          "errors": []
+        }
+      }
+    },
+    {
+      "attempt": 5,
+      "contractFailures": [
+        {
+          "id": "interactivity",
+          "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+          "pass": false,
+          "detail": "score 0 -> 0, states playing->playing"
+        }
+      ],
+      "consoleErrors": [],
+      "pageErrors": [],
+      "probeErrors": [],
+      "fps": 61,
+      "states": {
+        "mid": {
+          "state": "playing",
+          "score": 0,
+          "best": 0,
+          "fps": 60,
+          "time": 3.5331999999999972,
+          "flags": [],
+          "errors": []
+        },
+        "end": {
+          "state": "playing",
+          "score": 0,
+          "best": 0,
+          "fps": 60,
+          "time": 11.949599999999979,
+          "flags": [],
+          "errors": []
+        }
+      }
+    }
+  ]
+}
