@@ -12,10 +12,38 @@ const num = (k, d) => {
   return Number.isFinite(v) && v > 0 ? v : d;
 };
 
-const baseModel = env('GF_MODEL', 'google/gemini-2.5-flash');
+// Provider-Registry: each provider has its own defaults for baseUrl + default model.
+// Selection via GF_LLM_PROVIDER (openai | openrouter | googleai | huggingface).
+// All values overridable via GF_LLM_BASE_URL / GF_MODEL / GF_LLM_API_KEY env vars.
+const PROVIDERS = {
+  openai: {
+    baseUrl: 'https://api.openai.com/v1',
+    defaultModel: 'gpt-4o-mini'
+  },
+  openrouter: {
+    baseUrl: 'https://openrouter.ai/api/v1',
+    defaultModel: 'google/gemini-2.5-flash'
+  },
+  googleai: {
+    // Google AI Studio OpenAI-compatible endpoint (v1beta/openai)
+    baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai',
+    defaultModel: 'gemini-2.5-flash'
+  },
+  huggingface: {
+    // HF Inference Router (OpenAI-compatible)
+    baseUrl: 'https://router.huggingface.co/v1',
+    defaultModel: 'meta-llama/Llama-3.3-70B-Instruct'
+  }
+};
+
+const providerKey = env('GF_LLM_PROVIDER', 'openai').toLowerCase();
+const provider = PROVIDERS[providerKey] || PROVIDERS.openai;
+
+const baseModel = env('GF_MODEL', provider.defaultModel);
 
 export const LLM = {
-  baseUrl: env('GF_LLM_BASE_URL', 'https://openrouter.ai/api/v1').replace(/\/$/, ''),
+  provider: providerKey,
+  baseUrl: env('GF_LLM_BASE_URL', provider.baseUrl).replace(/\/$/, ''),
   apiKey: env('GF_LLM_API_KEY', ''),
   defaultModel: baseModel,
   models: {
