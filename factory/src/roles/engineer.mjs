@@ -75,15 +75,19 @@ export async function buildGame({ gdd }) {
     '9. game.hitStop(dur) is a METHOD. Call it: game.hitStop(0.1). NEVER assign: game.hitStop = 0.1 (THIS BREAKS).',
     '10. If you add a "salvage" or similar scene, it MUST have a draw() that renders visible content.',
     '11. QUALITY GATE: target at least 7/10. A flat background with a few rectangles will fail.',
-    '12. Draw at least three environmental layers: base, patterned structure and animated detail.',
-    '13. Add a framed HUD with labeled health, score, objective and concise controls.',
-    '14. Use distinct silhouettes, outlines or glows, telegraphs, impact particles and screen feedback.',
+    '12. Draw at least FOUR environmental layers: far background, mid structure, foreground detail, animated effects.',
+    '13. Add a framed HUD with labeled health, score, objective, concise controls AND visible status icons.',
+    '14. Use distinct silhouettes, colored outlines/glows, telegraphs, impact particles and screen feedback (flash, shake).',
     '15. Implement the GDD core hook visibly; do not replace it with a generic dodge/shooter loop.',
     '16. The score MUST increase within four seconds of ordinary simulated movement/click input.',
-    '17. Award points for hits, pickups or survival ticks; never require a difficult kill before the first point.'
+    '17. Award points for hits, pickups or survival ticks; never require a difficult kill before the first point.',
+    '18. VISUAL MINIMUMS: gradient/patterned bg, parallax/motion, 3+ entity types with unique colors/shapes, 5+ particle types.',
+    '19. Every entity needs outline/glow + unique color + distinct shape. Enemies must look different from player AND each other.',
+    '20. Background MUST have animated elements (scrolling, pulsing, drifting, rotating) visible in screenshots.',
+    '21. HUD needs: score, health bar, objective text, controls hint, AND visible status indicators (ammo, cooldown, etc.).'
   ].join('\n');
 
-  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.35, maxTokens: 16000 });
+  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.5, maxTokens: 16000 });
   return validateDesign(extractJson(text));
 }
 
@@ -98,12 +102,15 @@ export async function repairGame({ gdd, design, failureSummary }) {
     'auto-plays/responds to keyboard+mouse events and the __GF__ probe reports state=playing and a rising score.',
     'Guarantee score growth within four seconds by awarding points for hits, movement, pickups or survival ticks.',
     'Do not require several precise clicks or a full enemy kill before awarding the first point.',
-    'VISUAL RENDERING: Ensure Scene.draw(ctx) draws visible content:',
-    '- Draw background, player, enemies, projectiles and particles every frame',
+    'VISUAL RENDERING: Ensure Scene.draw(ctx) draws RICH visible content:',
+    '- Draw FOUR background layers: far, mid, foreground, animated effects with PARALLAX/MOTION',
+    '- Player/enemies/components ALL need outlines/glows, unique colors, distinct shapes',
+    '- Minimum 5 particle types: hit, death, pickup, trail, ambient. All must appear in screenshots.',
+    '- HUD: score, health BAR, objective, controls, status icons. Framed panel with contrast.',
     '- Do NOT use ctx.filter, CSS filters, or game.dt in draw()',
     '- game.hitStop() is a METHOD (call it), not a property',
-    '- Keep the corrected JavaScript multiline. Check every brace, parenthesis and comma.',
-    '- Define const game = new GF.Game({...}); do not chain .add() onto the constructor.',
+    '- Keep JavaScript multiline. Check every brace, parenthesis, comma.',
+    '- Define const game = new GF.Game({...}); do not chain .add() onto constructor.',
     '- Scene methods must use game.addScore(), game.hitStop(), game.shake() and game.burst().',
     'Return the FULL corrected JSON (title/css/html/js).',
     '',
@@ -127,12 +134,14 @@ export async function repairGame({ gdd, design, failureSummary }) {
 export async function polishGame({ gdd, design, playtest }) {
   const user = [
     '=== TASK ===',
-    'POLISH MODE: The game works technically but the visual/experience review demands improvements.',
-    'Apply the priorityFixes and address the critique while keeping all mechanics working.',
-    'Every priorityFix is mandatory and must cause an obvious screenshot-visible change.',
-    'Replace sparse flat scenes with layered environmental art, animated detail and strong composition.',
-    'Add framed HUD panels, labels, objective/control guidance, outlines, telegraphs and impact feedback.',
-    'Preserve and visibly emphasize the GDD core mechanic instead of simplifying to generic gameplay.',
+    'POLISH MODE: The game works technically but the visual/experience review demands STRONG improvements.',
+    'Every priorityFix is MANDATORY and must cause an OBVIOUS screenshot-visible change.',
+    'REPLACE any sparse/flat scenes with 4-layer environmental art: far parallax, mid structure, foreground detail, animated FX.',
+    'Add framed HUD panel with: score, health BAR, objective text, controls hint, status indicators. High contrast.',
+    'Every entity: unique silhouette + outline/glow + distinct color + telegraph. Enemies must differ from each other.',
+    'Particles: hit, death, pickup, trail, ambient - minimum 5 types, ALL visible in screenshots.',
+    'Background: gradient + parallax motion + pulsing/drifting elements. Must show animation in screenshots.',
+    'Preserve and VISIBLY EMPHASIZE the GDD core mechanic. Do NOT simplify to generic gameplay.',
     'Return the FULL corrected JSON (title/css/html/js).',
     '',
     '=== PLAYTEST REVIEW ===',
