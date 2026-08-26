@@ -98,7 +98,7 @@ footer{text-align:center;color:#4b5578;font-size:12px;padding:40px 0 28px}
     <div class="grid">${products.length ? products.map((p) => card(p, { label: 'PLAY', dirPrefix: 'products' }, '#7dffb2')).join('') : '<div class="empty">No approved games yet.</div>'}</div>
   </section>
 </main>
-<footer>built autonomously by game-factory &middot; every release passed technical contract, vision playtest and audit</footer>
+<footer>built autonomously by game-factory v0.1 &middot; every release passed technical contract, vision playtest and audit</footer>
 </body>
 </html>
 `;
