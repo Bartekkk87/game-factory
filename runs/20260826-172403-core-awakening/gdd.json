@@ -1,0 +1,69 @@
+{
+  "title": "Core Awakening",
+  "tagline": "Rebuild your identity from the wreckage.",
+  "genre": "action",
+  "pitch": "As the core of a fallen Titan AI, players control a modular mech to dismantle enemies and recover components. Each battle offers tactical choices that shape your mech's abilities and identity.",
+  "coreLoop": "Players read enemy attack patterns, evade or interrupt them, target critical subsystems, and choose how to salvage components for their mech.",
+  "mechanics": [
+    {
+      "name": "Evade and Interrupt",
+      "description": "Players must dodge enemy attacks and can interrupt them to gain a strategic advantage."
+    },
+    {
+      "name": "Subsystem Targeting",
+      "description": "Players can target and destroy specific enemy subsystems, altering the battle and salvaged loot."
+    },
+    {
+      "name": "Component Decision-Making",
+      "description": "After defeating an enemy, players choose to install, secure, or dismantle the component for immediate benefits."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD for movement, SPACE for interrupt actions, SHIFT to target subsystems",
+    "mouse": "Aim with the mouse to target subsystems, click to attack"
+  },
+  "artDirection": {
+    "mood": "stylized isometric sci-fi",
+    "palette": [
+      "#00BFFF",
+      "#FFAA00",
+      "#A0A0A0",
+      "#FFFFFF"
+    ],
+    "shapes": "clean vector shapes",
+    "backgroundFx": "silhouettes of large machinery subtly moving in the background"
+  },
+  "audioDirection": {
+    "musicMood": "tense and mechanical, building with action",
+    "sfx": [
+      "evade",
+      "interrupt",
+      "component salvage"
+    ]
+  },
+  "difficulty": {
+    "start": "Very easy, with clear enemy attack patterns and slow-paced actions.",
+    "progression": "Gradually introduces faster enemies and more complex attack patterns.",
+    "peak": "Challenging decisions on component salvage while managing multiple threats."
+  },
+  "winLose": {
+    "win": "Defeat the enemy and make a successful component decision.",
+    "lose": "The mech's integrity drops to zero."
+  },
+  "juice": {
+    "screenShake": "when an enemy is defeated",
+    "particles": "when components are salvaged",
+    "hitStop": "when an attack is successfully interrupted",
+    "flash": "when a subsystem is hit or a critical moment in combat occurs"
+  },
+  "scopeNotes": "Do not include procedural dungeons, multiple enemy types, bosses, inventory management, crafting, narrative scenes, or save systems.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing"
+    ],
+    "scoreEvents": [
+      "score increases when an enemy is defeated, when components are salvaged, and when decisions are made"
+    ]
+  }
+}
