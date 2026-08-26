@@ -146,6 +146,9 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     if (tech.verdict.passed) break;
     failureBundles.push(failureBundle(tech.evidence));
     log.warn(`attempt ${attempt} failed contract (${tech.verdict.failures.length} checks)`);
+    for (const f of tech.verdict.failures) {
+      log.warn(`  FAILED CHECK [${f.id}] ${f.label} :: ${f.detail || 'no detail'}`);
+    }
     if (overBudget(budgetUsd)) return failClosed(runDir, 'budget_exceeded_during_debug');
   }
   if (!tech?.verdict.passed) {
@@ -265,3 +268,4 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
 
   return { status: 'success', slug, runDir, meta };
 }
+
