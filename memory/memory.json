@@ -2,10 +2,10 @@
   "products": [],
   "lessons": [],
   "stats": {
-    "runs": 9,
+    "runs": 10,
     "published": 0,
     "rejected": 0,
-    "failed": 4,
+    "failed": 5,
     "tokens": 0,
     "costUsd": 0
   }

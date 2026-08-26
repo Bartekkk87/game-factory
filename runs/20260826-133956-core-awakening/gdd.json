@@ -1,0 +1,79 @@
+{
+  "title": "Core Awakening",
+  "tagline": "Dismantle fallen Titans, salvage intact modules, rebuild your identity.",
+  "genre": "action",
+  "pitch": "Control a surviving cyan Titan core in a modular salvage frame. Fight armored enemy constructs in a single-room tactical arena, targeted-dismantling their subsystems to claim rare drops. Decide instantly whether to Install, Secure, or Dismantle components to survive.",
+  "coreLoop": "Evade telegraphed enemy attacks, precision-target specific subsystems (Weapon vs Core), and resolve quick 3-way salvage choices to rebuild power or bank score.",
+  "mechanics": [
+    {
+      "name": "Subsystem Precision Targeting",
+      "description": "Aim with mouse at highlighted enemy zones (Weapon vs Locomotion vs Core). Destroying weapons renders enemies safe but destroys weapon loot; defeating core preserves weapon loot."
+    },
+    {
+      "name": "Telegraphed Tactical Evasion",
+      "description": "Enemy attacks broadcast bright orange hazard zones on the floor grid before firing. Spacebar dashes through danger zones with short invulnerability."
+    },
+    {
+      "name": "3-Way Salvage Decision",
+      "description": "Defeated modules drop a prompt (Keys 1/2/3 or Click): INSTALL for instant stat/visual buff, SECURE for major run points, or DISMANTLE to instantly repair Core integrity."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD / Arrows to move frame, Space to dash, 1/2/3 keys for Salvage choice",
+    "mouse": "Aim reticle at enemy subsystems, Left Click to fire primary laser"
+  },
+  "artDirection": {
+    "mood": "industrial cyberpunk, cyan core vs warm amber highlights",
+    "palette": [
+      "#090d16",
+      "#00f0ff",
+      "#ff4d00",
+      "#ffb700"
+    ],
+    "shapes": "geometric diamond-grid isometric vectors",
+    "backgroundFx": "Pulsing power conduits along floor grid and ambient ember particle drift"
+  },
+  "audioDirection": {
+    "musicMood": "Heavy dark-synth pulse with rhythmic industrial bass",
+    "sfx": [
+      "laser-shot",
+      "telegraph-beep",
+      "subsystem-break",
+      "salvage-equip",
+      "core-dash",
+      "explosion"
+    ]
+  },
+  "difficulty": {
+    "start": "Single heavy construct firing slow 120-degree telegraphed arc attacks.",
+    "progression": "Enemies spawn faster with overlapping telegraphs and shorter charge-up times.",
+    "peak": "Dual construct pressure forcing rapid dash positioning and quick subsystem priority choices."
+  },
+  "winLose": {
+    "win": "Extract safely with 3 Secured modules or reach 2,500 points.",
+    "lose": "Core Integrity drops to 0%."
+  },
+  "juice": {
+    "screenShake": "Heavy rumble on subsystem explosion and taking direct cannon hits",
+    "particles": "Cyan dash trails, orange spark bursts on armor impact, floating amber salvage glyphs",
+    "hitStop": "80ms frame freeze on breaking an enemy subsystem",
+    "flash": "Red room flash on critical player damage, bright cyan flash upon installing module"
+  },
+  "scopeNotes": "Strict single-room proof slice. No procedural dungeon generation, no persistent meta-shop, no complex inventory screens, no long cutscenes.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing",
+      "salvage_choice",
+      "extracted",
+      "destroyed"
+    ],
+    "scoreEvents": [
+      "subsystem_hit",
+      "subsystem_destroyed",
+      "salvage_secured",
+      "salvage_dismantled",
+      "extraction_completed"
+    ]
+  }
+}
