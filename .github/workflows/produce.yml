@@ -11,6 +11,9 @@ on:
         description: 'Maximale API-Kosten in USD fuer diesen Lauf'
         required: false
         default: '10'
+  push:
+    paths:
+      - 'ideas/**'
 
 permissions:
   contents: write
