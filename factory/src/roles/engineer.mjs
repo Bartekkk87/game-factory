@@ -78,7 +78,9 @@ export async function buildGame({ gdd }) {
     '12. Draw at least three environmental layers: base, patterned structure and animated detail.',
     '13. Add a framed HUD with labeled health, score, objective and concise controls.',
     '14. Use distinct silhouettes, outlines or glows, telegraphs, impact particles and screen feedback.',
-    '15. Implement the GDD core hook visibly; do not replace it with a generic dodge/shooter loop.'
+    '15. Implement the GDD core hook visibly; do not replace it with a generic dodge/shooter loop.',
+    '16. The score MUST increase within four seconds of ordinary simulated movement/click input.',
+    '17. Award points for hits, pickups or survival ticks; never require a difficult kill before the first point.'
   ].join('\n');
 
   const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.35, maxTokens: 16000 });
@@ -94,6 +96,8 @@ export async function repairGame({ gdd, design, failureSummary }) {
     'You MUST actually modify js/css/html so that every listed check passes.',
     'If a check measures score increase via simulated input, make sure the game',
     'auto-plays/responds to keyboard+mouse events and the __GF__ probe reports state=playing and a rising score.',
+    'Guarantee score growth within four seconds by awarding points for hits, movement, pickups or survival ticks.',
+    'Do not require several precise clicks or a full enemy kill before awarding the first point.',
     'VISUAL RENDERING: Ensure Scene.draw(ctx) draws visible content:',
     '- Draw background, player, enemies, projectiles and particles every frame',
     '- Do NOT use ctx.filter, CSS filters, or game.dt in draw()',
