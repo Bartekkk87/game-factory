@@ -14,14 +14,7 @@ on:
   push:
     paths:
       - 'ideas/**'
-
-permissions:
-  contents: write
-  issues: write
-
-concurrency:
-  group: game-factory-produce
-  cancel-in-progress: false
+    branches: [main]
 
 jobs:
   produce:
@@ -29,6 +22,8 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -40,13 +35,27 @@ jobs:
       - name: Install browser
         run: npx playwright install --with-deps chromium
 
+      - name: Prepare idea
+        id: prep
+        run: |
+          if [ -n "${{ github.event.inputs.idea }}" ]; then
+            echo "IDEA=${{ github.event.inputs.idea }}" >> $GITHUB_OUTPUT
+          else
+            LATEST=$(ls -t ideas/*.md 2>/dev/null | head -n1)
+            if [ -n "$LATEST" ]; then
+              IDEA=$(cat "$LATEST")
+              echo "IDEA=$IDEA" >> $GITHUB_OUTPUT
+              echo "Using latest idea: $LATEST"
+            fi
+          fi
+
       - name: Run production pipeline
         env:
           GF_LLM_API_KEY: ${{ secrets.GF_LLM_API_KEY }}
           GF_LLM_BASE_URL: ${{ vars.GF_LLM_BASE_URL }}
           GF_MODEL: ${{ vars.GF_MODEL }}
-          IDEA: ${{ inputs.idea }}
-          BUDGET: ${{ inputs.budget_usd }}
+          IDEA: ${{ steps.prep.outputs.IDEA }}
+          BUDGET: ${{ github.event.inputs.budget_usd || '10' }}
         run: node factory/src/index.mjs --idea "$IDEA" --budget "$BUDGET"
 
       - name: Identify latest draft
