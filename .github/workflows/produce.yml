@@ -35,16 +35,22 @@ jobs:
       - name: Install browser
         run: npx playwright install --with-deps chromium
 
-      - name: Prepare idea
+- name: Prepare idea
         id: prep
         run: |
           if [ -n "${{ github.event.inputs.idea }}" ]; then
-            echo "IDEA=${{ github.event.inputs.idea }}" >> $GITHUB_OUTPUT
+            # Write idea to temp file to handle multiline content
+            cat > /tmp/idea.txt <<'EOF'
+${{ github.event.inputs.idea }}
+EOF
+            echo "IDEA=$(cat /tmp/idea.txt | sed ':a;N;$!ba;s/\n/\\n/g')"
+            echo "IDEA=$(cat /tmp/idea.txt | sed ':a;N;$!ba;s/\n/\\n/g')" >> $GITHUB_OUTPUT
+            echo "Using manual trigger idea"
           else
             LATEST=$(ls -t ideas/*.md 2>/dev/null | head -n1)
             if [ -n "$LATEST" ]; then
-              IDEA=$(cat "$LATEST")
-              echo "IDEA=$IDEA" >> $GITHUB_OUTPUT
+              cat "$LATEST" > /tmp/idea.txt
+              echo "IDEA=$(cat /tmp/idea.txt | sed ':a;N;$!ba;s/\n/\\n/g')" >> $GITHUB_OUTPUT
               echo "Using latest idea: $LATEST"
             fi
           fi
@@ -56,7 +62,10 @@ jobs:
           GF_MODEL: ${{ vars.GF_MODEL }}
           IDEA: ${{ steps.prep.outputs.IDEA }}
           BUDGET: ${{ github.event.inputs.budget_usd || '10' }}
-        run: node factory/src/index.mjs --idea "$IDEA" --budget "$BUDGET"
+        run: |
+          # Decode the escaped newlines
+          echo "${{ steps.prep.outputs.IDEA }}" | sed 's/\\n/\n/g' > /tmp/idea-decoded.txt
+          node factory/src/index.mjs --idea-file /tmp/idea-decoded.txt --budget "$BUDGET"
 
       - name: Identify latest draft
         id: meta
