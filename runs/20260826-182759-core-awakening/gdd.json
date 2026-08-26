@@ -1,0 +1,70 @@
+{
+  "title": "Core Awakening",
+  "tagline": "Rebuild your identity from the wreckage of fallen Titans.",
+  "genre": "action",
+  "pitch": "In a compact arena, you control a modular mech, tactically dismantling enemies to reclaim lost components. Your choices during combat shape your capabilities and identity, leading to a thrilling experience of tactical decision-making.",
+  "coreLoop": "Read enemy attacks, dodge or interrupt, target and dismantle subsystems, and choose how to recover components for future use.",
+  "mechanics": [
+    {
+      "name": "Evade & Interrupt",
+      "description": "Players can dodge incoming attacks and interrupt enemy actions, creating openings for counter-attacks."
+    },
+    {
+      "name": "Subsystem Targeting",
+      "description": "Combat involves targeting different subsystems of enemies, each with its own consequences when destroyed or preserved."
+    },
+    {
+      "name": "Three-Way Decision",
+      "description": "After defeating an enemy, choose between installing a component for immediate benefit, securing it for extraction, or dismantling it for instant repairs."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD for movement, mouse for aiming and targeting",
+    "mouse": "Left click to execute action on targeted subsystem"
+  },
+  "artDirection": {
+    "mood": "stylized isometric techno-fallout",
+    "palette": [
+      "#00BFFF",
+      "#2F4F4F",
+      "#FFD700",
+      "#FF4500"
+    ],
+    "shapes": "clean vector shapes, minimalistic design",
+    "backgroundFx": "subtle moving machinery silhouettes"
+  },
+  "audioDirection": {
+    "musicMood": "ambient futuristic tones with subtle tension",
+    "sfx": [
+      "dodge",
+      "hit",
+      "salvage"
+    ]
+  },
+  "difficulty": {
+    "start": "Introduction to enemy attacks with basic telegraphs.",
+    "progression": "Slowly increase enemy complexity and challenge with multiple attack patterns.",
+    "peak": "Encounter tactical nuances that require critical thinking to survive."
+  },
+  "winLose": {
+    "win": "Successfully extract salvaged components after defeating the enemy.",
+    "lose": "The mech's core integrity reaches zero from taking damage."
+  },
+  "juice": {
+    "screenShake": "When the mech takes damage or successfully hits an enemy subsystem.",
+    "particles": "When components are dismantled or salvaged.",
+    "hitStop": "When a successful interrupt occurs.",
+    "flash": "When an enemy is defeated or a decision is made."
+  },
+  "scopeNotes": "Do not build procedural dungeons, economy/shop systems, multiple enemy types, bosses, inventory management, crafting, upgrades between runs, or extensive narrative scenes.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing",
+      "result"
+    ],
+    "scoreEvents": [
+      "Score increases for every enemy defeated and component salvaged."
+    ]
+  }
+}
