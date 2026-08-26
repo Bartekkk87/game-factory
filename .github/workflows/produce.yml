@@ -11,6 +11,16 @@ on:
         description: 'Maximale API-Kosten in USD fuer diesen Lauf'
         required: false
         default: '10'
+      provider:
+        description: 'LLM Provider (openai | openrouter | googleai | huggingface)'
+        required: false
+        default: 'openai'
+        type: choice
+        options:
+          - openai
+          - openrouter
+          - googleai
+          - huggingface
   push:
     paths:
       - 'ideas/**'
@@ -66,6 +76,7 @@ jobs:
           GF_LLM_API_KEY: ${{ secrets.GF_LLM_API_KEY }}
           GF_LLM_BASE_URL: ${{ vars.GF_LLM_BASE_URL }}
           GF_MODEL: ${{ vars.GF_MODEL }}
+          GF_LLM_PROVIDER: ${{ github.event.inputs.provider || 'openai' }}
           IDEA_B64: ${{ steps.prep.outputs.IDEA_B64 }}
           BUDGET: ${{ github.event.inputs.budget_usd || '10' }}
         run: |
