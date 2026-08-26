@@ -1,4 +1,5 @@
 import path from 'node:path';
+
 import { fileURLToPath } from 'node:url';
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -7,6 +8,7 @@ const env = (k, d) => {
   const v = process.env[k];
   return v === undefined || v === '' ? d : v;
 };
+
 const num = (k, d) => {
   const v = Number(process.env[k]);
   return Number.isFinite(v) && v > 0 ? v : d;
@@ -15,6 +17,7 @@ const num = (k, d) => {
 // Provider-Registry: each provider has its own defaults for baseUrl + default model.
 // Selection via GF_LLM_PROVIDER (openai | openrouter | googleai | huggingface).
 // All values overridable via GF_LLM_BASE_URL / GF_MODEL / GF_LLM_API_KEY env vars.
+
 const PROVIDERS = {
   openai: {
     baseUrl: 'https://api.openai.com/v1',
@@ -27,7 +30,7 @@ const PROVIDERS = {
   googleai: {
     // Google AI Studio OpenAI-compatible endpoint (v1beta/openai)
     baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai',
-    defaultModel: 'gemini-3.6-flash'
+    defaultModel: 'gemini-1.5-flash'
   },
   huggingface: {
     // HF Inference Router (OpenAI-compatible)
@@ -46,6 +49,7 @@ export const LLM = {
   baseUrl: env('GF_LLM_BASE_URL', provider.baseUrl).replace(/\/$/, ''),
   apiKey: env('GF_LLM_API_KEY', ''),
   defaultModel: baseModel,
+
   models: {
     director: env('GF_MODEL_DIRECTOR', baseModel),
     engineer: env('GF_MODEL_ENGINEER', baseModel),
@@ -56,8 +60,8 @@ export const LLM = {
 
 export const LIMITS = {
   maxDebugRounds: num('GF_MAX_DEBUG_ROUNDS', 4),
-  maxPolishRounds: num('GF_MAX_POLISH_ROUNDS', 2),
-  minOverallScore: num('GF_MIN_SCORE', 7),
+  maxPolishRounds: num('GF_MAX_POLISH_ROUNDS', 3),
+  minOverallScore: num('GF_MIN_SCORE', 6.5),
   budgetUsd: num('GF_BUDGET_USD', 10),
   playSeconds: num('GF_PLAY_SECONDS', 12),
   minFps: num('GF_MIN_FPS', 30)
