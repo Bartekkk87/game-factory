@@ -10,12 +10,12 @@ function colorDist(c1, c2) {
   return Math.abs(c1.r - c2.r) + Math.abs(c1.g - c2.g) + Math.abs(c1.b - c2.b);
 }
 
-function analyzeScreenshot(dataUrl, bgColor) {
+async function analyzeScreenshot(dataUrl, bgColor) {
   if (!dataUrl || !dataUrl.startsWith('data:image/')) return { visible: false, ratio: 0, error: 'no data' };
   try {
     const base64 = dataUrl.split(',')[1];
     const buf = Buffer.from(base64, 'base64');
-    const PNG = require('pngjs').PNG;
+    const { PNG } = await import('pngjs');
     const png = PNG.sync.read(buf);
     const bg = hexToRgb(bgColor || '#101010');
     let diff = 0;
@@ -30,7 +30,7 @@ function analyzeScreenshot(dataUrl, bgColor) {
   }
 }
 
-export function evaluateContract(report, { minFps = LIMITS.minFps, bgColor = '#101010' } = {}) {
+export async function evaluateContract(report, { minFps = LIMITS.minFps, bgColor = '#101010' } = {}) {
   const checks = [];
   const add = (id, label, pass, detail = '') => checks.push({ id, label, pass, detail });
 
@@ -64,7 +64,7 @@ export function evaluateContract(report, { minFps = LIMITS.minFps, bgColor = '#1
   let visibleCount = 0;
   const details = [];
   for (const shot of gameplayShots) {
-    const res = analyzeScreenshot(shot.dataUrl, bgColor);
+    const res = await analyzeScreenshot(shot.dataUrl, bgColor);
     if (res.visible) visibleCount++;
     details.push(`${shot.name}: ${res.visible ? 'VISIBLE' : 'BLACK'} (${res.ratio}% diff)`);
     if (res.error) details[details.length-1] += ` [${res.error}]`;
