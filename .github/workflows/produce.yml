@@ -1,0 +1,70 @@
+name: Produce Game
+
+on:
+  workflow_dispatch:
+    inputs:
+      idea:
+        description: 'Spielidee (leer lassen = Director waehlt frei)'
+        required: false
+        default: ''
+      budget_usd:
+        description: 'Maximale API-Kosten in USD fuer diesen Lauf'
+        required: false
+        default: '10'
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: game-factory-produce
+  cancel-in-progress: false
+
+jobs:
+  produce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run production pipeline
+        env:
+          GF_LLM_API_KEY: ${{ secrets.GF_LLM_API_KEY }}
+          GF_LLM_BASE_URL: ${{ vars.GF_LLM_BASE_URL }}
+          GF_MODEL: ${{ vars.GF_MODEL }}
+          IDEA: ${{ inputs.idea }}
+          BUDGET: ${{ inputs.budget_usd }}
+        run: node factory/src/index.mjs --idea "$IDEA" --budget "$BUDGET"
+
+      - name: Identify latest draft
+        id: meta
+        if: success()
+        run: |
+          SLUG=$(ls -t drafts | head -n 1)
+          echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
+          echo "title=$(jq -r .title "drafts/$SLUG/meta.json")" >> "$GITHUB_OUTPUT"
+
+      - name: Commit results & evidence
+        if: always()
+        run: |
+          git config user.name "game-factory-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "factory: run ${{ github.run_id }} (${{ job.status }})"
+          git push
+
+      - name: Open review issue
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue create --title "[Review] ${{ steps.meta.outputs.title }}" --body-file "drafts/${{ steps.meta.outputs.slug }}/REVIEW.md"
