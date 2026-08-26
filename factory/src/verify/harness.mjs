@@ -15,11 +15,13 @@ export async function runSession({ root, entry = '/index.html', seconds = 10, sc
   });
   const context = await browser.newContext({ viewport: { width: 1280, height: 720 } });
   const page = await context.newPage();
+  await context.route('**/favicon.ico', (route) => route.abort());
 
   const consoleErrors = [];
   const consoleWarnings = [];
   const pageErrors = [];
   const requestFailed = [];
+  const httpIssues = [];
 
   page.on('console', (m) => {
     if (m.type() === 'error') consoleErrors.push(m.text());
@@ -27,9 +29,13 @@ export async function runSession({ root, entry = '/index.html', seconds = 10, sc
   });
   page.on('pageerror', (e) => pageErrors.push(String(e?.message || e)));
   page.on('requestfailed', (r) => requestFailed.push(`${r.url()} :: ${r.failure()?.errorText}`));
+  page.on('response', (r) => {
+    if (r.status() >= 400 && !r.url().includes('favicon')) httpIssues.push(`${r.status()} ${r.url()}`);
+  });
 
   const shots = [];
   let probeOk = false;
+  let pageTitle = null;
   let midSnapshot = null;
   let endSnapshot = null;
   let fps = null;
@@ -56,8 +62,12 @@ export async function runSession({ root, entry = '/index.html', seconds = 10, sc
 
   try {
     await page.goto(url + entry, { waitUntil: 'load', timeout: 20000 });
+    const pageTitle = await page.title();
     await page
-      .waitForFunction(() => window.__GF__ && typeof window.__GF__.getScore === 'function', null, { timeout: 8000 })
+      .waitForFunction(() => window.__GF__ && typeof window.__GF__.getScore === 'function', null, {
+        timeout: 8000,
+        polling: 250
+      })
       .then(() => {
         probeOk = true;
       })
@@ -121,6 +131,8 @@ export async function runSession({ root, entry = '/index.html', seconds = 10, sc
 
   return {
     probeOk,
+    pageTitle: pageTitle ?? null,
+    httpIssues,
     consoleErrors,
     consoleWarnings,
     pageErrors,
