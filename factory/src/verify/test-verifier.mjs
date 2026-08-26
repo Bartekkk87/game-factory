@@ -19,6 +19,7 @@ for (const fx of FIXTURES) {
   }
   if (verdict.passed !== fx.mustPass) {
     console.error(`fixture ${fx.name}: expected passed=${fx.mustPass}, got ${verdict.passed}`);
+    console.error(`diagnostics: title="${report.pageTitle}" httpIssues=${JSON.stringify(report.httpIssues)} pageErrors=${JSON.stringify(report.pageErrors).slice(0, 300)}`);
     ok = false;
   } else {
     console.log(`fixture ${fx.name}: behaved as expected (passed=${verdict.passed})`);
