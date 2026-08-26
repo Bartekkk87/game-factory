@@ -1,0 +1,70 @@
+{
+  "title": "Core Awakening",
+  "tagline": "Rebuild your identity from the remnants of fallen Titans.",
+  "genre": "action",
+  "pitch": "Engage in tactical arena combat as a modular mech, dismantling enemies to recover valuable components. Every decision shapes your power and identity while you uncover your past.",
+  "coreLoop": "Read enemy attack telegraphs, evade or interrupt strikes, target subsystems, and defeat foes to salvage or repair your mech. Your choices directly impact your capabilities.",
+  "mechanics": [
+    {
+      "name": "Tactical Combat",
+      "description": "Dodge and manipulate enemy attacks while targeting specific subsystems for a strategic advantage."
+    },
+    {
+      "name": "Subsystem Targeting",
+      "description": "Choose which enemy part to attack; destroying an enemy's weapon offers safety but loses the chance to salvage it."
+    },
+    {
+      "name": "Three-Way Decision",
+      "description": "After defeating an enemy, make a quick choice to install, secure, or dismantle the recovered component."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD for movement, mouse for aiming",
+    "mouse": "click to attack/target"
+  },
+  "artDirection": {
+    "mood": "futuristic industrial",
+    "palette": [
+      "#00FFFF",
+      "#D0D0D0",
+      "#FFA500",
+      "#FF4500"
+    ],
+    "shapes": "geometric",
+    "backgroundFx": "softly moving machinery silhouettes"
+  },
+  "audioDirection": {
+    "musicMood": "tense and ambient",
+    "sfx": [
+      "dodge",
+      "attack",
+      "salvage",
+      "decision"
+    ]
+  },
+  "difficulty": {
+    "start": "simple enemy patterns, clear telegraphs",
+    "progression": "enemy patterns become more complex, requiring quicker decisions",
+    "peak": "challenging timing for dodges and critical targeting decisions"
+  },
+  "winLose": {
+    "win": "defeat the enemy and make a successful three-way decision",
+    "lose": "fail to evade or interrupt and take critical damage"
+  },
+  "juice": {
+    "screenShake": "upon enemy defeat",
+    "particles": "when components are salvaged or installed",
+    "hitStop": "when evading an enemy attack",
+    "flash": "when making a key decision"
+  },
+  "scopeNotes": "No procedural dungeons, no character upgrades, no multiple enemy types, no inventory management, no narrative scenes beyond one line.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing"
+    ],
+    "scoreEvents": [
+      "score increases on enemy defeated, successful subsystem targeted, and component decisions made"
+    ]
+  }
+}

@@ -1,0 +1,266 @@
+{
+  "reason": "debug_exhausted",
+  "closedAt": "2026-08-26T17:27:58.370Z",
+  "cost": {
+    "costUsd": 0,
+    "tokens": 44613
+  },
+  "attempts": 6,
+  "bundles": [
+    {
+      "attempt": 1,
+      "contractFailures": [
+        {
+          "id": "probe_present",
+          "label": "Test-Hook __GF__ vorhanden",
+          "pass": false,
+          "detail": ""
+        },
+        {
+          "id": "no_runtime_errors",
+          "label": "Keine Laufzeitfehler",
+          "pass": false,
+          "detail": "pageerror: Unexpected token ';'"
+        },
+        {
+          "id": "started_playing",
+          "label": "Spiel verlässt den Titelbildschirm",
+          "pass": false,
+          "detail": "endState=null"
+        },
+        {
+          "id": "interactivity",
+          "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+          "pass": false,
+          "detail": "score undefined -> undefined, states undefined->null"
+        },
+        {
+          "id": "fps_ok",
+          "label": "Performance >= 30 FPS",
+          "pass": false,
+          "detail": "fps=null"
+        },
+        {
+          "id": "visual_content",
+          "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+          "pass": false,
+          "detail": ""
+        }
+      ],
+      "consoleErrors": [],
+      "pageErrors": [
+        "Unexpected token ';'"
+      ],
+      "probeErrors": [],
+      "fps": null,
+      "states": {
+        "mid": null,
+        "end": null
+      }
+    },
+    {
+      "attempt": 2,
+      "contractFailures": [
+        {
+          "id": "probe_present",
+          "label": "Test-Hook __GF__ vorhanden",
+          "pass": false,
+          "detail": ""
+        },
+        {
+          "id": "no_runtime_errors",
+          "label": "Keine Laufzeitfehler",
+          "pass": false,
+          "detail": "pageerror: Unexpected token ','"
+        },
+        {
+          "id": "started_playing",
+          "label": "Spiel verlässt den Titelbildschirm",
+          "pass": false,
+          "detail": "endState=null"
+        },
+        {
+          "id": "interactivity",
+          "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+          "pass": false,
+          "detail": "score undefined -> undefined, states undefined->null"
+        },
+        {
+          "id": "fps_ok",
+          "label": "Performance >= 30 FPS",
+          "pass": false,
+          "detail": "fps=null"
+        },
+        {
+          "id": "visual_content",
+          "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+          "pass": false,
+          "detail": ""
+        }
+      ],
+      "consoleErrors": [],
+      "pageErrors": [
+        "Unexpected token ','"
+      ],
+      "probeErrors": [],
+      "fps": null,
+      "states": {
+        "mid": null,
+        "end": null
+      }
+    },
+    {
+      "attempt": 3,
+      "contractFailures": [
+        {
+          "id": "probe_present",
+          "label": "Test-Hook __GF__ vorhanden",
+          "pass": false,
+          "detail": ""
+        },
+        {
+          "id": "no_runtime_errors",
+          "label": "Keine Laufzeitfehler",
+          "pass": false,
+          "detail": "pageerror: Unexpected token ','"
+        },
+        {
+          "id": "started_playing",
+          "label": "Spiel verlässt den Titelbildschirm",
+          "pass": false,
+          "detail": "endState=null"
+        },
+        {
+          "id": "interactivity",
+          "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+          "pass": false,
+          "detail": "score undefined -> undefined, states undefined->null"
+        },
+        {
+          "id": "fps_ok",
+          "label": "Performance >= 30 FPS",
+          "pass": false,
+          "detail": "fps=null"
+        },
+        {
+          "id": "visual_content",
+          "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+          "pass": false,
+          "detail": ""
+        }
+      ],
+      "consoleErrors": [],
+      "pageErrors": [
+        "Unexpected token ','"
+      ],
+      "probeErrors": [],
+      "fps": null,
+      "states": {
+        "mid": null,
+        "end": null
+      }
+    },
+    {
+      "attempt": 4,
+      "contractFailures": [
+        {
+          "id": "probe_present",
+          "label": "Test-Hook __GF__ vorhanden",
+          "pass": false,
+          "detail": ""
+        },
+        {
+          "id": "no_runtime_errors",
+          "label": "Keine Laufzeitfehler",
+          "pass": false,
+          "detail": "pageerror: Unexpected token ','"
+        },
+        {
+          "id": "started_playing",
+          "label": "Spiel verlässt den Titelbildschirm",
+          "pass": false,
+          "detail": "endState=null"
+        },
+        {
+          "id": "interactivity",
+          "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+          "pass": false,
+          "detail": "score undefined -> undefined, states undefined->null"
+        },
+        {
+          "id": "fps_ok",
+          "label": "Performance >= 30 FPS",
+          "pass": false,
+          "detail": "fps=null"
+        },
+        {
+          "id": "visual_content",
+          "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+          "pass": false,
+          "detail": ""
+        }
+      ],
+      "consoleErrors": [],
+      "pageErrors": [
+        "Unexpected token ','"
+      ],
+      "probeErrors": [],
+      "fps": null,
+      "states": {
+        "mid": null,
+        "end": null
+      }
+    },
+    {
+      "attempt": 5,
+      "contractFailures": [
+        {
+          "id": "probe_present",
+          "label": "Test-Hook __GF__ vorhanden",
+          "pass": false,
+          "detail": ""
+        },
+        {
+          "id": "no_runtime_errors",
+          "label": "Keine Laufzeitfehler",
+          "pass": false,
+          "detail": "pageerror: Unexpected token ','"
+        },
+        {
+          "id": "started_playing",
+          "label": "Spiel verlässt den Titelbildschirm",
+          "pass": false,
+          "detail": "endState=null"
+        },
+        {
+          "id": "interactivity",
+          "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+          "pass": false,
+          "detail": "score undefined -> undefined, states undefined->null"
+        },
+        {
+          "id": "fps_ok",
+          "label": "Performance >= 30 FPS",
+          "pass": false,
+          "detail": "fps=null"
+        },
+        {
+          "id": "visual_content",
+          "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+          "pass": false,
+          "detail": ""
+        }
+      ],
+      "consoleErrors": [],
+      "pageErrors": [
+        "Unexpected token ','"
+      ],
+      "probeErrors": [],
+      "fps": null,
+      "states": {
+        "mid": null,
+        "end": null
+      }
+    }
+  ]
+}
