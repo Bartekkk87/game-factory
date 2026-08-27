@@ -7,7 +7,7 @@ import { lessonsFor, knownConcepts } from '../memory/store.mjs';
 export async function runDirector({ idea, source, ownerContract }) {
   const system = assembleSystemPrompt({
     promptName: 'director',
-    skillName: 'directing',
+    skillNames: ['directing', 'art-direction'],
     lessons: lessonsFor('director')
   });
 
