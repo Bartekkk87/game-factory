@@ -149,7 +149,7 @@ const runtimeGdd = compileDirectorTraceability({
     { ownerRequirementId: 'MH-02', statement: 'Upgrade changes a numeric gameplay value.' }
   ],
   probePlan: {
-    scoreEvents: ['periodic test score'],
+    scoreEvents: ['input-driven test score'],
     requirementProbes: [
       { ownerRequirementId: 'MH-01', kind: 'event', eventType: 'boss_entered' },
       { ownerRequirementId: 'MH-02', kind: 'event_value_change', eventType: 'upgrade_applied' }
@@ -166,15 +166,16 @@ async function runRuntimeFidelityCase(name, changedValue, mustPassFidelity) {
     js: `
 const game = new GF.Game({ id: 'runtime-${name}', title: 'Runtime ${name}', background: '#111827' });
 let evidenceSent = false;
-let scoreClock = 0;
+let visualOffset = 0;
+const productiveKeys = new Set(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space', 'KeyW', 'KeyA', 'KeyS', 'KeyD']);
+window.addEventListener('keydown', (event) => {
+  if (!productiveKeys.has(event.code)) return;
+  game.addScore(1);
+  visualOffset = (visualOffset + 17) % 120;
+});
 game.add('play', {
-  update(dt) {
-    scoreClock += dt;
-    if (scoreClock >= 0.35) {
-      scoreClock = 0;
-      game.addScore(1);
-    }
-    if (!evidenceSent && game.time >= 1.6) {
+  update() {
+    if (!evidenceSent && game.time >= 2.6) {
       evidenceSent = true;
       game.event('boss_entered', { boss: 'fixture' });
       game.event('upgrade_applied', { before: 1, after: ${changedValue} });
@@ -183,7 +184,7 @@ game.add('play', {
   },
   draw(ctx) {
     ctx.fillStyle = '#22d3ee';
-    ctx.fillRect(180, 140, 600, 260);
+    ctx.fillRect(120 + visualOffset, 140, 600, 260);
     GF.Draw.text(ctx, 'RUNTIME FIDELITY', 480, 270, { size: 36, color: '#ffffff' });
   }
 });
@@ -191,7 +192,7 @@ game.go('play');
 `
   };
   fs.writeFileSync(path.join(dir, 'index.html'), assemble(design));
-  const report = await runSession({ root: dir, seconds: 3 });
+  const report = await runSession({ root: dir, seconds: 6 });
   const technical = await evaluateContract(report, { minFps: 10, bgColor: '#111827' });
   const fidelity = evaluateProductFidelity({ ownerContract: runtimeOwner, gdd: runtimeGdd, report });
   const events = report.timeline.flatMap((entry) => entry.snapshot?.events || []);
@@ -201,7 +202,7 @@ game.go('play');
   const behaved = technical.passed && fidelity.pass === mustPassFidelity && payloadBounded;
   if (!behaved) {
     ok = false;
-    console.error(`${name}: technical=${technical.passed} fidelity=${fidelity.pass} expectedFidelity=${mustPassFidelity} payloadBounded=${payloadBounded}`);
+    console.error(`${name}: technical=${technical.passed} fidelity=${fidelity.pass} expectedFidelity=${mustPassFidelity} payloadBounded=${payloadBounded} failures=${JSON.stringify(technical.failures)} fidelityFailures=${JSON.stringify(fidelity.failures)}`);
   } else {
     console.log(`${name}: technical PASS, fidelity=${fidelity.pass ? 'PASS' : 'FAIL as expected'}, bounded events PASS`);
   }

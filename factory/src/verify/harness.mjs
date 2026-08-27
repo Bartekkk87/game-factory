@@ -30,8 +30,17 @@ function normalizeSeed(seed) {
   return Number.isFinite(n) ? (Math.trunc(n) >>> 0) : DEFAULT_VERIFIER_SEED;
 }
 
-export async function runSession({ root, entry = '/index.html', seconds = 10, screenshotDir = null, seed = DEFAULT_VERIFIER_SEED }) {
+async function runSingleSession({
+  root,
+  entry = '/index.html',
+  seconds = 10,
+  screenshotDir = null,
+  seed = DEFAULT_VERIFIER_SEED,
+  inputMode = 'active',
+  captureScreenshots = true
+}) {
   const verifierSeed = normalizeSeed(seed);
+  if (!['active', 'idle'].includes(inputMode)) throw new Error(`unsupported verifier input mode: ${inputMode}`);
   const { url, close } = await serveDir(root);
   const browser = await chromium.launch({
     headless: true,
@@ -109,6 +118,7 @@ export async function runSession({ root, entry = '/index.html', seconds = 10, sc
   };
 
   const takeShot = async (name) => {
+    if (!captureScreenshots) return;
     const buf = await page.screenshot({ type: 'png' });
     if (screenshotDir) {
       fs.mkdirSync(screenshotDir, { recursive: true });
@@ -134,28 +144,34 @@ export async function runSession({ root, entry = '/index.html', seconds = 10, sc
       await sleep(700);
       await takeShot('shot-1-title');
       startSnapshot = await record('start', 0);
+
+      // Both active and idle sessions receive the same bounded start impulse so
+      // the control measures gameplay effects, not whether the title screen was entered.
       await page.keyboard.press('Enter');
       await page.mouse.click(640, 400);
 
-      let keyIndex = 0;
-      let pointerIndex = 0;
-      let clickIndex = 0;
-      const inputTimer = setInterval(() => {
-        const key = PLAY_KEYS[keyIndex % PLAY_KEYS.length];
-        keyIndex++;
-        page.keyboard.down(key).catch(() => {});
-        setTimeout(() => page.keyboard.up(key).catch(() => {}), INPUT_PLAN.keyHoldMs);
-      }, INPUT_PLAN.keyEveryMs);
-      const mouseTimer = setInterval(() => {
-        const [x, y] = POINTER_PATH[pointerIndex % POINTER_PATH.length];
-        pointerIndex++;
-        page.mouse.move(x, y).catch(() => {});
-      }, INPUT_PLAN.pointerEveryMs);
-      const clickTimer = setInterval(() => {
-        const [x, y] = POINTER_PATH[clickIndex % POINTER_PATH.length];
-        clickIndex++;
-        page.mouse.click(x, y).catch(() => {});
-      }, INPUT_PLAN.clickEveryMs);
+      const timers = [];
+      if (inputMode === 'active') {
+        let keyIndex = 0;
+        let pointerIndex = 0;
+        let clickIndex = 0;
+        timers.push(setInterval(() => {
+          const key = PLAY_KEYS[keyIndex % PLAY_KEYS.length];
+          keyIndex++;
+          page.keyboard.down(key).catch(() => {});
+          setTimeout(() => page.keyboard.up(key).catch(() => {}), INPUT_PLAN.keyHoldMs);
+        }, INPUT_PLAN.keyEveryMs));
+        timers.push(setInterval(() => {
+          const [x, y] = POINTER_PATH[pointerIndex % POINTER_PATH.length];
+          pointerIndex++;
+          page.mouse.move(x, y).catch(() => {});
+        }, INPUT_PLAN.pointerEveryMs));
+        timers.push(setInterval(() => {
+          const [x, y] = POINTER_PATH[clickIndex % POINTER_PATH.length];
+          clickIndex++;
+          page.mouse.click(x, y).catch(() => {});
+        }, INPUT_PLAN.clickEveryMs));
+      }
 
       try {
         const total = seconds * 1000;
@@ -191,9 +207,7 @@ export async function runSession({ root, entry = '/index.html', seconds = 10, sc
         await takeShot('shot-3-gameplay');
         await waitUntil(total);
       } finally {
-        clearInterval(inputTimer);
-        clearInterval(mouseTimer);
-        clearInterval(clickTimer);
+        for (const timer of timers) clearInterval(timer);
       }
       endSnapshot = await record('end', seconds * 1000);
     }
@@ -206,14 +220,17 @@ export async function runSession({ root, entry = '/index.html', seconds = 10, sc
 
   return {
     seed: verifierSeed,
+    inputMode,
     inputSequence: {
+      mode: inputMode,
       seed: verifierSeed,
-      keys: [...INPUT_PLAN.keys],
-      pointerPath: INPUT_PLAN.pointerPath.map((p) => [...p]),
-      keyEveryMs: INPUT_PLAN.keyEveryMs,
-      keyHoldMs: INPUT_PLAN.keyHoldMs,
-      pointerEveryMs: INPUT_PLAN.pointerEveryMs,
-      clickEveryMs: INPUT_PLAN.clickEveryMs
+      startImpulse: ['Enter', 'pointer@640,400'],
+      keys: inputMode === 'active' ? [...INPUT_PLAN.keys] : [],
+      pointerPath: inputMode === 'active' ? INPUT_PLAN.pointerPath.map((p) => [...p]) : [],
+      keyEveryMs: inputMode === 'active' ? INPUT_PLAN.keyEveryMs : null,
+      keyHoldMs: inputMode === 'active' ? INPUT_PLAN.keyHoldMs : null,
+      pointerEveryMs: inputMode === 'active' ? INPUT_PLAN.pointerEveryMs : null,
+      clickEveryMs: inputMode === 'active' ? INPUT_PLAN.clickEveryMs : null
     },
     timeline,
     probeOk,
@@ -230,5 +247,27 @@ export async function runSession({ root, entry = '/index.html', seconds = 10, sc
     endSnapshot,
     screenshots: shots.map((s) => ({ name: s.name })),
     _images: shots.map((s) => ({ name: s.name, dataUrl: s.dataUrl }))
+  };
+}
+
+export async function runSession(options) {
+  const active = await runSingleSession({ ...options, inputMode: 'active', captureScreenshots: true });
+  const idle = await runSingleSession({ ...options, inputMode: 'idle', screenshotDir: null, captureScreenshots: false });
+  return {
+    ...active,
+    idleBaseline: {
+      seed: idle.seed,
+      inputMode: idle.inputMode,
+      inputSequence: idle.inputSequence,
+      timeline: idle.timeline,
+      probeOk: idle.probeOk,
+      pageErrors: idle.pageErrors,
+      consoleErrors: idle.consoleErrors,
+      requestFailed: idle.requestFailed,
+      startSnapshot: idle.startSnapshot,
+      earlySnapshot: idle.earlySnapshot,
+      midSnapshot: idle.midSnapshot,
+      endSnapshot: idle.endSnapshot
+    }
   };
 }

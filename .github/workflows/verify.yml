@@ -36,16 +36,26 @@ jobs:
         run: node factory/src/control/test-control.mjs
       - name: Prove model/provider router and capability gates
         run: node factory/src/llm/test-router.mjs
-      - name: Prove OpenRouter challenger and credential isolation
+      - name: Prove Production credential isolation and OpenRouter challenger
         run: node factory/src/llm/test-openrouter.mjs
+      - name: Prove Owner Contract decomposition and provenance
+        run: node factory/src/contract/test-owner-contract.mjs
       - name: Prove controlled learning safety and lifecycle
         run: node factory/src/learning/test-learning.mjs
+      - name: Prove cross-run learning trigger threshold
+        run: node factory/src/learning/test-cross-run-trigger.mjs
+      - name: Prove automatic controlled learning orchestration
+        run: node factory/src/learning/test-orchestration.mjs
       - name: Prove L4 production-agent integrity
         run: node factory/src/roles/test-production-agents.mjs
+      - name: Prove art-direction runtime prompt truth
+        run: node factory/src/roles/test-art-direction-runtime.mjs
       - name: Prove P0-03 product-fidelity event hardening
         run: node factory/src/verify/test-fidelity-hardening.mjs
       - name: Install browser
         run: npx playwright install --with-deps chromium
+      - name: Prove verifier causality and visual activity controls
+        run: node factory/src/verify/test-causality-visual.mjs
       - name: Prove verifier accepts good and rejects bad products
         run: npm run test:verifier
       - name: Prove publishing gates and gallery escaping

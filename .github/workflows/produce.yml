@@ -16,7 +16,7 @@ on:
         required: false
         default: 'openai'
         type: choice
-        options: [openai, openrouter, googleai, huggingface]
+        options: [openai, openrouter]
   push:
     paths: ['ideas/**']
     branches: [main]
@@ -40,16 +40,23 @@ jobs:
 
       - name: Check API configuration
         env:
-          GF_LLM_API_KEY: ${{ secrets.GF_LLM_API_KEY }}
+          OPENAI_PRODUCTION: ${{ secrets.OPENAI_PRODUCTION }}
           OPENROUTER_PRODUCTION: ${{ secrets.OPENROUTER_PRODUCTION }}
           GF_LLM_PROVIDER: ${{ github.event.inputs.provider || 'openai' }}
         run: |
-          if [ "$GF_LLM_PROVIDER" = "openrouter" ]; then
-            test -n "$OPENROUTER_PRODUCTION" || { echo "OPENROUTER_PRODUCTION is missing in repository secrets" >&2; exit 1; }
-          else
-            test -n "$GF_LLM_API_KEY" || { echo "GF_LLM_API_KEY is missing in repository secrets" >&2; exit 1; }
-          fi
-          echo "Using provider: $GF_LLM_PROVIDER (production credential lane)"
+          case "$GF_LLM_PROVIDER" in
+            openai)
+              test -n "$OPENAI_PRODUCTION" || { echo "OPENAI_PRODUCTION is missing in repository secrets" >&2; exit 1; }
+              ;;
+            openrouter)
+              test -n "$OPENROUTER_PRODUCTION" || { echo "OPENROUTER_PRODUCTION is missing in repository secrets" >&2; exit 1; }
+              ;;
+            *)
+              echo "Provider $GF_LLM_PROVIDER has no approved Production credential lane in this workflow" >&2
+              exit 1
+              ;;
+          esac
+          echo "Using provider: $GF_LLM_PROVIDER (isolated production credential lane)"
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
@@ -80,7 +87,7 @@ jobs:
 
       - name: Run production pipeline
         env:
-          GF_LLM_API_KEY: ${{ secrets.GF_LLM_API_KEY }}
+          OPENAI_PRODUCTION: ${{ secrets.OPENAI_PRODUCTION }}
           OPENROUTER_PRODUCTION: ${{ secrets.OPENROUTER_PRODUCTION }}
           GF_LLM_PROVIDER: ${{ github.event.inputs.provider || 'openai' }}
           GF_LLM_LANE: production
@@ -122,6 +129,11 @@ jobs:
           path: |
             runs/
             drafts/
+            learning/aggregates/
+            learning/triggers/
+            learning/analysis/
+            learning/candidates/
+            learning/orchestration/
           if-no-files-found: ignore
 
       - name: Open review issue

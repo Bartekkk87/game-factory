@@ -2,6 +2,13 @@ function sortedObject(entries) {
   return Object.fromEntries([...entries].sort(([a], [b]) => a.localeCompare(b)));
 }
 function bump(map, key, amount = 1) { if (key) map.set(String(key), (map.get(String(key)) || 0) + amount); }
+function noteRun(map, key, id) {
+  const signature = String(key || '').trim();
+  const run = String(id || '').trim();
+  if (!signature || !run) return;
+  if (!map.has(signature)) map.set(signature, new Set());
+  map.get(signature).add(run);
+}
 function number(value) { const n = Number(value); return Number.isFinite(n) ? n : 0; }
 function runId(run) { return String(run?.runId || run?.id || run?.run?.id || ''); }
 function gateFailed(gate) {
@@ -9,10 +16,14 @@ function gateFailed(gate) {
   if (!gate || typeof gate !== 'object') return false;
   return gate.pass === false || gate.passed === false;
 }
-function recurring(map) {
+function recurring(map, runMembership = null) {
   return [...map.entries()]
     .filter(([, count]) => Number(count) >= 2)
-    .map(([signature, count]) => ({ signature, count }))
+    .map(([signature, count]) => ({
+      signature,
+      count,
+      ...(runMembership ? { runCount: runMembership.get(signature)?.size || 0 } : {})
+    }))
     .sort((a, b) => a.signature.localeCompare(b.signature));
 }
 function detailClass(detail) {
@@ -36,6 +47,7 @@ function failureSignature(kind, failure) {
 
 export function aggregateEvidence({ runEvidence = [], attemptEvidence = [], ownerFeedback = [] } = {}) {
   const failures = new Map();
+  const failureRuns = new Map();
   const positives = new Map();
   const costsByRole = new Map();
   const costsByModel = new Map();
@@ -55,6 +67,7 @@ export function aggregateEvidence({ runEvidence = [], attemptEvidence = [], owne
 
   const runs = [...runEvidence].sort((a, b) => runId(a).localeCompare(runId(b)));
   for (const run of runs) {
+    const id = runId(run);
     const events = Array.isArray(run.events) ? run.events : [];
     const attempts = Array.isArray(run.attempts) ? run.attempts : [];
     const costs = run.costs || {};
@@ -80,7 +93,11 @@ export function aggregateEvidence({ runEvidence = [], attemptEvidence = [], owne
     const score = run.experience?.overall ?? run.experienceScore ?? gates.experience?.overall ?? gates.experience?.score;
     if (Number.isFinite(Number(score))) experience.push(Number(score));
 
-    for (const item of [...events, ...attempts]) bump(failures, item.failureSignature || item.signature || item.errorCode);
+    for (const item of [...events, ...attempts]) {
+      const signature = item.failureSignature || item.signature || item.errorCode;
+      bump(failures, signature);
+      noteRun(failureRuns, signature, id);
+    }
     for (const item of run.positivePatterns || []) bump(positives, typeof item === 'string' ? item : item.signature || item.id || item.pattern);
 
     for (const call of calls) {
@@ -113,7 +130,11 @@ export function aggregateEvidence({ runEvidence = [], attemptEvidence = [], owne
     if (!gateFailed(evidence)) continue;
     if (kind === 'technical') attemptTechnicalFailures++;
     if (kind === 'product-fidelity') attemptProductFidelityFailures++;
-    for (const failure of Array.isArray(evidence.failures) ? evidence.failures : []) bump(failures, failureSignature(kind, failure));
+    for (const failure of Array.isArray(evidence.failures) ? evidence.failures : []) {
+      const signature = failureSignature(kind, failure);
+      bump(failures, signature);
+      noteRun(failureRuns, signature, item.runId);
+    }
   }
 
   const feedback = [...ownerFeedback].sort((a, b) => String(a.id || '').localeCompare(String(b.id || '')));
@@ -131,7 +152,7 @@ export function aggregateEvidence({ runEvidence = [], attemptEvidence = [], owne
     },
     failures: {
       signatures: sortedObject(failures),
-      recurring: recurring(failures),
+      recurring: recurring(failures, failureRuns),
       technicalFailures,
       productFidelityFailures,
       attemptTechnicalFailures,

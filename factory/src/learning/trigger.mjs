@@ -4,7 +4,7 @@ export function evaluateImprovementTrigger(aggregate) {
   const verdicts = aggregate?.owner?.verdicts || {};
   const recurringFailures = aggregate?.failures?.recurring || [];
   const feedbackNegative = Number(verdicts.reject || 0) > 0 || Number(verdicts.feedback || 0) > 0;
-  const recurringEngineeringFailure = recurringFailures.some((x) => Number(x.count) >= 2);
+  const recurringEngineeringFailure = recurringFailures.some((x) => Number(x.count) >= 2 && Number(x.runCount) >= 2);
   const independentRunCount = new Set(aggregate?.input?.runIds || []).size;
   const reasons = [], allowedScopes = [];
   if (feedbackNegative) { reasons.push('owner-negative-or-feedback-evidence'); allowedScopes.push('product-feedback'); }

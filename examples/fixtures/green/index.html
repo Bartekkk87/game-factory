@@ -33,7 +33,7 @@
     score += 3;
   });
   window.__GF__ = {
-    version: 'fixture-green-1.0',
+    version: 'fixture-green-1.1',
     info: { title: 'Fixture Green' },
     errors: [],
     flags: {},
@@ -58,6 +58,13 @@
     }
     ctx.fillStyle = '#1a2140';
     ctx.fillRect(0, 0, W, H);
+
+    // Deterministic visible activity independent of screenshot timing. Causality is
+    // proven separately by the active-vs-idle telemetry control.
+    const driftX = ((now / 4) % (W + 240)) - 120;
+    ctx.fillStyle = '#334b78';
+    ctx.fillRect(driftX - 100, H - 100, 200, 80);
+
     ctx.fillStyle = '#7c5cff';
     ctx.beginPath();
     ctx.arc(state === 'playing' ? x : W / 2, H / 2, 30, 0, Math.PI * 2);

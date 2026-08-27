@@ -44,38 +44,92 @@ function findSection(sections, patterns) {
   return [];
 }
 
-function requirementList(prefix, items) {
-  return items.map((text, index) => ({
-    id: `${prefix}-${String(index + 1).padStart(2, '0')}`,
-    text,
-    immutable: true
-  }));
+function requirementList(prefix, items, mode) {
+  return items.map((item, index) => {
+    const text = typeof item === 'string' ? item : item.text;
+    const provenance = typeof item === 'string'
+      ? { mode, itemIndex: index }
+      : { mode, itemIndex: item.fragmentIndex ?? index };
+    return {
+      id: `${prefix}-${String(index + 1).padStart(2, '0')}`,
+      text,
+      provenance,
+      immutable: true
+    };
+  });
 }
 
 function contractDigest(contractWithoutSha) {
   return crypto.createHash('sha256').update(JSON.stringify(contractWithoutSha)).digest('hex');
 }
 
-export function createOwnerContract({ idea = '', source = 'unknown' } = {}) {
-  const rawIdea = String(idea || '').trim();
-  const sections = parseSections(rawIdea);
-  let mustHaveTexts = findSection(sections, [/^muss have$/, /^must have/, /^must haves/]);
-  const noGoTexts = findSection(sections, [/^no gos?$/, /^no go/, /^nicht erlaubt/, /^dont/, /^do not/]);
+const AMBIGUITY = /\b(?:maybe|perhaps|possibly|might|could|optional|ideally|nice to have|vielleicht|eventuell|gegebenenfalls|ggf|wenn möglich|waere schoen|wäre schön)\b/i;
+const NO_GO = /(?:^\s*no\b|\b(?:do not|don't|never|avoid|must not|mustn't|not allowed|forbidden|darf nicht|dürfen nicht|niemals|vermeide|kein(?:e|en|er|es)?)\b)/i;
 
-  if (!mustHaveTexts.length && rawIdea) {
-    const compact = rawIdea.replace(/\s+/g, ' ').trim();
-    mustHaveTexts = [compact];
-  } else if (!mustHaveTexts.length) {
-    mustHaveTexts = ['Produce one original, complete and highly playable browser game.'];
+function freeformFragments(rawIdea) {
+  const fragments = [];
+  for (const rawLine of String(rawIdea || '').split(/\r?\n/)) {
+    if (/^\s*#{1,6}\s+/.test(rawLine)) continue;
+    const line = rawLine.replace(/^\s*[-*+]\s+/, '').trim();
+    if (!line) continue;
+    for (const part of line.split(/(?<=[.!?])\s+|;\s*/)) {
+      const text = part.trim();
+      if (text) fragments.push({ text, fragmentIndex: fragments.length });
+    }
+  }
+  return fragments;
+}
+
+function decomposeFreeform(rawIdea) {
+  const mustHaves = [];
+  const noGos = [];
+  const unknowns = [];
+  for (const fragment of freeformFragments(rawIdea)) {
+    if (AMBIGUITY.test(fragment.text)) unknowns.push(fragment);
+    else if (NO_GO.test(fragment.text)) noGos.push(fragment);
+    else mustHaves.push(fragment);
+  }
+  return { mustHaves, noGos, unknowns };
+}
+
+export function createOwnerContract({ idea = '', source = 'unknown' } = {}) {
+  const originalBrief = String(idea ?? '');
+  const rawIdea = originalBrief.trim();
+  const sections = parseSections(rawIdea);
+
+  const explicitMustHaves = findSection(sections, [/^muss have$/, /^must have/, /^must haves/]);
+  const explicitNoGos = findSection(sections, [/^no gos?$/, /^no go/, /^nicht erlaubt/, /^dont/, /^do not/]);
+
+  let mustHaveItems = explicitMustHaves;
+  let noGoItems = explicitNoGos;
+  let unknownItems = [];
+  let decompositionMode = 'explicit-sections';
+
+  if (!explicitMustHaves.length && !explicitNoGos.length && rawIdea) {
+    const decomposed = decomposeFreeform(rawIdea);
+    mustHaveItems = decomposed.mustHaves;
+    noGoItems = decomposed.noGos;
+    unknownItems = decomposed.unknowns;
+    decompositionMode = 'deterministic-freeform-v1';
+  }
+
+  if (!rawIdea) {
+    mustHaveItems = ['Produce one original, complete and highly playable browser game.'];
+    decompositionMode = 'system-default';
   }
 
   const base = {
     schema: 'game-factory.owner-contract/1.0',
     source,
-    ownerBriefSha256: crypto.createHash('sha256').update(rawIdea).digest('hex'),
-    mustHaves: requirementList('MH', mustHaveTexts),
-    noGos: requirementList('NG', noGoTexts),
-    originalBrief: rawIdea,
+    ownerBriefSha256: crypto.createHash('sha256').update(originalBrief).digest('hex'),
+    decomposition: {
+      version: decompositionMode,
+      ambiguitiesPreservedAsUnknown: true
+    },
+    mustHaves: requirementList('MH', mustHaveItems, decompositionMode),
+    noGos: requirementList('NG', noGoItems, decompositionMode),
+    unknowns: requirementList('UN', unknownItems, decompositionMode),
+    originalBrief,
     immutable: true
   };
   const contract = { ...base, contractSha256: contractDigest(base) };
