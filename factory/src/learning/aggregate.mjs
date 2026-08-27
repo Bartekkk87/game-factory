@@ -7,8 +7,7 @@ function runId(run) { return String(run?.runId || run?.id || run?.run?.id || '')
 function gateFailed(gate) {
   if (gate === false) return true;
   if (!gate || typeof gate !== 'object') return false;
-  if (gate.pass === false || gate.passed === false) return true;
-  return false;
+  return gate.pass === false || gate.passed === false;
 }
 function recurring(map) {
   return [...map.entries()]
@@ -16,8 +15,26 @@ function recurring(map) {
     .map(([signature, count]) => ({ signature, count }))
     .sort((a, b) => a.signature.localeCompare(b.signature));
 }
+function detailClass(detail) {
+  const text = String(detail || '').toLowerCase();
+  if (text.includes('too early')) return 'correlated-too-early';
+  if (text.includes('absent') || text.includes('missing')) return 'missing';
+  if (text.includes('runtime')) return 'runtime';
+  return 'failed';
+}
+function failureSignature(kind, failure) {
+  if (failure?.failureSignature || failure?.signature || failure?.errorCode) return failure.failureSignature || failure.signature || failure.errorCode;
+  return [
+    kind || 'attempt',
+    failure?.requirementId || null,
+    failure?.probeId || null,
+    failure?.kind || null,
+    failure?.eventType || null,
+    detailClass(failure?.detail)
+  ].filter(Boolean).join(':');
+}
 
-export function aggregateEvidence({ runEvidence = [], ownerFeedback = [] } = {}) {
+export function aggregateEvidence({ runEvidence = [], attemptEvidence = [], ownerFeedback = [] } = {}) {
   const failures = new Map();
   const positives = new Map();
   const costsByRole = new Map();
@@ -27,6 +44,8 @@ export function aggregateEvidence({ runEvidence = [], ownerFeedback = [] } = {})
   const ownerVerdicts = new Map();
   let technicalFailures = 0;
   let productFidelityFailures = 0;
+  let attemptTechnicalFailures = 0;
+  let attemptProductFidelityFailures = 0;
   let repairs = 0;
   let rebuilds = 0;
   let polishes = 0;
@@ -61,12 +80,8 @@ export function aggregateEvidence({ runEvidence = [], ownerFeedback = [] } = {})
     const score = run.experience?.overall ?? run.experienceScore ?? gates.experience?.overall ?? gates.experience?.score;
     if (Number.isFinite(Number(score))) experience.push(Number(score));
 
-    for (const item of [...events, ...attempts]) {
-      bump(failures, item.failureSignature || item.signature || item.errorCode);
-    }
-    for (const item of run.positivePatterns || []) {
-      bump(positives, typeof item === 'string' ? item : item.signature || item.id || item.pattern);
-    }
+    for (const item of [...events, ...attempts]) bump(failures, item.failureSignature || item.signature || item.errorCode);
+    for (const item of run.positivePatterns || []) bump(positives, typeof item === 'string' ? item : item.signature || item.id || item.pattern);
 
     for (const call of calls) {
       const callCost = number(call.costUsd ?? call.cost);
@@ -87,6 +102,20 @@ export function aggregateEvidence({ runEvidence = [], ownerFeedback = [] } = {})
     }
   }
 
+  const attemptInputs = [...attemptEvidence].sort((a, b) => {
+    const ak = `${a.runId || ''}:${a.attemptId || ''}:${a.kind || ''}`;
+    const bk = `${b.runId || ''}:${b.attemptId || ''}:${b.kind || ''}`;
+    return ak.localeCompare(bk);
+  });
+  for (const item of attemptInputs) {
+    const kind = String(item.kind || '').toLowerCase();
+    const evidence = item.evidence || item;
+    if (!gateFailed(evidence)) continue;
+    if (kind === 'technical') attemptTechnicalFailures++;
+    if (kind === 'product-fidelity') attemptProductFidelityFailures++;
+    for (const failure of Array.isArray(evidence.failures) ? evidence.failures : []) bump(failures, failureSignature(kind, failure));
+  }
+
   const feedback = [...ownerFeedback].sort((a, b) => String(a.id || '').localeCompare(String(b.id || '')));
   for (const item of feedback) {
     bump(ownerVerdicts, item.parsedCommand || item.verdict);
@@ -97,13 +126,16 @@ export function aggregateEvidence({ runEvidence = [], ownerFeedback = [] } = {})
     schemaVersion: 'learning-aggregate-v1',
     input: {
       runIds: runs.map(runId).filter(Boolean),
+      attemptEvidence: attemptInputs.map((a) => ({ runId: String(a.runId || ''), attemptId: String(a.attemptId || ''), kind: a.kind || null, sourceRef: a.sourceRef || null })),
       ownerFeedbackIds: feedback.map((f) => f.id).filter(Boolean)
     },
     failures: {
       signatures: sortedObject(failures),
       recurring: recurring(failures),
       technicalFailures,
-      productFidelityFailures
+      productFidelityFailures,
+      attemptTechnicalFailures,
+      attemptProductFidelityFailures
     },
     positives: {
       signatures: sortedObject(positives),
