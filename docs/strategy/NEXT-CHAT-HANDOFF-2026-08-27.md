@@ -88,6 +88,14 @@ Playtester fidelity remains advisory.
 
 DeepSeek remains a later benchmark lane.
 
+## Important L4 closure lesson
+
+The first explicit L4 integrity run, `33050802610`, failed because the selftest assertion itself was too strict: it rejected the literal `audit.verdict`, including the production line that only deletes/sanitizes a stray non-authoritative LLM verdict.
+
+This was a **test-definition defect, not a production release-authority defect**.
+
+The assertion was corrected to require the intended sanitization behavior. Full branch Run `33050867522` then passed, followed by the merged `main` Run `33051402235` — **SUCCESS**.
+
 ## Top-down integrity check — PASS
 
 Verified chain:
