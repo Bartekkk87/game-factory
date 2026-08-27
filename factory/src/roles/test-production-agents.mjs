@@ -10,6 +10,8 @@ const root = process.cwd();
 const read = (relative) => fs.readFileSync(path.join(root, relative), 'utf8');
 
 const engineerPrompt = read('factory/prompts/engineer.md');
+const directingSkill = read('skills/directing.md');
+const engineeringSkill = read('skills/engineering.md');
 const engineerSource = read('factory/src/roles/engineer.mjs');
 const playtesterPrompt = read('factory/prompts/playtester.md');
 const playtesterSource = read('factory/src/roles/playtester.mjs');
@@ -18,8 +20,19 @@ const auditorSource = read('factory/src/roles/auditor.mjs');
 const pipelineSource = read('factory/src/pipeline/run.mjs');
 const routerTestSource = read('factory/src/llm/test-router.mjs');
 
-assert.doesNotMatch(engineerPrompt, /random input/i);
-assert.doesNotMatch(engineerPrompt, /~\s*15\s*seconds/i);
+const staleVerifierGuidance = /random\s+(?:key\s+)?mash|random\s+input|~\s*15\s*seconds|within\s+15\s+seconds/i;
+for (const [label, text] of [
+  ['engineer prompt', engineerPrompt],
+  ['directing skill', directingSkill],
+  ['engineering skill', engineeringSkill]
+]) {
+  assert.doesNotMatch(text, staleVerifierGuidance, `${label} contains stale verifier guidance`);
+}
+assert.match(directingSkill, /fixed deterministic keyboard\/pointer input sequence/i);
+assert.match(directingSkill, /start -> early -> mid -> end/i);
+assert.match(engineeringSkill, /fixed deterministic keyboard\/pointer input sequence/i);
+assert.match(engineeringSkill, /start -> early -> mid -> end/i);
+
 assert.match(engineerPrompt, /FIXED deterministic RNG seed/);
 assert.match(engineerPrompt, /start -> early -> mid -> end/);
 assert.match(engineerPrompt, /game\.event\(type, data\)/);
