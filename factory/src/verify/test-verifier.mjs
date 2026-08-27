@@ -175,7 +175,7 @@ window.addEventListener('keydown', (event) => {
 });
 game.add('play', {
   update() {
-    if (!evidenceSent && game.time >= 1.6) {
+    if (!evidenceSent && game.time >= 2.6) {
       evidenceSent = true;
       game.event('boss_entered', { boss: 'fixture' });
       game.event('upgrade_applied', { before: 1, after: ${changedValue} });
@@ -202,7 +202,7 @@ game.go('play');
   const behaved = technical.passed && fidelity.pass === mustPassFidelity && payloadBounded;
   if (!behaved) {
     ok = false;
-    console.error(`${name}: technical=${technical.passed} fidelity=${fidelity.pass} expectedFidelity=${mustPassFidelity} payloadBounded=${payloadBounded} failures=${JSON.stringify(technical.failures)}`);
+    console.error(`${name}: technical=${technical.passed} fidelity=${fidelity.pass} expectedFidelity=${mustPassFidelity} payloadBounded=${payloadBounded} failures=${JSON.stringify(technical.failures)} fidelityFailures=${JSON.stringify(fidelity.failures)}`);
   } else {
     console.log(`${name}: technical PASS, fidelity=${fidelity.pass ? 'PASS' : 'FAIL as expected'}, bounded events PASS`);
   }
