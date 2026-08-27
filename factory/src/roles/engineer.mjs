@@ -1,19 +1,17 @@
 import fs from 'node:fs';
 import { chat } from '../llm/client.mjs';
 import { extractJson } from '../llm/json.mjs';
-import { loadPrompt, loadSkill } from '../util/skills.mjs';
+import { assembleSystemPrompt } from '../util/skills.mjs';
 import { lessonsFor } from '../memory/store.mjs';
 import { PATHS } from '../config.mjs';
 import { ownerRequirementIds } from '../contract/owner.mjs';
 
 function systemPrompt() {
-  return (
-    loadPrompt('engineer') +
-    loadSkill('engineering') +
-    (lessonsFor('engineer').length
-      ? `\n\n## Lessons from past post-mortems\n${lessonsFor('engineer').join('\n')}`
-      : '')
-  );
+  return assembleSystemPrompt({
+    promptName: 'engineer',
+    skillName: 'engineering',
+    lessons: lessonsFor('engineer')
+  });
 }
 
 function engineSource() {
