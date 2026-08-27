@@ -40,6 +40,8 @@ jobs:
         run: node factory/src/llm/test-openrouter.mjs
       - name: Prove Owner Contract decomposition and provenance
         run: node factory/src/contract/test-owner-contract.mjs
+      - name: Prove Titan Step 3 candidate validation
+        run: node factory/src/contract/test-titan-candidate-validation.mjs
       - name: Prove controlled learning safety and lifecycle
         run: node factory/src/learning/test-learning.mjs
       - name: Prove cross-run learning trigger threshold
