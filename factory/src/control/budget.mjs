@@ -77,6 +77,7 @@ function pricingMultipliers(pricing, inputTokens) {
 }
 
 function tokenCost(pricing, { input, cached = 0, output }) {
+  if (input === null || input === undefined || output === null || output === undefined) return null;
   if (!Number.isFinite(Number(input)) || !Number.isFinite(Number(output))) return null;
   const inputN = Number(input); const outputN = Number(output); const cachedN = Math.min(Math.max(0, Number(cached) || 0), inputN);
   const uncachedN = Math.max(0, inputN - cachedN); const mult = pricingMultipliers(pricing, inputN);
