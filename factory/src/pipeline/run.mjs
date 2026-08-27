@@ -5,7 +5,7 @@ import { log } from '../util/log.mjs';
 import { ensureDir, writeJson, writeText, sha256 } from '../util/fsx.mjs';
 import { slugify } from '../util/slug.mjs';
 import { runDirector } from '../roles/director.mjs';
-import { buildGame, repairGame, polishGame } from '../roles/engineer.mjs';
+import { buildGame, rebuildGame, repairGame, polishGame } from '../roles/engineer.mjs';
 import { runPlaytester } from '../roles/playtester.mjs';
 import { runAuditor } from '../roles/auditor.mjs';
 import { runSession } from '../verify/harness.mjs';
@@ -35,6 +35,15 @@ function failureBundle(evidence) {
     fps: evidence.fps,
     states: evidence.states
   };
+}
+
+function failureSignature(bundle) {
+  return JSON.stringify({
+    failures: bundle.contractFailures.map((f) => [f.id, f.detail || '']),
+    consoleErrors: bundle.consoleErrors.slice(0, 3),
+    pageErrors: bundle.pageErrors.slice(0, 3),
+    probeErrors: bundle.probeErrors.slice(0, 3)
+  });
 }
 
 function summarizeFailure(bundle) {
@@ -139,29 +148,73 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
   let design = null;
   let tech = null;
   const failureBundles = [];
+  const escalationHistory = [];
+  let lastFailureSignature = null;
+  let lastCandidateSha = null;
+  let forceFreshRebuild = false;
   let attempt = 0;
 
   for (attempt = 1; attempt <= LIMITS.maxDebugRounds + 1; attempt++) {
     log.step(`PHASE B - BUILD & VERIFY (attempt ${attempt}/${LIMITS.maxDebugRounds + 1})`);
     try {
-      design =
-        attempt === 1
-          ? await buildGame({ gdd, ownerIdea: idea })
-          : await repairGame({ gdd, design, ownerIdea: idea, failureSummary: summarizeFailure(failureBundles[failureBundles.length - 1]) });
+      if (attempt === 1) {
+        design = await buildGame({ gdd, ownerIdea: idea });
+      } else if (forceFreshRebuild) {
+        log.warn('repair stagnation detected: discarding previous architecture and rebuilding fresh');
+        design = await rebuildGame({
+          gdd,
+          ownerIdea: idea,
+          failureHistory: escalationHistory.slice(-4)
+        });
+        forceFreshRebuild = false;
+      } else {
+        design = await repairGame({
+          gdd,
+          design,
+          ownerIdea: idea,
+          failureSummary: summarizeFailure(failureBundles[failureBundles.length - 1])
+        });
+      }
     } catch (e) {
       return failClosed(runDir, 'engineer_invalid_output', { error: String(e.message), attempt });
     }
+
     tech = await verifyAttempt({ runDir, attempt, design });
     if (tech.verdict.passed) break;
-    failureBundles.push(failureBundle(tech.evidence));
+
+    const bundle = failureBundle(tech.evidence);
+    const signature = failureSignature(bundle);
+    const candidateSha = tech.evidence.candidateSha;
+    const sameFailure = lastFailureSignature !== null && signature === lastFailureSignature;
+    const sameCandidate = lastCandidateSha !== null && candidateSha === lastCandidateSha;
+
+    failureBundles.push(bundle);
     log.warn(`attempt ${attempt} failed contract (${tech.verdict.failures.length} checks)`);
     for (const f of tech.verdict.failures) {
       log.warn(`  FAILED CHECK [${f.id}] ${f.label} :: ${f.detail || 'no detail'}`);
     }
+
+    if (sameFailure || sameCandidate) {
+      const trigger = [sameFailure ? 'same failure signature' : null, sameCandidate ? 'identical candidate' : null]
+        .filter(Boolean)
+        .join(' + ');
+      const summary = summarizeFailure(bundle);
+      escalationHistory.push(`${trigger}: ${summary}`);
+      forceFreshRebuild = true;
+      log.warn(`repair made no meaningful progress (${trigger}); next attempt will use fresh rebuild escalation`);
+    }
+
+    lastFailureSignature = signature;
+    lastCandidateSha = candidateSha;
+
     if (overBudget(budgetUsd)) return failClosed(runDir, 'budget_exceeded_during_debug');
   }
   if (!tech?.verdict.passed) {
-    return failClosed(runDir, 'debug_exhausted', { attempts: attempt, bundles: failureBundles });
+    return failClosed(runDir, 'debug_exhausted', {
+      attempts: attempt,
+      bundles: failureBundles,
+      escalations: escalationHistory
+    });
   }
   log.info('technical contract PASSED');
 
