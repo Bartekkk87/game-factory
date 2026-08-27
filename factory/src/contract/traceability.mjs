@@ -66,6 +66,11 @@ export function compileDirectorTraceability(gdd, ownerContract) {
     if (kind === 'event' || kind === 'event_absent' || kind === 'event_value_change') {
       compiledProbe.eventType = requireString(probe.eventType, `${probeId}.eventType`);
     }
+    if (kind === 'event' && requirementId.startsWith('MH-')) {
+      // Positive product mechanics need more than an event-name claim. The verifier
+      // correlates the engine-captured event time/state/score with telemetry.
+      compiledProbe.strength = 'correlated_gameplay';
+    }
     if (kind === 'event_value_change') {
       compiledProbe.beforeField = String(probe.beforeField || 'before');
       compiledProbe.afterField = String(probe.afterField || 'after');
