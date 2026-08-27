@@ -10,7 +10,7 @@ on:
       - 'skills/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/verify.yml'
+      - '.github/workflows/**'
   workflow_dispatch:
 
 permissions:
@@ -25,6 +25,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - name: Validate GitHub workflow YAML
+        run: |
+          ruby -e "require 'yaml'; Dir['.github/workflows/*.{yml,yaml}'].sort.each { |f| YAML.parse_file(f); puts \"workflow yaml OK: #{f}\" }"
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
       - name: Check all Node modules
