@@ -35,6 +35,7 @@ Verification + evidence contract (machine-checked afterwards):
 - Evidence is captured across the persisted `start -> early -> mid -> end` telemetry timeline. The game must leave title/boot and become productively interactive by the early evidence point.
 - Score MUST increase through actual gameplay actions described in `gdd.probePlan.scoreEvents` during the deterministic verifier sequence. Make ordinary supported input productive early.
 - Every Owner requirement must be implemented so its supplied Acceptance/Probe mapping can be evidenced. For product-specific mechanics, emit the exact bounded `game.event(...)` evidence required by `gdd.probePlan.requirementProbes`.
+- For a positive Must-Have with an `event` probe, emit that event only when the real mechanic has become active during gameplay, after the early verifier evidence point and after real score progress exists. Never emit a required mechanic event during init/startup merely to satisfy the probe name.
 - Never satisfy a mechanic with a decorative/prose-only stand-in. A required gameplay-value change must change the real value and emit before/after evidence.
 - Never block scoring or required evidence behind menus beyond the built-in title screen.
 - Do not end the round automatically before the verifier has meaningful early/mid evidence unless the player loses fairly.
