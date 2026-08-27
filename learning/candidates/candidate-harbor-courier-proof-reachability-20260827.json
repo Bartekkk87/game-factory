@@ -1,11 +1,11 @@
 {
   "schemaVersion": "learning-candidate-v1",
   "id": "candidate-harbor-courier-proof-reachability-20260827",
-  "status": "candidate",
+  "status": "validated",
   "role": "director",
   "scope": "verification-design",
   "targetLayer": "verifier",
-  "text": "Hypothesis only: Director proof plans need an explicit reachability check against the verifier observation model before paid Engineer repair loops begin. Harbor Courier canary #2 used a 75-second gameplay timeout while the factory verifier observes 12 seconds, yet PR-MH-04 requires state=failure from timeout. The same single active verifier session is also expected to prove state=success, third_delivery_completed, route_detour_completed and fresh_run_started. The current traceability compiler validates IDs/cardinality/evidence kinds but not whether all required probes are temporally and logically reachable under the fixed verifier seed/input/window. Validate whether the factory should fail closed before paid build/repair when a proof plan is unreachable, and whether independent scenario probes are required for mutually exclusive states such as success and timeout failure. Do not change Production or promote this candidate until deterministic regression fixtures prove the failure mode and the minimal remedy.",
+  "text": "Hypothesis validated: Director proof plans need an explicit reachability check against the verifier observation model before paid Engineer build/repair begins. Harbor Courier canary #2 used a 75-second gameplay timeout while the base verifier observed only 12 seconds and also expected one proof path to cover mutually exclusive success and failure plus restart. The validated repair compiles a proof plan after Director traceability and fails closed before Engineer spend if required proof scenarios are unreachable. The existing short active+idle technical control remains unchanged. Product terminal evidence is now gathered only when required through independent harness-owned browser scenarios: active for success, idle for timeout failure, stopping immediately when the target state is observed. Restart is proven by an actual harness-observed terminal-to-playing transition rather than a generated fresh_run_started self-attestation event. The Product Proof window is bounded and explicit. This candidate remains inactive and is not promoted as an active production lesson.",
   "sourceRunIds": [
     "20260827-210323"
   ],
@@ -20,15 +20,34 @@
     "factory/src/contract/traceability.mjs"
   ],
   "ownerFeedbackIds": [],
-  "candidateSha": null,
-  "confidence": 0.8,
+  "candidateSha": "11a02908b43805dd0e07ccfe7342262b2a6e0349",
+  "confidence": 1,
   "evidenceCount": 7,
   "createdAt": "2026-08-27T21:15:00.000Z",
-  "validatedAt": null,
+  "validatedAt": "2026-08-27T21:34:30.000Z",
   "expiresAfter": null,
   "supersedes": null,
-  "validationEvidence": [],
-  "regressionResults": [],
+  "validationEvidence": [
+    "factory/src/verify/test-proof-reachability.mjs",
+    "factory/src/verify/test-proof-scenarios.mjs",
+    "PR #19",
+    "GitHub Actions Verifier Selftest 33118304172 on 0dcc7dc2c7245bdb7246eeda3770e00256a17d6f",
+    "GitHub Actions post-merge Verifier Selftest 33118561201 on 11a02908b43805dd0e07ccfe7342262b2a6e0349"
+  ],
+  "regressionResults": [
+    {
+      "name": "branch-full-verifier",
+      "runId": "33118304172",
+      "commitSha": "0dcc7dc2c7245bdb7246eeda3770e00256a17d6f",
+      "passed": true
+    },
+    {
+      "name": "post-merge-full-verifier",
+      "runId": "33118561201",
+      "commitSha": "11a02908b43805dd0e07ccfe7342262b2a6e0349",
+      "passed": true
+    }
+  ],
   "active": false,
   "activatedAt": null,
   "promotionRef": null,
