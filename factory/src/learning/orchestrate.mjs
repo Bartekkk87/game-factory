@@ -144,12 +144,12 @@ function buildProposal({ eventKind, eventId, trigger, aggregate, durable, candid
   }
 
   if (eventKind === 'production-run' && trigger.allowedScopes?.includes('engineering')) {
-    const recurring = (aggregate?.failures?.recurring || []).filter((item) => Number(item.count) >= 2);
-    const signatures = recurring.map((item) => `${item.signature} x${item.count}`);
+    const recurring = (aggregate?.failures?.recurring || []).filter((item) => Number(item.count) >= 2 && Number(item.runCount) >= 2);
+    const signatures = recurring.map((item) => `${item.signature} x${item.count} across ${item.runCount} runs`);
     return {
       scope: 'engineering',
       facts: [
-        `Recurring deterministic failure evidence: ${signatures.join('; ') || 'none'}.`,
+        `Recurring deterministic cross-run failure evidence: ${signatures.join('; ') || 'none'}.`,
         `Independent durable runs in aggregate: ${new Set(aggregate?.input?.runIds || []).size}.`
       ],
       proposal: {
@@ -157,7 +157,7 @@ function buildProposal({ eventKind, eventId, trigger, aggregate, durable, candid
         role: 'engineer',
         scope: 'engineering',
         targetLayer: 'skill',
-        text: `Hypothesis only: recurring deterministic verifier failures observed by production event ${eventId} may indicate an engineering-guidance gap. Validate root cause against independent evidence and the full regression suite before proposing any skill change.`,
+        text: `Hypothesis only: recurring deterministic verifier failures observed across independent runs by production event ${eventId} may indicate an engineering-guidance gap. Validate root cause against independent evidence and the full regression suite before proposing any skill change.`,
         sourceRunIds: [...new Set(aggregate?.input?.runIds || [])].map(String).sort(),
         sourceKind: 'controlled-learning-orchestration',
         ownerFeedbackIds: [],
