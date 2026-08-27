@@ -9,6 +9,7 @@ const productionSource = fs.readFileSync(path.join(root, 'factory', 'src', 'inde
 const productionWorkflow = fs.readFileSync(path.join(root, '.github', 'workflows', 'produce.yml'), 'utf8');
 const reviewWorkflow = fs.readFileSync(path.join(root, '.github', 'workflows', 'review.yml'), 'utf8');
 const orchestrationSource = fs.readFileSync(path.join(root, 'factory', 'src', 'learning', 'orchestrate.mjs'), 'utf8');
+// C2 has one canonical Production hook in index.mjs; produce.yml must not add a parallel orchestration path.
 assert.match(productionSource, /orchestrateControlledLearning\(\{\s*eventKind:\s*'production-run'/s);
 assert.doesNotMatch(productionWorkflow, /Run controlled learning orchestration/);
 assert.match(productionWorkflow, /node factory\/src\/index\.mjs/);
