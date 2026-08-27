@@ -145,6 +145,7 @@ const titanResult = readJson('runs/20260827-120138/RESULT.json');
 const ownerFeedback = readJson('learning/evidence/owner-feedback/gh-issue-6-comment-5443073595.json');
 const candidateA = readJson('learning/candidates/titan-canary-3-visual-target-intake-v1.json');
 const candidateB = readJson('learning/candidates/candidate-owner-feedback-8e1c9bf738f845cb.json');
+const validation = readJson('learning/validations/titan-step3-candidate-validation-2026-08-27.json');
 
 assert.equal(titanBrief.idea.trim(), titanIdea);
 assert.equal(titanContract.originalBrief.trim(), titanIdea);
@@ -163,14 +164,27 @@ assert.deepEqual(
   titanResult.meta.productFidelity.criteria.map((item) => item.requirementId),
   ownerRequirementIds(titanContract)
 );
-assert.equal(candidateA.active, false);
-assert.equal(candidateB.active, false);
+
+// Durable assessment must remain evidence-only: partial outcomes are linked to the
+// candidates, but neither candidate is lifecycle-validated or active.
+assert.equal(validation.status, 'completed');
+assert.equal(validation.rootCauseAssessment.primaryTitanRootCause, 'durable-owner-intent-and-acceptance-baseline-mismatch');
+assert.equal(validation.rootCauseAssessment.secondarySystemicDefect, 'explicit descriptive product truth outside structured Must-Have/No-Go IDs is not covered by deterministic Product Fidelity');
+assert.deepEqual(validation.candidateOutcomes.map((item) => item.outcome), ['partially-confirmed', 'partially-confirmed']);
+for (const candidate of [candidateA, candidateB]) {
+  assert.equal(candidate.status, 'candidate');
+  assert.equal(candidate.validatedAt, null);
+  assert.equal(candidate.active, false);
+  assert.equal(candidate.validationEvidence[0]?.ref, 'learning/validations/titan-step3-candidate-validation-2026-08-27.json');
+  assert.equal(candidate.validationEvidence[0]?.outcome, 'partially-confirmed');
+}
 
 console.log(JSON.stringify({
   test: 'Titan Step 3 candidate validation',
   result: 'PASS',
-  candidateA: 'falsified-as-specific-Titan-root-cause',
-  candidateB: 'partially-supported-systemic-decomposition-and-fidelity-coverage-gap',
+  candidateA: 'partially-confirmed; falsified-as-specific-Titan-root-cause',
+  candidateB: 'partially-confirmed-systemic-decomposition-and-fidelity-coverage-gap',
+  primaryTitanRootCause: 'durable-owner-intent-and-acceptance-baseline-mismatch',
   promptAssemblyLoss: false,
   productionOwnerContractChanged: false,
   candidatesRemainInactive: true
