@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { createOwnerContract } from '../contract/owner.mjs';
 import { compileDirectorTraceability } from '../contract/traceability.mjs';
 import { evaluateProductFidelity } from './fidelity.mjs';
@@ -46,6 +47,7 @@ const fakeEventReport = {
 const fakeVerdict = evaluateProductFidelity({ ownerContract, gdd, report: fakeEventReport });
 assert.equal(fakeVerdict.pass, false);
 assert.match(fakeVerdict.failures[0].detail, /correlated gameplay evidence|too early|value change/i);
+assert.equal(fakeVerdict.criteria[0].evidenceSource, 'generated-game-event+runtime-correlation');
 assert.deepEqual(fakeVerdict.coverage.generatedGameEventDependentRequirementIds, ['MH-01']);
 assert.deepEqual(fakeVerdict.coverage.correlatedGeneratedGameEventRequirementIds, ['MH-01']);
 assert.deepEqual(fakeVerdict.coverage.harnessObservedRequirementIds, []);
@@ -73,6 +75,7 @@ const realMechanicReport = {
 const realVerdict = evaluateProductFidelity({ ownerContract, gdd, report: realMechanicReport });
 assert.equal(realVerdict.pass, true);
 assert.equal(realVerdict.criteria[0].strength, 'correlated_gameplay');
+assert.equal(realVerdict.criteria[0].evidenceSource, 'generated-game-event+runtime-correlation');
 assert.deepEqual(realVerdict.coverage.generatedGameEventDependentRequirementIds, ['MH-01']);
 assert.deepEqual(realVerdict.coverage.correlatedGeneratedGameEventRequirementIds, ['MH-01']);
 
@@ -95,7 +98,14 @@ const harnessGdd = compileDirectorTraceability({
 }, harnessContract);
 const harnessVerdict = evaluateProductFidelity({ ownerContract: harnessContract, gdd: harnessGdd, report: realMechanicReport });
 assert.equal(harnessVerdict.pass, true);
+assert.equal(harnessVerdict.criteria[0].evidenceSource, 'harness-observed');
 assert.deepEqual(harnessVerdict.coverage.harnessObservedRequirementIds, ['MH-01']);
 assert.deepEqual(harnessVerdict.coverage.generatedGameEventDependentRequirementIds, []);
+
+// The coverage boundary must survive the pipeline into durable result/review metadata.
+const pipelineSource = fs.readFileSync(new URL('../pipeline/run.mjs', import.meta.url), 'utf8');
+assert.match(pipelineSource, /coverage:\s*verified\.fidelity\.coverage/);
+assert.match(pipelineSource, /Product fidelity scope/);
+assert.match(pipelineSource, /coverage:\s*tech\.fidelity\.coverage/);
 
 console.log('P0-03 fidelity hardening selftest: PASS');
