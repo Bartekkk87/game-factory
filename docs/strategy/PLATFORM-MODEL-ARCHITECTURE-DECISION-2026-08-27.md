@@ -6,6 +6,21 @@
 
 This record does not authorize a paid game Canary and does not authorize automatic challenger promotion.
 
+### Current credential update — 27.08.2026
+
+The Owner reports that GitHub Actions repository secrets `OPENAI_PRODUCTION` and `OPENROUTER_PRODUCTION` have now been created and populated with the corresponding real provider keys. Secret values are not readable through the current GitHub connector and must never be echoed into code, logs, issues, evidence, Notion or chat.
+
+Owner-side provisioning is therefore complete, but **runtime migration is not yet complete**: the current Production workflow still uses legacy `GF_LLM_API_KEY` for OpenAI while OpenRouter already uses `OPENROUTER_PRODUCTION`.
+
+Target Production credential contract after Final Factory Closure:
+
+```text
+OpenAI Production     -> OPENAI_PRODUCTION
+OpenRouter Production -> OPENROUTER_PRODUCTION
+```
+
+This migration plus fail-closed credential isolation is tracked in GitHub Issue `#8` — **Final Factory Closure — Learning Orchestration + Secret Migration**. Legacy `GF_LLM_API_KEY` must not be retired until the new OpenAI path is implemented and regression-proven.
+
 ## 1. Platform / repository strategy
 
 The public `Bartekkk87/game-factory` repository remains approved for the current PoC. GitHub remains executable/durable Source of Truth.
@@ -73,7 +88,7 @@ Verified behavior in regression tests:
 - Production workflow identifies the Production credential lane;
 - no paid Game/Titan Canary was run.
 
-The current connector cannot read GitHub Actions secrets, so the existence of a live `OPENROUTER_PRODUCTION` secret is not asserted. No key is requested in chat or stored in code/docs/evidence.
+The current connector cannot read GitHub Actions secrets. The Owner now reports `OPENROUTER_PRODUCTION` is provisioned, but its value has not been inspected by the connector and no live OpenRouter API proof has yet been run. No key is requested in chat or stored in code/docs/evidence.
 
 ## 5. M1 — benchmark-safe challenger infrastructure implemented
 
@@ -94,9 +109,9 @@ Registry flags keep the model a challenger and not a Production default.
 
 Capability mismatch fails before dispatch. Role and operation overrides remain supported. No automatic “best model” selection or automatic DeepSeek Production promotion exists.
 
-## 6. Credential trust boundaries — implemented in runtime policy
+## 6. Credential trust boundaries — implemented in runtime policy, Production naming migration open
 
-Approved lanes:
+Approved OpenRouter lanes:
 
 ```text
 OPENROUTER_PRODUCTION
@@ -104,11 +119,20 @@ OPENROUTER_BENCHMARK
 OPENROUTER_IMPROVEMENT
 ```
 
+Production provider target names:
+
+```text
+OPENAI_PRODUCTION
+OPENROUTER_PRODUCTION
+```
+
 Selection is by trust/budget lane rather than per-agent API key.
 
-Security invariant:
+Security invariants:
 
 > Benchmark or Improvement must not silently use Production credentials when their isolated lane is required.
+
+> OpenAI and OpenRouter Production credentials must remain provider-isolated and fail closed; one provider key must not silently substitute for the other.
 
 Factory evidence continues to attribute consumption by role/model/operation, so separate role keys are not required for accounting.
 
@@ -169,7 +193,7 @@ Mature Production should distinguish:
 
 Potential controlled dimensions include approved endpoints/providers, fallback restrictions, retention/data-collection policy, proprietary-code exposure, capability requirements and spend ceilings.
 
-## 11. Acceptance status M0/M1
+## 11. Acceptance status M0/M1 and current credential boundary
 
 | Criterion | Result |
 |---|---|
@@ -179,12 +203,17 @@ Potential controlled dimensions include approved endpoints/providers, fallback r
 | challenger cannot silently become default | PASS |
 | role/operation overrides retained | PASS |
 | capability mismatch before dispatch | PASS |
-| Production/Benchmark/Improvement credential separation | PASS in code/regression |
+| OpenRouter Production/Benchmark/Improvement credential separation | PASS in code/regression |
+| Owner reports `OPENAI_PRODUCTION` provisioned | OWNER-REPORTED / connector cannot inspect secret |
+| Owner reports `OPENROUTER_PRODUCTION` provisioned | OWNER-REPORTED / connector cannot inspect secret |
+| Production workflow uses `OPENAI_PRODUCTION` | **OPEN — still legacy `GF_LLM_API_KEY`** |
 | no release-authority change | PASS |
 | no paid game Canary | PASS |
-| live OpenRouter API call | NOT RUN / optional after secret provisioning |
+| live OpenRouter API call | NOT RUN / optional only after safe runtime migration decision |
 
 Relevant Verifier evidence includes Runs `33083567504` and subsequent full green regression Runs documented in `docs/strategy/CONTROLLED-IMPROVEMENT-V1-IMPLEMENTATION-2026-08-27.md`.
+
+Current execution backlog for the remaining Factory closure is GitHub Issue `#8`. Durable handoff: `docs/strategy/FINAL-FACTORY-CLOSURE-HANDOFF-2026-08-27.md`.
 
 ## 12. Governance
 
