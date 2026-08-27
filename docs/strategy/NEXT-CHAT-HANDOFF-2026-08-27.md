@@ -107,7 +107,7 @@ L3 verification history:
 
 ## Immediate work order — L4 Production Agents / P0
 
-Work autonomously and bottom-up within L4. After every meaningful change, wait for the **full Verifier Selftest to be green before continuing**.
+Work autonomously and bottom-up within L4. After every meaningful change, require the **full Verifier Selftest to be green before continuing**.
 
 ### 1. Engineer contract alignment
 
