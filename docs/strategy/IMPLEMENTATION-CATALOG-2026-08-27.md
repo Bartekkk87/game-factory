@@ -5,15 +5,21 @@
 **L1 Control Kernel — DONE**  
 **L2 Model / Provider Layer — DONE**  
 **L3 Verification & Evidence — DONE**  
-**L4 Production Agents — IMPLEMENTED / FINAL CLOSURE PENDING**
+**L4 Production Agents — DONE / P0 VERIFIED**
 
-Aktueller L4-Code-Head vor den Dokumentationscommits:
+Finaler L4-Code-Head vor Dokumentationscommits:
 
-`b19ac17243326235eebdd8c62079c0df667ca46d`
+`ce0d061cbad98e8f2f5948e0910fd300dbd0b573`
 
-Letzter vollständiger bestehender Verifier-Selftest:
+Vollständiger Verifier-Selftest mit explizit ausgeführtem L4-Integritätstest:
 
-GitHub Actions Run `33049921260` — **SUCCESS**
+GitHub Actions Run `33050867522` — **SUCCESS**
+
+Top-down-Integritätscheck:
+
+`Owner Idea -> Owner Contract -> Director IDs -> Engineer -> Verifier Evidence -> Product Fidelity PASS -> Playtester Fidelity Review -> Experience >= 6.5 -> Budget PASS -> deterministic Release Gate -> Owner Preview`
+
+Ergebnis: **PASS**.
 
 **Kein bezahlter Titan Canary #3 wurde gestartet.**
 
@@ -21,9 +27,9 @@ Detaillierter L4-Nachweis: `docs/strategy/HARDENING-STATUS-2026-08-27-L4.md`.
 
 ---
 
-### L1 — Control Kernel / Fundament — DONE
+## L1 — Control Kernel / Fundament — DONE
 
-Umgesetzt und verifiziert:
+Verifiziert:
 
 - echtes modellbezogenes Kosten-Tracking;
 - Kosten pro Rolle / Modell / Operation / Attempt;
@@ -38,9 +44,9 @@ Verbindliche Release-Regel:
 
 ---
 
-### L2 — Model & Provider Layer — DONE
+## L2 — Model & Provider Layer — DONE
 
-Umgesetzt und verifiziert:
+Verifiziert:
 
 - fail-closed Role Router;
 - Provider Registry;
@@ -64,9 +70,9 @@ DeepSeek bleibt Benchmark-Lane für später und ist nicht ungeprüft Teil des Re
 
 ---
 
-### L3 — Verification & Evidence — DONE
+## L3 — Verification & Evidence — DONE
 
-Umgesetzt und verifiziert:
+Verifiziert:
 
 - immutable Owner Contract;
 - stabile `MH-xx` Must-Have- und `NG-xx` No-Go-IDs;
@@ -84,11 +90,9 @@ Finaler L3-`main`-Run: `33046180562` — **SUCCESS**.
 
 ---
 
-### L4 — Production Agents — IMPLEMENTED / FINAL CLOSURE PENDING
+## L4 — Production Agents — DONE / P0 VERIFIED
 
-Die Produktionsrollen sind jetzt an die L1–L3-Contracts angebunden.
-
-#### Engineer — umgesetzt
+### Engineer
 
 - stale `random input / ~15 seconds` Verifier-Text entfernt;
 - Prompt auf festen deterministischen Seed/Input-Ablauf und `start -> early -> mid -> end` ausgerichtet;
@@ -98,7 +102,7 @@ Die Produktionsrollen sind jetzt an die L1–L3-Contracts angebunden.
 - fail-closed bei fehlendem Owner Contract oder instabiler Traceability;
 - Repair / Fresh Rebuild / Verified Polish Rollback erhalten.
 
-#### Playtester — umgesetzt
+### Playtester
 
 Er erhält:
 
@@ -120,57 +124,27 @@ Experience Score + Kritik
 
 Die unabhängige Playtester-Fidelity bleibt advisory. Die deterministische Product Fidelity bleibt Maschinen-Authority.
 
-#### Auditor — umgesetzt
+### Auditor
 
 - strikt advisory only;
-- kein eigener Release-`PASS/FAIL` mehr;
+- kein eigener Release-`PASS/FAIL`;
 - Assessment `CONSISTENT` / `CONCERNS` plus Findings/Summary;
+- ein eventuell geliefertes `verdict`-Feld wird entfernt;
 - Digest enthält Technical, deterministische Fidelity, Playtester Fidelity, Experience, Budget und deterministic Release Gate;
 - Release-Entscheidung bleibt ausschließlich bei `releaseFor(...)`.
 
-#### CI / Referenzroute — umgesetzt
+### CI / Referenzroute
 
-- Änderungen unter `factory/prompts/**` triggern jetzt ebenfalls den vollständigen Verifier-Selftest;
+- Änderungen unter `factory/prompts/**` triggern den vollständigen Verifier-Selftest;
+- `node factory/src/roles/test-production-agents.mjs` ist expliziter Workflow-Schritt;
 - Routertests pinnen Terra für Director/Engineer/Playtester und Luna für Auditor;
 - Release Verdict nutzt kein LLM.
 
-L4-Verifikationsruns nach relevanten Änderungen:
-
-`33048507658`, `33048635648`, `33048970244`, `33049092906`, `33049183969`, `33049293313`, `33049385943`, `33049485667`, `33049672597`, `33049770257`, `33049921260` — alle **SUCCESS**.
-
-#### Noch offen zur formalen L4-Abnahme
-
-`factory/src/roles/test-production-agents.mjs` wurde als dedizierter L4-Integritätstest angelegt. Er prüft die Rollenverträge, Advisory-Grenzen, Referenzroute und die Owner-Contract-zu-Release-Gate-Kette.
-
-**Dieser Test ist noch nicht als expliziter Ausführungsschritt in `.github/workflows/verify.yml` verdrahtet.** Der bestehende Komplett-Selftest ist grün, aber der neue L4-Test wurde dabei bisher nur syntaktisch geprüft, nicht ausgeführt.
-
-Deshalb nächste Reihenfolge:
-
-1. dedizierten L4-Test als Workflow-Step verdrahten;
-2. vollständigen Verifier-Selftest erneut grün bestätigen;
-3. Top-down-Integritätscheck durchführen;
-4. L4/P0 erst dann auf DONE setzen.
+Finaler L4-Komplettlauf: `33050867522` — **SUCCESS**.
 
 ---
 
-### L5 — Owner / Product Layer
-
-Owner-Rolle bleibt bewusst klein:
-
-```text
-Idee eingeben
--> Factory arbeitet
--> Preview
--> Approve / Reject
-```
-
-SaaS-/Frontend-Themen bleiben außerhalb P0, bis der Produktionskern mehrere belastbare Genres bewiesen hat.
-
----
-
-## Top-down-Gegencheck — NEXT
-
-Nach finaler L4-Abnahme muss die komplette Kette geprüft werden:
+## Top-down-Gegencheck — PASS
 
 ```text
 Owner Idea
@@ -186,17 +160,36 @@ Owner Idea
 -> Owner Preview
 ```
 
-**Keine Owner-Anforderung darf unterwegs verschwinden.**
+**Keine Owner-Anforderung verschwindet unterwegs.**
 
-## Verbindliche Reihenfolge ab jetzt
+Der Draft/Owner-Preview-Pfad wird erst nach bestandenem deterministischem Release Gate geöffnet. Der Production-Workflow committed Draft und Evidence, erstellt das Review-Issue und Pages veröffentlicht die Preview auf `main`.
+
+---
+
+## L5 — Owner / Product Layer
+
+Owner-Rolle bleibt bewusst klein:
+
+```text
+Idee eingeben
+-> Factory arbeitet
+-> Preview
+-> Approve / Reject
+```
+
+SaaS-/Frontend-Themen bleiben außerhalb P0, bis der Produktionskern mehrere belastbare Genres bewiesen hat.
+
+---
+
+## Nächste Reihenfolge
 
 1. L1 Control Kernel — **DONE**
 2. L2 Model / Provider Layer — **DONE**
 3. L3 Verification & Evidence — **DONE**
-4. L4 Production Agents — **IMPLEMENTED; REGRESSION-INTEGRATION PENDING**
-5. L4 Integrity Test in Workflow + vollständiger Selftest — **NEXT**
-6. Top-down-Integritätscheck
-7. Erst danach genau ein `Titan Core: Reforged` Canary #3
+4. L4 Production Agents / P0 — **DONE**
+5. Branch sauber nach `main` übernehmen und `main`-Selftest grün bestätigen
+6. Danach ist genau ein `Titan Core: Reforged` Canary #3 technisch zulässig — **in dieser Closure-Arbeit nicht starten**
+7. Nach Referenz-PASS: zweites Genre und P1/P2 Optimierungen
 
 Wenn Canary #3 später scheitert:
 
