@@ -42,6 +42,9 @@ jobs:
       - name: Prove L4 production-agent integrity
         run: node factory/src/roles/test-production-agents.mjs
 
+      - name: Prove P0-03 product-fidelity event hardening
+        run: node factory/src/verify/test-fidelity-hardening.mjs
+
       - name: Install browser
         run: npx playwright install --with-deps chromium
 
