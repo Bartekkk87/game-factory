@@ -1,0 +1,36 @@
+{
+  "ownerContract": {
+    "schema": "game-factory.owner-contract/1.0",
+    "contractSha256": "fixture-broken",
+    "mustHaves": [
+      {"id": "MH-01", "text": "A boss encounter must happen."},
+      {"id": "MH-02", "text": "An upgrade must change gameplay."}
+    ],
+    "noGos": [
+      {"id": "NG-01", "text": "No decorative fake upgrade."}
+    ]
+  },
+  "gdd": {
+    "acceptanceCriteria": [
+      {"id": "AC-MH-01", "ownerRequirementId": "MH-01", "statement": "Boss encounter is observed."},
+      {"id": "AC-MH-02", "ownerRequirementId": "MH-02", "statement": "Upgrade changes a numeric gameplay value."},
+      {"id": "AC-NG-01", "ownerRequirementId": "NG-01", "statement": "Upgrade changes a numeric gameplay value."}
+    ],
+    "probePlan": {
+      "requirementProbes": [
+        {"id": "PR-MH-01", "acceptanceId": "AC-MH-01", "ownerRequirementId": "MH-01", "kind": "event", "eventType": "boss_entered"},
+        {"id": "PR-MH-02", "acceptanceId": "AC-MH-02", "ownerRequirementId": "MH-02", "kind": "event_value_change", "eventType": "upgrade_applied"},
+        {"id": "PR-NG-01", "acceptanceId": "AC-NG-01", "ownerRequirementId": "NG-01", "kind": "event_value_change", "eventType": "upgrade_applied"}
+      ]
+    }
+  },
+  "report": {
+    "timeline": [
+      {"phase": "start", "atMs": 0, "snapshot": {"state": "title", "score": 0, "events": []}},
+      {"phase": "early", "atMs": 1000, "snapshot": {"state": "playing", "score": 2, "events": []}},
+      {"phase": "mid", "atMs": 2500, "snapshot": {"state": "playing", "score": 8, "events": [{"seq": 1, "type": "upgrade_applied", "time": 2.1, "data": {"before": 1, "after": 1}}]}},
+      {"phase": "end", "atMs": 5000, "snapshot": {"state": "playing", "score": 14, "events": [{"seq": 1, "type": "upgrade_applied", "time": 2.1, "data": {"before": 1, "after": 1}}]}}
+    ]
+  },
+  "expectedFailureIds": ["MH-01", "MH-02", "NG-01"]
+}
