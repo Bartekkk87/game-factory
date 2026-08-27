@@ -65,6 +65,9 @@ function contractDigest(contractWithoutSha) {
 
 const AMBIGUITY = /\b(?:maybe|perhaps|possibly|might|could|optional|ideally|nice to have|vielleicht|eventuell|gegebenenfalls|ggf|wenn möglich|waere schoen|wäre schön)\b/i;
 const NO_GO = /(?:^\s*no\b|\b(?:do not|don't|never|avoid|must not|mustn't|not allowed|forbidden|darf nicht|dürfen nicht|niemals|vermeide|kein(?:e|en|er|es)?)\b)/i;
+const CONTEXT_ONLY = /\b(?:inspired by|inspiration|inspiriert von|angelehnt an|feels? like|feel like|soll sich anf(?:ü|ue|u)hlen wie|im stil von|style of)\b/i;
+const EXPLICIT_OBLIGATION = /\b(?:must|shall|required|requires?|needs? to|has to|have to|muss|müssen|soll|sollen|ist erforderlich|sind erforderlich)\b/i;
+const DIRECT_BUILD_REQUEST = /^\s*(?:please\s+)?(?:build|create|make|produce|develop|baue|bau|erstelle|entwickle)\b/i;
 
 function freeformFragments(rawIdea) {
   const fragments = [];
@@ -87,7 +90,9 @@ function decomposeFreeform(rawIdea) {
   for (const fragment of freeformFragments(rawIdea)) {
     if (AMBIGUITY.test(fragment.text)) unknowns.push(fragment);
     else if (NO_GO.test(fragment.text)) noGos.push(fragment);
-    else mustHaves.push(fragment);
+    else if (CONTEXT_ONLY.test(fragment.text)) unknowns.push(fragment);
+    else if (EXPLICIT_OBLIGATION.test(fragment.text) || DIRECT_BUILD_REQUEST.test(fragment.text)) mustHaves.push(fragment);
+    else unknowns.push(fragment);
   }
   return { mustHaves, noGos, unknowns };
 }
@@ -110,7 +115,7 @@ export function createOwnerContract({ idea = '', source = 'unknown' } = {}) {
     mustHaveItems = decomposed.mustHaves;
     noGoItems = decomposed.noGos;
     unknownItems = decomposed.unknowns;
-    decompositionMode = 'deterministic-freeform-v1';
+    decompositionMode = 'deterministic-freeform-v2';
   }
 
   if (!rawIdea) {
