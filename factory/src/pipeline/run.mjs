@@ -4,12 +4,14 @@ import { LIMITS, PATHS } from '../config.mjs';
 import { log } from '../util/log.mjs';
 import { ensureDir, writeJson, writeText, sha256 } from '../util/fsx.mjs';
 import { slugify } from '../util/slug.mjs';
+import { createOwnerContract } from '../contract/owner.mjs';
 import { runDirector } from '../roles/director.mjs';
 import { buildGame, rebuildGame, repairGame, polishGame } from '../roles/engineer.mjs';
 import { runPlaytester } from '../roles/playtester.mjs';
 import { runAuditor } from '../roles/auditor.mjs';
 import { runSession } from '../verify/harness.mjs';
 import { evaluateContract } from '../verify/contract.mjs';
+import { evaluateProductFidelity } from '../verify/fidelity.mjs';
 import { assemble } from '../publish/assemble.mjs';
 import { registerProduct, bumpStats } from '../memory/store.mjs';
 import { beginRunBudget, costReport } from '../llm/client.mjs';
@@ -23,9 +25,23 @@ function stamp() {
 }
 
 function failureBundle(evidence) {
+  const technicalFailures = (evidence.contract?.failures || []).map((failure) => ({
+    id: failure.id,
+    label: failure.label,
+    detail: failure.detail || '',
+    gate: 'technical'
+  }));
+  const fidelityFailures = (evidence.productFidelity?.failures || []).map((failure) => ({
+    id: `fidelity_${failure.requirementId}`,
+    label: `Owner requirement ${failure.requirementId}`,
+    detail: `${failure.acceptanceId}/${failure.probeId}: ${failure.detail || 'not proven'}`,
+    gate: 'product-fidelity'
+  }));
   return {
     attempt: evidence.attempt,
-    contractFailures: evidence.contract.failures,
+    failures: [...technicalFailures, ...fidelityFailures],
+    technicalFailures,
+    fidelityFailures,
     consoleErrors: (evidence.consoleErrors || []).slice(0, 8),
     pageErrors: (evidence.pageErrors || []).slice(0, 8),
     probeErrors: (evidence.probeErrors || []).slice(0, 8),
@@ -36,7 +52,7 @@ function failureBundle(evidence) {
 
 function failureSignature(bundle) {
   return JSON.stringify({
-    failures: bundle.contractFailures.map((f) => [f.id, f.detail || '']),
+    failures: bundle.failures.map((f) => [f.id, f.detail || '']),
     consoleErrors: bundle.consoleErrors.slice(0, 3),
     pageErrors: bundle.pageErrors.slice(0, 3),
     probeErrors: bundle.probeErrors.slice(0, 3)
@@ -45,19 +61,30 @@ function failureSignature(bundle) {
 
 function summarizeFailure(bundle) {
   const lines = [
-    `Attempt ${bundle.attempt} failed the technical contract.`, '', 'Failed checks:',
-    ...bundle.contractFailures.map((f) => `- [${f.id}] ${f.label} :: ${f.detail || 'no detail'}`)
+    `Attempt ${bundle.attempt} failed verification.`, '', 'Failed checks:',
+    ...bundle.failures.map((f) => `- [${f.id}] ${f.label} :: ${f.detail || 'no detail'}`)
   ];
   if (bundle.consoleErrors.length) lines.push('', 'Console errors:', ...bundle.consoleErrors.map((e) => '- ' + e));
   if (bundle.pageErrors.length) lines.push('', 'Page errors:', ...bundle.pageErrors.map((e) => '- ' + e));
   if (bundle.probeErrors.length) lines.push('', 'Probe-reported game errors:', ...bundle.probeErrors.map((e) => '- ' + e));
   const states = bundle.states || {};
   lines.push('', `Measured FPS: ${bundle.fps ?? 'n/a'} | timeline: start=${states.start?.state}/${states.start?.score} -> early=${states.early?.state}/${states.early?.score} -> mid=${states.mid?.state}/${states.mid?.score} -> end=${states.end?.state}/${states.end?.score}`);
-  lines.push('', 'Reminder: score or gameplay state must advance deterministically under the fixed verifier seed/input sequence during the early telemetry timeline. Do not rely on lucky random collisions or rare events. No runtime errors are allowed.');
+  lines.push('', 'Reminder: technical checks and every Owner Contract requirement must be proven by the fixed verifier seed/input sequence and start/early/mid/end evidence. Do not rely on lucky random collisions, rare events or prose claims.');
   return lines.join('\n');
 }
 
-async function verifyAttempt({ runDir, attempt, design }) {
+function applyVerificationState(state, verified) {
+  state.candidateSha = verified.evidence.candidateSha;
+  state.technical = { pass: verified.verdict.passed, checks: verified.verdict.checks };
+  state.productFidelity = {
+    pass: verified.fidelity.pass,
+    status: verified.fidelity.status,
+    contractSha256: verified.fidelity.contractSha256,
+    criteria: verified.fidelity.criteria
+  };
+}
+
+async function verifyAttempt({ runDir, attempt, design, ownerContract, gdd }) {
   const dir = path.join(runDir, `attempt-${String(attempt).padStart(2, '0')}`);
   ensureDir(dir);
   const html = assemble(design);
@@ -75,9 +102,11 @@ async function verifyAttempt({ runDir, attempt, design }) {
   log.info(`verifying attempt ${attempt} (sha ${sha256(html).slice(0, 12)}) ...`);
   const report = await runSession({ root: dir, seconds: LIMITS.playSeconds, screenshotDir: path.join(dir, 'shots') });
   const verdict = await evaluateContract(report, { bgColor });
+  const fidelity = evaluateProductFidelity({ ownerContract, gdd, report });
   const evidence = {
     attempt,
     candidateSha: sha256(html),
+    ownerContractSha256: ownerContract.contractSha256,
     seed: report.seed,
     inputSequence: report.inputSequence,
     telemetry: report.timeline,
@@ -89,6 +118,7 @@ async function verifyAttempt({ runDir, attempt, design }) {
       end: report.endSnapshot
     },
     contract: verdict,
+    productFidelity: fidelity,
     consoleErrors: report.consoleErrors.slice(0, 10),
     pageErrors: report.pageErrors.slice(0, 10),
     probeErrors: (report.endSnapshot?.errors || []).slice(0, 10)
@@ -99,7 +129,8 @@ async function verifyAttempt({ runDir, attempt, design }) {
     timeline: report.timeline
   });
   writeJson(path.join(dir, 'evidence-tech.json'), evidence);
-  return { dir, html, report, verdict, evidence };
+  writeJson(path.join(dir, 'evidence-fidelity.json'), fidelity);
+  return { dir, html, report, verdict, fidelity, passed: verdict.passed && fidelity.pass, evidence };
 }
 
 function releaseFor(state) {
@@ -136,7 +167,7 @@ function writeUnifiedEvidence(runDir, state, status, reason = null, artifacts = 
 }
 
 function failClosed(runDir, state, reason, extra = {}) {
-  const evidence = writeUnifiedEvidence(runDir, state, 'failed', reason);
+  const evidence = writeUnifiedEvidence(runDir, state, 'failed', reason, { ownerContract: 'owner-contract.json' });
   const payload = { reason, closedAt: new Date().toISOString(), cost: costReport(), releaseGate: evidence.gates.release, ...extra };
   writeJson(path.join(runDir, 'FAILURE.json'), payload);
   bumpStats({ failed: 1 });
@@ -155,6 +186,7 @@ function reviewMarkdown(meta) {
     `> ${meta.tagline}`, '',
     '| Metric | Value |',
     `| Release gate | **${meta.releaseGate.pass ? 'PASS' : 'FAIL'}** |`,
+    `| Product fidelity | **${meta.productFidelity.pass ? 'PASS' : 'FAIL'}** |`,
     `| Playtest overall | **${meta.overall} / 10** |`,
     `| Visuals / UI / Fun / Perf | ${meta.scores.visuals} / ${meta.scores.uiClarity} / ${meta.scores.funProxy} / ${meta.scores.performance} |`,
     `| Attempts (build+debug) | ${meta.attempts} |`,
@@ -180,22 +212,30 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
       freshRebuild: { maxCalls: LIMITS.maxFreshRebuilds, maxUsd: LIMITS.freshRebuildBudgetUsd }
     }
   });
+
+  const ownerContract = createOwnerContract({ idea, source });
+  writeJson(path.join(runDir, 'owner-contract.json'), ownerContract);
   const state = {
     runId,
     source,
     candidateSha: null,
     technical: { pass: false, checks: null },
-    productFidelity: { pass: false, status: 'pending-l3', criteria: null },
+    productFidelity: {
+      pass: false,
+      status: 'pending-verification',
+      contractSha256: ownerContract.contractSha256,
+      criteria: null
+    },
     experience: { score: null, scores: null, critique: [] },
     audit: null,
     counters: { attempts: 0, repairCalls: 0, polishRounds: 0, freshRebuilds: 0 }
   };
-  writeJson(path.join(runDir, 'brief.json'), { idea, source, startedAt: new Date().toISOString(), budgetUsd });
+  writeJson(path.join(runDir, 'brief.json'), { idea, source, startedAt: new Date().toISOString(), budgetUsd, ownerContractSha256: ownerContract.contractSha256 });
 
   log.step('PHASE A - DIRECTING');
   let gdd;
   try {
-    gdd = await runDirector({ idea, source });
+    gdd = await runDirector({ idea, source, ownerContract });
   } catch (e) {
     return failClosed(runDir, state, llmFailureReason(e, 'director_failed'), { error: String(e.message) });
   }
@@ -234,10 +274,9 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
       return failClosed(runDir, state, llmFailureReason(e, 'engineer_invalid_output'), { error: String(e.message), attempt });
     }
 
-    tech = await verifyAttempt({ runDir, attempt, design });
-    state.candidateSha = tech.evidence.candidateSha;
-    state.technical = { pass: tech.verdict.passed, checks: tech.verdict.checks };
-    if (tech.verdict.passed) break;
+    tech = await verifyAttempt({ runDir, attempt, design, ownerContract, gdd });
+    applyVerificationState(state, tech);
+    if (tech.passed) break;
 
     const bundle = failureBundle(tech.evidence);
     const signature = failureSignature(bundle);
@@ -245,8 +284,8 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     const sameFailure = lastFailureSignature !== null && signature === lastFailureSignature;
     const sameCandidate = lastCandidateSha !== null && candidateSha === lastCandidateSha;
     failureBundles.push(bundle);
-    log.warn(`attempt ${attempt} failed contract (${tech.verdict.failures.length} checks)`);
-    for (const f of tech.verdict.failures) log.warn(`  FAILED CHECK [${f.id}] ${f.label} :: ${f.detail || 'no detail'}`);
+    log.warn(`attempt ${attempt} failed verification (${bundle.failures.length} checks)`);
+    for (const f of bundle.failures) log.warn(`  FAILED CHECK [${f.id}] ${f.label} :: ${f.detail || 'no detail'}`);
 
     if (sameFailure || sameCandidate) {
       const trigger = [sameFailure ? 'same failure signature' : null, sameCandidate ? 'identical candidate' : null].filter(Boolean).join(' + ');
@@ -258,10 +297,10 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     lastCandidateSha = candidateSha;
   }
 
-  if (!tech?.verdict.passed) {
+  if (!tech?.passed) {
     return failClosed(runDir, state, 'debug_exhausted', { attempts: attempt, bundles: failureBundles, escalations: escalationHistory });
   }
-  log.info('technical contract PASSED');
+  log.info('technical contract + product fidelity PASSED');
 
   let playtest = null;
   let polishRounds = 0;
@@ -307,11 +346,10 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     }
     attempt++;
     state.counters.attempts = attempt;
-    tech = await verifyAttempt({ runDir, attempt, design });
-    state.candidateSha = tech.evidence.candidateSha;
-    state.technical = { pass: tech.verdict.passed, checks: tech.verdict.checks };
+    tech = await verifyAttempt({ runDir, attempt, design, ownerContract, gdd });
+    applyVerificationState(state, tech);
     let repairs = 0;
-    while (!tech.verdict.passed && repairs < 2) {
+    while (!tech.passed && repairs < 2) {
       repairs++;
       failureBundles.push(failureBundle(tech.evidence));
       try {
@@ -325,21 +363,20 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
       }
       attempt++;
       state.counters.attempts = attempt;
-      tech = await verifyAttempt({ runDir, attempt, design });
-      state.candidateSha = tech.evidence.candidateSha;
-      state.technical = { pass: tech.verdict.passed, checks: tech.verdict.checks };
+      tech = await verifyAttempt({ runDir, attempt, design, ownerContract, gdd });
+      applyVerificationState(state, tech);
     }
-    if (!tech.verdict.passed) {
-      const regressionSummary = tech.verdict.failures.map((f) => `[${f.id}] ${f.detail || f.label}`).join(' | ');
+    if (!tech.passed) {
+      const regressionBundle = failureBundle(tech.evidence);
+      const regressionSummary = regressionBundle.failures.map((f) => `[${f.id}] ${f.detail || f.label}`).join(' | ');
       polishRegressionNotes.push(`Round ${polishRounds}: ${regressionSummary}`);
-      log.warn(`polish round ${polishRounds} regressed the technical contract after ${repairs} repair attempts; restoring last verified candidate and trying the next polish round`);
+      log.warn(`polish round ${polishRounds} regressed verification after ${repairs} repair attempts; restoring last fully verified candidate and trying the next polish round`);
       design = stableDesign;
       tech = stableTech;
-      state.candidateSha = tech.evidence.candidateSha;
-      state.technical = { pass: true, checks: tech.verdict.checks };
+      applyVerificationState(state, tech);
       continue;
     }
-    log.info(`polish round ${polishRounds} preserved technical contract`);
+    log.info(`polish round ${polishRounds} preserved technical + product fidelity contracts`);
   }
 
   if (!playtest || playtest.overall < LIMITS.minOverallScore) {
@@ -355,10 +392,12 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
   const beforeAudit = costReport();
   const digest = {
     product: { title: gdd.title, genre: gdd.genre },
+    ownerContractSha256: ownerContract.contractSha256,
     attemptsTotal: attempt,
     debugRepairRounds: failureBundles.length,
     polishRounds,
     finalTechnicalChecks: tech.verdict.checks,
+    finalProductFidelity: tech.fidelity.criteria,
     playtestScores: playtest.scores,
     playtestOverall: playtest.overall,
     scoreGate: LIMITS.minOverallScore,
@@ -397,6 +436,8 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     status: 'awaiting-review',
     previewPath: `drafts/${slug}/index.html`,
     candidateSha: tech.evidence.candidateSha,
+    ownerContractSha256: ownerContract.contractSha256,
+    productFidelity: state.productFidelity,
     attempts: attempt,
     debugRepairRounds: failureBundles.length,
     polishRounds,
@@ -416,7 +457,8 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
 
   const unified = writeUnifiedEvidence(runDir, state, 'release-eligible', null, {
     draft: `drafts/${slug}`,
-    candidateSha: tech.evidence.candidateSha
+    candidateSha: tech.evidence.candidateSha,
+    ownerContract: 'owner-contract.json'
   });
   writeJson(path.join(runDir, 'RESULT.json'), { status: 'success', slug, meta, evidenceSchema: unified.schema });
   log.info(`draft ready: drafts/${slug}`);

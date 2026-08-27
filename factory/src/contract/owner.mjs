@@ -65,6 +65,8 @@ export function createOwnerContract({ idea = '', source = 'unknown' } = {}) {
   if (!mustHaveTexts.length && rawIdea) {
     const compact = rawIdea.replace(/\s+/g, ' ').trim();
     mustHaveTexts = [compact];
+  } else if (!mustHaveTexts.length) {
+    mustHaveTexts = ['Produce one original, complete and highly playable browser game.'];
   }
 
   const base = {
