@@ -1,84 +1,109 @@
-# Next Chat Handoff — Game Factory Production Hardening
+# Next Chat Handoff — Game Factory — Final P0 Acceptance
 
 Date: 2026-08-27
 Repository: `Bartekkk87/game-factory`
 
 ## Mission
 
-Continue `Bartekkk87/game-factory` seamlessly from the fully verified post-L4/P0 state on `main`.
+Continue `Bartekkk87/game-factory` seamlessly from the **final verified external-audit P0 closure** on `main`.
 
-**L1, L2, L3 and L4/P0 are complete and verified on `main`.**
+**L1, L2, L3, L4 and audit P0-01 through P0-05 are complete and verified.**
 
 Do not reopen them unless a concrete regression exposes a defect.
 
-**No paid Titan Canary #3 has been started.**
+**No paid Titan Canary #3 has been started. Do not start it without a new explicit Owner instruction.**
 
 ## Canonical sources
 
-1. `docs/strategy/HARDENING-STATUS-2026-08-27-L4.md`
-2. `docs/strategy/HARDENING-STATUS-2026-08-27-L1-L3.md`
-3. `docs/strategy/IMPLEMENTATION-CATALOG-2026-08-27.md`
-4. `docs/strategy/PRODUCTION-HARDENING-PLAN.md`
-5. `docs/strategy/LLM-SELECTION-REQUIREMENTS.md`
-6. `ARCHITECTURE.md`
-7. GitHub Issue #3 — `Production Hardening before Titan Canary #3`
+1. `docs/strategy/P0-FINAL-ACCEPTANCE-2026-08-27.md`
+2. `docs/strategy/IMPLEMENTATION-CATALOG-2026-08-27.md`
+3. `docs/strategy/HARDENING-STATUS-2026-08-27-L4.md`
+4. `docs/strategy/HARDENING-STATUS-2026-08-27-L1-L3.md`
+5. `docs/strategy/PRODUCTION-HARDENING-PLAN.md`
+6. `docs/strategy/LLM-SELECTION-REQUIREMENTS.md`
+7. `ARCHITECTURE.md`
+8. GitHub Issue #3 — `Production Hardening before Titan Canary #3`
 
-## Final verified state
+## Final verified runtime state
 
-L4 was merged through PR #5.
+Final runtime commit on `main`:
 
-Final merge commit on `main`:
+`69aac9f26d7004aa8be19ed0ec61fc649f3d6565`
 
-`f7b5e2ebd75e405d857b3bec19d85231e02eaef8`
+Final full Verifier Selftest:
 
-Final merged `main` Verifier Selftest:
+GitHub Actions Run `33060506910` — **SUCCESS**.
 
-GitHub Actions Run `33051402235` — **SUCCESS**.
+Per-gate verification:
 
-This run includes:
+- P0-01 Skill Integrity — Run `33059358311` — SUCCESS
+- P0-02 Skill CI / Assembled Prompt Regression — Run `33059654534` — SUCCESS
+- P0-03 Product Fidelity Hardening — Run `33060152626` — SUCCESS
+- P0-04 Structural Release Authority Guard — Run `33060326700` — SUCCESS
+- P0-05 Model Routing Single Source of Truth + final Full Selftest — Run `33060506910` — SUCCESS
 
-- Node syntax checks;
-- L1 Control Kernel budgets/release gate;
-- L2 Role Router/capability gates;
-- explicit L4 Production-Agent integrity test;
-- browser verifier;
-- Green/Broken verifier fixtures;
-- publishing gates/gallery escaping.
+## P0-01 — Skill Integrity — DONE
 
-The dedicated L4 command is now permanently part of `.github/workflows/verify.yml`:
+- stale `random key mash`, `random input` and `~15 seconds` verifier guidance removed from active Director/Engineer skills;
+- active skills aligned to fixed deterministic RNG/input behavior and `start -> early -> mid -> end` telemetry;
+- regression test rejects stale guidance in active skill text.
 
-`node factory/src/roles/test-production-agents.mjs`
+## P0-02 — Skill CI / Assembled Prompt Regression — DONE
 
-## L4 Production Agents / P0 — DONE
+- `skills/**` now triggers the full Verifier Selftest;
+- runtime system-prompt assembly is centralized;
+- Director and Engineer use the same assembly function tested by CI;
+- Base Prompt + Skill + Lessons are tested as actually assembled;
+- Lesson injection is explicitly regression-tested.
 
-### Engineer
+## P0-03 — Product Fidelity Hardening — DONE
 
-- deterministic verifier wording;
-- immutable Owner Contract in Build / Repair / Rebuild / Polish;
-- Acceptance/Probe traceability explicitly supplied;
-- bounded runtime mechanic evidence;
-- fail-closed contract handling;
-- Repair, Fresh Rebuild and verified-polish rollback preserved.
+Positive Must-Have `event` probes can no longer PASS on event-name presence alone.
 
-### Playtester
+For positive event evidence, deterministic Product Fidelity now requires correlated gameplay evidence, including relevant playing state/timing after the Early evidence boundary and independent engine-observed progress.
 
-Receives Owner Contract, compact GDD, Acceptance/Probe mapping, telemetry, runtime events, screenshots, objective metrics and deterministic Product Fidelity.
+Adversarial proof:
 
-Returns separately:
+`fake boss_entered event + no mechanic/progress -> Product Fidelity FAIL`
 
-- independent Product Fidelity review;
-- Experience score + critique.
+Positive control:
 
-Playtester fidelity remains advisory.
+`post-early event + real gameplay progress -> Product Fidelity PASS`
 
-### Auditor
+Director and Engineer prompts were aligned to these strengthened semantics.
 
-- strictly advisory;
-- no release PASS/FAIL authority;
-- stray `verdict` fields sanitized;
-- sees Technical, deterministic Fidelity, Playtester fidelity, Experience, Budget and deterministic Release state.
+### Important P0-03 failure classification
 
-### Reference route
+Run `33059960409` passed the new P0-03 adversarial hardening test but failed later in the existing runtime-green verifier fixture.
+
+Root cause: the old green fixture itself emitted `boss_entered` before the newly enforced Early evidence boundary.
+
+Classification: **fixture defect, not production defect**.
+
+The fixture was corrected. Full Run `33060152626` then passed. No blind rerun was used.
+
+## P0-04 — Structural Release Authority Guard — DONE
+
+`evaluateReleaseGate(...)` now accepts only the deterministic release-relevant surface:
+
+- `technical`
+- `productFidelity`
+- `experienceScore`
+- `budget`
+- `minExperience` / deterministic threshold policy
+
+Unexpected fields are rejected.
+
+Therefore `audit`, `playtesterFidelity` or other LLM/advisory fields cannot enter the release-gate API and cannot affect release authority.
+
+## P0-05 — Model Routing Single Source of Truth — DONE
+
+- removed the competing legacy `LLM` / provider-role configuration from `factory/src/config.mjs`;
+- canonical runtime routing remains in Role Router + Provider/Model Registries;
+- router remains fail-closed;
+- regression prevents a second apparent routing authority from returning to `config.mjs`.
+
+Reference route remains:
 
 - Director -> `gpt-5.6-terra`
 - Engineer Build / Repair / Rebuild / Polish -> `gpt-5.6-terra`
@@ -86,44 +111,63 @@ Playtester fidelity remains advisory.
 - Auditor -> `gpt-5.6-luna`
 - Release Verdict -> no LLM
 
-DeepSeek remains a later benchmark lane.
+DeepSeek/Open-Weight remains a later benchmark lane.
 
-## Important L4 closure lesson
-
-The first explicit L4 integrity run, `33050802610`, failed because the selftest assertion itself was too strict: it rejected the literal `audit.verdict`, including the production line that only deletes/sanitizes a stray non-authoritative LLM verdict.
-
-This was a **test-definition defect, not a production release-authority defect**.
-
-The assertion was corrected to require the intended sanitization behavior. Full branch Run `33050867522` then passed, followed by the merged `main` Run `33051402235` — **SUCCESS**.
-
-## Top-down integrity check — PASS
+## Final top-down integrity check — PASS
 
 Verified chain:
 
-`Owner Idea -> Owner Contract -> Director IDs -> Engineer -> Verifier Evidence -> Product Fidelity PASS -> Playtester Fidelity Review -> Experience >= 6.5 -> Budget PASS -> deterministic Release Gate -> Owner Preview`
+`Owner Idea -> Owner Contract -> Director IDs -> Engineer -> Verifier Evidence -> Product Fidelity -> Playtester -> Experience -> Budget -> deterministic Release Gate -> Owner Preview`
 
-No Owner requirement disappears between intake and review.
+Key authority properties:
 
-Owner Preview path is gated correctly:
+- Owner Contract stays immutable and traceable.
+- Engineer Build/Repair/Rebuild/Polish receives Owner Contract + normalized traceability.
+- Verifier uses fixed deterministic seed/input and persisted `start -> early -> mid -> end` evidence.
+- Positive mechanic events cannot be proven by event-name presence alone.
+- Playtester fidelity remains advisory.
+- Auditor remains advisory.
+- Release Gate accepts no advisory/LLM fields.
+- Model routing has exactly one canonical runtime source.
+- Only deterministic release PASS may advance the verified candidate toward Owner Preview.
 
-- only deterministic release PASS writes the draft;
-- Production workflow commits draft/evidence and opens the Review Issue;
-- Pages deploys the preview on `main`;
-- Owner uses `/approve` or `/reject`.
+Result: **PASS**.
 
 ## Current decision point
 
-The complete P0 hardening prerequisite is now satisfied on `main`.
+Technical readiness for exactly one controlled paid `Titan Core: Reforged` Canary #3: **YES**.
 
-Exactly one controlled paid `Titan Core: Reforged` Canary #3 is technically eligible.
+Operational authorization: **NO until the Owner gives a new explicit instruction**.
 
-**Do not start it without a new explicit Owner instruction.**
+**STOP. Do not start Canary #3 automatically.**
 
-If the later Canary #3 fails:
+If the Owner explicitly authorizes Canary #3 in the next chat, run exactly one controlled paid reference Canary.
 
-`classify cause -> repair platform -> full selftest -> only then decide whether another paid run is justified`
+If it fails:
 
-P1/P2 optimization remains deferred until reference evidence exists.
+`classify cause -> repair platform -> full Verifier Selftest -> only then decide whether another paid run is justified`
+
+No blind paid reruns.
+
+## Deferred P1 / P2 scope
+
+After reference Canary evidence, continue with the already recorded sequence, including:
+
+- Owner Contract decomposition for complex unstructured briefs;
+- idle-baseline causality proof;
+- stronger inter-frame visual activity proof;
+- art-direction skill wiring cleanup;
+- structured lesson schema;
+- candidate vs validated lessons;
+- self-modification guard;
+- deterministic Improvement aggregation + threshold triggers;
+- controlled evidence-driven learning;
+- multi-seed / alternate deterministic input robustness;
+- model-outcome benchmarking by cost per verified release and convergence quality.
+
+Until the controlled Improvement layer is actually built and proven, do **not** describe the Factory as fully self-improving.
+
+Target principle remains: **evidence-driven controlled improvement**.
 
 ## Working style
 
