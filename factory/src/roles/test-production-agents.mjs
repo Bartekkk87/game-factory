@@ -5,6 +5,8 @@ import { createOwnerContract, ownerRequirementIds } from '../contract/owner.mjs'
 import { compileDirectorTraceability } from '../contract/traceability.mjs';
 import { evaluateProductFidelity } from '../verify/fidelity.mjs';
 import { evaluateReleaseGate } from '../control/release-gate.mjs';
+import { assembleSystemPrompt } from '../util/skills.mjs';
+import { lessonsFor } from '../memory/store.mjs';
 
 const root = process.cwd();
 const read = (relative) => fs.readFileSync(path.join(root, relative), 'utf8');
@@ -13,6 +15,7 @@ const engineerPrompt = read('factory/prompts/engineer.md');
 const directingSkill = read('skills/directing.md');
 const engineeringSkill = read('skills/engineering.md');
 const engineerSource = read('factory/src/roles/engineer.mjs');
+const directorSource = read('factory/src/roles/director.mjs');
 const playtesterPrompt = read('factory/prompts/playtester.md');
 const playtesterSource = read('factory/src/roles/playtester.mjs');
 const auditorPrompt = read('factory/prompts/auditor.md');
@@ -32,6 +35,39 @@ assert.match(directingSkill, /fixed deterministic keyboard\/pointer input sequen
 assert.match(directingSkill, /start -> early -> mid -> end/i);
 assert.match(engineeringSkill, /fixed deterministic keyboard\/pointer input sequence/i);
 assert.match(engineeringSkill, /start -> early -> mid -> end/i);
+
+// P0-02: exercise the exact runtime assembler used by Director and Engineer.
+assert.match(directorSource, /assembleSystemPrompt/);
+assert.match(engineerSource, /assembleSystemPrompt/);
+const assembledDirector = assembleSystemPrompt({
+  promptName: 'director',
+  skillName: 'directing',
+  lessons: lessonsFor('director')
+});
+const assembledEngineer = assembleSystemPrompt({
+  promptName: 'engineer',
+  skillName: 'engineering',
+  lessons: lessonsFor('engineer')
+});
+for (const [label, text] of [
+  ['assembled director system prompt', assembledDirector],
+  ['assembled engineer system prompt', assembledEngineer]
+]) {
+  assert.doesNotMatch(text, staleVerifierGuidance, `${label} contains stale verifier guidance`);
+  assert.match(text, /## Learned skill directives/);
+}
+assert.match(assembledDirector, /fixed deterministic keyboard\/pointer input sequence/i);
+assert.match(assembledEngineer, /FIXED deterministic RNG seed/);
+assert.match(assembledEngineer, /fixed deterministic keyboard\/pointer input sequence/i);
+
+const lessonSentinel = '- P0-02-ASSEMBLED-LESSON-SENTINEL';
+const assembledWithLesson = assembleSystemPrompt({
+  promptName: 'engineer',
+  skillName: 'engineering',
+  lessons: [lessonSentinel]
+});
+assert.match(assembledWithLesson, /## Lessons from past post-mortems/);
+assert.match(assembledWithLesson, /P0-02-ASSEMBLED-LESSON-SENTINEL/);
 
 assert.match(engineerPrompt, /FIXED deterministic RNG seed/);
 assert.match(engineerPrompt, /start -> early -> mid -> end/);
