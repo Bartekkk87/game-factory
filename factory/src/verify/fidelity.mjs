@@ -27,13 +27,40 @@ function scoreChanged(report) {
   return false;
 }
 
+function correlatedGameplayEvent(event, report) {
+  const timeline = Array.isArray(report?.timeline) ? report.timeline : [];
+  const start = timeline.find((entry) => entry?.phase === 'start')?.snapshot;
+  const early = timeline.find((entry) => entry?.phase === 'early')?.snapshot;
+  const eventTime = Number(event?.time);
+  const earlyTime = Number(early?.time);
+  const startScore = Number(start?.score);
+  const eventScore = Number(event?.score);
+
+  if (!event || event.state === 'title' || event.state === 'boot') {
+    return { pass: false, detail: 'event occurred outside active gameplay state' };
+  }
+  if (!Number.isFinite(eventTime) || !Number.isFinite(earlyTime) || eventTime < earlyTime) {
+    return { pass: false, detail: `event occurred too early for correlated gameplay evidence (event=${Number.isFinite(eventTime) ? eventTime : 'missing'}, early=${Number.isFinite(earlyTime) ? earlyTime : 'missing'})` };
+  }
+  if (!Number.isFinite(startScore) || !Number.isFinite(eventScore) || eventScore <= startScore) {
+    return { pass: false, detail: `event lacks independent engine-observed gameplay value change (score ${Number.isFinite(startScore) ? startScore : 'missing'} -> ${Number.isFinite(eventScore) ? eventScore : 'missing'})` };
+  }
+  return { pass: true, detail: `event correlated with active gameplay at t=${eventTime}s and engine-observed score ${startScore} -> ${eventScore}` };
+}
+
 function evaluateProbe(probe, report, events) {
   const kind = probe?.kind;
   if (!SUPPORTED_KINDS.has(kind)) return { pass: false, detail: `unsupported evidence kind: ${kind ?? 'missing'}` };
 
   if (kind === 'event') {
-    const found = events.find((event) => event?.type === probe.eventType);
-    return { pass: !!found, detail: found ? `event ${probe.eventType} observed` : `missing event ${probe.eventType}` };
+    const candidates = events.filter((event) => event?.type === probe.eventType);
+    if (!candidates.length) return { pass: false, detail: `missing event ${probe.eventType}` };
+    if (probe?.strength === 'correlated_gameplay') {
+      const evaluated = candidates.map((event) => correlatedGameplayEvent(event, report));
+      const passing = evaluated.find((result) => result.pass);
+      return passing || { pass: false, detail: `${probe.eventType} observed but not as correlated gameplay evidence: ${evaluated.map((result) => result.detail).join('; ')}` };
+    }
+    return { pass: true, detail: `event ${probe.eventType} observed` };
   }
   if (kind === 'event_absent') {
     const found = events.find((event) => event?.type === probe.eventType);
@@ -86,6 +113,7 @@ export function evaluateProductFidelity({ ownerContract, gdd, report } = {}) {
       acceptanceId: expectedAcceptanceId,
       probeId: expectedProbeId,
       kind: probe?.kind ?? null,
+      strength: probe?.strength ?? null,
       eventType: probe?.eventType ?? null,
       pass: !!(traceable && observed.pass),
       traceable,
