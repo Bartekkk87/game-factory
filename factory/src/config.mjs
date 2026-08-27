@@ -19,6 +19,7 @@ export const LIMITS = {
   polishBudgetUsd: num('GF_POLISH_BUDGET_USD', 3),
   freshRebuildBudgetUsd: num('GF_FRESH_REBUILD_BUDGET_USD', 4),
   playSeconds: num('GF_PLAY_SECONDS', 12),
+  maxProofSeconds: num('GF_MAX_PROOF_SECONDS', 125),
   minFps: num('GF_MIN_FPS', 30)
 };
 
