@@ -43,6 +43,8 @@ The dedicated L4 test was added at `factory/src/roles/test-production-agents.mjs
 
 Initial explicit Run `33050802610` exposed an overly strict selftest assertion: it rejected the literal `audit.verdict` even though production code only used that field to sanitize/remove a non-authoritative LLM output.
 
+This was a **test-definition defect, not a production release-authority defect**.
+
 The assertion was corrected at code commit:
 
 `ce0d061cbad98e8f2f5948e0910fd300dbd0b573`
