@@ -25,16 +25,51 @@ try {
   assert.equal(director.provider.id, 'openai');
   assert.equal(director.model.id, 'gpt-5.6-terra');
 
-  // Canary #3 regression: OpenAI GPT-5.6 rejects legacy max_tokens and requires
-  // max_completion_tokens on Chat Completions requests.
-  const openAiBody = JSON.parse(buildOpenAiCompatibleChatRequest({
+  // Canary #3 request-contract regression: GPT-5.6 reasoning routes use
+  // max_completion_tokens and omit custom temperature sampling values.
+  for (const modelId of ['gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-5.6-luna']) {
+    const route = { ...director, model: getModelRecord('openai', modelId) };
+    const body = JSON.parse(buildOpenAiCompatibleChatRequest({
+      route,
+      system: 'system',
+      user: 'user',
+      json: true,
+      temperature: 0.9,
+      maxTokens: 321
+    }).body);
+    assert.equal(body.model, modelId);
+    assert.equal(body.max_completion_tokens, 321);
+    assert.equal(Object.hasOwn(body, 'max_tokens'), false);
+    assert.equal(Object.hasOwn(body, 'temperature'), false);
+    assert.deepEqual(body.response_format, { type: 'json_object' });
+    assert.deepEqual(body.messages.map((m) => m.role), ['system', 'user']);
+  }
+
+  const visionBody = JSON.parse(buildOpenAiCompatibleChatRequest({
     route: director,
     system: 'system',
     user: 'user',
+    images: ['data:image/png;base64,AA=='],
     maxTokens: 321
   }).body);
-  assert.equal(openAiBody.max_completion_tokens, 321);
-  assert.equal(Object.hasOwn(openAiBody, 'max_tokens'), false);
+  assert.equal(Array.isArray(visionBody.messages[1].content), true);
+  assert.equal(visionBody.messages[1].content[1].type, 'image_url');
+  assert.equal(visionBody.messages[1].content[1].image_url.url, 'data:image/png;base64,AA==');
+  assert.throws(() => buildOpenAiCompatibleChatRequest({ route: director, system: 's', user: 'u', maxTokens: 128001 }), /exceeds model limit/);
+
+  // Legacy OpenAI models retain their established sampling/token fields.
+  const legacyOpenAiRoute = { ...director, model: getModelRecord('openai', 'gpt-4o') };
+  const legacyBody = JSON.parse(buildOpenAiCompatibleChatRequest({
+    route: legacyOpenAiRoute,
+    system: 'system',
+    user: 'user',
+    temperature: 0.4,
+    maxTokens: 321
+  }).body);
+  assert.equal(legacyBody.max_tokens, 321);
+  assert.equal(Object.hasOwn(legacyBody, 'max_completion_tokens'), false);
+  assert.equal(legacyBody.temperature, 0.4);
+  assert.throws(() => buildOpenAiCompatibleChatRequest({ route: legacyOpenAiRoute, system: 's', user: 'u', temperature: 3 }), /Invalid temperature/);
 
   for (const operation of ['build', 'repair', 'rebuild', 'polish']) {
     const engineer = resolveRoleRoute({ role: 'engineer', operation });
@@ -69,10 +104,18 @@ try {
     route: deepseekRoute,
     system: 'system',
     user: 'user',
+    temperature: 0.4,
     maxTokens: 321
   }).body);
   assert.equal(deepseekBody.max_tokens, 321);
   assert.equal(Object.hasOwn(deepseekBody, 'max_completion_tokens'), false);
+  assert.equal(deepseekBody.temperature, 0.4);
+  assert.throws(() => buildOpenAiCompatibleChatRequest({
+    route: deepseekRoute,
+    system: 'system',
+    user: 'user',
+    images: ['data:image/png;base64,AA==']
+  }), /does not support vision/);
   assert.throws(() => resolveRoleRoute({ role: 'playtester', requirements: { vision: true } }), ModelCapabilityError);
 
   process.env.GF_LLM_PROVIDER = 'definitely-not-a-provider';
