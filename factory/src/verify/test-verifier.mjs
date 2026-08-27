@@ -174,7 +174,7 @@ game.add('play', {
       scoreClock = 0;
       game.addScore(1);
     }
-    if (!evidenceSent && game.time >= 1.0) {
+    if (!evidenceSent && game.time >= 1.6) {
       evidenceSent = true;
       game.event('boss_entered', { boss: 'fixture' });
       game.event('upgrade_applied', { before: 1, after: ${changedValue} });
