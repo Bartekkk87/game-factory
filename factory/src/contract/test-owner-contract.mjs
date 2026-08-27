@@ -20,8 +20,28 @@ assert.deepEqual(a.noGos.map((r) => r.id), ['NG-01']);
 assert.deepEqual(a.unknowns.map((r) => r.id), ['UN-01']);
 assert.deepEqual(ownerRequirementIds(a), ['MH-01', 'MH-02', 'NG-01']);
 assert.equal(a.unknowns[0].text, 'Maybe add co-op later.');
-assert.equal(a.decomposition.version, 'deterministic-freeform-v1');
+assert.equal(a.decomposition.version, 'deterministic-freeform-v2');
 assert.equal(Object.isFrozen(a.mustHaves[0].provenance), true);
+
+const inflatedMood = createOwnerContract({
+  idea: 'Baue ein kleines schnelles Sci-Fi Action Game. Es soll sich anfuehlen wie Hotline Miami. Vielleicht mit einem Boss. Inspiriert von Blade Runner.',
+  source: 'freeform-inflation-regression'
+});
+assert.deepEqual(inflatedMood.mustHaves.map((r) => r.text), ['Baue ein kleines schnelles Sci-Fi Action Game.']);
+assert.equal(inflatedMood.noGos.length, 0);
+assert.deepEqual(inflatedMood.unknowns.map((r) => r.text), [
+  'Es soll sich anfuehlen wie Hotline Miami.',
+  'Vielleicht mit einem Boss.',
+  'Inspiriert von Blade Runner.'
+]);
+assert.equal(inflatedMood.mustHaves.some((r) => /Hotline Miami|Blade Runner/i.test(r.text)), false);
+
+const explicitConstraint = createOwnerContract({
+  idea: 'Das Spiel muss Top-down sein. Dunkle Industrie-Atmosphaere.',
+  source: 'freeform-explicit-obligation'
+});
+assert.deepEqual(explicitConstraint.mustHaves.map((r) => r.text), ['Das Spiel muss Top-down sein.']);
+assert.deepEqual(explicitConstraint.unknowns.map((r) => r.text), ['Dunkle Industrie-Atmosphaere.']);
 
 const ambiguous = createOwnerContract({
   idea: 'Maybe a boss would be cool. Perhaps meta progression later.',
