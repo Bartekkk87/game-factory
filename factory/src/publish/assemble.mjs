@@ -19,9 +19,12 @@ const PROBE_EXTENSION = `
     event(type, data = {}) {
       let safeData = {};
       try {
-        safeData = JSON.parse(JSON.stringify(data ?? {}));
+        const serialized = JSON.stringify(data ?? {});
+        safeData = serialized.length <= 2048
+          ? JSON.parse(serialized)
+          : { truncated: true, preview: serialized.slice(0, 1900) };
       } catch (_) {
-        safeData = { value: String(data) };
+        safeData = { value: String(data).slice(0, 1900) };
       }
       const event = {
         seq: ++this._probeSeq,

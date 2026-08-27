@@ -1,8 +1,10 @@
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { ROOT } from '../config.mjs';
 import { createOwnerContract } from '../contract/owner.mjs';
 import { compileDirectorTraceability } from '../contract/traceability.mjs';
+import { assemble } from '../publish/assemble.mjs';
 import { runSession } from './harness.mjs';
 import { evaluateContract } from './contract.mjs';
 import { evaluateProductFidelity } from './fidelity.mjs';
@@ -135,6 +137,78 @@ for (const name of ['green', 'broken']) {
     }
   }
 }
+
+console.log('\n--- assembled runtime fidelity fixture ---');
+const runtimeOwner = createOwnerContract({
+  idea: '## Must-Have\n- A boss encounter is observable.\n- An upgrade changes a real gameplay value.',
+  source: 'selftest-runtime'
+});
+const runtimeGdd = compileDirectorTraceability({
+  acceptanceCriteria: [
+    { ownerRequirementId: 'MH-01', statement: 'Boss entry is observed at runtime.' },
+    { ownerRequirementId: 'MH-02', statement: 'Upgrade changes a numeric gameplay value.' }
+  ],
+  probePlan: {
+    scoreEvents: ['periodic test score'],
+    requirementProbes: [
+      { ownerRequirementId: 'MH-01', kind: 'event', eventType: 'boss_entered' },
+      { ownerRequirementId: 'MH-02', kind: 'event_value_change', eventType: 'upgrade_applied' }
+    ]
+  }
+}, runtimeOwner);
+
+async function runRuntimeFidelityCase(name, changedValue, mustPassFidelity) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), `gf-${name}-`));
+  const design = {
+    title: `Runtime ${name}`,
+    css: '',
+    html: '',
+    js: `
+const game = new GF.Game({ id: 'runtime-${name}', title: 'Runtime ${name}', background: '#111827' });
+let evidenceSent = false;
+let scoreClock = 0;
+game.add('play', {
+  update(dt) {
+    scoreClock += dt;
+    if (scoreClock >= 0.35) {
+      scoreClock = 0;
+      game.addScore(1);
+    }
+    if (!evidenceSent && game.time >= 1.0) {
+      evidenceSent = true;
+      game.event('boss_entered', { boss: 'fixture' });
+      game.event('upgrade_applied', { before: 1, after: ${changedValue} });
+      game.event('oversized_probe', { value: 'x'.repeat(10000) });
+    }
+  },
+  draw(ctx) {
+    ctx.fillStyle = '#22d3ee';
+    ctx.fillRect(180, 140, 600, 260);
+    GF.Draw.text(ctx, 'RUNTIME FIDELITY', 480, 270, { size: 36, color: '#ffffff' });
+  }
+});
+game.go('play');
+`
+  };
+  fs.writeFileSync(path.join(dir, 'index.html'), assemble(design));
+  const report = await runSession({ root: dir, seconds: 3 });
+  const technical = await evaluateContract(report, { minFps: 10, bgColor: '#111827' });
+  const fidelity = evaluateProductFidelity({ ownerContract: runtimeOwner, gdd: runtimeGdd, report });
+  const events = report.timeline.flatMap((entry) => entry.snapshot?.events || []);
+  const oversized = events.find((event) => event.type === 'oversized_probe');
+  const payloadBounded = !oversized || JSON.stringify(oversized.data).length <= 2048;
+  fs.rmSync(dir, { recursive: true, force: true });
+  const behaved = technical.passed && fidelity.pass === mustPassFidelity && payloadBounded;
+  if (!behaved) {
+    ok = false;
+    console.error(`${name}: technical=${technical.passed} fidelity=${fidelity.pass} expectedFidelity=${mustPassFidelity} payloadBounded=${payloadBounded}`);
+  } else {
+    console.log(`${name}: technical PASS, fidelity=${fidelity.pass ? 'PASS' : 'FAIL as expected'}, bounded events PASS`);
+  }
+}
+
+await runRuntimeFidelityCase('runtime-green', 1.5, true);
+await runRuntimeFidelityCase('runtime-broken', 1, false);
 
 if (!ok) {
   console.error('\ntest:verifier FAILED');
