@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "technical-verifier-repair-v1",
+  "id": "technical-verifier-hud-layout-repair-2026-08-27",
+  "status": "completed",
+  "date": "2026-08-27",
+  "baseline": {
+    "mainSha": "4b0232f06ce16f7dd4d32ddd3afad16b19fd39d4",
+    "sourceFinding": "Step 4 identified hud_layout_clear as generated-game-event-dependent evidence rather than independent HUD geometry proof."
+  },
+  "rootCause": {
+    "primary": "HUD layout fidelity could be self-attested by generated game events named hud_layout_clear / hud_overlap_detected.",
+    "prerequisite": "The factory engine exposed logical W/H and CSS sizing but the assembled production canvas did not explicitly align its intrinsic drawing buffer to that logical size before game drawing."
+  },
+  "repair": {
+    "evidenceKind": "layout_no_overlap",
+    "source": "playwright-canvas-draw-observation-v1",
+    "mechanism": [
+      "Playwright installs a verifier-owned CanvasRenderingContext2D observation hook before generated game code runs.",
+      "The hook observes actual text and rectangle draw geometry with current Canvas transforms and text metrics.",
+      "HUD candidates are derived from recent rendered edge-region text and containing rendered rectangles.",
+      "The verifier checks pairwise overlap and out-of-bounds geometry independently of generated-game events.",
+      "Legacy hud_layout_clear and hud_overlap_detected probes are normalized to layout_no_overlap and therefore lose self-attestation authority.",
+      "Assembled GF.Game canvases explicitly align intrinsic width/height to the engine logical W/H before generated scenes draw."
+    ],
+    "newControlComponent": false,
+    "newGate": false,
+    "releaseGateSemanticsChanged": false
+  },
+  "adversarialValidation": {
+    "spoofedLegacyEvent": "FAIL as intended when hud_layout_clear exists but no independent layout snapshot exists",
+    "greenGeometryFixture": "PASS with three independently observed non-overlapping HUD regions",
+    "overlapGeometryFixture": "FAIL as intended when two rendered HUD panels overlap",
+    "canvasDimensionAssertion": "PASS: logical and intrinsic canvas dimensions match in assembled runtime fixture"
+  },
+  "regression": {
+    "testedCodeSha": "df322fcdeee800314c5195e21fce42af1c274c9f",
+    "githubActionsRun": 33109985486,
+    "conclusion": "success",
+    "covered": [
+      "workflow YAML",
+      "Node syntax",
+      "control kernel",
+      "model/provider router",
+      "production credential isolation",
+      "Owner Contract",
+      "Titan Step 3 candidate validation",
+      "controlled learning lifecycle",
+      "cross-run trigger",
+      "learning orchestration",
+      "production agent integrity",
+      "art-direction runtime",
+      "Product Fidelity hardening",
+      "independent HUD geometry verifier",
+      "verifier causality and visual activity",
+      "Good/Bad product fixtures",
+      "publishing gates"
+    ]
+  },
+  "learningBoundary": {
+    "candidatePromotion": false,
+    "candidateActivation": false,
+    "paidGameRun": false,
+    "paidTitanRun": false,
+    "claim": "EVIDENCE-DRIVEN CONTROLLED IMPROVEMENT"
+  },
+  "limitations": [
+    "This is geometry evidence from actual Canvas draw calls, not computer-vision or semantic image understanding.",
+    "HUD-region discovery deliberately uses a bounded edge-zone plus containing-rectangle heuristic; arbitrary non-text HUD graphics without observable text/rect geometry are not claimed as semantically classified.",
+    "The repair proves overlap and canvas-boundary integrity for observed HUD regions; it does not claim artistic quality or readability by itself."
+  ]
+}
