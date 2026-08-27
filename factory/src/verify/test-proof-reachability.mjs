@@ -12,7 +12,7 @@ const harborGdd = {
       { id: 'PR-MH-03', ownerRequirementId: 'MH-03', kind: 'event', eventType: 'route_detour_completed' },
       { id: 'PR-MH-04', ownerRequirementId: 'MH-04', kind: 'state_reached', state: 'failure' },
       { id: 'PR-MH-06', ownerRequirementId: 'MH-06', kind: 'state_reached', state: 'success' },
-      { id: 'PR-MH-07', ownerRequirementId: 'MH-07', kind: 'event', eventType: 'fresh_run_started' }
+      { id: 'PR-MH-07', ownerRequirementId: 'MH-07', kind: 'restart_after_terminal', legacyEventType: 'fresh_run_started' }
     ]
   }
 };
@@ -31,6 +31,7 @@ const legacy = validateProofPlan({ gdd: harborGdd, plan: legacySingleSession });
 assert.equal(legacy.pass, false, 'legacy 12-second single-session Harbor proof must be rejected');
 assert(legacy.errors.some((e) => e.includes('success-proof')));
 assert(legacy.errors.some((e) => e.includes('failure-proof')));
+assert(legacy.errors.some((e) => e.includes('restart_after_terminal')));
 
 const plan = compileProofPlan({ gdd: harborGdd, baseSeconds: 12, maxProofSeconds: 125 });
 assert.equal(plan.pass, true);
@@ -49,7 +50,9 @@ assert.equal(failure.restartAtEnd, true);
 
 const successCoverage = plan.coverage.find((c) => c.probeId === 'PR-MH-06');
 const failureCoverage = plan.coverage.find((c) => c.probeId === 'PR-MH-04');
+const restartCoverage = plan.coverage.find((c) => c.probeId === 'PR-MH-07');
 assert.deepEqual(successCoverage.scenarioIds, ['success-proof']);
 assert.deepEqual(failureCoverage.scenarioIds, ['failure-proof']);
+assert.deepEqual(restartCoverage.scenarioIds, ['success-proof', 'failure-proof']);
 
-console.log('proof reachability OK: legacy Harbor single-session proof rejected; independent success/failure scenarios compiled');
+console.log('proof reachability OK: legacy Harbor single-session proof rejected; independent success/failure/restart scenarios compiled');
