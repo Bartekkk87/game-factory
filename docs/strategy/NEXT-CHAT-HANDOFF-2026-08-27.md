@@ -48,11 +48,7 @@ After every meaningful change: **full Verifier Selftest -> continue only when gr
 ### Playtester
 Pass Owner Contract, compact GDD, Acceptance/Probe mapping, telemetry, runtime events, screenshots and metrics.
 
-Return separate:
-- independent Product Fidelity review;
-- Experience score + critique.
-
-Deterministic Product Fidelity remains machine authority.
+Return separate independent Product Fidelity review and Experience score + critique. Deterministic Product Fidelity remains machine authority.
 
 ### Auditor
 Remain advisory. Summarize Technical, deterministic Fidelity, Playtester fidelity, Experience, Budget and deterministic Release Verdict without becoming release authority.
