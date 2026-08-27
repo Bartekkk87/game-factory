@@ -1,0 +1,2050 @@
+{
+  "attempt": 1,
+  "candidateSha": "195469679c5b62dc6686ec16179d9df29ed3a237899f8c3fde5d35cd71f9ad53",
+  "ownerContractSha256": "d3a83649db0972a9e5f03568402d4248f28c0c9cc0058a6a990472247c70e3c1",
+  "seed": 1207618270,
+  "inputSequence": {
+    "mode": "active",
+    "seed": 1207618270,
+    "startImpulse": [
+      "Enter",
+      "pointer@640,400"
+    ],
+    "keys": [
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+      "Space",
+      "KeyW",
+      "KeyA",
+      "KeyS",
+      "KeyD",
+      "Enter"
+    ],
+    "pointerPath": [
+      [
+        420,
+        300
+      ],
+      [
+        640,
+        280
+      ],
+      [
+        820,
+        360
+      ],
+      [
+        700,
+        480
+      ],
+      [
+        480,
+        460
+      ],
+      [
+        560,
+        350
+      ]
+    ],
+    "keyEveryMs": 190,
+    "keyHoldMs": 110,
+    "pointerEveryMs": 450,
+    "clickEveryMs": 1300
+  },
+  "telemetry": [
+    {
+      "phase": "start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 62,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": [],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 444.98,
+                "top": 493.5,
+                "right": 515.02,
+                "bottom": 506.5,
+                "width": 70.04,
+                "height": 13
+              },
+              "labels": [
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 70,
+          "recentTextDraws": 3,
+          "hudTextDraws": 1
+        }
+      }
+    },
+    {
+      "phase": "early",
+      "atMs": 1200,
+      "snapshot": {
+        "state": "playing",
+        "score": 0,
+        "best": 0,
+        "fps": 60,
+        "time": 1.2499999999999996,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 16,
+                "top": 14,
+                "right": 188,
+                "bottom": 62,
+                "width": 172,
+                "height": 48
+              },
+              "labels": [
+                "TIME  89s"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 625,
+                "top": 14,
+                "right": 770,
+                "bottom": 62,
+                "width": 145,
+                "height": 48
+              },
+              "labels": [
+                "DELIVERED",
+                "0 / 3"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 786,
+                "top": 14,
+                "right": 944,
+                "bottom": 62,
+                "width": 158,
+                "height": 48
+              },
+              "labels": [
+                "SCORE",
+                "0",
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 468.17,
+                "top": 31.5,
+                "right": 491.83,
+                "bottom": 56.5,
+                "width": 23.66,
+                "height": 25
+              },
+              "labels": [
+                "0"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 205,
+                "top": 70,
+                "right": 515,
+                "bottom": 113,
+                "width": 310,
+                "height": 43
+              },
+              "labels": [
+                "DELIVER TO: Lighthouse Café"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-06",
+              "bounds": {
+                "left": 60,
+                "top": 77,
+                "right": 190,
+                "bottom": 182,
+                "width": 130,
+                "height": 105
+              },
+              "labels": [
+                "Post office"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-07",
+              "bounds": {
+                "left": 710,
+                "top": 252,
+                "right": 825,
+                "bottom": 357,
+                "width": 115,
+                "height": 105
+              },
+              "labels": [
+                "Harbor hall"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-08",
+              "bounds": {
+                "left": 295,
+                "top": 375,
+                "right": 470,
+                "bottom": 450,
+                "width": 175,
+                "height": 75
+              },
+              "labels": [
+                "Bakery"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-09",
+              "bounds": {
+                "left": 335.64,
+                "top": 515.5,
+                "right": 624.36,
+                "bottom": 528.5,
+                "width": 288.72,
+                "height": 13
+              },
+              "labels": [
+                "WASD / ARROWS • Follow the ribbon"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 1024,
+          "recentTextDraws": 16,
+          "hudTextDraws": 12
+        }
+      }
+    },
+    {
+      "phase": "mid",
+      "atMs": 3500,
+      "snapshot": {
+        "state": "playing",
+        "score": 0,
+        "best": 0,
+        "fps": 60,
+        "time": 3.549899999999995,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "obstacle_collision_blocked",
+            "time": 1.95,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "kind": "planter"
+            }
+          },
+          {
+            "seq": 3,
+            "type": "obstacle_collision_blocked",
+            "time": 2.75,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "kind": "planter"
+            }
+          },
+          {
+            "seq": 4,
+            "type": "obstacle_collision_blocked",
+            "time": 3.117,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "kind": "planter"
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 16,
+                "top": 14,
+                "right": 188,
+                "bottom": 62,
+                "width": 172,
+                "height": 48
+              },
+              "labels": [
+                "TIME  87s"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 625,
+                "top": 14,
+                "right": 770,
+                "bottom": 62,
+                "width": 145,
+                "height": 48
+              },
+              "labels": [
+                "DELIVERED",
+                "0 / 3"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 786,
+                "top": 14,
+                "right": 944,
+                "bottom": 62,
+                "width": 158,
+                "height": 48
+              },
+              "labels": [
+                "SCORE",
+                "0",
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 468.17,
+                "top": 31.5,
+                "right": 491.83,
+                "bottom": 56.5,
+                "width": 23.66,
+                "height": 25
+              },
+              "labels": [
+                "0"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 205,
+                "top": 70,
+                "right": 515,
+                "bottom": 113,
+                "width": 310,
+                "height": 43
+              },
+              "labels": [
+                "DELIVER TO: Lighthouse Café"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-06",
+              "bounds": {
+                "left": 60,
+                "top": 77,
+                "right": 190,
+                "bottom": 182,
+                "width": 130,
+                "height": 105
+              },
+              "labels": [
+                "Post office"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-07",
+              "bounds": {
+                "left": 710,
+                "top": 252,
+                "right": 825,
+                "bottom": 357,
+                "width": 115,
+                "height": 105
+              },
+              "labels": [
+                "Harbor hall"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-08",
+              "bounds": {
+                "left": 295,
+                "top": 375,
+                "right": 470,
+                "bottom": 450,
+                "width": 175,
+                "height": 75
+              },
+              "labels": [
+                "Bakery"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-09",
+              "bounds": {
+                "left": 335.64,
+                "top": 515.5,
+                "right": 624.36,
+                "bottom": 528.5,
+                "width": 288.72,
+                "height": 13
+              },
+              "labels": [
+                "WASD / ARROWS • Follow the ribbon"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 1024,
+          "recentTextDraws": 16,
+          "hudTextDraws": 12
+        }
+      }
+    },
+    {
+      "phase": "end",
+      "atMs": 12000,
+      "snapshot": {
+        "state": "playing",
+        "score": 0,
+        "best": 0,
+        "fps": 60,
+        "time": 12.049499999999982,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "obstacle_collision_blocked",
+            "time": 1.95,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "kind": "planter"
+            }
+          },
+          {
+            "seq": 3,
+            "type": "obstacle_collision_blocked",
+            "time": 2.75,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "kind": "planter"
+            }
+          },
+          {
+            "seq": 4,
+            "type": "obstacle_collision_blocked",
+            "time": 3.117,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "kind": "planter"
+            }
+          },
+          {
+            "seq": 5,
+            "type": "obstacle_collision_blocked",
+            "time": 3.9,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "kind": "planter"
+            }
+          },
+          {
+            "seq": 6,
+            "type": "obstacle_collision_blocked",
+            "time": 4.633,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "kind": "planter"
+            }
+          },
+          {
+            "seq": 7,
+            "type": "obstacle_collision_blocked",
+            "time": 5.033,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "kind": "planter"
+            }
+          },
+          {
+            "seq": 8,
+            "type": "obstacle_collision_blocked",
+            "time": 5.916,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "kind": "planter"
+            }
+          },
+          {
+            "seq": 9,
+            "type": "obstacle_collision_blocked",
+            "time": 6.483,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "kind": "planter"
+            }
+          },
+          {
+            "seq": 10,
+            "type": "obstacle_collision_blocked",
+            "time": 7,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "kind": "planter"
+            }
+          },
+          {
+            "seq": 11,
+            "type": "obstacle_collision_blocked",
+            "time": 9.016,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "kind": "planter"
+            }
+          },
+          {
+            "seq": 12,
+            "type": "obstacle_collision_blocked",
+            "time": 10.933,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "kind": "planter"
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 16,
+                "top": 14,
+                "right": 188,
+                "bottom": 62,
+                "width": 172,
+                "height": 48
+              },
+              "labels": [
+                "TIME  79s",
+                "TIME  78s"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 625,
+                "top": 14,
+                "right": 770,
+                "bottom": 62,
+                "width": 145,
+                "height": 48
+              },
+              "labels": [
+                "DELIVERED",
+                "0 / 3"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 786,
+                "top": 14,
+                "right": 944,
+                "bottom": 62,
+                "width": 158,
+                "height": 48
+              },
+              "labels": [
+                "SCORE",
+                "0",
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 468.17,
+                "top": 31.5,
+                "right": 491.83,
+                "bottom": 56.5,
+                "width": 23.66,
+                "height": 25
+              },
+              "labels": [
+                "0"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 205,
+                "top": 70,
+                "right": 515,
+                "bottom": 113,
+                "width": 310,
+                "height": 43
+              },
+              "labels": [
+                "DELIVER TO: Lighthouse Café"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-06",
+              "bounds": {
+                "left": 60,
+                "top": 77,
+                "right": 190,
+                "bottom": 182,
+                "width": 130,
+                "height": 105
+              },
+              "labels": [
+                "Post office"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-07",
+              "bounds": {
+                "left": 710,
+                "top": 252,
+                "right": 825,
+                "bottom": 357,
+                "width": 115,
+                "height": 105
+              },
+              "labels": [
+                "Harbor hall"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-08",
+              "bounds": {
+                "left": 295,
+                "top": 375,
+                "right": 470,
+                "bottom": 450,
+                "width": 175,
+                "height": 75
+              },
+              "labels": [
+                "Bakery"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-09",
+              "bounds": {
+                "left": 335.64,
+                "top": 515.5,
+                "right": 624.36,
+                "bottom": 528.5,
+                "width": 288.72,
+                "height": 13
+              },
+              "labels": [
+                "WASD / ARROWS • Follow the ribbon"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 1024,
+          "recentTextDraws": 17,
+          "hudTextDraws": 13
+        }
+      }
+    }
+  ],
+  "fps": 61,
+  "states": {
+    "start": {
+      "state": "title",
+      "score": 0,
+      "best": 0,
+      "fps": 62,
+      "time": 0,
+      "flags": [],
+      "errors": [],
+      "events": [],
+      "layout": {
+        "source": "playwright-canvas-draw-observation-v1",
+        "canvas": {
+          "domId": "game",
+          "logicalWidth": 960,
+          "logicalHeight": 540,
+          "intrinsicWidth": 960,
+          "intrinsicHeight": 540,
+          "logicalIntrinsicMatch": true
+        },
+        "regions": [
+          {
+            "id": "HUD-01",
+            "bounds": {
+              "left": 444.98,
+              "top": 493.5,
+              "right": 515.02,
+              "bottom": 506.5,
+              "width": 70.04,
+              "height": 13
+            },
+            "labels": [
+              "BEST 0"
+            ],
+            "geometrySource": "canvas-fillText"
+          }
+        ],
+        "issues": [],
+        "recentDrawCalls": 70,
+        "recentTextDraws": 3,
+        "hudTextDraws": 1
+      }
+    },
+    "early": {
+      "state": "playing",
+      "score": 0,
+      "best": 0,
+      "fps": 60,
+      "time": 1.2499999999999996,
+      "flags": [],
+      "errors": [],
+      "events": [
+        {
+          "seq": 1,
+          "type": "state_changed",
+          "time": 0,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "from": "title",
+            "to": "playing",
+            "scene": "play"
+          }
+        }
+      ],
+      "layout": {
+        "source": "playwright-canvas-draw-observation-v1",
+        "canvas": {
+          "domId": "game",
+          "logicalWidth": 960,
+          "logicalHeight": 540,
+          "intrinsicWidth": 960,
+          "intrinsicHeight": 540,
+          "logicalIntrinsicMatch": true
+        },
+        "regions": [
+          {
+            "id": "HUD-01",
+            "bounds": {
+              "left": 16,
+              "top": 14,
+              "right": 188,
+              "bottom": 62,
+              "width": 172,
+              "height": 48
+            },
+            "labels": [
+              "TIME  89s"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-02",
+            "bounds": {
+              "left": 625,
+              "top": 14,
+              "right": 770,
+              "bottom": 62,
+              "width": 145,
+              "height": 48
+            },
+            "labels": [
+              "DELIVERED",
+              "0 / 3"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-03",
+            "bounds": {
+              "left": 786,
+              "top": 14,
+              "right": 944,
+              "bottom": 62,
+              "width": 158,
+              "height": 48
+            },
+            "labels": [
+              "SCORE",
+              "0",
+              "BEST 0"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-04",
+            "bounds": {
+              "left": 468.17,
+              "top": 31.5,
+              "right": 491.83,
+              "bottom": 56.5,
+              "width": 23.66,
+              "height": 25
+            },
+            "labels": [
+              "0"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-05",
+            "bounds": {
+              "left": 205,
+              "top": 70,
+              "right": 515,
+              "bottom": 113,
+              "width": 310,
+              "height": 43
+            },
+            "labels": [
+              "DELIVER TO: Lighthouse Café"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-06",
+            "bounds": {
+              "left": 60,
+              "top": 77,
+              "right": 190,
+              "bottom": 182,
+              "width": 130,
+              "height": 105
+            },
+            "labels": [
+              "Post office"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-07",
+            "bounds": {
+              "left": 710,
+              "top": 252,
+              "right": 825,
+              "bottom": 357,
+              "width": 115,
+              "height": 105
+            },
+            "labels": [
+              "Harbor hall"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-08",
+            "bounds": {
+              "left": 295,
+              "top": 375,
+              "right": 470,
+              "bottom": 450,
+              "width": 175,
+              "height": 75
+            },
+            "labels": [
+              "Bakery"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-09",
+            "bounds": {
+              "left": 335.64,
+              "top": 515.5,
+              "right": 624.36,
+              "bottom": 528.5,
+              "width": 288.72,
+              "height": 13
+            },
+            "labels": [
+              "WASD / ARROWS • Follow the ribbon"
+            ],
+            "geometrySource": "canvas-fillText"
+          }
+        ],
+        "issues": [],
+        "recentDrawCalls": 1024,
+        "recentTextDraws": 16,
+        "hudTextDraws": 12
+      }
+    },
+    "mid": {
+      "state": "playing",
+      "score": 0,
+      "best": 0,
+      "fps": 60,
+      "time": 3.549899999999995,
+      "flags": [],
+      "errors": [],
+      "events": [
+        {
+          "seq": 1,
+          "type": "state_changed",
+          "time": 0,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "from": "title",
+            "to": "playing",
+            "scene": "play"
+          }
+        },
+        {
+          "seq": 2,
+          "type": "obstacle_collision_blocked",
+          "time": 1.95,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "kind": "planter"
+          }
+        },
+        {
+          "seq": 3,
+          "type": "obstacle_collision_blocked",
+          "time": 2.75,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "kind": "planter"
+          }
+        },
+        {
+          "seq": 4,
+          "type": "obstacle_collision_blocked",
+          "time": 3.117,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "kind": "planter"
+          }
+        }
+      ],
+      "layout": {
+        "source": "playwright-canvas-draw-observation-v1",
+        "canvas": {
+          "domId": "game",
+          "logicalWidth": 960,
+          "logicalHeight": 540,
+          "intrinsicWidth": 960,
+          "intrinsicHeight": 540,
+          "logicalIntrinsicMatch": true
+        },
+        "regions": [
+          {
+            "id": "HUD-01",
+            "bounds": {
+              "left": 16,
+              "top": 14,
+              "right": 188,
+              "bottom": 62,
+              "width": 172,
+              "height": 48
+            },
+            "labels": [
+              "TIME  87s"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-02",
+            "bounds": {
+              "left": 625,
+              "top": 14,
+              "right": 770,
+              "bottom": 62,
+              "width": 145,
+              "height": 48
+            },
+            "labels": [
+              "DELIVERED",
+              "0 / 3"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-03",
+            "bounds": {
+              "left": 786,
+              "top": 14,
+              "right": 944,
+              "bottom": 62,
+              "width": 158,
+              "height": 48
+            },
+            "labels": [
+              "SCORE",
+              "0",
+              "BEST 0"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-04",
+            "bounds": {
+              "left": 468.17,
+              "top": 31.5,
+              "right": 491.83,
+              "bottom": 56.5,
+              "width": 23.66,
+              "height": 25
+            },
+            "labels": [
+              "0"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-05",
+            "bounds": {
+              "left": 205,
+              "top": 70,
+              "right": 515,
+              "bottom": 113,
+              "width": 310,
+              "height": 43
+            },
+            "labels": [
+              "DELIVER TO: Lighthouse Café"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-06",
+            "bounds": {
+              "left": 60,
+              "top": 77,
+              "right": 190,
+              "bottom": 182,
+              "width": 130,
+              "height": 105
+            },
+            "labels": [
+              "Post office"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-07",
+            "bounds": {
+              "left": 710,
+              "top": 252,
+              "right": 825,
+              "bottom": 357,
+              "width": 115,
+              "height": 105
+            },
+            "labels": [
+              "Harbor hall"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-08",
+            "bounds": {
+              "left": 295,
+              "top": 375,
+              "right": 470,
+              "bottom": 450,
+              "width": 175,
+              "height": 75
+            },
+            "labels": [
+              "Bakery"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-09",
+            "bounds": {
+              "left": 335.64,
+              "top": 515.5,
+              "right": 624.36,
+              "bottom": 528.5,
+              "width": 288.72,
+              "height": 13
+            },
+            "labels": [
+              "WASD / ARROWS • Follow the ribbon"
+            ],
+            "geometrySource": "canvas-fillText"
+          }
+        ],
+        "issues": [],
+        "recentDrawCalls": 1024,
+        "recentTextDraws": 16,
+        "hudTextDraws": 12
+      }
+    },
+    "end": {
+      "state": "playing",
+      "score": 0,
+      "best": 0,
+      "fps": 60,
+      "time": 12.049499999999982,
+      "flags": [],
+      "errors": [],
+      "events": [
+        {
+          "seq": 1,
+          "type": "state_changed",
+          "time": 0,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "from": "title",
+            "to": "playing",
+            "scene": "play"
+          }
+        },
+        {
+          "seq": 2,
+          "type": "obstacle_collision_blocked",
+          "time": 1.95,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "kind": "planter"
+          }
+        },
+        {
+          "seq": 3,
+          "type": "obstacle_collision_blocked",
+          "time": 2.75,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "kind": "planter"
+          }
+        },
+        {
+          "seq": 4,
+          "type": "obstacle_collision_blocked",
+          "time": 3.117,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "kind": "planter"
+          }
+        },
+        {
+          "seq": 5,
+          "type": "obstacle_collision_blocked",
+          "time": 3.9,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "kind": "planter"
+          }
+        },
+        {
+          "seq": 6,
+          "type": "obstacle_collision_blocked",
+          "time": 4.633,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "kind": "planter"
+          }
+        },
+        {
+          "seq": 7,
+          "type": "obstacle_collision_blocked",
+          "time": 5.033,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "kind": "planter"
+          }
+        },
+        {
+          "seq": 8,
+          "type": "obstacle_collision_blocked",
+          "time": 5.916,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "kind": "planter"
+          }
+        },
+        {
+          "seq": 9,
+          "type": "obstacle_collision_blocked",
+          "time": 6.483,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "kind": "planter"
+          }
+        },
+        {
+          "seq": 10,
+          "type": "obstacle_collision_blocked",
+          "time": 7,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "kind": "planter"
+          }
+        },
+        {
+          "seq": 11,
+          "type": "obstacle_collision_blocked",
+          "time": 9.016,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "kind": "planter"
+          }
+        },
+        {
+          "seq": 12,
+          "type": "obstacle_collision_blocked",
+          "time": 10.933,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "kind": "planter"
+          }
+        }
+      ],
+      "layout": {
+        "source": "playwright-canvas-draw-observation-v1",
+        "canvas": {
+          "domId": "game",
+          "logicalWidth": 960,
+          "logicalHeight": 540,
+          "intrinsicWidth": 960,
+          "intrinsicHeight": 540,
+          "logicalIntrinsicMatch": true
+        },
+        "regions": [
+          {
+            "id": "HUD-01",
+            "bounds": {
+              "left": 16,
+              "top": 14,
+              "right": 188,
+              "bottom": 62,
+              "width": 172,
+              "height": 48
+            },
+            "labels": [
+              "TIME  79s",
+              "TIME  78s"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-02",
+            "bounds": {
+              "left": 625,
+              "top": 14,
+              "right": 770,
+              "bottom": 62,
+              "width": 145,
+              "height": 48
+            },
+            "labels": [
+              "DELIVERED",
+              "0 / 3"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-03",
+            "bounds": {
+              "left": 786,
+              "top": 14,
+              "right": 944,
+              "bottom": 62,
+              "width": 158,
+              "height": 48
+            },
+            "labels": [
+              "SCORE",
+              "0",
+              "BEST 0"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-04",
+            "bounds": {
+              "left": 468.17,
+              "top": 31.5,
+              "right": 491.83,
+              "bottom": 56.5,
+              "width": 23.66,
+              "height": 25
+            },
+            "labels": [
+              "0"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-05",
+            "bounds": {
+              "left": 205,
+              "top": 70,
+              "right": 515,
+              "bottom": 113,
+              "width": 310,
+              "height": 43
+            },
+            "labels": [
+              "DELIVER TO: Lighthouse Café"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-06",
+            "bounds": {
+              "left": 60,
+              "top": 77,
+              "right": 190,
+              "bottom": 182,
+              "width": 130,
+              "height": 105
+            },
+            "labels": [
+              "Post office"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-07",
+            "bounds": {
+              "left": 710,
+              "top": 252,
+              "right": 825,
+              "bottom": 357,
+              "width": 115,
+              "height": 105
+            },
+            "labels": [
+              "Harbor hall"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-08",
+            "bounds": {
+              "left": 295,
+              "top": 375,
+              "right": 470,
+              "bottom": 450,
+              "width": 175,
+              "height": 75
+            },
+            "labels": [
+              "Bakery"
+            ],
+            "geometrySource": "canvas-fillPathRect+text"
+          },
+          {
+            "id": "HUD-09",
+            "bounds": {
+              "left": 335.64,
+              "top": 515.5,
+              "right": 624.36,
+              "bottom": 528.5,
+              "width": 288.72,
+              "height": 13
+            },
+            "labels": [
+              "WASD / ARROWS • Follow the ribbon"
+            ],
+            "geometrySource": "canvas-fillText"
+          }
+        ],
+        "issues": [],
+        "recentDrawCalls": 1024,
+        "recentTextDraws": 17,
+        "hudTextDraws": 13
+      }
+    }
+  },
+  "contract": {
+    "passed": false,
+    "checks": [
+      {
+        "id": "probe_present",
+        "label": "Test-Hook __GF__ vorhanden",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "deterministic_seed",
+        "label": "Deterministischer Verifier-Seed ist vorhanden",
+        "pass": true,
+        "detail": "seed=1207618270"
+      },
+      {
+        "id": "telemetry_timeline",
+        "label": "Telemetry enthält start/early/mid/end",
+        "pass": true,
+        "detail": "start:title/0@0ms -> early:playing/0@1200ms -> mid:playing/0@3500ms -> end:playing/0@12000ms"
+      },
+      {
+        "id": "idle_baseline",
+        "label": "Deterministische Idle-Control mit gleichem Seed ist vorhanden",
+        "pass": true,
+        "detail": "mode=idle seed=1207618270 timeline=start:title/0@0ms -> early:playing/0@1200ms -> mid:playing/0@3500ms -> end:playing/0@12000ms"
+      },
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "assets_ok",
+        "label": "Alle Assets geladen",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "started_playing",
+        "label": "Spiel verlässt den Titelbildschirm",
+        "pass": true,
+        "detail": "endState=playing"
+      },
+      {
+        "id": "interactivity",
+        "label": "Spiel zeigt deterministischen Gameplay-Fortschritt in der Telemetry",
+        "pass": false,
+        "detail": "start:title/0@0ms -> early:playing/0@1200ms -> mid:playing/0@3500ms -> end:playing/0@12000ms"
+      },
+      {
+        "id": "input_causality",
+        "label": "Gameplay-Fortschritt ist gegenüber der Idle-Control auf Eingaben zurückführbar",
+        "pass": true,
+        "detail": "active(score+0,events+11,end=playing) vs idle(score+0,events+0,end=playing)"
+      },
+      {
+        "id": "fps_ok",
+        "label": "Performance >= 30 FPS",
+        "pass": true,
+        "detail": "fps=61"
+      },
+      {
+        "id": "visual_content",
+        "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+        "pass": true,
+        "detail": "shot-2-gameplay: VISIBLE (97.69% diff) | shot-3-gameplay: VISIBLE (97.69% diff)"
+      },
+      {
+        "id": "visual_activity",
+        "label": "Gameplay zeigt deterministische Inter-Frame-Aktivität",
+        "pass": true,
+        "detail": "0.569% pixels changed"
+      }
+    ],
+    "failures": [
+      {
+        "id": "interactivity",
+        "label": "Spiel zeigt deterministischen Gameplay-Fortschritt in der Telemetry",
+        "pass": false,
+        "detail": "start:title/0@0ms -> early:playing/0@1200ms -> mid:playing/0@3500ms -> end:playing/0@12000ms"
+      }
+    ]
+  },
+  "productFidelity": {
+    "pass": false,
+    "status": "failed",
+    "contractSha256": "d3a83649db0972a9e5f03568402d4248f28c0c9cc0058a6a990472247c70e3c1",
+    "requirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-03",
+      "MH-04",
+      "MH-05",
+      "MH-06",
+      "MH-07",
+      "MH-08",
+      "NG-01",
+      "NG-02",
+      "NG-03",
+      "NG-04"
+    ],
+    "criteria": [
+      {
+        "requirementId": "MH-01",
+        "acceptanceId": "AC-MH-01",
+        "probeId": "PR-MH-01",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "courier_drive_confirmed",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": false,
+        "traceable": true,
+        "detail": "missing event courier_drive_confirmed"
+      },
+      {
+        "requirementId": "MH-02",
+        "acceptanceId": "AC-MH-02",
+        "probeId": "PR-MH-02",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "delivery_sequence_completed",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": false,
+        "traceable": true,
+        "detail": "missing event delivery_sequence_completed"
+      },
+      {
+        "requirementId": "MH-03",
+        "acceptanceId": "AC-MH-03",
+        "probeId": "PR-MH-03",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "obstacle_collision_blocked",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": false,
+        "traceable": true,
+        "detail": "obstacle_collision_blocked observed but not as correlated gameplay evidence: event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0)"
+      },
+      {
+        "requirementId": "MH-04",
+        "acceptanceId": "AC-MH-04",
+        "probeId": "PR-MH-04",
+        "kind": "state_reached",
+        "declaredKind": "state_reached",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed",
+        "pass": false,
+        "traceable": true,
+        "detail": "state failure not reached"
+      },
+      {
+        "requirementId": "MH-05",
+        "acceptanceId": "AC-MH-05",
+        "probeId": "PR-MH-05",
+        "kind": "layout_no_overlap",
+        "declaredKind": "layout_no_overlap",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed-canvas-geometry",
+        "pass": false,
+        "traceable": true,
+        "detail": "independent canvas layout insufficient at best phase early: regions=9/4, issueCount=0, scoreProgress=false"
+      },
+      {
+        "requirementId": "MH-06",
+        "acceptanceId": "AC-MH-06",
+        "probeId": "PR-MH-06",
+        "kind": "state_reached",
+        "declaredKind": "state_reached",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed",
+        "pass": false,
+        "traceable": true,
+        "detail": "state success not reached"
+      },
+      {
+        "requirementId": "MH-07",
+        "acceptanceId": "AC-MH-07",
+        "probeId": "PR-MH-07",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "fresh_run_started",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": false,
+        "traceable": true,
+        "detail": "missing event fresh_run_started"
+      },
+      {
+        "requirementId": "MH-08",
+        "acceptanceId": "AC-MH-08",
+        "probeId": "PR-MH-08",
+        "kind": "layout_no_overlap",
+        "declaredKind": "layout_no_overlap",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed-canvas-geometry",
+        "pass": false,
+        "traceable": true,
+        "detail": "independent canvas layout insufficient at best phase early: regions=9/4, issueCount=0, scoreProgress=false"
+      },
+      {
+        "requirementId": "NG-01",
+        "acceptanceId": "AC-NG-01",
+        "probeId": "PR-NG-01",
+        "kind": "event_absent",
+        "declaredKind": "event_absent",
+        "strength": null,
+        "eventType": "combat_action",
+        "evidenceSource": "generated-game-event-dependent",
+        "pass": true,
+        "traceable": true,
+        "detail": "event combat_action absent"
+      },
+      {
+        "requirementId": "NG-02",
+        "acceptanceId": "AC-NG-02",
+        "probeId": "PR-NG-02",
+        "kind": "event_absent",
+        "declaredKind": "event_absent",
+        "strength": null,
+        "eventType": "boss_encounter",
+        "evidenceSource": "generated-game-event-dependent",
+        "pass": true,
+        "traceable": true,
+        "detail": "event boss_encounter absent"
+      },
+      {
+        "requirementId": "NG-03",
+        "acceptanceId": "AC-NG-03",
+        "probeId": "PR-NG-03",
+        "kind": "event_absent",
+        "declaredKind": "event_absent",
+        "strength": null,
+        "eventType": "upgrade_applied",
+        "evidenceSource": "generated-game-event-dependent",
+        "pass": true,
+        "traceable": true,
+        "detail": "event upgrade_applied absent"
+      },
+      {
+        "requirementId": "NG-04",
+        "acceptanceId": "AC-NG-04",
+        "probeId": "PR-NG-04",
+        "kind": "event_absent",
+        "declaredKind": "event_absent",
+        "strength": null,
+        "eventType": "prohibited_visual_identity",
+        "evidenceSource": "generated-game-event-dependent",
+        "pass": true,
+        "traceable": true,
+        "detail": "event prohibited_visual_identity absent"
+      }
+    ],
+    "failures": [
+      {
+        "requirementId": "MH-01",
+        "acceptanceId": "AC-MH-01",
+        "probeId": "PR-MH-01",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "courier_drive_confirmed",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": false,
+        "traceable": true,
+        "detail": "missing event courier_drive_confirmed"
+      },
+      {
+        "requirementId": "MH-02",
+        "acceptanceId": "AC-MH-02",
+        "probeId": "PR-MH-02",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "delivery_sequence_completed",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": false,
+        "traceable": true,
+        "detail": "missing event delivery_sequence_completed"
+      },
+      {
+        "requirementId": "MH-03",
+        "acceptanceId": "AC-MH-03",
+        "probeId": "PR-MH-03",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "obstacle_collision_blocked",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": false,
+        "traceable": true,
+        "detail": "obstacle_collision_blocked observed but not as correlated gameplay evidence: event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0); event lacks independent engine-observed gameplay value change (score 0 -> 0)"
+      },
+      {
+        "requirementId": "MH-04",
+        "acceptanceId": "AC-MH-04",
+        "probeId": "PR-MH-04",
+        "kind": "state_reached",
+        "declaredKind": "state_reached",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed",
+        "pass": false,
+        "traceable": true,
+        "detail": "state failure not reached"
+      },
+      {
+        "requirementId": "MH-05",
+        "acceptanceId": "AC-MH-05",
+        "probeId": "PR-MH-05",
+        "kind": "layout_no_overlap",
+        "declaredKind": "layout_no_overlap",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed-canvas-geometry",
+        "pass": false,
+        "traceable": true,
+        "detail": "independent canvas layout insufficient at best phase early: regions=9/4, issueCount=0, scoreProgress=false"
+      },
+      {
+        "requirementId": "MH-06",
+        "acceptanceId": "AC-MH-06",
+        "probeId": "PR-MH-06",
+        "kind": "state_reached",
+        "declaredKind": "state_reached",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed",
+        "pass": false,
+        "traceable": true,
+        "detail": "state success not reached"
+      },
+      {
+        "requirementId": "MH-07",
+        "acceptanceId": "AC-MH-07",
+        "probeId": "PR-MH-07",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "fresh_run_started",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": false,
+        "traceable": true,
+        "detail": "missing event fresh_run_started"
+      },
+      {
+        "requirementId": "MH-08",
+        "acceptanceId": "AC-MH-08",
+        "probeId": "PR-MH-08",
+        "kind": "layout_no_overlap",
+        "declaredKind": "layout_no_overlap",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed-canvas-geometry",
+        "pass": false,
+        "traceable": true,
+        "detail": "independent canvas layout insufficient at best phase early: regions=9/4, issueCount=0, scoreProgress=false"
+      }
+    ],
+    "coverage": {
+      "evaluatedRequirementIds": [
+        "MH-01",
+        "MH-02",
+        "MH-03",
+        "MH-04",
+        "MH-05",
+        "MH-06",
+        "MH-07",
+        "MH-08",
+        "NG-01",
+        "NG-02",
+        "NG-03",
+        "NG-04"
+      ],
+      "harnessObservedRequirementIds": [
+        "MH-04",
+        "MH-05",
+        "MH-06",
+        "MH-08"
+      ],
+      "canvasGeometryRequirementIds": [
+        "MH-05",
+        "MH-08"
+      ],
+      "generatedGameEventDependentRequirementIds": [
+        "MH-01",
+        "MH-02",
+        "MH-03",
+        "MH-07",
+        "NG-01",
+        "NG-02",
+        "NG-03",
+        "NG-04"
+      ],
+      "correlatedGeneratedGameEventRequirementIds": [
+        "MH-01",
+        "MH-02",
+        "MH-03",
+        "MH-07"
+      ],
+      "unstructuredBriefContentEvaluated": false,
+      "scope": "Product Fidelity evaluates only structured Owner Contract MH/NG requirements. layout_no_overlap is independently observed by the Playwright harness from actual Canvas text/rectangle draw geometry. event/event_value_change/event_absent evidence depends on generated-game event instrumentation; correlated_gameplay additionally requires harness-observed gameplay timing, state and score change. Descriptive originalBrief content outside MH/NG is not evaluated here."
+    },
+    "observedEvents": [
+      {
+        "seq": 1,
+        "type": "state_changed",
+        "time": 0,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "from": "title",
+          "to": "playing",
+          "scene": "play"
+        }
+      },
+      {
+        "seq": 2,
+        "type": "obstacle_collision_blocked",
+        "time": 1.95,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "kind": "planter"
+        }
+      },
+      {
+        "seq": 3,
+        "type": "obstacle_collision_blocked",
+        "time": 2.75,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "kind": "planter"
+        }
+      },
+      {
+        "seq": 4,
+        "type": "obstacle_collision_blocked",
+        "time": 3.117,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "kind": "planter"
+        }
+      },
+      {
+        "seq": 5,
+        "type": "obstacle_collision_blocked",
+        "time": 3.9,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "kind": "planter"
+        }
+      },
+      {
+        "seq": 6,
+        "type": "obstacle_collision_blocked",
+        "time": 4.633,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "kind": "planter"
+        }
+      },
+      {
+        "seq": 7,
+        "type": "obstacle_collision_blocked",
+        "time": 5.033,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "kind": "planter"
+        }
+      },
+      {
+        "seq": 8,
+        "type": "obstacle_collision_blocked",
+        "time": 5.916,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "kind": "planter"
+        }
+      },
+      {
+        "seq": 9,
+        "type": "obstacle_collision_blocked",
+        "time": 6.483,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "kind": "planter"
+        }
+      },
+      {
+        "seq": 10,
+        "type": "obstacle_collision_blocked",
+        "time": 7,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "kind": "planter"
+        }
+      },
+      {
+        "seq": 11,
+        "type": "obstacle_collision_blocked",
+        "time": 9.016,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "kind": "planter"
+        }
+      },
+      {
+        "seq": 12,
+        "type": "obstacle_collision_blocked",
+        "time": 10.933,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "kind": "planter"
+        }
+      }
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "probeErrors": []
+}

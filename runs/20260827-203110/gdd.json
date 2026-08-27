@@ -1,0 +1,249 @@
+{
+  "title": "Harbor Courier",
+  "tagline": "Thread the seaside streets, beat the clock, and ring every doorstep bell.",
+  "genre": "arcade",
+  "pitch": "Harbor Courier is a bright top-down delivery sprint through a compact coastal town. Ride a nimble scooter between parcel depots and three color-coded waterfront addresses, choosing streets around buildings, docks, and planter barriers before the shift timer runs out. Every handoff turns the town briefly celebratory with a bell, burst of confetti, and the next route painted clearly into the streets.",
+  "coreLoop": "Pick up the currently marked parcel at its depot, follow the matching destination marker through the street network, and stop inside the destination circle to deliver it. Repeat for three sequential orders before the countdown expires, balancing short blocked lanes against longer open routes.",
+  "mechanics": [
+    {
+      "name": "Top-down scooter handling",
+      "description": "Arrow keys or WASD steer a small courier scooter in a fixed 960x540 overhead town. Movement has light acceleration, gentle turning inertia, a responsive brake when reversing direction, and a clear white outline for readability."
+    },
+    {
+      "name": "Parcel-to-address sequence",
+      "description": "Each of three orders begins at a clearly marked parcel depot. Collecting the parcel changes the HUD target to one distinct named address: Lighthouse Café, Coral House, then Marina Market. A parcel icon floats above the scooter only while carrying."
+    },
+    {
+      "name": "Street maze with honest route choices",
+      "description": "Colorful buildings, dock fences, water edges, hedges, and planter islands are solid collision geometry. Two or more visible street routes connect each depot and address, with narrow shortcuts trading turning precision for travel distance."
+    },
+    {
+      "name": "Route ribbon",
+      "description": "A subtle animated dashed ribbon points from the scooter toward the active depot or destination, but it only indicates direction rather than drawing a full solution. It keeps the objective immediately legible while preserving navigation decisions."
+    },
+    {
+      "name": "Clock pressure and delivery bonus",
+      "description": "A 90-second countdown drives one complete run. Each successful handoff awards 100 points plus a visible remaining-time bonus, while completing a delivery grants a modest 3-second time refund to keep the final leg tense but fair."
+    },
+    {
+      "name": "Harbor bell signature moment",
+      "description": "Entering the correct delivery circle while carrying its parcel produces a tiny hit-stop, warm screen flash, scooter bell chord, buoy-like ring ripple, and a burst of colored receipt confetti. The next depot marker pops in with a satisfying map-stamp animation."
+    },
+    {
+      "name": "Complete replay loop",
+      "description": "Success and failure screens summarize delivered orders, score, and time, then offer a large \"PRESS ENTER FOR NEW RUN\" prompt that resets all parcels, destinations, timer, and score without reloading."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD or Arrow Keys drive the scooter. Enter starts the game and starts a new run from success or failure. Escape returns to the title screen.",
+    "mouse": "Mouse may click START or NEW RUN buttons; no aiming or combat input exists.",
+    "touch": "optional"
+  },
+  "artDirection": {
+    "mood": "sunny coastal postcard arcade",
+    "palette": [
+      "#1679A8",
+      "#F8D66D",
+      "#F47B62",
+      "#F5F1DF",
+      "#247B5A"
+    ],
+    "shapes": "smooth-vector",
+    "backgroundFx": "An animated turquoise water gradient surrounds the town; small wave dashes and sailboat silhouettes drift on the water layer while distant gull specks and palm shadows move slowly behind the street grid."
+  },
+  "audioDirection": {
+    "musicMood": "bouncy marimba-and-brushed-percussion seaside loop that gains a light clap layer on the final delivery",
+    "sfx": [
+      "soft scooter motor pitch while moving",
+      "parcel pickup paper pop",
+      "delivery bell chord",
+      "short curb bump",
+      "countdown warning tick",
+      "success harbor horn",
+      "failure muted gull call",
+      "button click"
+    ]
+  },
+  "difficulty": {
+    "start": "The first depot is beside the scooter and Lighthouse Café is reached by a broad, obvious street, teaching pickup and delivery within seconds.",
+    "progression": "The second and third legs introduce more barriers and alternate lanes, but route ribbon direction, generous delivery circles, and the small delivery time refunds keep decisions readable.",
+    "peak": "The Marina Market final leg crosses the densest dockside street split with enough remaining time for one recovery from a wrong turn; no hazards, enemies, or random traffic can make it unfair."
+  },
+  "winLose": {
+    "win": "Deliver all three named parcels before the countdown reaches zero; enter the clear success state with a final score and New Run prompt.",
+    "lose": "If the countdown reaches 0 while fewer than three deliveries are complete, enter the clear failure state showing the incomplete delivery count and New Run prompt."
+  },
+  "juice": {
+    "screenShake": "A 4px, 0.18-second shake occurs on each completed delivery and a 3px curb bump occurs on a solid obstacle collision.",
+    "particles": "Parcel pickups emit paper-square sparks; deliveries emit destination-colored receipt confetti and expanding buoy-ring particles; scooter movement emits sparse dust puffs on streets.",
+    "hitStop": "A 0.08-second hit-stop punctuates each valid delivery only.",
+    "flash": "A warm cream flash at 0.35 alpha accompanies delivery completion, while a brief red-orange edge pulse warns at 10 seconds remaining."
+  },
+  "scopeNotes": "Do not build combat, attacks, weapons, damage, enemies, traffic AI, boss encounters, mechs, robots, crafting, salvage, forging, upgrades, inventories, procedural maps, scrolling worlds, meta progression, or online features. Keep one fixed single-screen harbor layout, three sequential deliveries, and deterministic static obstacle geometry.",
+  "acceptanceCriteria": [
+    {
+      "id": "AC-MH-01",
+      "ownerRequirementId": "MH-01",
+      "statement": "During active play, the player visibly drives a small courier scooter in an overhead town and a courier_drive_confirmed event is emitted only after actual movement and score progress."
+    },
+    {
+      "id": "AC-MH-02",
+      "ownerRequirementId": "MH-02",
+      "statement": "A complete run emits delivery_sequence_completed only after the player has collected and delivered parcels to all three distinct named destinations."
+    },
+    {
+      "id": "AC-MH-03",
+      "ownerRequirementId": "MH-03",
+      "statement": "Attempting to ride into a building, dock fence, water edge, hedge, or planter emits obstacle_collision_blocked because the scooter cannot pass through that obstacle."
+    },
+    {
+      "id": "AC-MH-04",
+      "ownerRequirementId": "MH-04",
+      "statement": "When the visible countdown reaches zero before all three deliveries are complete, the game enters the failure state."
+    },
+    {
+      "id": "AC-MH-05",
+      "ownerRequirementId": "MH-05",
+      "statement": "During active gameplay, independently rendered HUD geometry contains readable, separate timer, current target, delivery progress, and score regions within the canvas."
+    },
+    {
+      "id": "AC-MH-06",
+      "ownerRequirementId": "MH-06",
+      "statement": "Completing the third required delivery with time remaining enters the success state."
+    },
+    {
+      "id": "AC-MH-07",
+      "ownerRequirementId": "MH-07",
+      "statement": "After a success or failure terminal result, activating New Run emits fresh_run_started and resets play without a page reload."
+    },
+    {
+      "id": "AC-MH-08",
+      "ownerRequirementId": "MH-08",
+      "statement": "During normal active gameplay, the main independently rendered HUD regions are non-overlapping, readable, and fully within the 960x540 visible canvas."
+    },
+    {
+      "id": "AC-NG-01",
+      "ownerRequirementId": "NG-01",
+      "statement": "No combat action event is emitted during a complete observed session."
+    },
+    {
+      "id": "AC-NG-02",
+      "ownerRequirementId": "NG-02",
+      "statement": "No mech, Titan, combat robot, boss arena, or boss-fight event is emitted during a complete observed session."
+    },
+    {
+      "id": "AC-NG-03",
+      "ownerRequirementId": "NG-03",
+      "statement": "No crafting, salvage, forge, or equipment-upgrade event is emitted during a complete observed session."
+    },
+    {
+      "id": "AC-NG-04",
+      "ownerRequirementId": "NG-04",
+      "statement": "No cyberpunk, military, or heavy-industrial visual-identity event is emitted during a complete observed session."
+    }
+  ],
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing",
+      "success",
+      "failure"
+    ],
+    "scoreEvents": [
+      "score_change occurs when a valid parcel is delivered: score increases by 100 plus a nonnegative remaining-time bonus.",
+      "The delivery score change is emitted only after the matching parcel has been collected and the scooter enters its matching destination circle."
+    ],
+    "requirementProbes": [
+      {
+        "id": "PR-MH-01",
+        "acceptanceId": "AC-MH-01",
+        "ownerRequirementId": "MH-01",
+        "kind": "event",
+        "eventType": "courier_drive_confirmed",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-02",
+        "acceptanceId": "AC-MH-02",
+        "ownerRequirementId": "MH-02",
+        "kind": "event",
+        "eventType": "delivery_sequence_completed",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-03",
+        "acceptanceId": "AC-MH-03",
+        "ownerRequirementId": "MH-03",
+        "kind": "event",
+        "eventType": "obstacle_collision_blocked",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-04",
+        "acceptanceId": "AC-MH-04",
+        "ownerRequirementId": "MH-04",
+        "kind": "state_reached",
+        "state": "failure"
+      },
+      {
+        "id": "PR-MH-05",
+        "acceptanceId": "AC-MH-05",
+        "ownerRequirementId": "MH-05",
+        "kind": "layout_no_overlap",
+        "minRegions": 4,
+        "requireScoreProgress": true
+      },
+      {
+        "id": "PR-MH-06",
+        "acceptanceId": "AC-MH-06",
+        "ownerRequirementId": "MH-06",
+        "kind": "state_reached",
+        "state": "success"
+      },
+      {
+        "id": "PR-MH-07",
+        "acceptanceId": "AC-MH-07",
+        "ownerRequirementId": "MH-07",
+        "kind": "event",
+        "eventType": "fresh_run_started",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-08",
+        "acceptanceId": "AC-MH-08",
+        "ownerRequirementId": "MH-08",
+        "kind": "layout_no_overlap",
+        "minRegions": 4,
+        "requireScoreProgress": true
+      },
+      {
+        "id": "PR-NG-01",
+        "acceptanceId": "AC-NG-01",
+        "ownerRequirementId": "NG-01",
+        "kind": "event_absent",
+        "eventType": "combat_action"
+      },
+      {
+        "id": "PR-NG-02",
+        "acceptanceId": "AC-NG-02",
+        "ownerRequirementId": "NG-02",
+        "kind": "event_absent",
+        "eventType": "boss_encounter"
+      },
+      {
+        "id": "PR-NG-03",
+        "acceptanceId": "AC-NG-03",
+        "ownerRequirementId": "NG-03",
+        "kind": "event_absent",
+        "eventType": "upgrade_applied"
+      },
+      {
+        "id": "PR-NG-04",
+        "acceptanceId": "AC-NG-04",
+        "ownerRequirementId": "NG-04",
+        "kind": "event_absent",
+        "eventType": "prohibited_visual_identity"
+      }
+    ]
+  }
+}

@@ -1,0 +1,875 @@
+{
+  "schemaVersion": "learning-aggregate-v1",
+  "input": {
+    "runIds": [
+      "20260827-111826",
+      "20260827-113631",
+      "20260827-120138",
+      "20260827-203110"
+    ],
+    "attemptEvidence": [
+      {
+        "runId": "20260826-102914-color-cascade",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-102914-color-cascade/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-102914-color-cascade",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-102914-color-cascade/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-102914-color-cascade",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-102914-color-cascade/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-102914-color-cascade",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-102914-color-cascade/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-102914-color-cascade",
+        "attemptId": "attempt-05",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-102914-color-cascade/attempt-05/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-113120-core-awakening-salvage",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-113120-core-awakening-salvage/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-113120-core-awakening-salvage",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-113120-core-awakening-salvage/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-113120-core-awakening-salvage",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-113120-core-awakening-salvage/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-113120-core-awakening-salvage",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-113120-core-awakening-salvage/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-113120-core-awakening-salvage",
+        "attemptId": "attempt-05",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-113120-core-awakening-salvage/attempt-05/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-113120-core-awakening-salvage",
+        "attemptId": "attempt-06",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-113120-core-awakening-salvage/attempt-06/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-113120-core-awakening-salvage",
+        "attemptId": "attempt-07",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-113120-core-awakening-salvage/attempt-07/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-113120-core-awakening-salvage",
+        "attemptId": "attempt-08",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-113120-core-awakening-salvage/attempt-08/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-113120-core-awakening-salvage",
+        "attemptId": "attempt-09",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-113120-core-awakening-salvage/attempt-09/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-115057-core-salvage",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-115057-core-salvage/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-115057-core-salvage",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-115057-core-salvage/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-134725-titan-core-salvage",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-134725-titan-core-salvage/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-134725-titan-core-salvage",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-134725-titan-core-salvage/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-134725-titan-core-salvage",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-134725-titan-core-salvage/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-134725-titan-core-salvage",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-134725-titan-core-salvage/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-134725-titan-core-salvage",
+        "attemptId": "attempt-05",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-134725-titan-core-salvage/attempt-05/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-134725-titan-core-salvage",
+        "attemptId": "attempt-06",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-134725-titan-core-salvage/attempt-06/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-172639-core-awakening",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-172639-core-awakening/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-172639-core-awakening",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-172639-core-awakening/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-172639-core-awakening",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-172639-core-awakening/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-172639-core-awakening",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-172639-core-awakening/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-172639-core-awakening",
+        "attemptId": "attempt-05",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-172639-core-awakening/attempt-05/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-173127-core-awakening",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-173127-core-awakening/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-173127-core-awakening",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-173127-core-awakening/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-173127-core-awakening",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-173127-core-awakening/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-173127-core-awakening",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-173127-core-awakening/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-173649-core-awakening",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-173649-core-awakening/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-173649-core-awakening",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-173649-core-awakening/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-173649-core-awakening",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-173649-core-awakening/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-173649-core-awakening",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-173649-core-awakening/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-173649-core-awakening",
+        "attemptId": "attempt-05",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-173649-core-awakening/attempt-05/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-174050-core-awakening",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-174050-core-awakening/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-174050-core-awakening",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-174050-core-awakening/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-174050-core-awakening",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-174050-core-awakening/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-174050-core-awakening",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-174050-core-awakening/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-174050-core-awakening",
+        "attemptId": "attempt-05",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-174050-core-awakening/attempt-05/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-174700-core-awakening",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-174700-core-awakening/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-174700-core-awakening",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-174700-core-awakening/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-174700-core-awakening",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-174700-core-awakening/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-174700-core-awakening",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-174700-core-awakening/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-175149-core-awakening",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-175149-core-awakening/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-175149-core-awakening",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-175149-core-awakening/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-175149-core-awakening",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-175149-core-awakening/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-175149-core-awakening",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-175149-core-awakening/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-175149-core-awakening",
+        "attemptId": "attempt-05",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-175149-core-awakening/attempt-05/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-175149-core-awakening",
+        "attemptId": "attempt-06",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-175149-core-awakening/attempt-06/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-175149-core-awakening",
+        "attemptId": "attempt-07",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-175149-core-awakening/attempt-07/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-175149-core-awakening",
+        "attemptId": "attempt-08",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-175149-core-awakening/attempt-08/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-180351-core-awakening",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-180351-core-awakening/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-180351-core-awakening",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-180351-core-awakening/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-180351-core-awakening",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-180351-core-awakening/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-180351-core-awakening",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-180351-core-awakening/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-181412-core-awakening",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-181412-core-awakening/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-181412-core-awakening",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-181412-core-awakening/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-181412-core-awakening",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-181412-core-awakening/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-181412-core-awakening",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-181412-core-awakening/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-181412-core-awakening",
+        "attemptId": "attempt-05",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-181412-core-awakening/attempt-05/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-183226-core-awakening",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-183226-core-awakening/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-183226-core-awakening",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-183226-core-awakening/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-183226-core-awakening",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-183226-core-awakening/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-183226-core-awakening",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-183226-core-awakening/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-183226-core-awakening",
+        "attemptId": "attempt-05",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-183226-core-awakening/attempt-05/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-190334-breach-breaker",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-190334-breach-breaker/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-190334-breach-breaker",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-190334-breach-breaker/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-190334-breach-breaker",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-190334-breach-breaker/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-190334-breach-breaker",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-190334-breach-breaker/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260826-190334-breach-breaker",
+        "attemptId": "attempt-05",
+        "kind": "technical",
+        "sourceRef": "runs/20260826-190334-breach-breaker/attempt-05/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-041726-core-awakening",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-041726-core-awakening/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-041726-core-awakening",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-041726-core-awakening/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-041726-core-awakening",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-041726-core-awakening/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-041726-core-awakening",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-041726-core-awakening/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-041726-core-awakening",
+        "attemptId": "attempt-05",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-041726-core-awakening/attempt-05/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-042215-titan-core-reforged",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-042215-titan-core-reforged/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-042215-titan-core-reforged",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-042215-titan-core-reforged/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-042215-titan-core-reforged",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-042215-titan-core-reforged/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-042215-titan-core-reforged",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-042215-titan-core-reforged/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-042215-titan-core-reforged",
+        "attemptId": "attempt-05",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-042215-titan-core-reforged/attempt-05/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-042215-titan-core-reforged",
+        "attemptId": "attempt-06",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-042215-titan-core-reforged/attempt-06/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-042215-titan-core-reforged",
+        "attemptId": "attempt-07",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-042215-titan-core-reforged/attempt-07/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-042215-titan-core-reforged",
+        "attemptId": "attempt-08",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-042215-titan-core-reforged/attempt-08/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-043356-titan-core-reforged",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-043356-titan-core-reforged/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-043356-titan-core-reforged",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-043356-titan-core-reforged/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-043356-titan-core-reforged",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-043356-titan-core-reforged/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-043356-titan-core-reforged",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-043356-titan-core-reforged/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-043356-titan-core-reforged",
+        "attemptId": "attempt-05",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-043356-titan-core-reforged/attempt-05/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-120138",
+        "attemptId": "attempt-01",
+        "kind": "product-fidelity",
+        "sourceRef": "runs/20260827-120138/attempt-01/evidence-fidelity.json"
+      },
+      {
+        "runId": "20260827-120138",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-120138/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-120138",
+        "attemptId": "attempt-02",
+        "kind": "product-fidelity",
+        "sourceRef": "runs/20260827-120138/attempt-02/evidence-fidelity.json"
+      },
+      {
+        "runId": "20260827-120138",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-120138/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-120138",
+        "attemptId": "attempt-03",
+        "kind": "product-fidelity",
+        "sourceRef": "runs/20260827-120138/attempt-03/evidence-fidelity.json"
+      },
+      {
+        "runId": "20260827-120138",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-120138/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-203110",
+        "attemptId": "attempt-01",
+        "kind": "product-fidelity",
+        "sourceRef": "runs/20260827-203110/attempt-01/evidence-fidelity.json"
+      },
+      {
+        "runId": "20260827-203110",
+        "attemptId": "attempt-01",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-203110/attempt-01/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-203110",
+        "attemptId": "attempt-02",
+        "kind": "product-fidelity",
+        "sourceRef": "runs/20260827-203110/attempt-02/evidence-fidelity.json"
+      },
+      {
+        "runId": "20260827-203110",
+        "attemptId": "attempt-02",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-203110/attempt-02/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-203110",
+        "attemptId": "attempt-03",
+        "kind": "product-fidelity",
+        "sourceRef": "runs/20260827-203110/attempt-03/evidence-fidelity.json"
+      },
+      {
+        "runId": "20260827-203110",
+        "attemptId": "attempt-03",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-203110/attempt-03/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-203110",
+        "attemptId": "attempt-04",
+        "kind": "product-fidelity",
+        "sourceRef": "runs/20260827-203110/attempt-04/evidence-fidelity.json"
+      },
+      {
+        "runId": "20260827-203110",
+        "attemptId": "attempt-04",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-203110/attempt-04/evidence-tech.json"
+      },
+      {
+        "runId": "20260827-203110",
+        "attemptId": "attempt-05",
+        "kind": "product-fidelity",
+        "sourceRef": "runs/20260827-203110/attempt-05/evidence-fidelity.json"
+      },
+      {
+        "runId": "20260827-203110",
+        "attemptId": "attempt-05",
+        "kind": "technical",
+        "sourceRef": "runs/20260827-203110/attempt-05/evidence-tech.json"
+      }
+    ],
+    "ownerFeedbackIds": [
+      "gh-issue-6-comment-5443073595",
+      "historical-titan-canary-3-owner-result-2026-08-27"
+    ]
+  },
+  "failures": {
+    "signatures": {
+      "product-fidelity:MH-01:PR-MH-01:event:courier_drive_confirmed:correlated-too-early": 2,
+      "product-fidelity:MH-01:PR-MH-01:event:courier_drive_confirmed:missing": 1,
+      "product-fidelity:MH-02:PR-MH-02:event:delivery_sequence_completed:missing": 3,
+      "product-fidelity:MH-02:PR-MH-02:event:titan_and_threats_active:correlated-too-early": 1,
+      "product-fidelity:MH-03:PR-MH-03:event:obstacle_collision_blocked:correlated-too-early": 1,
+      "product-fidelity:MH-03:PR-MH-03:event:obstacle_collision_blocked:failed": 1,
+      "product-fidelity:MH-04:PR-MH-04:event:hud_layout_clear:correlated-too-early": 1,
+      "product-fidelity:MH-04:PR-MH-04:state_reached:failed": 5,
+      "product-fidelity:MH-05:PR-MH-05:layout_no_overlap:failed": 3,
+      "product-fidelity:MH-06:PR-MH-06:state_reached:failed": 5,
+      "product-fidelity:MH-07:PR-MH-07:event:fresh_run_started:correlated-too-early": 1,
+      "product-fidelity:MH-07:PR-MH-07:event:fresh_run_started:missing": 3,
+      "product-fidelity:MH-08:PR-MH-08:layout_no_overlap:failed": 3,
+      "technical:fps_ok:failed": 5,
+      "technical:input_causality:failed": 2,
+      "technical:interactivity:failed": 41,
+      "technical:no_runtime_errors:failed": 22,
+      "technical:probe_present:failed": 5,
+      "technical:started_playing:failed": 5,
+      "technical:visual_activity:failed": 1,
+      "technical:visual_content:failed": 20
+    },
+    "recurring": [
+      {
+        "signature": "product-fidelity:MH-01:PR-MH-01:event:courier_drive_confirmed:correlated-too-early",
+        "count": 2,
+        "runCount": 1,
+        "runIds": [
+          "20260827-203110"
+        ]
+      },
+      {
+        "signature": "product-fidelity:MH-02:PR-MH-02:event:delivery_sequence_completed:missing",
+        "count": 3,
+        "runCount": 1,
+        "runIds": [
+          "20260827-203110"
+        ]
+      },
+      {
+        "signature": "product-fidelity:MH-04:PR-MH-04:state_reached:failed",
+        "count": 5,
+        "runCount": 1,
+        "runIds": [
+          "20260827-203110"
+        ]
+      },
+      {
+        "signature": "product-fidelity:MH-05:PR-MH-05:layout_no_overlap:failed",
+        "count": 3,
+        "runCount": 1,
+        "runIds": [
+          "20260827-203110"
+        ]
+      },
+      {
+        "signature": "product-fidelity:MH-06:PR-MH-06:state_reached:failed",
+        "count": 5,
+        "runCount": 1,
+        "runIds": [
+          "20260827-203110"
+        ]
+      },
+      {
+        "signature": "product-fidelity:MH-07:PR-MH-07:event:fresh_run_started:missing",
+        "count": 3,
+        "runCount": 1,
+        "runIds": [
+          "20260827-203110"
+        ]
+      },
+      {
+        "signature": "product-fidelity:MH-08:PR-MH-08:layout_no_overlap:failed",
+        "count": 3,
+        "runCount": 1,
+        "runIds": [
+          "20260827-203110"
+        ]
+      },
+      {
+        "signature": "technical:fps_ok:failed",
+        "count": 5,
+        "runCount": 1,
+        "runIds": [
+          "20260826-172639-core-awakening"
+        ]
+      },
+      {
+        "signature": "technical:input_causality:failed",
+        "count": 2,
+        "runCount": 1,
+        "runIds": [
+          "20260827-203110"
+        ]
+      },
+      {
+        "signature": "technical:interactivity:failed",
+        "count": 41,
+        "runCount": 14,
+        "runIds": [
+          "20260826-102914-color-cascade",
+          "20260826-113120-core-awakening-salvage",
+          "20260826-134725-titan-core-salvage",
+          "20260826-172639-core-awakening",
+          "20260826-173127-core-awakening",
+          "20260826-174050-core-awakening",
+          "20260826-175149-core-awakening",
+          "20260826-181412-core-awakening",
+          "20260826-183226-core-awakening",
+          "20260826-190334-breach-breaker",
+          "20260827-041726-core-awakening",
+          "20260827-042215-titan-core-reforged",
+          "20260827-043356-titan-core-reforged",
+          "20260827-203110"
+        ]
+      },
+      {
+        "signature": "technical:no_runtime_errors:failed",
+        "count": 22,
+        "runCount": 10,
+        "runIds": [
+          "20260826-102914-color-cascade",
+          "20260826-113120-core-awakening-salvage",
+          "20260826-115057-core-salvage",
+          "20260826-134725-titan-core-salvage",
+          "20260826-172639-core-awakening",
+          "20260826-173127-core-awakening",
+          "20260826-173649-core-awakening",
+          "20260827-041726-core-awakening",
+          "20260827-043356-titan-core-reforged",
+          "20260827-203110"
+        ]
+      },
+      {
+        "signature": "technical:probe_present:failed",
+        "count": 5,
+        "runCount": 1,
+        "runIds": [
+          "20260826-172639-core-awakening"
+        ]
+      },
+      {
+        "signature": "technical:started_playing:failed",
+        "count": 5,
+        "runCount": 1,
+        "runIds": [
+          "20260826-172639-core-awakening"
+        ]
+      },
+      {
+        "signature": "technical:visual_content:failed",
+        "count": 20,
+        "runCount": 7,
+        "runIds": [
+          "20260826-115057-core-salvage",
+          "20260826-172639-core-awakening",
+          "20260826-173649-core-awakening",
+          "20260826-175149-core-awakening",
+          "20260826-183226-core-awakening",
+          "20260827-041726-core-awakening",
+          "20260827-043356-titan-core-reforged"
+        ]
+      }
+    ],
+    "technicalFailures": 3,
+    "productFidelityFailures": 3,
+    "attemptTechnicalFailures": 56,
+    "attemptProductFidelityFailures": 6
+  },
+  "positives": {
+    "signatures": {},
+    "recurring": []
+  },
+  "convergence": {
+    "repairCount": 5,
+    "freshRebuildCount": 0,
+    "polishCount": 1
+  },
+  "experience": {
+    "scores": [
+      0,
+      0,
+      7.7,
+      0
+    ],
+    "latest": 0
+  },
+  "owner": {
+    "verdicts": {
+      "reject": 2
+    },
+    "classificationClaims": {}
+  },
+  "economics": {
+    "costUsd": 0.983106,
+    "tokens": 230860,
+    "costByRole": {
+      "auditor": 0.002004,
+      "director": 0.097734,
+      "engineer": 0.8043780000000001,
+      "playtester": 0.07899
+    },
+    "costByModel": {
+      "gpt-5.6-luna": 0.002004,
+      "gpt-5.6-terra": 0.981102
+    },
+    "costByOperation": {
+      "auditor": 0.002004,
+      "build": 0.17671399999999998,
+      "director": 0.097734,
+      "playtester": 0.07899,
+      "polish": 0.112265,
+      "repair": 0.5153989999999999
+    }
+  },
+  "orchestration": {
+    "eventKind": "production-run",
+    "eventId": "20260827-203110",
+    "authority": "deterministic-aggregation-only"
+  }
+}

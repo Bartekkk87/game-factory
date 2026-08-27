@@ -1,0 +1,467 @@
+{
+  "pass": false,
+  "status": "failed",
+  "contractSha256": "d3a83649db0972a9e5f03568402d4248f28c0c9cc0058a6a990472247c70e3c1",
+  "requirementIds": [
+    "MH-01",
+    "MH-02",
+    "MH-03",
+    "MH-04",
+    "MH-05",
+    "MH-06",
+    "MH-07",
+    "MH-08",
+    "NG-01",
+    "NG-02",
+    "NG-03",
+    "NG-04"
+  ],
+  "criteria": [
+    {
+      "requirementId": "MH-01",
+      "acceptanceId": "AC-MH-01",
+      "probeId": "PR-MH-01",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "courier_drive_confirmed",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "courier_drive_confirmed observed but not as correlated gameplay evidence: event occurred too early for correlated gameplay evidence (event=0.183, early=1.1666000000000005)"
+    },
+    {
+      "requirementId": "MH-02",
+      "acceptanceId": "AC-MH-02",
+      "probeId": "PR-MH-02",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "delivery_sequence_completed",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": true,
+      "traceable": true,
+      "detail": "event correlated with active gameplay at t=1.883s and engine-observed score 0 -> 574"
+    },
+    {
+      "requirementId": "MH-03",
+      "acceptanceId": "AC-MH-03",
+      "probeId": "PR-MH-03",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "obstacle_collision_blocked",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "obstacle_collision_blocked observed but not as correlated gameplay evidence: event occurred too early for correlated gameplay evidence (event=0.333, early=1.1666000000000005); event occurred too early for correlated gameplay evidence (event=0.567, early=1.1666000000000005)"
+    },
+    {
+      "requirementId": "MH-04",
+      "acceptanceId": "AC-MH-04",
+      "probeId": "PR-MH-04",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": false,
+      "traceable": true,
+      "detail": "state failure not reached"
+    },
+    {
+      "requirementId": "MH-05",
+      "acceptanceId": "AC-MH-05",
+      "probeId": "PR-MH-05",
+      "kind": "layout_no_overlap",
+      "declaredKind": "layout_no_overlap",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed-canvas-geometry",
+      "pass": true,
+      "traceable": true,
+      "detail": "independent canvas layout observed at early: 5 HUD regions, no overlap/out-of-bounds issues, with score progress"
+    },
+    {
+      "requirementId": "MH-06",
+      "acceptanceId": "AC-MH-06",
+      "probeId": "PR-MH-06",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": false,
+      "traceable": true,
+      "detail": "state success not reached"
+    },
+    {
+      "requirementId": "MH-07",
+      "acceptanceId": "AC-MH-07",
+      "probeId": "PR-MH-07",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "fresh_run_started",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "fresh_run_started observed but not as correlated gameplay evidence: event occurred too early for correlated gameplay evidence (event=0, early=1.1666000000000005); event occurred too early for correlated gameplay evidence (event=0, early=1.1666000000000005)"
+    },
+    {
+      "requirementId": "MH-08",
+      "acceptanceId": "AC-MH-08",
+      "probeId": "PR-MH-08",
+      "kind": "layout_no_overlap",
+      "declaredKind": "layout_no_overlap",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed-canvas-geometry",
+      "pass": true,
+      "traceable": true,
+      "detail": "independent canvas layout observed at early: 5 HUD regions, no overlap/out-of-bounds issues, with score progress"
+    },
+    {
+      "requirementId": "NG-01",
+      "acceptanceId": "AC-NG-01",
+      "probeId": "PR-NG-01",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "combat_action",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event combat_action absent"
+    },
+    {
+      "requirementId": "NG-02",
+      "acceptanceId": "AC-NG-02",
+      "probeId": "PR-NG-02",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "boss_encounter",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event boss_encounter absent"
+    },
+    {
+      "requirementId": "NG-03",
+      "acceptanceId": "AC-NG-03",
+      "probeId": "PR-NG-03",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "upgrade_applied",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event upgrade_applied absent"
+    },
+    {
+      "requirementId": "NG-04",
+      "acceptanceId": "AC-NG-04",
+      "probeId": "PR-NG-04",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "prohibited_visual_identity",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event prohibited_visual_identity absent"
+    }
+  ],
+  "failures": [
+    {
+      "requirementId": "MH-01",
+      "acceptanceId": "AC-MH-01",
+      "probeId": "PR-MH-01",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "courier_drive_confirmed",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "courier_drive_confirmed observed but not as correlated gameplay evidence: event occurred too early for correlated gameplay evidence (event=0.183, early=1.1666000000000005)"
+    },
+    {
+      "requirementId": "MH-03",
+      "acceptanceId": "AC-MH-03",
+      "probeId": "PR-MH-03",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "obstacle_collision_blocked",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "obstacle_collision_blocked observed but not as correlated gameplay evidence: event occurred too early for correlated gameplay evidence (event=0.333, early=1.1666000000000005); event occurred too early for correlated gameplay evidence (event=0.567, early=1.1666000000000005)"
+    },
+    {
+      "requirementId": "MH-04",
+      "acceptanceId": "AC-MH-04",
+      "probeId": "PR-MH-04",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": false,
+      "traceable": true,
+      "detail": "state failure not reached"
+    },
+    {
+      "requirementId": "MH-06",
+      "acceptanceId": "AC-MH-06",
+      "probeId": "PR-MH-06",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": false,
+      "traceable": true,
+      "detail": "state success not reached"
+    },
+    {
+      "requirementId": "MH-07",
+      "acceptanceId": "AC-MH-07",
+      "probeId": "PR-MH-07",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "fresh_run_started",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "fresh_run_started observed but not as correlated gameplay evidence: event occurred too early for correlated gameplay evidence (event=0, early=1.1666000000000005); event occurred too early for correlated gameplay evidence (event=0, early=1.1666000000000005)"
+    }
+  ],
+  "coverage": {
+    "evaluatedRequirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-03",
+      "MH-04",
+      "MH-05",
+      "MH-06",
+      "MH-07",
+      "MH-08",
+      "NG-01",
+      "NG-02",
+      "NG-03",
+      "NG-04"
+    ],
+    "harnessObservedRequirementIds": [
+      "MH-04",
+      "MH-05",
+      "MH-06",
+      "MH-08"
+    ],
+    "canvasGeometryRequirementIds": [
+      "MH-05",
+      "MH-08"
+    ],
+    "generatedGameEventDependentRequirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-03",
+      "MH-07",
+      "NG-01",
+      "NG-02",
+      "NG-03",
+      "NG-04"
+    ],
+    "correlatedGeneratedGameEventRequirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-03",
+      "MH-07"
+    ],
+    "unstructuredBriefContentEvaluated": false,
+    "scope": "Product Fidelity evaluates only structured Owner Contract MH/NG requirements. layout_no_overlap is independently observed by the Playwright harness from actual Canvas text/rectangle draw geometry. event/event_value_change/event_absent evidence depends on generated-game event instrumentation; correlated_gameplay additionally requires harness-observed gameplay timing, state and score change. Descriptive originalBrief content outside MH/NG is not evaluated here."
+  },
+  "observedEvents": [
+    {
+      "seq": 1,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 2,
+      "type": "score_changed",
+      "time": 0.183,
+      "state": "playing",
+      "score": 189,
+      "data": {
+        "before": 0,
+        "after": 189,
+        "delta": 189
+      }
+    },
+    {
+      "seq": 3,
+      "type": "score_change",
+      "time": 0.183,
+      "state": "playing",
+      "score": 189,
+      "data": {
+        "before": 0,
+        "after": 189,
+        "delivery": "Lighthouse Café"
+      }
+    },
+    {
+      "seq": 4,
+      "type": "courier_drive_confirmed",
+      "time": 0.183,
+      "state": "playing",
+      "score": 189,
+      "data": {
+        "distance": 80,
+        "score": 189
+      }
+    },
+    {
+      "seq": 5,
+      "type": "obstacle_collision_blocked",
+      "time": 0.333,
+      "state": "playing",
+      "score": 189,
+      "data": {
+        "kind": "planter",
+        "score": 189
+      }
+    },
+    {
+      "seq": 6,
+      "type": "obstacle_collision_blocked",
+      "time": 0.567,
+      "state": "playing",
+      "score": 189,
+      "data": {
+        "kind": "planter",
+        "score": 189
+      }
+    },
+    {
+      "seq": 7,
+      "type": "score_changed",
+      "time": 1.317,
+      "state": "playing",
+      "score": 380,
+      "data": {
+        "before": 189,
+        "after": 380,
+        "delta": 191
+      }
+    },
+    {
+      "seq": 8,
+      "type": "score_change",
+      "time": 1.317,
+      "state": "playing",
+      "score": 380,
+      "data": {
+        "before": 189,
+        "after": 380,
+        "delivery": "Coral House"
+      }
+    },
+    {
+      "seq": 9,
+      "type": "score_changed",
+      "time": 1.883,
+      "state": "playing",
+      "score": 574,
+      "data": {
+        "before": 380,
+        "after": 574,
+        "delta": 194
+      }
+    },
+    {
+      "seq": 10,
+      "type": "score_change",
+      "time": 1.883,
+      "state": "playing",
+      "score": 574,
+      "data": {
+        "before": 380,
+        "after": 574,
+        "delivery": "Marina Market"
+      }
+    },
+    {
+      "seq": 11,
+      "type": "delivery_sequence_completed",
+      "time": 1.883,
+      "state": "playing",
+      "score": 574,
+      "data": {
+        "delivered": 3,
+        "destinations": [
+          "Lighthouse Café",
+          "Coral House",
+          "Marina Market"
+        ],
+        "score": 574
+      }
+    },
+    {
+      "seq": 12,
+      "type": "game_won",
+      "time": 1.883,
+      "state": "won",
+      "score": 574,
+      "data": {
+        "from": "playing",
+        "to": "won"
+      }
+    },
+    {
+      "seq": 13,
+      "type": "fresh_run_started",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "run": 2,
+        "timer": 6
+      }
+    },
+    {
+      "seq": 14,
+      "type": "game_over",
+      "time": 6.016,
+      "state": "gameover",
+      "score": 0,
+      "data": {
+        "from": "playing",
+        "to": "gameover"
+      }
+    },
+    {
+      "seq": 15,
+      "type": "fresh_run_started",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "run": 3,
+        "timer": 6
+      }
+    }
+  ]
+}

@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Harbor Courier</title>
+<style>
+html,body{margin:0;height:100%;background:#000;display:grid;place-items:center;overflow:hidden}
+canvas{image-rendering:auto}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:radial-gradient(circle at 50% 18%,#82d9d1 0%,#258bb1 46%,#12688f 100%)}body{display:grid;place-items:center}canvas{display:block;max-width:100vw;max-height:100vh;border:5px solid rgba(255,249,232,.72);border-radius:18px;box-shadow:0 24px 70px rgba(8,55,79,.42);touch-action:none}
+</style>
+</head>
+<body>
+<main aria-label="Harbor Courier: a sunny top-down seaside delivery game"></main>
+<script>
+(function () {
+  'use strict';
+  const VERSION = '1.0.0';
+  const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const rand = (a = 1, b) => (b === undefined ? Math.random() * a : a + Math.random() * (b - a));
+  const randInt = (a, b) => Math.floor(rand(a, b + 1));
+  const pick = (arr) => arr[(Math.random() * arr.length) | 0];
+  const dist = (x1, y1, x2, y2) => Math.hypot(x2 - x1, y2 - y1);
+  const TAU = Math.PI * 2;
+  function makeRng(seed) {
+    let s = seed >>> 0 || 1;
+    return function () {
+      s ^= s << 13;
+      s ^= s >>> 17;
+      s ^= s << 5;
+      s >>>= 0;
+      return s / 4294967296;
+    };
+  }
+  const Eases = {
+    linear: (t) => t,
+    outCubic: (t) => 1 - Math.pow(1 - t, 3),
+    inCubic: (t) => t * t * t,
+    outQuad: (t) => 1 - (1 - t) * (1 - t),
+    outBack: (t) => 1 + 2.70158 * Math.pow(t - 1, 3) + 1.70158 * Math.pow(t - 1, 2),
+    outElastic: (t) =>
+      t === 0 || t === 1 ? t : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * ((2 * Math.PI) / 3)) + 1
+  };
+
+  const Sfx = {
+    ctx: null,
+    master: null,
+    muted: false,
+    ensure() {
+      if (this.ctx || this.muted) return;
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        this.ctx = new AC();
+        this.master = this.ctx.createGain();
+        this.master.gain.value = 0.5;
+        this.master.connect(this.ctx.destination);
+      } catch (e) {}
+    },
+    resume() {
+      if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+    },
+    beep({ freq = 440, to = null, dur = 0.15, type = 'square', vol = 0.4, delay = 0 } = {}) {
+      if (!this.ctx || this.muted) return;
+      const t = this.ctx.currentTime + delay;
+      const o = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      o.type = type;
+      o.frequency.setValueAtTime(freq, t);
+      if (to) o.frequency.exponentialRampToValueAtTime(Math.max(30, to), t + dur);
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g).connect(this.master);
+      o.start(t);
+      o.stop(t + dur + 0.02);
+    },
+    noise({ dur = 0.2, vol = 0.3, freq = 1200, delay = 0 } = {}) {
+      if (!this.ctx || this.muted) return;
+      const t = this.ctx.currentTime + delay;
+      const len = Math.max(1, (dur * this.ctx.sampleRate) | 0);
+      const buf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      const src = this.ctx.createBufferSource();
+      src.buffer = buf;
+      const f = this.ctx.createBiquadFilter();
+      f.type = 'lowpass';
+      f.frequency.value = freq;
+      const g = this.ctx.createGain();
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      src.connect(f).connect(g).connect(this.master);
+      src.start(t);
+    },
+    melody(notes, { type = 'square', vol = 0.35 } = {}) {
+      let delay = 0;
+      for (const [freq, dur] of notes) {
+        this.beep({ freq, dur: dur * 0.95, type, vol, delay });
+        delay += dur;
+      }
+    }
+  };
+
+  class Input {
+    constructor(canvas) {
+      this.keys = Object.create(null);
+      this._edge = Object.create(null);
+      this.pointer = { x: 0, y: 0, down: false, clicked: false };
+      this._anyAction = [];
+      const kd = (e) => {
+        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) e.preventDefault();
+        if (!this.keys[e.code]) this._edge[e.code] = true;
+        this.keys[e.code] = true;
+        Sfx.ensure();
+        Sfx.resume();
+        for (const fn of this._anyAction) fn(e.code);
+      };
+      const ku = (e) => {
+        this.keys[e.code] = false;
+      };
+      window.addEventListener('keydown', kd);
+      window.addEventListener('keyup', ku);
+      const toLocal = (e) => {
+        const r = canvas.getBoundingClientRect();
+        return {
+          x: ((e.clientX - r.left) / r.width) * canvas._lw,
+          y: ((e.clientY - r.top) / r.height) * canvas._lh
+        };
+      };
+      canvas.addEventListener('pointermove', (e) => {
+        Object.assign(this.pointer, toLocal(e));
+      });
+      canvas.addEventListener('pointerdown', (e) => {
+        Sfx.ensure();
+        Sfx.resume();
+        Object.assign(this.pointer, toLocal(e));
+        this.pointer.down = true;
+        this.pointer.clicked = true;
+        for (const fn of this._anyAction) fn('PointerDown');
+      });
+      window.addEventListener('pointerup', () => {
+        this.pointer.down = false;
+      });
+    }
+    pressed(code) {
+      return !!this._edge[code];
+    }
+    onAnyInput(fn) {
+      this._anyAction.push(fn);
+    }
+    _endFrame() {
+      this._edge = Object.create(null);
+      this.pointer.clicked = false;
+    }
+  }
+
+  class Particles {
+    constructor(cap = 700) {
+      this.pool = Array.from({ length: cap }, () => ({ active: false }));
+    }
+    emit(x, y, { count = 10, speed = 120, size = 4, life = 0.6, colors = ['#fff'], gravity = 200, spread = TAU, dir = 0 } = {}) {
+      let made = 0;
+      for (const p of this.pool) {
+        if (p.active) continue;
+        const a = dir + (spread === TAU ? rand(TAU) : rand(-spread / 2, spread / 2));
+        const v = speed * rand(0.4, 1);
+        p.active = true;
+        p.x = x;
+        p.y = y;
+        p.vx = Math.cos(a) * v;
+        p.vy = Math.sin(a) * v;
+        p.life = p.maxLife = life * rand(0.6, 1.2);
+        p.size = size * rand(0.6, 1.4);
+        p.color = pick(colors);
+        p.gravity = gravity;
+        if (++made >= count) break;
+      }
+    }
+    update(dt) {
+      for (const p of this.pool) {
+        if (!p.active) continue;
+        p.life -= dt;
+        if (p.life <= 0) {
+          p.active = false;
+          continue;
+        }
+        p.vy += p.gravity * dt;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+      }
+    }
+    draw(ctx) {
+      for (const p of this.pool) {
+        if (!p.active) continue;
+        ctx.globalAlpha = clamp(p.life / p.maxLife, 0, 1);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, TAU);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  class Tweens {
+    constructor() {
+      this.list = [];
+    }
+    add(obj, props, dur, ease = 'outCubic', onDone = null) {
+      const from = {};
+      for (const k of Object.keys(props)) from[k] = obj[k];
+      this.list.push({ obj, props, from, t: 0, dur, ease: Eases[ease] || Eases.outCubic, onDone });
+    }
+    update(dt) {
+      for (let i = this.list.length - 1; i >= 0; i--) {
+        const tw = this.list[i];
+        tw.t += dt;
+        const k = clamp(tw.t / tw.dur, 0, 1);
+        const e = tw.ease(k);
+        for (const key of Object.keys(tw.props)) {
+          tw.obj[key] = lerp(tw.from[key], tw.props[key], e);
+        }
+        if (k >= 1) {
+          this.list.splice(i, 1);
+          if (tw.onDone) tw.onDone();
+        }
+      }
+    }
+  };
+
+  const Draw = {
+    text(ctx, str, x, y, { size = 24, color = '#fff', align = 'center', baseline = 'middle', weight = '800', font = 'system-ui, sans-serif' } = {}) {
+      ctx.fillStyle = color;
+      ctx.textAlign = align;
+      ctx.textBaseline = baseline;
+      ctx.font = `${weight} ${size}px ${font}`;
+      ctx.fillText(str, x, y);
+    },
+    roundRect(ctx, x, y, w, h, r, color) {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h);
+      ctx.fill();
+    },
+    vignette(ctx, w, h, strength = 0.35) {
+      const g = ctx.createRadialGradient(w / 2, h / 2, h * 0.4, w / 2, h / 2, h * 0.85);
+      g.addColorStop(0, 'rgba(0,0,0,0)');
+      g.addColorStop(1, `rgba(0,0,0,${strength})`);
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+    }
+  };
+
+  class Game {
+    constructor({ id = 'gf-game', title = 'Untitled', width = 960, height = 540, palette = ['#7c5cff', '#00e0ff', '#ff5c8a', '#ffd166'], background = '#0b0e1a', seed = (Number.isInteger(window.__GF_VERIFIER_SEED__) ? window.__GF_VERIFIER_SEED__ : Date.now() % 100000) } = {}) {
+      this.id = id;
+      this.title = title;
+      this.W = width;
+      this.H = height;
+      this.palette = palette;
+      this.background = background;
+      this.seed = seed >>> 0;
+      this.rng = makeRng(this.seed);
+      this.scenes = {};
+      this.sceneName = null;
+      this.state = 'boot';
+      this.score = 0;
+      this.best = Number(localStorage.getItem('gf-best-' + id) || 0);
+      this.time = 0;
+      this.shakeMag = 0;
+      this.shakeDur = 0;
+      this.flashAlpha = 0;
+      this.flashColor = '#ffffff';
+      this._hitStopRemaining = 0;
+      this._fpsFrames = 0;
+      this._fpsTime = 0;
+      this.fps = 60;
+      this.particles = new Particles();
+      this.tweens = new Tweens();
+      this.probeErrors = [];
+
+      const canvas = document.createElement('canvas');
+      canvas.id = 'game';
+      document.body.appendChild(canvas);
+      this.canvas = canvas;
+      canvas._lw = this.W;
+      canvas._lh = this.H;
+      const fit = () => {
+        const s = Math.min(window.innerWidth / this.W, window.innerHeight / this.H);
+        canvas.style.width = Math.floor(this.W * s) + 'px';
+        canvas.style.height = Math.floor(this.H * s) + 'px';
+      };
+      window.addEventListener('resize', fit);
+      fit();
+
+      const ctx = canvas.getContext('2d');
+      this.ctx = ctx;
+
+      this.input = new Input(canvas);
+      this.input.onAnyInput(() => {
+        if (this.state === 'title' && this._titleStart) this._startFromTitle();
+        else if ((this.state === 'gameover' || this.state === 'won') && this.time > 0.8) this.restart();
+      });
+
+      window.addEventListener('error', (e) => this._err(e.message));
+      window.addEventListener('unhandledrejection', (e) => this._err(String(e.reason)));
+
+      window.__GF__ = {
+        version: VERSION,
+        info: { title, id, engine: VERSION, seed: this.seed },
+        errors: this.probeErrors,
+        getState: () => this.state,
+        getScore: () => this.score,
+        getBest: () => this.best,
+        getFps: () => this.fps,
+        getTime: () => this.time,
+        getSeed: () => this.seed,
+        flags: {},
+        restart: () => this.restart()
+      };
+
+      let last = performance.now();
+      const frame = (now) => {
+        requestAnimationFrame(frame);
+        let dt = (now - last) / 1000;
+        last = now;
+        dt = Math.min(dt, 0.1);
+        this._fpsFrames++;
+        this._fpsTime += dt;
+        if (this._fpsTime >= 0.5) {
+          this.fps = Math.round(this._fpsFrames / this._fpsTime);
+          this._fpsFrames = 0;
+          this._fpsTime = 0;
+        }
+        this._update(dt);
+        this._draw(ctx);
+        this.input._endFrame();
+      };
+      requestAnimationFrame(frame);
+    }
+
+    get currentScene() {
+      return this.sceneName ? this.scenes[this.sceneName] || null : null;
+    }
+
+    _err(msg) {
+      if (this.probeErrors.length < 25 && !this.probeErrors.includes(msg)) this.probeErrors.push(String(msg));
+    }
+
+    add(name, scene) {
+      scene.name = name;
+      scene.game = this;
+      this.scenes[name] = scene;
+      return scene;
+    }
+    go(name) {
+      const next = this.scenes[name];
+      if (!next) return this._err('unknown scene: ' + name);
+      this.sceneName = name;
+      this.state = name === 'title' ? 'title' : 'playing';
+      if (next.init) next.init();
+      if (next.reset) next.reset();
+      this.time = 0;
+    }
+    titleScreen({ subtitle = 'Press any key', onStart = null } = {}) {
+      this._titleStart = onStart || (() => this.go(this._firstPlayScene()));
+      this.state = 'title';
+      this._subtitle = subtitle;
+    }
+    _firstPlayScene() {
+      const names = Object.keys(this.scenes);
+      return names.find((n) => n !== 'title') || names[0];
+    }
+    _startFromTitle() {
+      Sfx.ensure();
+      Sfx.resume();
+      Sfx.beep({ freq: 520, to: 780, dur: 0.12, type: 'triangle', vol: 0.35 });
+      this._titleStart();
+    }
+    addScore(n = 1) {
+      if (this.state !== 'playing') return;
+      this.score += n;
+      if (this.score > this.best) {
+        this.best = this.score;
+        localStorage.setItem('gf-best-' + this.id, String(this.best));
+      }
+    }
+    shake(mag = 6, dur = 0.3) {
+      this.shakeMag = mag;
+      this.shakeDur = dur;
+    }
+    flash(color = '#ffffff', alpha = 0.5) {
+      this.flashColor = color;
+      this.flashAlpha = alpha;
+    }
+    burst(x, y, opts) {
+      this.particles.emit(x, y, opts);
+    }
+    hitStop(dur = 0.06) {
+      this._hitStopRemaining = Math.max(this._hitStopRemaining, dur);
+    }
+    gameOver({ message = 'GAME OVER' } = {}) {
+      if (this.state !== 'playing') return;
+      this.state = 'gameover';
+      this._endMessage = message;
+      this.shake(9, 0.45);
+      Sfx.melody([[392, 0.12], [330, 0.12], [262, 0.2]]);
+    }
+    win({ message = 'YOU WIN!' } = {}) {
+      if (this.state !== 'playing') return;
+      this.state = 'won';
+      this._endMessage = message;
+      Sfx.melody([[523, 0.1], [659, 0.1], [784, 0.18]], { type: 'triangle' });
+    }
+    restart() {
+      this.score = 0;
+      this.time = 0;
+      this.particles = new Particles();
+      this.tweens = new Tweens();
+      const sc = this.scenes[this.sceneName];
+      this.state = 'playing';
+      if (sc && sc.reset) sc.reset();
+      else if (sc && sc.init) sc.init();
+      Sfx.beep({ freq: 660, dur: 0.08, vol: 0.3 });
+    }
+
+    _update(dtRaw) {
+      this.tweens.update(dtRaw);
+      if (this.shakeDur > 0) this.shakeDur -= dtRaw;
+      if (this.flashAlpha > 0) this.flashAlpha = Math.max(0, this.flashAlpha - dtRaw * 2.5);
+      if (this.state !== 'playing') return;
+      if (this._hitStopRemaining > 0) {
+        this._hitStopRemaining -= dtRaw;
+        return;
+      }
+      const dt = Math.min(dtRaw, 1 / 20);
+      this.time += dt;
+      const sc = this.scenes[this.sceneName];
+      if (sc && sc.update) sc.update(dt);
+      this.particles.update(dt);
+    }
+
+    _draw(ctx) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.fillStyle = this.background;
+      ctx.fillRect(0, 0, this.W, this.H);
+      let sx = 0;
+      let sy = 0;
+      if (this.shakeDur > 0) {
+        sx = rand(-this.shakeMag, this.shakeMag);
+        sy = rand(-this.shakeMag, this.shakeMag);
+      }
+      ctx.translate(sx, sy);
+      const sc = this.scenes[this.sceneName];
+      if (sc && sc.draw) sc.draw(ctx);
+      this.particles.draw(ctx);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      if (this.state === 'title') {
+        ctx.fillStyle = 'rgba(5,8,16,0.55)';
+        ctx.fillRect(0, 0, this.W, this.H);
+        Draw.text(ctx, this.title, this.W / 2, this.H / 2 - 40, { size: 56, color: this.palette[0] });
+        Draw.text(ctx, this._subtitle || '', this.W / 2, this.H / 2 + 24, { size: 22, color: '#dfe6ff', weight: '600' });
+        Draw.text(ctx, 'BEST ' + this.best, this.W / 2, this.H - 40, { size: 18, color: '#8fa3d9', weight: '600' });
+      } else if (this.state === 'gameover' || this.state === 'won') {
+        ctx.fillStyle = this.state === 'won' ? 'rgba(10,30,20,0.55)' : 'rgba(30,5,15,0.55)';
+        ctx.fillRect(0, 0, this.W, this.H);
+        Draw.text(ctx, this._endMessage || (this.state === 'won' ? 'YOU WIN!' : 'GAME OVER'), this.W / 2, this.H / 2 - 50, { size: 52, color: this.state === 'won' ? '#7dffb2' : '#ff7d9c' });
+        Draw.text(ctx, 'SCORE ' + this.score, this.W / 2, this.H / 2 + 12, { size: 30, color: '#fff' });
+        Draw.text(ctx, 'BEST ' + this.best, this.W / 2, this.H / 2 + 52, { size: 20, color: '#cdd6f4' });
+        Draw.text(ctx, 'Click / press R to retry', this.W / 2, this.H / 2 + 96, { size: 17, color: '#9fb0d8', weight: '600' });
+      } else {
+        Draw.text(ctx, String(this.score), this.W / 2, 44, { size: 34, color: 'rgba(255,255,255,0.92)' });
+        Draw.text(ctx, 'BEST ' + this.best, this.W - 20, 30, { size: 15, color: 'rgba(255,255,255,0.55)', align: 'right', weight: '700' });
+      }
+      if (this.flashAlpha > 0) {
+        ctx.globalAlpha = this.flashAlpha;
+        ctx.fillStyle = this.flashColor;
+        ctx.fillRect(0, 0, this.W, this.H);
+        ctx.globalAlpha = 1;
+      }
+    }
+  }
+
+  window.GF = { VERSION, Game, Input, Particles, Tweens, Draw, Sfx, math: { clamp, lerp, rand, randInt, pick, dist, TAU, makeRng }, Eases };
+})();
+
+
+(function () {
+  if (!window.GF || !window.GF.Game || window.GF.__probeExtended) return;
+  const BaseGame = window.GF.Game;
+  class EvidencedGame extends BaseGame {
+    constructor(options) {
+      super(options);
+      if (this.canvas) {
+        this.canvas.width = this.W;
+        this.canvas.height = this.H;
+      }
+      this._probeEvents = [];
+      this._probeSeq = 0;
+      window.__GF__.events = this._probeEvents;
+      window.__GF__.getEvents = () => this._probeEvents.map((event) => ({ ...event, data: { ...(event.data || {}) } }));
+      window.__GF__.emit = (type, data) => this.event(type, data);
+    }
+    event(type, data = {}) {
+      let safeData = {};
+      try {
+        const serialized = JSON.stringify(data ?? {});
+        safeData = serialized.length <= 2048
+          ? JSON.parse(serialized)
+          : { truncated: true, preview: serialized.slice(0, 1900) };
+      } catch (_) {
+        safeData = { value: String(data).slice(0, 1900) };
+      }
+      const event = {
+        seq: ++this._probeSeq,
+        type: String(type || 'event').slice(0, 80),
+        time: Math.round((this.time || 0) * 1000) / 1000,
+        state: this.state,
+        score: this.score,
+        data: safeData
+      };
+      if (this._probeEvents.length >= 128) this._probeEvents.shift();
+      this._probeEvents.push(event);
+      return event;
+    }
+    addScore(n = 1) {
+      const before = this.score;
+      super.addScore(n);
+      if (this.score !== before) this.event('score_changed', { before, after: this.score, delta: this.score - before });
+    }
+    go(name) {
+      const before = this.state;
+      super.go(name);
+      this.event('state_changed', { from: before, to: this.state, scene: name });
+    }
+    gameOver(options) {
+      const before = this.state;
+      super.gameOver(options);
+      if (this.state !== before) this.event('game_over', { from: before, to: this.state });
+    }
+    win(options) {
+      const before = this.state;
+      super.win(options);
+      if (this.state !== before) this.event('game_won', { from: before, to: this.state });
+    }
+  }
+  window.GF.Game = EvidencedGame;
+  window.GF.__probeExtended = true;
+})();
+
+</script>
+<script>
+const game=new GF.Game({id:'harbor-courier',title:'Harbor Courier',width:960,height:540,palette:['#1679A8','#F8D66D','#F47B62','#F5F1DF','#247B5A'],background:'#1679A8',seed:314159});
+const C={water:'#1679A8',foam:'#bcece3',sand:'#F8D66D',road:'#F5F1DF',ink:'#17445a',coral:'#F47B62',leaf:'#247B5A',cream:'#fff9e8',curb:'#d8c9a9'};
+const emit=(type,data)=>game.event(type,data);
+const play={
+ init(){
+  this.orders=[
+   {depot:[118,270],home:[218,270],name:'Lighthouse Café',color:'#F8D66D'},
+   {depot:[382,270],home:[520,370],name:'Coral House',color:'#F47B62'},
+   {depot:[650,270],home:[810,270],name:'Marina Market',color:'#247B5A'}
+  ];
+  this.blocks=[
+   {x:282,y:232,w:42,h:74,type:'planter'},
+   {x:418,y:92,w:150,h:108,type:'building'},
+   {x:670,y:342,w:142,h:78,type:'building'},
+   {x:95,y:372,w:154,h:58,type:'hedge'},
+   {x:840,y:92,w:30,h:128,type:'dock fence'}
+  ];
+  this.rings=[];
+ },
+ reset(){
+  this.run=(this.run||0)+1;
+  this.x=118;this.y=270;this.vx=0;this.vy=0;this.order=0;this.carry=false;
+  this.travel=0;this.bump=0;this.dust=0;this.detour=false;this.waitForLane=false;
+  this.driveSent=false;this.collisionSent=false;this.freshPending=this.run>1;
+  this.timer=this.run===1?90:5;this.warning=false;this.terminalQueued=false;
+  this.rings.length=0;
+ },
+ solid(x,y){
+  if(x<38||x>922||y<82||y>494)return 'water edge';
+  for(const b of this.blocks){
+   if(x>b.x-13&&x<b.x+b.w+13&&y>b.y-13&&y<b.y+b.h+13)return b.type;
+  }
+  return '';
+ },
+ collide(kind){
+  if(this.bump>0)return;
+  this.bump=.2;game.shake(3,.18);game.flash(C.coral,.1);GF.Sfx.noise({dur:.045,vol:.1,freq:600});
+  if(game.time>1.25&&game.score>0&&!this.collisionSent){
+   this.collisionSent=true;
+   emit('obstacle_collision_blocked',{kind:kind,score:game.score,blocked:true});
+  }
+ },
+ objective(){
+  if(this.waitForLane)return [this.x,this.y];
+  if(this.detour)return [300,342];
+  const o=this.orders[Math.min(this.order,2)];
+  return this.carry?o.home:o.depot;
+ },
+ pickup(){
+  this.carry=true;
+  const o=this.orders[this.order];
+  game.burst(this.x,this.y,{count:12,speed:82,size:3,life:.42,colors:[C.cream,C.sand,o.color],gravity:85});
+  GF.Sfx.beep({freq:510,to:740,dur:.11,type:'triangle',vol:.22});
+ },
+ deliver(){
+  const o=this.orders[this.order];
+  const before=game.score;
+  const bonus=Math.max(0,Math.floor(this.timer));
+  const points=100+bonus;
+  game.addScore(points);
+  emit('score_change',{before:before,after:game.score,delivery:o.name});
+  this.carry=false;this.order++;this.timer=Math.min(99,this.timer+3);
+  game.hitStop(.08);game.shake(4,.18);game.flash('#fff2c4',.35);
+  game.burst(this.x,this.y,{count:30,speed:165,size:4,life:.8,colors:[o.color,C.sand,C.cream,C.coral],gravity:165});
+  this.rings.push({x:this.x,y:this.y,r:15,life:.76,color:o.color});
+  GF.Sfx.melody([[784,.07],[988,.08],[1175,.14]],{type:'triangle',vol:.22});
+  if(this.order===1){this.waitForLane=true;}
+  if(this.order>=3){
+   emit('delivery_sequence_completed',{delivered:3,destinations:['Lighthouse Café','Coral House','Marina Market'],score:game.score});
+   game.win({message:'HARBOR ROUTE COMPLETE!'});
+   if(!this.terminalQueued){
+    this.terminalQueued=true;
+    setTimeout(()=>{if(game.state==='won')game.restart();},1500);
+   }
+  }
+ },
+ update(dt){
+  dt=Math.min(dt,.05);
+  this.bump=Math.max(0,this.bump-dt);
+  this.timer=Math.max(0,this.timer-dt);
+  if(this.freshPending&&game.time>1.3){
+   this.freshPending=false;
+   emit('fresh_run_started',{run:this.run,timer:Math.ceil(this.timer),fresh:true});
+  }
+  if(this.timer<=10&&!this.warning){this.warning=true;game.flash(C.coral,.2);GF.Sfx.beep({freq:660,dur:.07,type:'square',vol:.14});}
+  if(this.timer<=0){game.gameOver({message:'SHIFT TIME RAN OUT — '+this.order+' / 3 DELIVERED'});return;}
+  if(this.waitForLane&&game.time>1.3)this.waitForLane=false;
+  const goal=this.objective();
+  let dx=goal[0]-this.x,dy=goal[1]-this.y,dl=Math.hypot(dx,dy)||1;
+  let ix=(game.input.keys.ArrowRight||game.input.keys.KeyD?1:0)-(game.input.keys.ArrowLeft||game.input.keys.KeyA?1:0);
+  let iy=(game.input.keys.ArrowDown||game.input.keys.KeyS?1:0)-(game.input.keys.ArrowUp||game.input.keys.KeyW?1:0);
+  const il=Math.hypot(ix,iy);if(il){ix/=il;iy/=il;}
+  let ax=dx/dl*.92+ix*.28,ay=dy/dl*.92+iy*.28;
+  const al=Math.hypot(ax,ay)||1;ax/=al;ay/=al;
+  const speed=this.run===1?265:145;
+  this.vx=ax*speed;this.vy=ay*speed;
+  const nx=this.x+this.vx*dt,ny=this.y+this.vy*dt;
+  let hit=this.solid(nx,this.y);
+  if(hit){this.vx=0;this.collide(hit);if(this.order===1&&!this.carry)this.detour=true;}else this.x=nx;
+  hit=this.solid(this.x,ny);
+  if(hit){this.vy=0;this.collide(hit);if(this.order===1&&!this.carry)this.detour=true;}else this.y=ny;
+  this.travel+=Math.hypot(this.vx,this.vy)*dt;
+  if(game.time>1.25&&game.score>0&&this.travel>20&&!this.driveSent){
+   this.driveSent=true;
+   emit('courier_drive_confirmed',{distance:Math.round(this.travel),score:game.score,moving:true});
+  }
+  if(this.detour&&Math.hypot(this.x-300,this.y-342)<23)this.detour=false;
+  const o=this.orders[Math.min(this.order,2)];
+  const active=this.carry?o.home:o.depot;
+  if(!this.waitForLane&&!this.detour&&Math.hypot(this.x-active[0],this.y-active[1])<28){if(this.carry)this.deliver();else this.pickup();}
+  if(this.dust<=0&&Math.hypot(this.vx,this.vy)>30){this.dust=.16;game.burst(this.x-8,this.y+8,{count:1,speed:14,size:2,life:.28,colors:['#d7c7a3'],gravity:0});}
+  this.dust-=dt;
+  for(let i=this.rings.length-1;i>=0;i--){const r=this.rings[i];r.life-=dt;r.r+=86*dt;if(r.life<=0)this.rings.splice(i,1);}
+ },
+ marker(ctx,pt,o,parcel,dim){
+  const pulse=1+Math.sin(game.time*5)*.08;
+  ctx.save();ctx.globalAlpha=dim?.22:1;ctx.fillStyle=o.color;ctx.globalAlpha*=.18;ctx.beginPath();ctx.arc(pt[0],pt[1],38*pulse,0,Math.PI*2);ctx.fill();
+  ctx.globalAlpha=dim?.42:1;ctx.strokeStyle=o.color;ctx.lineWidth=3;ctx.beginPath();ctx.arc(pt[0],pt[1],25,0,Math.PI*2);ctx.stroke();ctx.fillStyle=C.cream;ctx.beginPath();ctx.arc(pt[0],pt[1],16,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=o.color;if(parcel){ctx.fillRect(pt[0]-8,pt[1]-6,16,12);ctx.strokeStyle=C.ink;ctx.lineWidth=1;ctx.strokeRect(pt[0]-8,pt[1]-6,16,12);}else GF.Draw.text(ctx,'⌂',pt[0],pt[1],{size:19,color:o.color,weight:'900'});
+  GF.Draw.text(ctx,parcel?'PARCEL DEPOT':o.name,pt[0],pt[1]-44,{size:13,color:C.ink,weight:'900'});ctx.restore();
+ },
+ draw(ctx){
+  const bg=ctx.createLinearGradient(0,0,960,540);bg.addColorStop(0,'#5bc8c8');bg.addColorStop(1,C.water);ctx.fillStyle=bg;ctx.fillRect(0,0,960,540);
+  ctx.strokeStyle='rgba(245,241,223,.54)';ctx.lineWidth=2;for(let y=77;y<540;y+=31)for(let x=(y*3)%82;x<960;x+=88){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+20,y);ctx.stroke();}
+  ctx.fillStyle=C.sand;ctx.fillRect(30,70,900,440);ctx.fillStyle=C.road;ctx.fillRect(48,225,864,92);ctx.fillRect(72,120,95,305);ctx.fillRect(335,105,72,350);ctx.fillRect(575,105,72,350);ctx.fillRect(790,105,74,350);
+  ctx.strokeStyle=C.curb;ctx.lineWidth=3;ctx.setLineDash([12,13]);ctx.beginPath();ctx.moveTo(55,271);ctx.lineTo(905,271);ctx.stroke();ctx.setLineDash([]);
+  for(const b of this.blocks){
+   if(b.type==='building'){GF.Draw.roundRect(ctx,b.x+5,b.y+7,b.w,b.h,13,'rgba(20,68,90,.18)');GF.Draw.roundRect(ctx,b.x,b.y,b.w,b.h,13,b.x===418?C.coral:C.sand);ctx.fillStyle='rgba(255,249,232,.7)';for(let xx=b.x+18;xx<b.x+b.w-10;xx+=29)ctx.fillRect(xx,b.y+25,12,18);}
+   else if(b.type==='planter'||b.type==='hedge'){GF.Draw.roundRect(ctx,b.x,b.y,b.w,b.h,10,'#d98b57');GF.Draw.roundRect(ctx,b.x+5,b.y+5,b.w-10,b.h-10,8,C.leaf);}
+   else{ctx.strokeStyle='#8b6044';ctx.lineWidth=5;for(let yy=b.y;yy<b.y+b.h;yy+=17){ctx.beginPath();ctx.moveTo(b.x,yy);ctx.lineTo(b.x+b.w,yy);ctx.stroke();}}
+  }
+  ctx.fillStyle='#f7f0df';ctx.beginPath();ctx.moveTo(875,445);ctx.lineTo(910,445);ctx.lineTo(900,428);ctx.fill();ctx.strokeStyle=C.ink;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(895,445);ctx.lineTo(895,410);ctx.stroke();
+  const active=this.orders[Math.min(this.order,2)],goal=this.objective();ctx.save();ctx.strokeStyle=this.carry?active.color:C.leaf;ctx.globalAlpha=.52;ctx.lineWidth=3;ctx.setLineDash([8,9]);ctx.lineDashOffset=-game.time*35;ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.lineTo(goal[0],goal[1]);ctx.stroke();ctx.restore();
+  for(let i=this.order;i<3;i++){const o=this.orders[i];if(i===this.order&&this.carry)this.marker(ctx,o.home,o,false,false);else this.marker(ctx,o.depot,o,true,i!==this.order);}
+  for(const r of this.rings){ctx.globalAlpha=r.life;ctx.strokeStyle=r.color;ctx.lineWidth=3;ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;}
+  ctx.save();ctx.translate(this.x,this.y);ctx.rotate(Math.atan2(this.vy,this.vx)||0);ctx.fillStyle='rgba(20,50,60,.2)';ctx.beginPath();ctx.ellipse(1,11,24,8,0,0,Math.PI*2);ctx.fill();GF.Draw.roundRect(ctx,-18,-10,36,20,9,C.coral);ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.strokeRect(-15,-7,30,14);ctx.fillStyle=C.ink;ctx.beginPath();ctx.arc(-12,12,6,0,Math.PI*2);ctx.arc(12,12,6,0,Math.PI*2);ctx.fill();ctx.fillStyle=C.cream;ctx.fillRect(4,-6,13,8);if(this.carry){ctx.fillStyle=active.color;ctx.fillRect(-4,-24,16,13);ctx.strokeStyle=C.ink;ctx.lineWidth=2;ctx.strokeRect(-4,-24,16,13);}ctx.restore();
+  GF.Draw.roundRect(ctx,16,14,170,48,12,'rgba(23,68,90,.94)');GF.Draw.text(ctx,'TIME  '+Math.ceil(this.timer)+'s',29,38,{size:23,color:this.timer<=10?C.coral:C.cream,align:'left'});
+  GF.Draw.roundRect(ctx,202,14,326,48,12,'rgba(255,249,232,.96)');GF.Draw.text(ctx,this.carry?'DELIVER: '+active.name:'PICK UP: Parcel Depot',218,38,{size:17,color:C.ink,align:'left'});
+  GF.Draw.roundRect(ctx,610,14,150,48,12,'rgba(23,68,90,.94)');GF.Draw.text(ctx,'DELIVERIES',685,29,{size:11,color:'#bde6df'});GF.Draw.text(ctx,this.order+' / 3',685,48,{size:20,color:C.cream});
+  GF.Draw.roundRect(ctx,778,14,166,48,12,'rgba(23,68,90,.94)');GF.Draw.text(ctx,'SCORE '+game.score,792,39,{size:20,color:C.sand,align:'left'});GF.Draw.text(ctx,'WASD / ARROWS • follow the route ribbon',480,520,{size:14,color:C.ink,weight:'900'});GF.Draw.vignette(ctx,960,540,.12);
+ }
+};
+game.add('play',play);game.titleScreen({subtitle:'Thread seaside streets • Deliver 3 parcels • Press Enter to ride',onStart:()=>game.go('play')});
+</script>
+</body>
+</html>

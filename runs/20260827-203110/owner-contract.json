@@ -1,0 +1,125 @@
+{
+  "schema": "game-factory.owner-contract/1.0",
+  "source": "ideas-folder",
+  "ownerBriefSha256": "6aee6637d0b3c31497bb681c1e65ab5c7a29dc01fc6ecec35de6f05676b4e2df",
+  "decomposition": {
+    "version": "explicit-sections",
+    "ambiguitiesPreservedAsUnknown": true
+  },
+  "mustHaves": [
+    {
+      "id": "MH-01",
+      "text": "The game must be a top-down delivery arcade game in which the player controls a small courier scooter or delivery vehicle.",
+      "provenance": {
+        "mode": "explicit-sections",
+        "itemIndex": 0
+      },
+      "immutable": true
+    },
+    {
+      "id": "MH-02",
+      "text": "A complete run must require collecting parcels and delivering them to at least three clearly distinct destinations.",
+      "provenance": {
+        "mode": "explicit-sections",
+        "itemIndex": 1
+      },
+      "immutable": true
+    },
+    {
+      "id": "MH-03",
+      "text": "The player must navigate solid street or environment obstacles; route choice must matter rather than allowing the player to drive directly through scenery.",
+      "provenance": {
+        "mode": "explicit-sections",
+        "itemIndex": 2
+      },
+      "immutable": true
+    },
+    {
+      "id": "MH-04",
+      "text": "A visible countdown timer must limit the run, and reaching zero before all required deliveries are complete must produce a clear failure state.",
+      "provenance": {
+        "mode": "explicit-sections",
+        "itemIndex": 3
+      },
+      "immutable": true
+    },
+    {
+      "id": "MH-05",
+      "text": "The current delivery target and delivery progress must be visible during active gameplay.",
+      "provenance": {
+        "mode": "explicit-sections",
+        "itemIndex": 4
+      },
+      "immutable": true
+    },
+    {
+      "id": "MH-06",
+      "text": "Completing all required deliveries before time expires must produce a clear success state.",
+      "provenance": {
+        "mode": "explicit-sections",
+        "itemIndex": 5
+      },
+      "immutable": true
+    },
+    {
+      "id": "MH-07",
+      "text": "After success or failure, the player must be able to start a fresh run without reloading the page.",
+      "provenance": {
+        "mode": "explicit-sections",
+        "itemIndex": 6
+      },
+      "immutable": true
+    },
+    {
+      "id": "MH-08",
+      "text": "HUD information must remain readable and its main information regions must not overlap each other or leave the visible game canvas during normal active gameplay.",
+      "provenance": {
+        "mode": "explicit-sections",
+        "itemIndex": 7
+      },
+      "immutable": true
+    }
+  ],
+  "noGos": [
+    {
+      "id": "NG-01",
+      "text": "No combat, weapons, attacks, damage dealing or enemies that the player is expected to fight.",
+      "provenance": {
+        "mode": "explicit-sections",
+        "itemIndex": 0
+      },
+      "immutable": true
+    },
+    {
+      "id": "NG-02",
+      "text": "No mechs, Titans, combat robots, boss arena or boss-fight structure.",
+      "provenance": {
+        "mode": "explicit-sections",
+        "itemIndex": 1
+      },
+      "immutable": true
+    },
+    {
+      "id": "NG-03",
+      "text": "No crafting, salvage, forge or equipment-upgrade loop.",
+      "provenance": {
+        "mode": "explicit-sections",
+        "itemIndex": 2
+      },
+      "immutable": true
+    },
+    {
+      "id": "NG-04",
+      "text": "No cyberpunk, military or heavy-industrial visual identity.",
+      "provenance": {
+        "mode": "explicit-sections",
+        "itemIndex": 3
+      },
+      "immutable": true
+    }
+  ],
+  "unknowns": [],
+  "originalBrief": "# OWNER BRIEF — HARBOR COURIER\n\n## Product Direction\n\nCreate a small, complete arcade game called **Harbor Courier**.\n\nThe player works as a courier in a coastal harbor town and completes a short delivery run under time pressure.\n\nThe game should feel like a coherent small game rather than a technical demo or collection of disconnected mechanics.\n\n## Must-Haves — Hard\n\n- The game must be a top-down delivery arcade game in which the player controls a small courier scooter or delivery vehicle.\n- A complete run must require collecting parcels and delivering them to at least three clearly distinct destinations.\n- The player must navigate solid street or environment obstacles; route choice must matter rather than allowing the player to drive directly through scenery.\n- A visible countdown timer must limit the run, and reaching zero before all required deliveries are complete must produce a clear failure state.\n- The current delivery target and delivery progress must be visible during active gameplay.\n- Completing all required deliveries before time expires must produce a clear success state.\n- After success or failure, the player must be able to start a fresh run without reloading the page.\n- HUD information must remain readable and its main information regions must not overlap each other or leave the visible game canvas during normal active gameplay.\n\n## No-Gos — Hard\n\n- No combat, weapons, attacks, damage dealing or enemies that the player is expected to fight.\n- No mechs, Titans, combat robots, boss arena or boss-fight structure.\n- No crafting, salvage, forge or equipment-upgrade loop.\n- No cyberpunk, military or heavy-industrial visual identity.\n\n## Perspective / Presentation\n\nTop-down perspective is an intentional product requirement and is included in the Hard Must-Haves.\n\nWhether the camera is completely fixed, follows the player, or uses another sensible top-down implementation is deliberately open.\n\n## Gameplay Identity\n\nThe intended core interaction is:\n\ncollect a parcel → identify the destination → navigate through the town → deliver the parcel → continue to the next delivery → complete the required deliveries before time expires.\n\nThe central player skill should be movement, navigation and handling time pressure, not combat.\n\n## Visual / Environment Direction\n\nThe intended direction is a bright, welcoming coastal harbor town.\n\nUseful visual ideas include colorful buildings, streets, water, docks, boats, greenery or other recognizable harbor/coastal cues.\n\nThis section describes product and mood direction. It is not permission to turn every example into a mandatory feature.\n\n## HUD / Readability\n\nThe hard HUD obligations are already listed in the Must-Haves: visible time, current delivery information/progress and non-overlapping readable HUD regions.\n\nExact HUD styling, fonts, colors, panel shapes and screen positions are open design decisions as long as those obligations are satisfied.\n\n## Quality / Experience Target\n\nTarget a small but coherent and finished-feeling arcade experience.\n\nThe basic objective should become understandable quickly while playing. Movement should feel responsive, state changes should be understandable, and success, failure and restart should feel like parts of one complete game loop.\n\nThis is a qualitative product target, not a claim that visual or gameplay quality can be reduced to a single automatic score.\n\n## Deliberately Open Design Space\n\nThe Director may decide:\n\n- the exact street and harbor layout,\n- the exact destination locations and delivery order,\n- whether there are more than three deliveries,\n- detailed vehicle handling and speed,\n- exact timer duration,\n- scoring and optional bonus mechanics,\n- decorative props and non-essential NPCs,\n- fixed versus following top-down camera behavior,\n- exact art style, palette and typography within the stated product direction,\n- sound effects and music,\n- additional small mechanics that support the delivery loop without contradicting the Hard Must-Haves or Hard No-Gos.\n\n## Unknown / Unspecified\n\nThe Owner does not currently specify:\n\n- an exact run duration,\n- an exact scoring formula,\n- mobile or touch controls,\n- localization,\n- meta progression between runs,\n- mandatory audio content,\n- a specific resolution,\n- a specific number of decorative NPCs or vehicles.\n\nThese details must not be retrospectively treated as Owner requirements.",
+  "immutable": true,
+  "contractSha256": "d3a83649db0972a9e5f03568402d4248f28c0c9cc0058a6a990472247c70e3c1"
+}
