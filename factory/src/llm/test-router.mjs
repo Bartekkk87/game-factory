@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { buildOpenAiCompatibleChatRequest } from './adapters/openai-compatible-chat.mjs';
 import { getModelRecord, getModelPricing } from './model-registry.mjs';
 import { resolveRoleRoute, ModelCapabilityError } from './router.mjs';
 import { UnknownProviderError } from './provider-registry.mjs';
@@ -23,6 +24,17 @@ try {
   const director = resolveRoleRoute({ role: 'director', operation: 'direct' });
   assert.equal(director.provider.id, 'openai');
   assert.equal(director.model.id, 'gpt-5.6-terra');
+
+  // Canary #3 regression: OpenAI GPT-5.6 rejects legacy max_tokens and requires
+  // max_completion_tokens on Chat Completions requests.
+  const openAiBody = JSON.parse(buildOpenAiCompatibleChatRequest({
+    route: director,
+    system: 'system',
+    user: 'user',
+    maxTokens: 321
+  }).body);
+  assert.equal(openAiBody.max_completion_tokens, 321);
+  assert.equal(Object.hasOwn(openAiBody, 'max_tokens'), false);
 
   for (const operation of ['build', 'repair', 'rebuild', 'polish']) {
     const engineer = resolveRoleRoute({ role: 'engineer', operation });
@@ -51,7 +63,16 @@ try {
   assert.equal(flash.capabilities.vision, false);
 
   process.env.GF_LLM_PROVIDER = 'deepseek';
-  assert.equal(resolveRoleRoute({ role: 'engineer' }).model.id, 'deepseek-v4-flash');
+  const deepseekRoute = resolveRoleRoute({ role: 'engineer' });
+  assert.equal(deepseekRoute.model.id, 'deepseek-v4-flash');
+  const deepseekBody = JSON.parse(buildOpenAiCompatibleChatRequest({
+    route: deepseekRoute,
+    system: 'system',
+    user: 'user',
+    maxTokens: 321
+  }).body);
+  assert.equal(deepseekBody.max_tokens, 321);
+  assert.equal(Object.hasOwn(deepseekBody, 'max_completion_tokens'), false);
   assert.throws(() => resolveRoleRoute({ role: 'playtester', requirements: { vision: true } }), ModelCapabilityError);
 
   process.env.GF_LLM_PROVIDER = 'definitely-not-a-provider';
