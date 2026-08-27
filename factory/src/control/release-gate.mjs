@@ -1,18 +1,33 @@
 export const RELEASE_RULE = 'Technical PASS + Product Fidelity PASS + Experience >= threshold + Budget PASS';
 
+const RELEASE_INPUT_KEYS = new Set([
+  'technical',
+  'productFidelity',
+  'experienceScore',
+  'budget',
+  'minExperience'
+]);
+
 function passValue(value) {
   if (value === true) return true;
   if (!value || typeof value !== 'object') return false;
   return value.pass === true || value.passed === true;
 }
 
-export function evaluateReleaseGate({
-  technical,
-  productFidelity,
-  experienceScore,
-  budget,
-  minExperience = 6.5
-}) {
+export function evaluateReleaseGate(input = {}) {
+  const unexpected = Object.keys(input).filter((key) => !RELEASE_INPUT_KEYS.has(key));
+  if (unexpected.length) {
+    throw new TypeError(`Release gate received non-authoritative input: ${unexpected.join(', ')}`);
+  }
+
+  const {
+    technical,
+    productFidelity,
+    experienceScore,
+    budget,
+    minExperience = 6.5
+  } = input;
+
   const score = Number(experienceScore);
   const technicalPass = passValue(technical);
   const productFidelityPass = passValue(productFidelity);
