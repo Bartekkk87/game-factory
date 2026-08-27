@@ -32,178 +32,96 @@ Full Verifier Selftest on that runtime head:
 
 - GitHub Actions Run `33046180562` — **SUCCESS**
 
-It verified:
-
-- all Node syntax checks;
-- L1 Control Kernel tests;
-- L2 Model/Provider router + capability tests;
-- L3 deterministic seed/timeline checks;
-- immutable Owner Contract stability;
-- Director traceability;
-- Product Fidelity Green/Broken fixtures;
-- real assembled runtime fidelity PASS/FAIL evidence;
-- publishing gates and gallery escaping.
+It verified Node syntax, L1 Control Kernel, L2 Model/Provider routing, L3 deterministic seed/timeline, immutable Owner Contract, Director traceability, Product Fidelity fixtures, real assembled runtime fidelity evidence, and publishing gates.
 
 Documentation commits after this runtime head do not change the verified platform code.
 
-## Completed — L1 Control Kernel
+## Completed
 
-**DONE and verified.**
+### L1 Control Kernel — DONE
 
-- real model/token price accounting;
-- cost ledger by role/model/operation/attempt;
-- pre-call budget enforcement;
-- bounded Repair / Polish / Fresh-Rebuild budgets;
-- deterministic release gate;
-- unified run evidence.
+Real cost accounting, pre-call budget enforcement, bounded repair/polish/rebuild budgets, deterministic release gate and unified evidence are implemented and verified.
 
-Binding release rule:
+### L2 Model / Provider Layer — DONE
 
-`Technical PASS + Product Fidelity PASS + Experience >= 6.5 + Budget PASS`
+Fail-closed Role Router, provider/capability/price registries and no silent cross-provider fallback are implemented and verified. Reference matrix: Director/Engineer/Playtester `gpt-5.6-terra`, Auditor `gpt-5.6-luna`, Release Verdict no LLM. DeepSeek remains benchmark-only.
 
-## Completed — L2 Model / Provider Layer
+### L3 Verification & Evidence — DONE
 
-**DONE and verified.**
+Implemented and verified:
 
-- fail-closed Role Router;
-- Provider Registry;
-- model capability + price registry;
-- no silent cross-provider fallback;
-- provider/capability validation before transport;
-- OpenAI reference matrix prepared:
-  - Director -> `gpt-5.6-terra`
-  - Engineer -> `gpt-5.6-terra`
-  - Playtester -> `gpt-5.6-terra`
-  - Auditor -> `gpt-5.6-luna`
-  - Release verdict -> no LLM
+- immutable Owner Contract with stable `MH-xx` / `NG-xx` IDs and hash;
+- Owner-ID -> Director acceptance/probe traceability;
+- deterministic verifier seed + persisted input sequence;
+- `start -> early -> mid -> end` telemetry;
+- bounded runtime/mechanic events;
+- deterministic Product Fidelity PASS/FAIL;
+- Technical + Fidelity integration in build/repair/polish;
+- Green/Broken fixtures for all new hard checks;
+- end-to-end runtime proof that real gameplay-value change passes and fake decorative upgrade fails.
 
-DeepSeek remains a later benchmark lane only.
-
-## Completed — L3 Verification & Evidence
-
-**DONE and verified.**
-
-Implemented:
-
-1. Immutable Owner Contract with stable `MH-xx` and `NG-xx` IDs plus deterministic hash.
-2. Stable Owner-ID -> Director acceptance/probe traceability.
-3. Deterministic verifier RNG seed persisted with every attempt.
-4. Persisted deterministic input sequence.
-5. `start -> early -> mid -> end` telemetry timeline.
-6. Bounded engine/runtime gameplay events for score/state and product-specific mechanic evidence.
-7. Deterministic Product Fidelity PASS/FAIL tied to owner IDs.
-8. Product Fidelity integrated into build/repair/polish production flow.
-9. Green + Broken fixtures for every new hard check.
-10. Real end-to-end runtime fixture proving actual gameplay-value change PASS and decorative/fake upgrade FAIL.
-
-L3 verification history:
-
-- `33045193747` — SUCCESS
-- `33045457760` — SUCCESS
-- `33045637678` — SUCCESS
-- `33045912220` — SUCCESS
-- `33046078946` — SUCCESS
-- final `main` Run `33046180562` — SUCCESS
+L3 verification runs: `33045193747`, `33045457760`, `33045637678`, `33045912220`, `33046078946`, final `main` `33046180562` — all **SUCCESS**.
 
 ## Immediate work order — L4 Production Agents / P0
 
-Work autonomously and bottom-up within L4. After every meaningful change, require the **full Verifier Selftest to be green before continuing**.
+After every meaningful change, the **full Verifier Selftest must be green before continuing**.
 
-### 1. Engineer contract alignment
+### Engineer
 
-Update `factory/prompts/engineer.md` and Engineer call context:
-
-- remove stale wording about `random input` / `~15 seconds`;
-- describe deterministic fixed verifier input + early telemetry evidence accurately;
-- pass immutable Owner Contract explicitly;
+- remove stale `random input / ~15 seconds` wording from `factory/prompts/engineer.md`;
+- describe deterministic fixed verifier input + early evidence accurately;
+- pass immutable Owner Contract explicitly into Build / Repair / Rebuild / Polish;
 - pass relevant acceptance/probe mappings explicitly;
-- require product-specific runtime evidence via the bounded probe/event interface when an owner requirement cannot be inferred from generic state/score evidence;
-- preserve bounded repair, fresh rebuild and verified-polish rollback behavior.
+- require bounded runtime evidence for product-specific mechanics when generic score/state cannot prove them;
+- preserve repair, fresh rebuild and verified-polish rollback behavior.
 
-Do **not** implement the P1 incremental patch protocol yet unless required by a concrete P0 regression.
+Do not pull P1 incremental-patch work into P0 unless a concrete regression requires it.
 
-### 2. Playtester product context
+### Playtester
 
-The Playtester must receive:
+Pass:
 
 - Owner Contract;
 - compact GDD;
 - acceptance/probe mapping;
-- telemetry timeline;
-- bounded runtime/mechanic events;
+- telemetry;
+- runtime/mechanic events;
 - screenshots;
 - objective metrics.
 
-Its output must separate:
+Return separate outputs for:
 
-- product-fidelity review (`PASS/FAIL`, missing Must-Haves / suspected No-Go violations);
-- experience score and critique.
+- independent product-fidelity review (`PASS/FAIL`, missing Must-Haves / suspected No-Go violations);
+- Experience score and critique.
 
-Important: deterministic Product Fidelity remains the machine authority. The Playtester fidelity result is an independent product-review signal and must not override deterministic evidence.
+Deterministic Product Fidelity remains machine authority; the LLM Playtester cannot override it.
 
-### 3. Auditor alignment
+### Auditor
 
-Auditor remains advisory only.
+Remain advisory only. Summarize Technical, deterministic Fidelity, Playtester fidelity review, Experience, Budget and deterministic Release Verdict without becoming release authority.
 
-Align its digest/prompt so it summarizes:
+### Reference model lane
 
-- Technical gate;
-- deterministic Product Fidelity gate;
-- Playtester fidelity review;
-- Experience score;
-- Budget gate;
-- deterministic release verdict.
+Confirm the prepared GPT-5.6 matrix is the actual reference route and covered by router/capability tests. Do not use unbenchmarked DeepSeek for the reference Titan.
 
-It must not become release authority again.
+## After L4
 
-### 4. GPT-5.6 reference lane
+Run the full selftest, then perform the top-down integrity check:
 
-Before Canary #3, confirm the intended OpenAI reference matrix is the actual production route for the reference lane and is covered by router/capability tests.
+`Owner idea -> Owner Contract -> Director Acceptance/Probe IDs -> Engineer -> deterministic verifier evidence -> Product Fidelity PASS -> Playtester fidelity review -> Experience >= 6.5 -> Budget PASS -> deterministic Release Gate -> Owner Preview`
 
-Do not switch to an unbenchmarked DeepSeek model for the reference Titan.
-
-### 5. Full L4 selftest
-
-After all L4 P0 work:
-
-- run/inspect the complete Verifier Selftest;
-- require all syntax, L1, L2, L3, verifier and publishing checks to be green;
-- do not proceed from a red intermediate state.
-
-## Then perform the top-down integrity check
-
-Prove this entire chain without gaps:
-
-`Owner idea`
-`-> immutable Owner Contract`
-`-> Director acceptance/probe IDs`
-`-> Engineer receives and implements them`
-`-> deterministic verifier evidence`
-`-> Product Fidelity PASS`
-`-> Playtester independent fidelity review`
-`-> Experience >= 6.5`
-`-> Budget PASS`
-`-> deterministic Release Gate`
-`-> Owner Preview`
-
-No owner requirement may disappear between layers.
+No Owner requirement may disappear between layers.
 
 ## Canary rule
 
-**Do not start Titan Canary #3 until L4 P0 + full selftest + top-down integrity check are green.**
+**No Titan Canary #3 before L4 P0 + full green selftest + top-down integrity check.**
 
-Then run exactly one paid `Titan Core: Reforged` reference canary.
-
-If it fails:
-
-`classify failure -> repair platform -> full selftest -> only then decide whether another paid run is justified`
-
-Never use repeated paid Titan runs as a debugging loop.
+Then run exactly one paid `Titan Core: Reforged` reference canary. If it fails: classify -> repair platform -> full selftest -> only then decide on another paid run.
 
 ## Branch note
 
-Branch `hardening/l4-production-agents` exists and was created from the verified L3 state. No L4 code commit has been accepted as verified yet. Inspect it first, but treat `main` runtime commit `52e843bba72bd3fe83ea2b34475a32e2076dcdee` as canonical until a new L4 commit passes the full selftest.
+`hardening/l4-production-agents` exists from the verified L3 state. No L4 code commit is accepted as verified yet. Treat runtime commit `52e843bba72bd3fe83ea2b34475a32e2076dcdee` as canonical until a new L4 commit passes the full selftest.
 
 ## Working style
 
-Communicate briefly and simply. Avoid owner terminal work or micromanagement when GitHub/tools can perform the work autonomously. All work here is Gaming Development only.
+Communicate briefly and simply. Avoid owner terminal work or micromanagement when GitHub/tools can perform the work autonomously. Gaming Development only.
