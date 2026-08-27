@@ -96,6 +96,13 @@ function evaluateProbe(probe, report, events) {
   return { pass: false, detail: 'unreachable evidence kind' };
 }
 
+function evidenceSource(probe) {
+  if (HARNESS_OBSERVED_KINDS.has(probe?.kind)) return 'harness-observed';
+  if (probe?.kind === 'event' && probe?.strength === 'correlated_gameplay') return 'generated-game-event+runtime-correlation';
+  if (GENERATED_EVENT_KINDS.has(probe?.kind)) return 'generated-game-event-dependent';
+  return 'unknown';
+}
+
 function coverageSummary(requirementIds, criteria) {
   const uniqueIds = (items) => [...new Set(items)].sort();
   const generatedGameEventDependentRequirementIds = uniqueIds(
@@ -138,6 +145,7 @@ export function evaluateProductFidelity({ ownerContract, gdd, report } = {}) {
       kind: probe?.kind ?? null,
       strength: probe?.strength ?? null,
       eventType: probe?.eventType ?? null,
+      evidenceSource: evidenceSource(probe),
       pass: !!(traceable && observed.pass),
       traceable,
       detail: observed.detail
