@@ -237,14 +237,15 @@
   };
 
   class Game {
-    constructor({ id = 'gf-game', title = 'Untitled', width = 960, height = 540, palette = ['#7c5cff', '#00e0ff', '#ff5c8a', '#ffd166'], background = '#0b0e1a', seed = Date.now() % 100000 } = {}) {
+    constructor({ id = 'gf-game', title = 'Untitled', width = 960, height = 540, palette = ['#7c5cff', '#00e0ff', '#ff5c8a', '#ffd166'], background = '#0b0e1a', seed = (Number.isInteger(window.__GF_VERIFIER_SEED__) ? window.__GF_VERIFIER_SEED__ : Date.now() % 100000) } = {}) {
       this.id = id;
       this.title = title;
       this.W = width;
       this.H = height;
       this.palette = palette;
       this.background = background;
-      this.rng = makeRng(seed);
+      this.seed = seed >>> 0;
+      this.rng = makeRng(this.seed);
       this.scenes = {};
       this.sceneName = null;
       this.state = 'boot';
@@ -291,13 +292,14 @@
 
       window.__GF__ = {
         version: VERSION,
-        info: { title, id, engine: VERSION },
+        info: { title, id, engine: VERSION, seed: this.seed },
         errors: this.probeErrors,
         getState: () => this.state,
         getScore: () => this.score,
         getBest: () => this.best,
         getFps: () => this.fps,
         getTime: () => this.time,
+        getSeed: () => this.seed,
         flags: {},
         restart: () => this.restart()
       };

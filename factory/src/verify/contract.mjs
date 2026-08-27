@@ -30,11 +30,50 @@ async function analyzeScreenshot(dataUrl, bgColor) {
   }
 }
 
+function timelineDetail(timeline) {
+  return timeline
+    .map((entry) => `${entry.phase}:${entry.snapshot?.state ?? 'null'}/${entry.snapshot?.score ?? 'null'}@${entry.atMs}ms`)
+    .join(' -> ');
+}
+
+function progressObserved(timeline) {
+  const snapshots = timeline
+    .filter((entry) => ['start', 'early', 'mid', 'end'].includes(entry.phase) && entry.snapshot)
+    .map((entry) => entry.snapshot);
+  for (let i = 0; i < snapshots.length; i++) {
+    for (let j = i + 1; j < snapshots.length; j++) {
+      const a = snapshots[i];
+      const b = snapshots[j];
+      const scoreAdvanced = typeof a.score === 'number' && typeof b.score === 'number' && b.score > a.score;
+      const stateAdvanced = a.state === 'playing' && ['gameover', 'won'].includes(b.state);
+      if (scoreAdvanced || stateAdvanced) return true;
+    }
+  }
+  return false;
+}
+
 export async function evaluateContract(report, { minFps = LIMITS.minFps, bgColor = '#101010' } = {}) {
   const checks = [];
   const add = (id, label, pass, detail = '') => checks.push({ id, label, pass, detail });
 
   add('probe_present', 'Test-Hook __GF__ vorhanden', report.probeOk);
+  add(
+    'deterministic_seed',
+    'Deterministischer Verifier-Seed ist vorhanden',
+    Number.isInteger(report.seed),
+    `seed=${report.seed ?? 'missing'}`
+  );
+
+  const timeline = Array.isArray(report.timeline) ? report.timeline : [];
+  const requiredPhases = ['start', 'early', 'mid', 'end'];
+  const phases = new Set(timeline.filter((e) => e?.snapshot).map((e) => e.phase));
+  const timelineComplete = requiredPhases.every((phase) => phases.has(phase));
+  add(
+    'telemetry_timeline',
+    'Telemetry enthält start/early/mid/end',
+    timelineComplete,
+    timeline.length ? timelineDetail(timeline) : 'timeline missing'
+  );
 
   const runtimeErrors = [
     ...report.pageErrors.map((e) => 'pageerror: ' + e),
@@ -49,17 +88,16 @@ export async function evaluateContract(report, { minFps = LIMITS.minFps, bgColor
   const started = ['playing', 'gameover', 'won'].includes(endState);
   add('started_playing', 'Spiel verlässt den Titelbildschirm', !!started, `endState=${endState}`);
 
-  const s0 = report.midSnapshot?.score;
-  const s1 = report.endSnapshot?.score;
-  const stateAdvanced =
-    report.midSnapshot?.state === 'playing' &&
-    (report.endSnapshot?.state !== 'playing' || (typeof s0 === 'number' && typeof s1 === 'number' && s1 > s0));
-  const scoreChanged = typeof s0 === 'number' && typeof s1 === 'number' && s1 > s0;
-  add('interactivity', 'Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)', !!(scoreChanged || stateAdvanced), `score ${s0} -> ${s1}, states ${report.midSnapshot?.state}->${endState}`);
+  const interactive = timelineComplete && progressObserved(timeline);
+  add(
+    'interactivity',
+    'Spiel zeigt deterministischen Gameplay-Fortschritt in der Telemetry',
+    interactive,
+    timeline.length ? timelineDetail(timeline) : 'timeline missing'
+  );
 
   add('fps_ok', `Performance >= ${minFps} FPS`, typeof report.fps === 'number' && report.fps >= minFps, `fps=${report.fps}`);
 
-  // VISUAL SMOKE TEST: analyze gameplay screenshots for non-background pixels
   const gameplayShots = (report._images || []).filter((s) => s.name.startsWith('shot-2') || s.name.startsWith('shot-3'));
   let visibleCount = 0;
   const details = [];

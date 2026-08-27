@@ -51,8 +51,9 @@ function summarizeFailure(bundle) {
   if (bundle.consoleErrors.length) lines.push('', 'Console errors:', ...bundle.consoleErrors.map((e) => '- ' + e));
   if (bundle.pageErrors.length) lines.push('', 'Page errors:', ...bundle.pageErrors.map((e) => '- ' + e));
   if (bundle.probeErrors.length) lines.push('', 'Probe-reported game errors:', ...bundle.probeErrors.map((e) => '- ' + e));
-  lines.push('', `Measured FPS: ${bundle.fps ?? 'n/a'} | states: mid=${bundle.states?.mid?.state} -> end=${bundle.states?.end?.state}, score ${bundle.states?.mid?.score} -> ${bundle.states?.end?.score}`);
-  lines.push('', 'Reminder: score must increase deterministically under ordinary simulated keyboard/mouse input within the first few seconds; do not rely on lucky random collisions or rare events. No runtime errors are allowed.');
+  const states = bundle.states || {};
+  lines.push('', `Measured FPS: ${bundle.fps ?? 'n/a'} | timeline: start=${states.start?.state}/${states.start?.score} -> early=${states.early?.state}/${states.early?.score} -> mid=${states.mid?.state}/${states.mid?.score} -> end=${states.end?.state}/${states.end?.score}`);
+  lines.push('', 'Reminder: score or gameplay state must advance deterministically under the fixed verifier seed/input sequence during the early telemetry timeline. Do not rely on lucky random collisions or rare events. No runtime errors are allowed.');
   return lines.join('\n');
 }
 
@@ -77,13 +78,26 @@ async function verifyAttempt({ runDir, attempt, design }) {
   const evidence = {
     attempt,
     candidateSha: sha256(html),
+    seed: report.seed,
+    inputSequence: report.inputSequence,
+    telemetry: report.timeline,
     fps: report.fps,
-    states: { mid: report.midSnapshot, end: report.endSnapshot },
+    states: {
+      start: report.startSnapshot,
+      early: report.earlySnapshot,
+      mid: report.midSnapshot,
+      end: report.endSnapshot
+    },
     contract: verdict,
     consoleErrors: report.consoleErrors.slice(0, 10),
     pageErrors: report.pageErrors.slice(0, 10),
     probeErrors: (report.endSnapshot?.errors || []).slice(0, 10)
   };
+  writeJson(path.join(dir, 'telemetry.json'), {
+    seed: report.seed,
+    inputSequence: report.inputSequence,
+    timeline: report.timeline
+  });
   writeJson(path.join(dir, 'evidence-tech.json'), evidence);
   return { dir, html, report, verdict, evidence };
 }
@@ -171,7 +185,6 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     source,
     candidateSha: null,
     technical: { pass: false, checks: null },
-    // L3 will replace this fail-closed placeholder with verifier-backed fidelity evidence.
     productFidelity: { pass: false, status: 'pending-l3', criteria: null },
     experience: { score: null, scores: null, critique: [] },
     audit: null,
@@ -259,11 +272,16 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     const metrics = {
       fps: tech.report.fps,
       durationSeconds: LIMITS.playSeconds,
+      stateStart: tech.report.startSnapshot?.state,
+      stateEarly: tech.report.earlySnapshot?.state,
       stateMid: tech.report.midSnapshot?.state,
       stateEnd: tech.report.endSnapshot?.state,
+      scoreStart: tech.report.startSnapshot?.score,
+      scoreEarly: tech.report.earlySnapshot?.score,
       scoreMid: tech.report.midSnapshot?.score,
       scoreEnd: tech.report.endSnapshot?.score,
-      bestScore: tech.report.endSnapshot?.best
+      bestScore: tech.report.endSnapshot?.best,
+      verifierSeed: tech.report.seed
     };
     try {
       playtest = await runPlaytester({ metrics, images: gameplayShots });
@@ -356,8 +374,6 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     log.warn(`auditor unavailable (non-authoritative): ${e.message}`);
   }
 
-  // L1 deterministic release authority. Until L3 supplies real fidelity evidence,
-  // Product Fidelity remains false and production fails closed here by design.
   const finalRelease = releaseFor(state);
   if (!finalRelease.pass) {
     return failClosed(runDir, state, 'release_gate_not_met', { releaseGate: finalRelease });
