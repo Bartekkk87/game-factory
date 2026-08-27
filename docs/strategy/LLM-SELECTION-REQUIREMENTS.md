@@ -6,6 +6,28 @@ Status: 2026-08-27
 
 Model selection is a measurable production decision, not a permanent vendor preference. Each role should use the cheapest model that reaches the required quality and convergence level on factory evidence.
 
+## Current verified reference state
+
+The L4/P0 production-agent hardening is complete on `main`.
+
+Verified runtime merge commit:
+
+`f7b5e2ebd75e405d857b3bec19d85231e02eaef8`
+
+Full merged `main` Verifier Selftest:
+
+GitHub Actions Run `33051402235` — **SUCCESS**.
+
+The reference role matrix is explicitly router-tested:
+
+- Director -> `gpt-5.6-terra`
+- Engineer Build / Repair / Rebuild / Polish -> `gpt-5.6-terra`
+- Playtester -> `gpt-5.6-terra`
+- Auditor -> `gpt-5.6-luna`
+- Release Verdict -> no LLM
+
+No paid Titan Canary #3 has been started yet.
+
 ## Core requirements
 
 1. Models are selected per role, not globally.
@@ -23,7 +45,7 @@ Reason: the OpenRouter slug `deepseek/deepseek-chat` currently represents the ol
 
 ### Benchmark candidates
 
-- Reference baseline: current approved OpenAI Engineer candidate (GPT-5.6 Terra during hardening/eval).
+- Reference baseline: verified OpenAI Engineer reference lane using `gpt-5.6-terra`.
 - DeepSeek cost/performance candidate: current stable DeepSeek V4 Flash model.
 - DeepSeek quality candidate: current stable DeepSeek V4 Pro model.
 - Optional later rescue model: higher-capability model only when evidence shows the normal Engineer lane is stuck and budget allows it.
@@ -47,12 +69,12 @@ The winner is not the model with the highest generic coding benchmark. The winne
 
 ## Timing
 
-Do NOT switch the next Titan canary to an unbenchmarked DeepSeek model. First complete P0 production hardening and establish one green, reproducible reference lane. Then run DeepSeek against the same stored Titan/eval evidence without changing the surrounding pipeline.
+Do NOT switch the next Titan canary to an unbenchmarked DeepSeek model. P0 production hardening is now complete and the reference lane is verified on `main`; the next step, only after new explicit Owner approval, is exactly one controlled paid `Titan Core: Reforged` Canary #3 using the verified reference matrix.
 
 Recommended sequence:
 
-1. P0 hardening + green verifier selftest.
-2. One controlled reference Titan canary with the approved baseline model matrix.
+1. P0 hardening + green verifier selftest — **DONE**.
+2. One controlled reference Titan canary with the approved baseline model matrix — **NEXT only after explicit Owner approval**.
 3. Freeze the resulting tasks/evidence as eval cases.
 4. Benchmark DeepSeek V4 Flash/Pro on the same Engineer tasks.
 5. Promote DeepSeek to primary Engineer only if it matches/exceeds quality and materially improves cost or convergence.
