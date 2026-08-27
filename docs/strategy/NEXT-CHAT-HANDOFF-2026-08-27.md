@@ -32,31 +32,15 @@ Full Verifier Selftest on that runtime head:
 
 - GitHub Actions Run `33046180562` — **SUCCESS**
 
-Documentation commits after this runtime head do not change the verified platform code.
+Documentation-only commits after this runtime head do not change the verified platform code.
 
-## Completed
+## Completed layers
 
-### L1 Control Kernel — DONE
+- **L1 Control Kernel — DONE and verified**
+- **L2 Model / Provider Layer — DONE and verified**
+- **L3 Verification & Evidence — DONE and verified**
 
-Real cost accounting, pre-call budget enforcement, bounded repair/polish/rebuild budgets, deterministic release gate and unified evidence are implemented and verified.
-
-### L2 Model / Provider Layer — DONE
-
-Fail-closed Role Router, provider/capability/price registries and no silent cross-provider fallback are implemented and verified. Reference matrix: Director/Engineer/Playtester `gpt-5.6-terra`, Auditor `gpt-5.6-luna`, Release Verdict no LLM. DeepSeek remains benchmark-only.
-
-### L3 Verification & Evidence — DONE
-
-Implemented and verified:
-
-- immutable Owner Contract with stable `MH-xx` / `NG-xx` IDs and hash;
-- Owner-ID -> Director acceptance/probe traceability;
-- deterministic verifier seed + persisted input sequence;
-- `start -> early -> mid -> end` telemetry;
-- bounded runtime/mechanic events;
-- deterministic Product Fidelity PASS/FAIL;
-- Technical + Fidelity integration in build/repair/polish;
-- Green/Broken fixtures for all new hard checks;
-- end-to-end runtime proof that real gameplay-value change passes and fake decorative upgrade fails.
+L3 includes immutable Owner Contract (`MH-xx` / `NG-xx`), Director acceptance/probe traceability, deterministic seed + input sequence, `start -> early -> mid -> end` telemetry, bounded runtime/mechanic events, deterministic Product Fidelity PASS/FAIL, production-path fidelity enforcement and Green/Broken/end-to-end runtime fixtures.
 
 L3 verification runs: `33045193747`, `33045457760`, `33045637678`, `33045912220`, `33046078946`, final `main` `33046180562` — all **SUCCESS**.
 
