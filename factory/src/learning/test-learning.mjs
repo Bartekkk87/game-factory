@@ -51,8 +51,43 @@ const evidence={runEvidence:[
 ],ownerFeedback:[{id:captured.record.id,parsedCommand:'reject',classificationClaims:[{type:'visual-reference-mismatch'}]}]};
 const aggregate1=aggregateEvidence(evidence),aggregate2=aggregateEvidence(evidence);
 assert.equal(JSON.stringify(aggregate1),JSON.stringify(aggregate2));
+
+// Canonical RUN-EVIDENCE.json regression: real production evidence nests run id,
+// gate results and cost ledger under run/gates/costs rather than test-only aliases.
+const canonical = aggregateEvidence({runEvidence:[{
+  schema:'game-factory.run-evidence/v1',
+  run:{id:'20260827-120138',candidateSha:'abc'},
+  gates:{technical:{pass:true},productFidelity:{pass:true},experience:{pass:true,score:7.7},budget:{pass:true,spentUsd:0.44},release:{pass:true}},
+  costs:{
+    costUsd:0.44,tokens:100,
+    stageBudgets:{repair:{calls:1},freshRebuild:{calls:0},polish:{calls:1}},
+    attempts:[
+      {role:'director',operation:'director',model:'gpt-ref',responseModelId:'gpt-ref',costUsd:0.10,usage:{totalTokens:25}},
+      {role:'engineer',operation:'repair',model:'gpt-ref',responseModelId:'gpt-ref',costUsd:0.20,usage:{totalTokens:50}},
+      {role:'playtester',operation:'playtester',model:'gpt-ref',responseModelId:'gpt-ref',costUsd:0.10,usage:{totalTokens:25}}
+    ]
+  }
+}],ownerFeedback:[{id:'titan-feedback',verdict:'reject',classificationClaims:[]}]});
+assert.deepEqual(canonical.input.runIds,['20260827-120138']);
+assert.equal(canonical.failures.technicalFailures,0);
+assert.equal(canonical.failures.productFidelityFailures,0);
+assert.equal(canonical.convergence.repairCount,1);
+assert.equal(canonical.convergence.freshRebuildCount,0);
+assert.equal(canonical.convergence.polishCount,1);
+assert.equal(canonical.experience.latest,7.7);
+assert.equal(canonical.owner.verdicts.reject,1);
+assert.equal(canonical.economics.costUsd,0.4);
+assert.equal(canonical.economics.tokens,100);
+assert.equal(canonical.economics.costByRole.engineer,0.2);
+assert.equal(canonical.economics.costByModel['gpt-ref'],0.4);
+assert.equal(canonical.economics.costByOperation.repair,0.2);
+assert.deepEqual(canonical.positives.recurring,[]);
+
 const trigger1=evaluateImprovementTrigger(aggregate1),trigger2=evaluateImprovementTrigger(aggregate1);
 assert.deepEqual(trigger1,trigger2);assert.equal(trigger1.policyVersion,TRIGGER_POLICY_VERSION);assert.equal(trigger1.allowed,true);assert.equal(trigger1.canValidate,false);assert.equal(trigger1.canActivate,false);assert.ok(IMPROVEMENT_AUTHORITY.mustNot.includes('activate-production'));
+const canonicalTrigger=evaluateImprovementTrigger(canonical);
+assert.equal(canonicalTrigger.allowed,true);
+assert.deepEqual(canonicalTrigger.allowedScopes,['product-feedback']);
 
 const c=lifecycle.createCandidate({id:'candidate-fixture',role:'director',scope:'product-feedback',targetLayer:'prompt',text:'Scoped test candidate',sourceRunIds:['run-1'],sourceKind:'owner-feedback',ownerFeedbackIds:[captured.record.id],candidateSha,confidence:0.5,evidenceCount:1,createdAt:'2026-08-27T12:10:00Z'});
 assert.equal(c.status,'candidate');assert.equal(c.active,false);assert.equal(store.lessonsFor('director').includes('- Scoped test candidate'),false);
