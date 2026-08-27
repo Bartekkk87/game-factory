@@ -71,14 +71,22 @@ jobs:
           if [ -n "$MANUAL_IDEA" ]; then
             printf '%s\n' "$MANUAL_IDEA" > /tmp/idea.txt
             echo "Using manual trigger idea"
+          elif [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            IDEA_FILE=$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" -- 'ideas/*.md' | head -n1)
+            if [ -z "$IDEA_FILE" ]; then
+              echo "Push trigger did not contain an idea file" >&2
+              exit 1
+            fi
+            cp "$IDEA_FILE" /tmp/idea.txt
+            echo "Using pushed idea: $IDEA_FILE"
           else
-            LATEST=$(ls -t ideas/*.md 2>/dev/null | head -n1)
+            LATEST=$(git log -1 --format= --name-only -- 'ideas/*.md' | head -n1)
             if [ -z "$LATEST" ]; then
               echo "No idea file found in ideas/" >&2
               exit 1
             fi
             cp "$LATEST" /tmp/idea.txt
-            echo "Using latest idea: $LATEST"
+            echo "Using most recently committed idea: $LATEST"
           fi
           B64=$(base64 -w0 /tmp/idea.txt)
           {
