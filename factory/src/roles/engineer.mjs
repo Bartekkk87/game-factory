@@ -19,6 +19,22 @@ function engineSource() {
   return fs.readFileSync(PATHS.engineFile, 'utf8');
 }
 
+function acceptanceRules() {
+  return [
+    '=== NON-NEGOTIABLE PRODUCT + VERIFICATION CONTRACT ===',
+    '- The ORIGINAL OWNER IDEA is a hard product contract. Explicit Must-Haves/Muss-Haves and No-Gos override simplifications in the GDD.',
+    '- Implement every explicit Must-Have and every GDD mechanic as a visible, playable behavior; do not replace requested mechanics with decorative stand-ins.',
+    '- If the brief asks for a boss/Titan, it must be visually distinct and mechanically meaningful, not just a normal enemy rectangle.',
+    '- If the brief asks for salvage/upgrades, collecting/choosing an upgrade must change a real gameplay value or ability and show clear feedback.',
+    '- If the brief asks for a risk/reward choice, implement an actual player choice with distinct outcomes.',
+    '- Preserve readable HUD layout with no overlapping labels.',
+    '- Score must increase deterministically within 4 seconds of ordinary simulated keyboard/mouse gameplay. Never make this depend on a lucky random collision, rare spawn, or precise aim.',
+    '- The game must remain playable under WASD/arrows/Space/Enter and pointer clicks as applicable.',
+    '- No external URLs or assets. Keep runtime free of console/page/probe errors and maintain >=30 FPS.',
+    '- Keep JavaScript multiline and reasonably readable.'
+  ].join('\n');
+}
+
 function validateDesign(design) {
   const problems = [];
   if (typeof design.js !== 'string' || design.js.trim().length < 200) problems.push('js slot too short/missing');
@@ -40,19 +56,15 @@ function validateDesign(design) {
   return design;
 }
 
-export async function buildGame({ gdd }) {
+export async function buildGame({ gdd, ownerIdea = '' }) {
   const user = [
     '=== TASK ===',
     'Implement this game now (fresh build). Output ONLY strict JSON with slots title/css/html/js.',
     '',
-    '=== ESSENTIAL RULES (critical - violate and output is REJECTED) ===',
-    '- Output must be valid JSON with exactly: title, css, html, js.',
-    '- js MUST contain new GF.Game({...}) constructor call.',
-    '- NO external URLs in js/css/html.',
-    '- game.hitStop() must be called as a METHOD (game.hitStop(0.1)), NOT assigned as property.',
-    '- Keep JavaScript MULTILINE and reasonably readable.',
-    '- Score must increase within 4 seconds of simulated gameplay.',
-    '- Game must be playable: draw background + player + enemies each frame.',
+    acceptanceRules(),
+    '',
+    '=== ORIGINAL OWNER IDEA ===',
+    ownerIdea || '(no additional owner brief)',
     '',
     '=== GAME DESIGN BRIEFING ===',
     JSON.stringify(gdd, null, 2),
@@ -65,15 +77,20 @@ export async function buildGame({ gdd }) {
   return validateDesign(extractJson(text));
 }
 
-export async function repairGame({ gdd, design, failureSummary }) {
+export async function repairGame({ gdd, design, failureSummary, ownerIdea = '' }) {
   const user = [
     '=== TASK ===',
-    'REPAIR MODE: previous attempt failed verification. Fix exactly the listed failures.',
+    'REPAIR MODE: previous attempt failed verification. Fix exactly the listed failures while preserving every behavior that already works.',
     'IMPORTANT: do NOT return previous code unchanged or near-unchanged.',
     'You MUST actually modify js/css/html so output passes verification.',
     '',
+    acceptanceRules(),
+    '',
     '=== FAILURE EVIDENCE ===',
     failureSummary,
+    '',
+    '=== ORIGINAL OWNER IDEA ===',
+    ownerIdea || '(no additional owner brief)',
     '',
     '=== GAME DESIGN BRIEFING ===',
     JSON.stringify(gdd, null, 2),
@@ -89,20 +106,29 @@ export async function repairGame({ gdd, design, failureSummary }) {
   return validateDesign(extractJson(text));
 }
 
-export async function polishGame({ gdd, design, playtest }) {
+export async function polishGame({ gdd, design, playtest, ownerIdea = '', regressionNotes = [] }) {
   const user = [
     '=== TASK ===',
-    'POLISH MODE: game works but visual review demands improvements.',
+    'POLISH MODE: game is technically verified but product review demands improvements.',
+    'Improve presentation and player experience WITHOUT regressing any verified mechanic, input behavior, score progression, or runtime property.',
     'Apply priorityFixes and address critique while keeping all mechanics working.',
     'Return the FULL corrected JSON (title/css/html/js).',
+    '',
+    acceptanceRules(),
+    ...(regressionNotes.length
+      ? ['', '=== PREVIOUS POLISH REGRESSIONS - DO NOT REPEAT ===', ...regressionNotes.map((n) => `- ${n}`)]
+      : []),
     '',
     '=== PLAYTEST REVIEW ===',
     JSON.stringify(playtest, null, 2),
     '',
+    '=== ORIGINAL OWNER IDEA ===',
+    ownerIdea || '(no additional owner brief)',
+    '',
     '=== GAME DESIGN BRIEFING ===',
     JSON.stringify(gdd, null, 2),
     '',
-    '=== CURRENT IMPLEMENTATION (json with title/css/html/js) ===',
+    '=== CURRENT VERIFIED IMPLEMENTATION (json with title/css/html/js) ===',
     JSON.stringify(design, null, 2),
     '',
     '=== MICRO-ENGINE SOURCE ===',
