@@ -34,6 +34,9 @@ jobs:
       - name: Prove control kernel budgets and release gate
         run: node factory/src/control/test-control.mjs
 
+      - name: Prove model/provider router and capability gates
+        run: node factory/src/llm/test-router.mjs
+
       - name: Install browser
         run: npx playwright install --with-deps chromium
 
