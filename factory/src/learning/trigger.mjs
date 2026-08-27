@@ -1,14 +1,40 @@
 export const TRIGGER_POLICY_VERSION = 'controlled-improvement-trigger-v1';
 
-export function evaluateImprovementTrigger(aggregate) {
+function recurringFailureForEvent(recurringFailures, eventId) {
+  return recurringFailures.some((x) => {
+    const recurrent = Number(x.count) >= 2 && Number(x.runCount) >= 2;
+    if (!recurrent) return false;
+    if (!eventId) return true;
+    return Array.isArray(x.runIds) && x.runIds.map(String).includes(String(eventId));
+  });
+}
+
+export function evaluateImprovementTrigger(aggregate, context = {}) {
   const verdicts = aggregate?.owner?.verdicts || {};
   const recurringFailures = aggregate?.failures?.recurring || [];
-  const feedbackNegative = Number(verdicts.reject || 0) > 0 || Number(verdicts.feedback || 0) > 0;
-  const recurringEngineeringFailure = recurringFailures.some((x) => Number(x.count) >= 2 && Number(x.runCount) >= 2);
-  const independentRunCount = new Set(aggregate?.input?.runIds || []).size;
+  const eventKind = String(context?.eventKind || '').trim();
+  const eventId = String(context?.eventId || '').trim();
+  const eventVerdict = String(context?.eventVerdict || '').trim().toLowerCase();
+
+  const aggregateFeedbackNegative = Number(verdicts.reject || 0) > 0 || Number(verdicts.feedback || 0) > 0;
+  const feedbackNegative = eventKind === 'owner-feedback'
+    ? ['reject', 'feedback'].includes(eventVerdict)
+    : aggregateFeedbackNegative;
+  const recurringEngineeringFailure = recurringFailureForEvent(
+    recurringFailures,
+    eventKind === 'production-run' ? eventId : ''
+  );
+
   const reasons = [], allowedScopes = [];
-  if (feedbackNegative) { reasons.push('owner-negative-or-feedback-evidence'); allowedScopes.push('product-feedback'); }
-  if (recurringEngineeringFailure && independentRunCount >= 2) { reasons.push('recurring-engineering-failure-across-runs'); allowedScopes.push('engineering'); }
+  if ((!eventKind || eventKind === 'owner-feedback') && feedbackNegative) {
+    reasons.push('owner-negative-or-feedback-evidence');
+    allowedScopes.push('product-feedback');
+  }
+  if ((!eventKind || eventKind === 'production-run') && recurringEngineeringFailure) {
+    reasons.push('recurring-engineering-failure-across-runs');
+    allowedScopes.push('engineering');
+  }
+
   return {
     schemaVersion: 'learning-trigger-v1', policyVersion: TRIGGER_POLICY_VERSION,
     allowed: reasons.length > 0, reasons: reasons.sort(), allowedScopes: [...new Set(allowedScopes)].sort(),
