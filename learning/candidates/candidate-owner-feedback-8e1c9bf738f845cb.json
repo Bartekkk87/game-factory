@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "learning-candidate-v1",
+  "id": "candidate-owner-feedback-8e1c9bf738f845cb",
+  "status": "candidate",
+  "role": "director",
+  "scope": "product-feedback",
+  "targetLayer": "owner-contract",
+  "text": "Hypothesis only: Owner feedback gh-issue-6-comment-5443073595 may indicate an intake or Owner Contract decomposition gap. Validate the preserved brief, requirement decomposition, and product evidence before changing Production. Do not infer or invent missing requirements from this feedback alone.",
+  "sourceRunIds": [
+    "20260827-120138"
+  ],
+  "sourceKind": "controlled-learning-orchestration",
+  "ownerFeedbackIds": [
+    "gh-issue-6-comment-5443073595"
+  ],
+  "candidateSha": "0c675f626042c25c49326bca19b9aba95860d54845b02e91bfc600c05884110d",
+  "confidence": 0.4,
+  "evidenceCount": 1,
+  "createdAt": "2026-08-27T17:53:12Z",
+  "validatedAt": null,
+  "expiresAfter": null,
+  "supersedes": null,
+  "validationEvidence": [],
+  "regressionResults": [],
+  "active": false,
+  "activatedAt": null,
+  "promotionRef": null,
+  "deactivatedAt": null,
+  "deactivatedBy": null,
+  "rollbackOf": null,
+  "reversalReason": null
+}

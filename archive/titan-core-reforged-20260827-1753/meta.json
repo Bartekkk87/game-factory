@@ -4,7 +4,7 @@
   "tagline": "Rip apart war machines, socket their cores, then gamble the escape.",
   "genre": "action",
   "date": "2026-08-27T12:06:19.773Z",
-  "status": "awaiting-review",
+  "status": "rejected",
   "previewPath": "drafts/titan-core-reforged/index.html",
   "candidateSha": "0c675f626042c25c49326bca19b9aba95860d54845b02e91bfc600c05884110d",
   "ownerContractSha256": "6719afcb7c4d1c2e3614ea8c079e20afdc72e7160eba577d91a5f26fad715c48",
@@ -603,5 +603,7 @@
     "violations": []
   },
   "costUsd": 0.442821,
-  "tokens": 109703
+  "tokens": 109703,
+  "rejectionReason": "Product Acceptance FAIL: Die Ausführung trifft die erwartete Produktvision nicht. Das Ergebnis ist eine reduzierte 2D-Neon-/Vektor-Arena mit abstrakten Figuren/Grid/Boss, während die erwartete Richtung eine deutlich detailliertere isometrische Sci-Fi-/Mech-Arena mit erkennbarem Mech, mechanischem Boss, industriellem Environment, räumlicher Tiefe, Texturen/Beleuchtung, Waffen/Schilden, Boden-Telegraphen und insgesamt commercial-indie-artigem Qualitätsniveau war. Zusätzlich weicht die Gameplay-Identity mit Core Cannon / Forge Ring / Single-Screen-Arena / Extraction-Descend von der erwarteten Produktidentität ab. Daher: machine execution PASS, aber Owner Product Acceptance FAIL.",
+  "rejectedAt": "2026-08-27T17:53:26.128Z"
 }

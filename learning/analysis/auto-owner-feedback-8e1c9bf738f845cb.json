@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "improvement-analysis-v1",
+  "id": "auto-owner-feedback-8e1c9bf738f845cb",
+  "triggerRef": "learning/triggers/auto-owner-feedback-8e1c9bf738f845cb.json",
+  "aggregateRef": "learning/aggregates/auto-owner-feedback-8e1c9bf738f845cb.json",
+  "event": {
+    "kind": "owner-feedback",
+    "id": "gh-issue-6-comment-5443073595"
+  },
+  "scope": "product-feedback",
+  "authority": {
+    "may": [
+      "propose-scoped-learning-candidate"
+    ],
+    "mustNot": [
+      "activate-production",
+      "edit-production",
+      "change-own-authority",
+      "weaken-release-gates"
+    ]
+  },
+  "facts": [
+    "Owner reject evidence gh-issue-6-comment-5443073595 contains a preserved reason (Product Acceptance FAIL: Die Ausführung trifft die erwartete Produktvision nicht. Das Ergebnis ist eine reduzierte 2D-Neon-/Vektor-Arena mit abstrakten Figuren/Grid/Boss, während die erwartete Richtung eine deutlich detailliertere isometris…).",
+    "Source run provenance: 20260827-120138.",
+    "No missing Owner requirement is inferred automatically from this evidence."
+  ],
+  "conclusion": "Evidence supports one inactive hypothesis candidate (candidate-owner-feedback-8e1c9bf738f845cb); validation and activation remain prohibited.",
+  "candidateId": "candidate-owner-feedback-8e1c9bf738f845cb",
+  "blocked": null,
+  "canValidate": false,
+  "canActivate": false
+}

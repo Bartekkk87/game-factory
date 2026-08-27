@@ -13,7 +13,7 @@
       "title": "Titan Core: Reforged",
       "genre": "action",
       "date": "2026-08-27T12:06:19.773Z",
-      "status": "draft",
+      "status": "rejected",
       "score": 7.7
     }
   ],
@@ -21,7 +21,7 @@
   "stats": {
     "runs": 31,
     "published": 0,
-    "rejected": 0,
+    "rejected": 1,
     "failed": 22,
     "tokens": 0,
     "costUsd": 0

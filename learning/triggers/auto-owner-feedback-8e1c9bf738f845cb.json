@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "learning-trigger-v1",
+  "policyVersion": "controlled-improvement-trigger-v1",
+  "allowed": true,
+  "reasons": [
+    "owner-negative-or-feedback-evidence",
+    "recurring-engineering-failure-across-runs"
+  ],
+  "allowedScopes": [
+    "engineering",
+    "product-feedback"
+  ],
+  "authority": "analysis-only",
+  "canValidate": false,
+  "canActivate": false,
+  "eventKind": "owner-feedback",
+  "eventId": "gh-issue-6-comment-5443073595",
+  "aggregateRef": "learning/aggregates/auto-owner-feedback-8e1c9bf738f845cb.json"
+}

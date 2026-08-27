@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "controlled-learning-orchestration-v1",
+  "eventKind": "owner-feedback",
+  "eventId": "gh-issue-6-comment-5443073595",
+  "aggregateRef": "learning/aggregates/auto-owner-feedback-8e1c9bf738f845cb.json",
+  "triggerRef": "learning/triggers/auto-owner-feedback-8e1c9bf738f845cb.json",
+  "analysisRef": "learning/analysis/auto-owner-feedback-8e1c9bf738f845cb.json",
+  "triggerAllowed": true,
+  "triggerReasons": [
+    "owner-negative-or-feedback-evidence",
+    "recurring-engineering-failure-across-runs"
+  ],
+  "focusScope": "product-feedback",
+  "candidateId": "candidate-owner-feedback-8e1c9bf738f845cb",
+  "candidateActive": false,
+  "canValidate": false,
+  "canActivate": false
+}
