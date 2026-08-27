@@ -1,199 +1,168 @@
 # Game Factory — Umsetzungskatalog 27.08.2026
 
-## Status
+## Aktueller verbindlicher Status
 
-L1, L2, L3 und L4/P0 wurden vor dem externen Falsification Audit auf `main` technisch verifiziert.
+**P0-01 bis P0-05 sind auf `main` vollständig umgesetzt und verifiziert.**
 
-Verifizierter Runtime-Baseline-Commit:
+Finaler verifizierter Runtime-Commit:
 
-`f7b5e2ebd75e405d857b3bec19d85231e02eaef8`
+`69aac9f26d7004aa8be19ed0ec61fc649f3d6565`
 
-Finaler vollständiger Runtime-Selftest auf `main`:
+Finaler vollständiger Verifier Selftest:
 
-GitHub Actions Run `33051402235` — **SUCCESS**
+GitHub Actions Run `33060506910` — **SUCCESS**
 
-Der externe Architecture Falsification Audit vom 27.08.2026 bestätigt den deterministischen Kern grundsätzlich, identifiziert aber konkrete verbleibende Beweislücken vor dem nächsten bezahlten Titan Canary.
+Detailabnahme:
 
-**Wichtig:** Die Priorisierung des Audits wird normalisiert. Insbesondere bleibt das Product-Fidelity-Event-Probe-Hardening ein P0 vor Canary, obwohl es in der späteren Action-Liste des Audits inkonsistent unter P1 auftauchte.
+`docs/strategy/P0-FINAL-ACCEPTANCE-2026-08-27.md`
 
-**Titan Canary #3 wurde nicht gestartet und darf weiterhin nur nach neuer expliziter Owner-Freigabe gestartet werden.**
+**Titan Canary #3 wurde nicht gestartet.** Technische Readiness ist erreicht, aber ein Paid Canary darf weiterhin nur nach einer neuen expliziten Owner-Instruktion gestartet werden.
 
 ---
 
 ## Architekturprinzip
 
-Die Factory besteht künftig aus zwei klar getrennten Schleifen:
-
 ### Production Factory
 
-`Owner Idea -> Owner Contract -> Director -> Engineer -> Verifier -> Repair/Rebuild -> Playtester -> Polish -> deterministic Release Gate -> Owner Preview`
+`Owner Idea -> Owner Contract -> Director -> Engineer -> deterministic Verifier -> Repair/Fresh Rebuild -> Playtester -> Polish -> deterministic Release Gate -> Owner Preview -> Approve/Reject`
 
-Ziel: **das aktuelle Spiel verbessern und sicher freigeben.**
+Ziel: das aktuelle Spiel robust erzeugen, prüfen und dem Owner vorlegen.
 
 ### Improvement Factory
 
-`Run Evidence -> deterministic Aggregation -> Threshold -> Improvement Analysis -> Lesson Candidate -> Validation -> Regression -> versionierte Aktivierung`
+`Run Evidence -> deterministic Aggregation -> Threshold -> Improvement Analysis -> Lesson Candidate -> Validation -> Regression -> human-merged/versioned activation`
 
-Ziel: **die Factory von Run zu Run verbessern.**
+Ziel: die Factory selbst evidence-driven verbessern.
 
-Die Production Factory darf nicht von ungeprüften Learning-/Improvement-Ergebnissen verändert werden.
+Die Improvement Factory ist noch nicht vollständig implementiert. Production darf nicht durch ungeprüfte Learning-Signale direkt selbstmodifiziert werden.
 
----
+Authority Order:
 
-# P0 — Zwingend vor Titan Canary #3
-
-## P0-01 — Skill Integrity
-
-### Problem
-
-`skills/directing.md` und `skills/engineering.md` enthalten noch veraltete Aussagen zu `random key mashing` und `~15 seconds`, obwohl der aktuelle Verifier mit festem Seed/Input und `start -> early -> mid -> end` arbeitet.
-
-### Anforderung
-
-- Veraltete Random-/15s-Regeln entfernen.
-- Skills an die aktuelle deterministische Verifier-Architektur anpassen.
-- Keine Skill-Regel darf deterministischen Control-/Verifier-Regeln widersprechen.
-
-### Abnahme
-
-- Kein veraltetes `random key mash` / `random input` / `~15 seconds` Verhalten mehr in aktiven Skills.
-- Vollständig zusammengesetzter Runtime-Systemprompt ist widerspruchsfrei.
+`Control Plane > Owner Contract > Engine/API Contract > Verified Skill > Memory Lesson`
 
 ---
 
-## P0-02 — Skill CI / Assembled Prompt Regression
+# P0 — VOR TITAN CANARY #3 — DONE
 
-### Problem
+## P0-01 — Skill Integrity — PASS
 
-Aktuelle Tests prüfen vor allem rohe Prompt-Dateien, nicht zwingend den tatsächlich zusammengesetzten Systemprompt aus Prompt + Skill + Lessons. `skills/**` muss außerdem zuverlässig CI auslösen.
+- Veraltete `random key mash` / `random input` / `~15 seconds` Regeln aus aktiven Skills entfernt.
+- Director-/Engineer-Skills an fixed deterministic Seed/Input und `start -> early -> mid -> end` angepasst.
+- Regression prüft aktive Skill-Inhalte.
 
-### Anforderung
+Evidence: Run `33059358311` — SUCCESS.
 
-- `skills/**` in den Verifier-CI-Trigger aufnehmen.
-- Regressionstest gegen den tatsächlich assemblierten Prompt ausführen.
-- Skill-/Lesson-Injection explizit testen.
+## P0-02 — Skill CI / Assembled Prompt Regression — PASS
 
-### Abnahme
+- `skills/**` triggert vollständigen Verifier Selftest.
+- Runtime-Systemprompt wird zentral über `assembleSystemPrompt(...)` zusammengesetzt.
+- Director und Engineer verwenden exakt diesen Assembly-Pfad.
+- Test prüft Base Prompt + Skill + Lessons sowie explizite Lesson-Injection.
+- Rückfall auf stale Random-/15s-Regeln führt deterministisch zu FAIL.
 
-- Änderung an `skills/**` startet den vollständigen relevanten Selftest.
-- Test würde eine erneute Random-/15s-Regel im aktiven Runtime-Prompt nachweislich erkennen und FAIL erzeugen.
+Evidence: Run `33059654534` — SUCCESS.
 
----
+## P0-03 — Product Fidelity Hardening — PASS
 
-## P0-03 — Product Fidelity Hardening
+- Positive Must-Have-`event`-Probes werden als `correlated_gameplay` kompiliert.
+- Event-Name allein genügt nicht mehr.
+- Event muss mit relevantem Runtime-State/Timing nach Early-Evidence und unabhängiger engine-observed Gameplay-Progression korrelieren.
+- Adversarial Fixture `fake boss_entered event, no mechanic/progress` ergibt Product Fidelity FAIL.
+- Positive Control Fixture ergibt PASS.
+- Director-/Engineer-Prompts wurden auf die stärkere Evidence-Semantik angepasst.
 
-### Problem
+Zwischenbefund: Run `33059960409` deckte ein altes Runtime-Green-Fixture auf, das selbst vor dem neuen Early-Grenzwert emittierte. Klassifikation: **fixture defect**, nicht production defect. Fixture korrigiert; kein Blind-Rerun.
 
-Ein einfacher `event`-Probe kann aktuell semantisch zu schwach sein: das Auftreten eines Event-Namens allein kann eine komplexe Mechanik scheinbar beweisen, ohne dass diese Mechanik wirklich existiert.
+Final Evidence: Run `33060152626` — SUCCESS.
 
-Beispiel:
+## P0-04 — Structural Release Authority Guard — PASS
 
-`game.event('boss_entered', {})`
+`evaluateReleaseGate(...)` akzeptiert nur:
 
-könnte nicht ausreichen, um einen echten Boss-Encounter zu beweisen.
+- `technical`
+- `productFidelity`
+- `experienceScore`
+- `budget`
+- `minExperience`
 
-### Anforderung
+Andere Inputs werden als nicht autoritativ strukturell abgewiesen.
 
-- Komplexe Owner-Must-Haves dürfen nicht allein durch das bloße Auftreten eines Event-Namens PASS erhalten.
-- Event-Probes müssen mindestens mit relevantem Runtime-State/Timing und einem unabhängigen beobachtbaren Zustands- oder Wertwechsel korreliert werden, wenn die Requirement-Komplexität dies verlangt.
-- Director/Traceability muss Probe-Stärke passend zur Requirement-Komplexität wählen.
-- Adversarial Fixture `fake event, no mechanic` ergänzen.
+Regression beweist explizit, dass `audit` und `playtesterFidelity` nicht in die Release-Gate-Oberfläche gelangen können.
 
-### Abnahme
+Evidence: Run `33060326700` — SUCCESS.
 
-Ein Game, das nur das erwartete Event emittiert, aber die Mechanik nicht implementiert, muss deterministisch **Product Fidelity FAIL** ergeben.
+## P0-05 — Model Routing Single Source of Truth — PASS
 
----
+- konkurrierende Legacy-`LLM`-/Provider-Konfiguration aus `factory/src/config.mjs` entfernt;
+- kanonische Runtime-Route liegt ausschließlich im Role Router + Provider/Model Registries;
+- Router-Test schützt gegen Wiederauftauchen eines zweiten `LLM`-/`roleModels`-Objekts in `config.mjs`;
+- fail-closed Routing bleibt erhalten.
 
-## P0-04 — Release Authority Structural Guard
+Referenzroute:
 
-### Problem
+- Director -> `gpt-5.6-terra`
+- Engineer Build/Repair/Rebuild/Polish -> `gpt-5.6-terra`
+- Playtester -> `gpt-5.6-terra`
+- Auditor -> `gpt-5.6-luna`
+- Release -> kein LLM
 
-Die Advisory-only-Auditor-Regel ist aktuell funktional korrigiert, soll aber strukturell stärker abgesichert werden.
-
-### Anforderung
-
-`evaluateReleaseGate()` darf ausschließlich release-relevante deterministische Inputs akzeptieren:
-
-- Technical
-- Product Fidelity
-- Experience
-- Budget
-- Threshold/Policy
-
-Audit-/LLM-Felder dürfen nicht Teil der Release-Gate-Eingabeoberfläche sein.
-
-### Abnahme
-
-- Auditor kann den Release-Gate-Input weder direkt noch indirekt befüllen.
-- Regressionstest beweist, dass Audit-/Playtester-Fidelity-Meinungen den Release-Verdict nicht verändern.
-
----
-
-## P0-05 — Single Source of Truth für Model Routing
-
-### Problem
-
-Neben dem aktiven Router existiert eine zweite tote/konkurrierend wirkende Model-Konfiguration in `config.mjs`.
-
-### Anforderung
-
-- Unbenutzte `LLM`-Konfiguration aus `config.mjs` entfernen.
-- Genau eine kanonische Runtime-Routing-Quelle behalten.
-- Dokumentation verweist nur auf diese Quelle.
-
-### Abnahme
-
-- Kein zweites scheinbar autoritatives Model-Routing-Config-Objekt existiert.
-- Role Router bleibt fail-closed.
+Evidence: Run `33060506910` — SUCCESS.
 
 ---
 
-# P0 Canary Gate
+# Finaler P0-Gegencheck — PASS
 
-Titan Canary #3 ist erst technisch freigabefähig, wenn **P0-01 bis P0-05** implementiert und durch den vollständigen Verifier auf `main` nachweislich PASS sind.
+Top-down geprüft:
 
-Danach gilt weiterhin:
+`Owner Idea -> Owner Contract -> Director IDs -> Engineer -> Verifier Evidence -> Product Fidelity -> Playtester -> Experience -> Budget -> deterministic Release Gate -> Owner Preview`
 
-**Keinen bezahlten Canary ohne neue explizite Owner-Freigabe starten.**
+Ergebnis: **PASS**.
+
+Finaler vollständiger Runtime-Proof ist Run `33060506910` auf Commit `69aac9f26d7004aa8be19ed0ec61fc649f3d6565`.
 
 ---
 
-# P1 — Nach Referenz-Canary, vor Multi-Genre-Validierung
+# Harte Canary-Regel
+
+Technische Readiness für genau einen kontrollierten Titan Canary #3: **YES**.
+
+Automatische/operative Freigabe: **NO**.
+
+Es gilt weiterhin:
+
+**Keinen bezahlten Canary ohne neue explizite Owner-Instruktion starten.**
+
+Falls ein später freigegebener Canary scheitert:
+
+`classify cause -> repair platform -> full verifier selftest -> Entscheidung über weiteren paid run`
+
+Kein Blind-Rerun.
+
+---
+
+# P1 — Nach Referenz-Canary
+
+P1 nicht vorziehen, sofern kein zwingender P0-/Canary-Defekt dies erforderlich macht.
 
 ## P1-01 — Owner Contract Decomposition
 
-Unstrukturierte Owner-Ideen müssen deterministisch/evidenzbasiert in diskrete Must-Haves/No-Gos zerlegt werden. Eine komplexe Idee darf nicht stillschweigend in ein einziges grobes `MH-01` kollabieren.
-
-Abnahme:
-
-- Jede eigenständig prüfbare Owner-Anforderung erhält eine eigene stabile Requirement-ID.
-- Traceability bleibt Requirement -> Acceptance -> Probe -> Runtime Evidence.
+Komplexe unstrukturierte Owner-Ideen deterministisch/evidenzbasiert in diskrete Must-Haves/No-Gos zerlegen. Jede eigenständig prüfbare Anforderung benötigt eine eigene stabile Requirement-ID.
 
 ## P1-02 — Verifier Causality / Idle Baseline
 
-- zusätzlicher Kontrolllauf ohne synthetische Inputs;
-- Progress/Score darf dort nicht künstlich steigen;
-- Input-getriebene Interaktivität muss gegenüber Idle unterscheidbar sein.
+Zusätzlicher Kontrolllauf ohne synthetische Inputs. Score/Progress darf dort nicht künstlich steigen; Input-getriebene Interaktivität muss gegenüber Idle unterscheidbar sein.
 
 ## P1-03 — Visual Activity Proof
 
-- Gameplay-Frames zusätzlich untereinander vergleichen;
-- statische große Fläche darf nicht als ausreichende Gameplay-Aktivität zählen.
+Gameplay-Frames zusätzlich untereinander vergleichen. Eine statische große Fläche darf nicht als ausreichende Gameplay-Aktivität zählen.
 
-## P1-04 — Art-Direction Skill Wiring
+## P1-04 — Art Direction Skill Wiring
 
-`art-direction.md` entweder:
-
-- tatsächlich in die passenden Rollen verdrahten und testen,
-
-oder
-
-- entfernen/umbenennen, sodass keine falsche Runtime-Behauptung existiert.
+`art-direction.md` entweder tatsächlich verdrahten und testen oder die falsche Runtime-Behauptung entfernen/umbenennen.
 
 ## P1-05 — Structured Memory Schema
 
-Freitext-Lessons durch strukturiertes Schema ergänzen, mindestens:
+Lessons mindestens mit:
 
 - `id`
 - `role`
@@ -201,7 +170,7 @@ Freitext-Lessons durch strukturiertes Schema ergänzen, mindestens:
 - `text`
 - `sourceRunIds`
 - `sourceKind`
-- `confidence`
+- `confidence/status`
 - `evidenceCount`
 - `createdAt`
 - `validatedAt`
@@ -210,174 +179,95 @@ Freitext-Lessons durch strukturiertes Schema ergänzen, mindestens:
 
 ## P1-06 — Candidate vs Validated Lesson
 
-- neue Lessons starten immer als `candidate`;
-- Candidate Lessons dürfen **nicht** in Produktionsprompts injiziert werden;
-- erst `validated` Lessons dürfen aktiv genutzt werden.
+Neue Lessons starten als `candidate`. Candidate Lessons dürfen nicht in Produktionsprompts gelangen. Nur `validated` Lessons dürfen aktiv genutzt werden.
 
 ## P1-07 — Self-Modification Guard
 
-- Daten-/Evidence-Writes dürfen weiterhin automatisiert versioniert werden;
-- Änderungen an `skills/`, `factory/prompts/`, Verifier-/Release-Code oder Engine-Contracts dürfen nicht direkt aus einem Produktions-/Improvement-Bot-Run nach `main` gehen;
-- solche Änderungen benötigen einen separaten PR und menschlichen Merge.
+Automatische Data/Evidence Writes bleiben möglich. Änderungen an `skills/`, `factory/prompts/`, Verifier, Release Gate oder Engine Contracts benötigen separaten PR + human merge.
 
 ## P1-08 — Deterministic Improvement Aggregator
 
 Nach jedem Run ohne LLM-Kosten aggregieren:
 
-- Failure Reasons
 - Failure Signatures
-- Repair-/Rebuild-Zahlen
+- Failure Reasons
+- Repair/Rebuild Counts
 - Cost by Role/Model
-- Experience/Fidelity Outcomes
+- Experience Outcomes
+- Fidelity Outcomes
 - Owner Feedback
 
 ## P1-09 — Improvement Trigger
 
-Deterministische Trigger definieren, z. B.:
+Explizite deterministische Schwellen definieren. Nur nach Überschreitung darf eine spätere Improvement Analysis laufen.
 
-- gleiche Failure-Klasse >= definierter Schwelle;
-- mehrere Runs seit letzter validierter Lesson;
-- Owner Rejection;
-- wiederkehrendes Playtester-Muster.
+## P1-10 — Engineer Lesson Candidates
 
-Trigger startet höchstens eine budgetierte Analyse — keine direkte Änderung.
-
-## P1-10 — Engineer Learning Candidates
-
-Wiederkehrende Coding-/Runtime-Failure-Signaturen müssen Cross-Run-Lesson-Candidates für den Engineer erzeugen können.
-
-Single-run Failure bleibt weiterhin nur Intra-Run-Repair-Signal.
+Wiederkehrende Failure Signatures können Cross-Run Engineer Lesson Candidates erzeugen. Ein einzelner Fehler bleibt nur intra-run Repair Signal.
 
 ---
 
 # P2 — Controlled Continuous Improvement
 
+Zielarchitektur:
+
+`Production Run -> RUN-EVIDENCE -> deterministic Aggregation -> Threshold -> Improvement Analysis -> scoped Lesson Candidate -> Validation -> Regression -> human-merged/versioned activation -> next Production Run`
+
+Nicht erlaubt:
+
+`Failure -> LLM -> Prompt Edit -> Production`
+
+Jede dauerhafte Verbesserung muss observable, traceable, scoped, versioned, testable und reversible sein.
+
 ## P2-01 — Improvement Analysis
 
-Nur nach deterministischem Trigger:
-
-`Aggregated Evidence -> LLM Root Cause Analysis -> scoped Lesson Candidates`
-
-Kein direkter Prompt-/Skill-Write.
+Nur nach deterministischem Trigger: `Aggregated Evidence -> LLM Root Cause Analysis -> scoped Lesson Candidates`.
 
 ## P2-02 — Validation & Regression
 
-Vor Promotion:
-
-- Scope prüfen;
-- unabhängige Evidence-Quellen verlangen;
-- bestehende Regression Suite PASS;
-- wenn möglich held-out frühere Run-Evidence prüfen.
+Vor Promotion: Scope prüfen, unabhängige Evidence verlangen, Regression Suite PASS und wenn möglich frühere/held-out Evidence prüfen.
 
 ## P2-03 — Positive Learning
 
-Nicht nur Fehler lernen.
-
-Aus mehreren erfolgreichen/approved Spielen können Kandidaten entstehen, z. B. auf Basis von:
-
-- Owner Approval
-- hoher Experience
-- niedriger Repair Count
-- niedriger Kosten
-- stabiler Performance
-
-Ein einzelner Erfolg darf keine globale Regel erzeugen.
+Auch erfolgreiche/approved Runs als Kandidatensignale nutzen, aber kein einzelner Erfolg darf eine globale Regel erzeugen.
 
 ## P2-04 — Owner Feedback Classification
 
-Owner-Feedback klassifizieren als z. B.:
-
-- Bug
-- Produktanforderung
-- einmalige Präferenz
-- Genre-Präferenz
-- generalisierbares Design-Learning
-- positive Präferenz
-
-Nur ausreichend validierte/generaliserbare Signale dürfen zu Skills aufsteigen.
+Owner Feedback klassifizieren, z. B. Bug, Product Requirement, One-off Preference, Genre Preference, Generalizable Lesson, Positive Preference.
 
 ## P2-05 — Skill Governance
 
-Ein Skill ist künftig:
-
-> eine validierte, wiederverwendbare Cross-Game-Erkenntnis für eine Rolle, die nicht sinnvoll stärker als deterministische Machine Rule/Engine Contract ausgedrückt werden kann.
-
-Skills müssen:
-
-- versioniert;
-- evidence-linked;
-- regression-getestet;
-- stale-detectable;
-- PR-gated;
-- scoped sein, wenn nicht global gültig.
-
-Autoritätsreihenfolge:
-
-`Control Plane > Owner Contract > Engine/API Contract > Verified Skill > Memory Lesson`
+Skill = validierte wiederverwendbare Cross-Game-Erkenntnis für eine Rolle, die nicht sinnvoll stärker als deterministische Machine Rule/Engine Contract ausgedrückt werden kann.
 
 ## P2-06 — Verifier Robustness
 
-- Seed pro Run rotierbar und gespeichert oder Multi-Seed-Spot-Check;
-- alternative deterministische Input-Sequenz als Robustheitscheck evaluieren.
+Seed pro Run rotierbar und gespeichert oder Multi-Seed-Spot-Check; alternative deterministische Input-Sequenz als Robustheitscheck evaluieren.
 
 ## P2-07 — Model Outcome Benchmarking
 
-Modelle künftig anhand von **cost per verified release** und Qualitäts-/Konvergenzmetriken vergleichen, nicht nur cost per call.
-
-DeepSeek/Open-Weight bleibt bis dahin Benchmark-Lane.
+Modelle anhand `cost per verified release`, Qualität und Konvergenz vergleichen. DeepSeek/Open-Weight bleibt Benchmark-Lane, kein stiller Production-Fallback.
 
 ---
 
 # Terminologie
 
-Bis die P2-Learning-Architektur existiert, gilt:
+Aktuell:
 
-- **Intra-run adaptive repair:** JA
-- **Self-healing im begrenzten Run-Sinn:** nur vorsichtig verwenden
-- **Cross-run learning:** sehr begrenzt / teilweise vorhanden
-- **Self-improving Factory:** NOCH NICHT
+- Intra-run adaptive repair: **JA**
+- Cross-run learning: **begrenzt / teilweise**
+- Self-healing: nur vorsichtig für bounded intra-run recovery
+- Self-improving Factory: **NOCH NICHT**
 
-Zielterminologie nach vollständiger Learning-Governance:
+Bevorzugter Zielbegriff:
 
 **evidence-driven controlled improvement**
 
-Jede dauerhafte Verbesserung muss:
-
-- observable
-- traceable
-- scoped
-- versioned
-- testable
-- reversible
-
-sein.
-
 ---
 
-# Reihenfolge ab jetzt
+## Audit Decision
 
-1. P0-01 Skill Integrity
-2. P0-02 Skill CI / Assembled Prompt Regression
-3. P0-03 Product Fidelity Hardening
-4. P0-04 Release Authority Structural Guard
-5. P0-05 Model Config Cleanup
-6. Full Verifier Selftest auf `main`
-7. Top-down Gegencheck der veränderten Kette
-8. **STOP — Owner-Freigabe einholen**
-9. Erst danach optional genau ein kontrollierter Titan Canary #3
-10. P1 nach dem Referenz-Canary
-11. P2 Controlled Continuous Improvement nach belastbarer Multi-Run-Evidence
+Externer Falsification Audit vom 27.08.2026: `47/100`, Verdict **YES, WITH MATERIAL CHANGES**.
 
----
+Der deterministische L1-L3-Kern wurde nicht neu designt. Die normalisierten Audit-P0-Lücken sind jetzt geschlossen und durch den finalen vollständigen Verifier nachgewiesen.
 
-## Source / Audit Decision
-
-Grundlage: externer `Game Factory: Architecture Falsification Audit` vom 27.08.2026, geprüft gegen `main @ f7b5e2e` und 28 Run-Artefakte.
-
-Audit Overall: `47/100`.
-
-Normalisierte Architekturentscheidung:
-
-**YES, WITH MATERIAL CHANGES.**
-
-Der deterministische Kern bleibt die Grundlage. Es ist kein L1-L3-Redesign vorgesehen. Die verbleibenden P0-Beweislücken werden vor dem nächsten Paid Canary geschlossen; die Learning-/Improvement-Schicht wird danach kontrolliert und evidence-driven aufgebaut.
+Nächster zulässiger Schritt: **STOP / Owner informieren.** Erst nach neuer expliziter Owner-Instruktion darf genau ein kontrollierter Titan Canary #3 gestartet werden.
