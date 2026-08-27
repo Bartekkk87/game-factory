@@ -1,0 +1,137 @@
+{
+  "schema": "learning-validation-assessment-v1",
+  "status": "completed",
+  "date": "2026-08-27",
+  "title": "REAL LEARNING PROOF — STEP 4 INTEGRITY REPAIR",
+  "authority": {
+    "approval": "explicit-owner-approval-in-chat",
+    "allowed": [
+      "repair confirmed integrity defects in protected Production layers",
+      "add deterministic regression coverage",
+      "record durable validation evidence",
+      "open a human-merge pull request"
+    ],
+    "mustNot": [
+      "activate or promote either Titan learning candidate",
+      "start a paid Game/Titan run",
+      "retroactively rewrite historical Owner intent",
+      "add unsupported Product Truth classification, visual scoring, reviewer roles or gates"
+    ]
+  },
+  "baseline": {
+    "mainSha": "48c50df8cde2970fb5b849a7811148abd401d58e",
+    "step3Validation": "learning/validations/titan-step3-candidate-validation-2026-08-27.json",
+    "auditDate": "2026-08-27",
+    "auditVerdict": "DO NOT PROMOTE either Titan candidate; investigate freeform requirement inflation, Product Fidelity self-attestation, and targetLayer/promotion mismatch"
+  },
+  "confirmedDefects": [
+    {
+      "id": "freeform-requirement-inflation",
+      "severity": "high",
+      "finding": "deterministic-freeform-v1 treated every non-ambiguous and non-No-Go freeform fragment as a hard Must-Have, including mood/reference prose",
+      "evidence": [
+        "factory/src/contract/owner.mjs",
+        "factory/src/contract/test-owner-contract.mjs"
+      ],
+      "status": "repaired"
+    },
+    {
+      "id": "product-fidelity-evidence-authority-ambiguity",
+      "severity": "high",
+      "finding": "event-based Product Fidelity can depend on generated-game event instrumentation; correlated_gameplay strengthens timing/state/score correlation but does not independently prove the semantic claim represented by an event name",
+      "evidence": [
+        "runs/20260827-120138/attempt-01/evidence-fidelity.json",
+        "runs/20260827-120138/attempt-03/evidence-fidelity.json",
+        "runs/20260827-120138/attempt-03/index.html",
+        "factory/src/verify/fidelity.mjs"
+      ],
+      "status": "scope-and-authority-now-explicit; pass-semantics-unchanged"
+    },
+    {
+      "id": "learning-target-layer-mismatch",
+      "severity": "high",
+      "finding": "promoteCandidate previously wrote any validated candidate as an active memory lesson even when targetLayer named owner-contract or another code layer; the actual mutation was prompt-memory injection",
+      "evidence": [
+        "factory/src/learning/lifecycle.mjs",
+        "factory/src/memory/store.mjs",
+        "factory/src/learning/test-learning.mjs"
+      ],
+      "status": "repaired-fail-closed"
+    }
+  ],
+  "rejectedAuditShortcut": {
+    "proposal": "convert all headingless freeform prose to unknowns and produce zero requirements",
+    "reason": "compileDirectorTraceability currently fails closed when there are no Owner requirements, and blindly demoting explicit freeform obligations would create requirement loss. The repair therefore keeps direct build requests and explicit obligation language as requirements while treating mood/reference/ambiguous/context prose as unknown."
+  },
+  "productionChanges": {
+    "ownerContract": {
+      "changed": true,
+      "mode": "deterministic-freeform-v2",
+      "behavior": "Freeform fragments become Must-Haves only when they are direct build requests or contain explicit obligation language. No-Gos remain explicit negative constraints. Mood/reference/ambiguous/other descriptive prose is preserved as unknown/context rather than promoted to a hard requirement. Explicit Must-Have/No-Go section behavior is unchanged."
+    },
+    "productFidelity": {
+      "changed": true,
+      "passLogicChanged": false,
+      "behavior": "Each criterion now declares evidenceSource; coverage identifies harness-observed vs generated-game-event-dependent requirements, states that unstructured originalBrief content is not evaluated, and is propagated into durable run metadata, Playtester/Auditor context and Owner REVIEW.md."
+    },
+    "learningLifecycle": {
+      "changed": true,
+      "behavior": "The memory-lesson promotion adapter supports only targetLayer=prompt. Candidates targeting owner-contract, verifier, product-fidelity or other layers fail closed before any candidate/memory mutation. Protected prompt promotion still requires human-merge."
+    },
+    "director": { "changed": false },
+    "engineer": { "changed": false },
+    "acceptanceTraceability": { "changed": false },
+    "releaseGate": { "changed": false },
+    "playtesterRole": { "changed": false },
+    "newControlEntities": 0,
+    "newGates": 0,
+    "newReviewerRoles": 0,
+    "paidGameRun": false
+  },
+  "deterministicTests": [
+    "freeform direct build request remains an Owner requirement",
+    "explicit freeform must/muss obligation remains an Owner requirement",
+    "Hotline Miami mood reference is not a hard requirement",
+    "Blade Runner inspiration is not a hard requirement",
+    "ambiguous boss/meta-progression prose remains unknown",
+    "non-combat Monument Valley puzzle fixture does not inherit Titan/combat vocabulary",
+    "explicit Must-Have/No-Go section behavior remains stable",
+    "fake early generated event remains rejected by correlated_gameplay",
+    "generated-event evidence remains explicitly labeled even when correlated_gameplay passes",
+    "score_change is identified as harness-observed evidence",
+    "Fidelity coverage is propagated to pipeline/review surfaces",
+    "owner-contract candidate cannot be activated through the prompt-lesson promotion adapter",
+    "prompt candidate still requires human-merge and remains reversible",
+    "Titan Step 3 candidate validation remains green",
+    "existing verifier good/bad and publishing regressions remain green"
+  ],
+  "regression": {
+    "testedCodeSha": "067f21f99dbc6fca467d8d14f2cef577b4f2aaeb",
+    "githubActionsRun": 33108373075,
+    "conclusion": "success",
+    "allVerifierStepsPassed": true
+  },
+  "candidateState": [
+    {
+      "id": "titan-canary-3-visual-target-intake-v1",
+      "status": "candidate",
+      "validatedAt": null,
+      "active": false,
+      "promoted": false
+    },
+    {
+      "id": "candidate-owner-feedback-8e1c9bf738f845cb",
+      "status": "candidate",
+      "validatedAt": null,
+      "active": false,
+      "promoted": false
+    }
+  ],
+  "residualRisks": [
+    "hud_layout_clear remains generated-event-dependent evidence rather than an independent HUD geometry measurement; a true bounding-box/geometry verifier would be a separate Technical Verifier repair requiring its own proof",
+    "Product Fidelity PASS remains intentionally scoped to structured MH/NG requirements and does not claim whole-brief or subjective visual acceptance",
+    "a headingless brief containing only ambiguous/context prose can still yield zero requirements and fail closed; this is preferable to inventing obligations and should only be changed with separate evidence",
+    "late Owner feedback remains new preference discovery and must not be rewritten into the causal record of a prior run"
+  ],
+  "claimBoundary": "EVIDENCE-DRIVEN CONTROLLED IMPROVEMENT"
+}
