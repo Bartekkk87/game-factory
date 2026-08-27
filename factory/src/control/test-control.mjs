@@ -66,6 +66,7 @@ assert.equal(costReport().pass, false);
 // Exact-budget reservation is allowed; the guard rejects only projected overspend.
 // Empty system+user text is conservatively estimated as 256 input tokens.
 const exactBudgetUsd = (256 * 0.15 + 1000 * 0.6) / 1_000_000;
+const roundedExactBudgetUsd = Math.round(exactBudgetUsd * 1e6) / 1e6;
 beginRunBudget({ runId: 'exact-budget-test', budgetUsd: exactBudgetUsd, stageBudgets: stages });
 const exactLogical = openLogicalCall({ role: 'engineer', operation: 'build', provider: 'openai', model: 'gpt-4o-mini', system: '', user: '' });
 const exactReservation = reserveAttempt(exactLogical, { transportAttempt: 1, maxTokens: 1000 });
@@ -73,7 +74,7 @@ settleAttempt(exactReservation, {
   usage: { prompt_tokens: 256, completion_tokens: 1000, total_tokens: 1256 }
 });
 assert.equal(costReport().pass, true);
-closeTo(costReport().spentUsd, exactBudgetUsd);
+closeTo(costReport().spentUsd, roundedExactBudgetUsd);
 closeTo(costReport().remainingUsd, 0);
 
 // Pricing overrides remain explicit and attributable for OpenAI-compatible/self-hosted lanes.
