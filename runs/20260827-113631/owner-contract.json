@@ -1,0 +1,57 @@
+{
+  "schema": "game-factory.owner-contract/1.0",
+  "source": "ideas-folder",
+  "ownerBriefSha256": "e1f96ce8d2e6bcd1538f34af0c4b72003cadea7fc7cfa8e7704041f2a33645dc",
+  "mustHaves": [
+    {
+      "id": "MH-01",
+      "text": "Ein klar steuerbarer Spieler mit sofort erkennbarem Angriff und sichtbarem Trefferfeedback.",
+      "immutable": true
+    },
+    {
+      "id": "MH-02",
+      "text": "Mindestens ein deutlich als Titan/Boss erkennbarer Gegner sowie kleinere Bedrohungen oder Projektile.",
+      "immutable": true
+    },
+    {
+      "id": "MH-03",
+      "text": "Salvage-/Upgrade-Mechanik: Besiegte Gegner liefern verwertbare Komponenten oder Energie, die den Spieler spürbar stärker machen.",
+      "immutable": true
+    },
+    {
+      "id": "MH-04",
+      "text": "Klare HUD-Anzeigen für Leben/Core-Zustand, Score/Salvage und Fortschritt; keine überlappenden UI-Elemente.",
+      "immutable": true
+    },
+    {
+      "id": "MH-05",
+      "text": "Ein verständlicher Risiko-/Belohnungs-Moment nach einem wichtigen Kampf, z. B. extrahieren oder tiefer gehen.",
+      "immutable": true
+    }
+  ],
+  "noGos": [
+    {
+      "id": "NG-01",
+      "text": "Kein bloßer Reskin des bestehenden Titan Core: Salvage; der Code und die konkrete Umsetzung sollen neu erzeugt werden.",
+      "immutable": true
+    },
+    {
+      "id": "NG-02",
+      "text": "Keine unlesbaren oder überlappenden HUD-Elemente.",
+      "immutable": true
+    },
+    {
+      "id": "NG-03",
+      "text": "Keine rein dekorativen Upgrades ohne spürbaren Gameplay-Effekt.",
+      "immutable": true
+    },
+    {
+      "id": "NG-04",
+      "text": "Kein komplexes Tutorial vor Spielbeginn; der Kernloop muss sofort spielbar sein.",
+      "immutable": true
+    }
+  ],
+  "originalBrief": "## Titel\nTitan Core: Reforged\n\n## Kernidee\nEin schneller Top-down-Arcade-Action-Prototyp: Der Spieler zerlegt feindliche Maschinen-Titanen, sammelt deren Komponenten und nutzt die Beute unmittelbar, um den eigenen Core während des Runs stärker zu machen. Das Spiel soll die Grundidee von \"Titan Core: Salvage\" erneut umsetzen, aber als eigenständig neu generierter Kandidat der aktuellen Factory-Version.\n\n## Gefühl & Referenzen\nDunkle Sci-Fi-/Cyberpunk-Arena, klare Neon-Silhouetten, schnelle direkte Steuerung und starkes Trefferfeedback. Der Loop soll innerhalb weniger Sekunden verständlich werden und sich wie ein kompakter Arcade-Roguelite-Run anfühlen.\n\n## Muss-Have\n- Ein klar steuerbarer Spieler mit sofort erkennbarem Angriff und sichtbarem Trefferfeedback.\n- Mindestens ein deutlich als Titan/Boss erkennbarer Gegner sowie kleinere Bedrohungen oder Projektile.\n- Salvage-/Upgrade-Mechanik: Besiegte Gegner liefern verwertbare Komponenten oder Energie, die den Spieler spürbar stärker machen.\n- Klare HUD-Anzeigen für Leben/Core-Zustand, Score/Salvage und Fortschritt; keine überlappenden UI-Elemente.\n- Ein verständlicher Risiko-/Belohnungs-Moment nach einem wichtigen Kampf, z. B. extrahieren oder tiefer gehen.\n\n## No-Gos\n- Kein bloßer Reskin des bestehenden Titan Core: Salvage; der Code und die konkrete Umsetzung sollen neu erzeugt werden.\n- Keine unlesbaren oder überlappenden HUD-Elemente.\n- Keine rein dekorativen Upgrades ohne spürbaren Gameplay-Effekt.\n- Kein komplexes Tutorial vor Spielbeginn; der Kernloop muss sofort spielbar sein.\n\n## Canary\nOpenAI Canary #3 controlled retry after the OpenAI completion-token adapter fix, full Verifier Selftest PASS, and fresh Owner authorization on 2026-08-27.",
+  "immutable": true,
+  "contractSha256": "034380245098f94d19ff4cac8267459fcb56de5fa50778b2c4cc76d757612961"
+}

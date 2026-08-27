@@ -1,0 +1,159 @@
+{
+  "schema": "game-factory.run-evidence/v1",
+  "generatedAt": "2026-08-27T11:36:33.354Z",
+  "run": {
+    "id": "20260827-113631",
+    "status": "failed",
+    "reason": "director_failed",
+    "source": "ideas-folder",
+    "candidateSha": null
+  },
+  "gates": {
+    "technical": {
+      "pass": false,
+      "checks": null
+    },
+    "productFidelity": {
+      "pass": false,
+      "status": "pending-verification",
+      "criteria": null
+    },
+    "experience": {
+      "pass": false,
+      "score": 0,
+      "threshold": 6.5,
+      "scores": null,
+      "critique": []
+    },
+    "budget": {
+      "pass": true,
+      "spentUsd": 0,
+      "budgetUsd": 10
+    },
+    "release": {
+      "pass": false,
+      "rule": "Technical PASS + Product Fidelity PASS + Experience >= threshold + Budget PASS",
+      "reasons": [
+        "technical_not_passed",
+        "product_fidelity_not_passed",
+        "experience_below_threshold"
+      ]
+    }
+  },
+  "costs": {
+    "schema": "game-factory.cost-ledger/v1",
+    "runId": "20260827-113631",
+    "budgetUsd": 10,
+    "costUsd": 0,
+    "spentUsd": 0,
+    "reservedUsd": 0,
+    "remainingUsd": 10,
+    "tokens": 0,
+    "tokenBreakdown": {
+      "inputTokens": 0,
+      "cachedInputTokens": 0,
+      "outputTokens": 0,
+      "totalTokens": 0
+    },
+    "accountingComplete": true,
+    "pass": true,
+    "stageBudgets": {
+      "repair": {
+        "maxCalls": 6,
+        "maxUsd": 4,
+        "calls": 0,
+        "spentUsd": 0,
+        "remainingUsd": 4
+      },
+      "polish": {
+        "maxCalls": 3,
+        "maxUsd": 3,
+        "calls": 0,
+        "spentUsd": 0,
+        "remainingUsd": 3
+      },
+      "freshRebuild": {
+        "maxCalls": 1,
+        "maxUsd": 4,
+        "calls": 0,
+        "spentUsd": 0,
+        "remainingUsd": 4
+      }
+    },
+    "byRole": {
+      "director": {
+        "costUsd": 0,
+        "attempts": 1,
+        "inputTokens": 0,
+        "cachedInputTokens": 0,
+        "outputTokens": 0
+      }
+    },
+    "byModel": {
+      "gpt-5.6-terra": {
+        "costUsd": 0,
+        "attempts": 1,
+        "inputTokens": 0,
+        "cachedInputTokens": 0,
+        "outputTokens": 0
+      }
+    },
+    "byOperation": {
+      "director": {
+        "costUsd": 0,
+        "attempts": 1,
+        "inputTokens": 0,
+        "cachedInputTokens": 0,
+        "outputTokens": 0
+      }
+    },
+    "attempts": [
+      {
+        "id": "llm-attempt-1",
+        "logicalCallId": "call-1",
+        "role": "director",
+        "operation": "director",
+        "scope": null,
+        "provider": "openai",
+        "model": "gpt-5.6-terra",
+        "modelVersion": "gpt-5.6-terra",
+        "modelAliasKind": "rolling-alias",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 2,
+          "cachedInputUsdPerM": 0.2,
+          "outputUsdPerM": 12,
+          "longContext": {
+            "inputThresholdTokens": 272000,
+            "inputMultiplier": 2,
+            "cachedInputMultiplier": 2,
+            "outputMultiplier": 1.5
+          },
+          "source": "openai-official-2026-08-27"
+        },
+        "estimatedInputTokens": 11566,
+        "maxOutputTokens": 8192,
+        "reservedUsd": 0.121436,
+        "costUsd": 0,
+        "status": "http-400",
+        "startedAt": "2026-08-27T11:36:31.810Z",
+        "error": "{\n  \"error\": {\n    \"message\": \"Unsupported value: 'temperature' does not support 0.9 with this model. Only the default (1) value is supported.\",\n    \"type\": \"invalid_request_error\",\n    \"param\": \"temperature\",\n    \"code\": \"unsupported_value\"\n  }\n}",
+        "endedAt": "2026-08-27T11:36:33.354Z",
+        "modelCalculatedCostUsd": null,
+        "providerReportedCostUsd": null
+      }
+    ],
+    "violations": []
+  },
+  "counters": {
+    "attempts": 0,
+    "repairCalls": 0,
+    "polishRounds": 0,
+    "freshRebuilds": 0
+  },
+  "audit": null,
+  "artifacts": {
+    "ownerContract": "owner-contract.json"
+  }
+}
