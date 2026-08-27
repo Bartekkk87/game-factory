@@ -21,4 +21,4 @@ Dunkle Sci-Fi-/Cyberpunk-Arena, klare Neon-Silhouetten, schnelle direkte Steueru
 - Kein komplexes Tutorial vor Spielbeginn; der Kernloop muss sofort spielbar sein.
 
 ## Canary
-OpenAI Canary #3 controlled retry after the OpenAI completion-token adapter fix, full Verifier Selftest PASS, and fresh Owner authorization on 2026-08-27.
+OpenAI Canary #3 controlled retry after full OpenAI request-field plausibility audit, request compatibility regression coverage, full Verifier Selftest PASS (run 33069438003), and fresh Owner authorization on 2026-08-27.
