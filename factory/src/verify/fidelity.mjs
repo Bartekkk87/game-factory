@@ -1,8 +1,8 @@
 import { ownerRequirementIds } from '../contract/owner.mjs';
 
-const SUPPORTED_KINDS = new Set(['event', 'event_value_change', 'score_change', 'state_reached', 'event_absent', 'started_by_early', 'layout_no_overlap']);
+const SUPPORTED_KINDS = new Set(['event', 'event_value_change', 'score_change', 'state_reached', 'event_absent', 'started_by_early', 'layout_no_overlap', 'restart_after_terminal']);
 const GENERATED_EVENT_KINDS = new Set(['event', 'event_value_change', 'event_absent']);
-const HARNESS_OBSERVED_KINDS = new Set(['score_change', 'state_reached', 'started_by_early', 'layout_no_overlap']);
+const HARNESS_OBSERVED_KINDS = new Set(['score_change', 'state_reached', 'started_by_early', 'layout_no_overlap', 'restart_after_terminal']);
 
 function allEvents(report) {
   const timeline = Array.isArray(report?.timeline) ? report.timeline : [];
@@ -10,7 +10,7 @@ function allEvents(report) {
   const seen = new Set();
   for (const entry of timeline) {
     for (const event of entry?.snapshot?.events || []) {
-      const key = `${event?.seq ?? ''}:${event?.type ?? ''}:${event?.time ?? ''}`;
+      const key = `${entry?.scenarioId || 'base'}:${event?.seq ?? ''}:${event?.type ?? ''}:${event?.time ?? ''}`;
       if (seen.has(key)) continue;
       seen.add(key);
       events.push(event);
@@ -52,7 +52,7 @@ function correlatedGameplayEvent(event, report) {
 
 function normalizeProbe(probe) {
   const kind = probe?.kind;
-  const eventType = String(probe?.eventType || '');
+  const eventType = String(probe?.eventType || probe?.legacyEventType || '');
   if ((kind === 'event' && eventType === 'hud_layout_clear') || (kind === 'event_absent' && eventType === 'hud_overlap_detected')) {
     return {
       ...probe,
@@ -61,6 +61,14 @@ function normalizeProbe(probe) {
       kind: 'layout_no_overlap',
       minRegions: Number.isFinite(Number(probe?.minRegions)) ? Math.max(1, Math.trunc(Number(probe.minRegions))) : 3,
       requireScoreProgress: probe?.requireScoreProgress !== false
+    };
+  }
+  if ((kind === 'event' && eventType === 'fresh_run_started') || kind === 'restart_after_terminal') {
+    return {
+      ...probe,
+      declaredKind: probe?.declaredKind || kind,
+      legacyEventType: eventType || probe?.legacyEventType || null,
+      kind: 'restart_after_terminal'
     };
   }
   return probe || {};
@@ -98,14 +106,33 @@ function evaluateLayoutNoOverlap(probe, report) {
     }
   }
 
-  if (!best) {
-    return { pass: false, detail: 'no independent Playwright canvas layout observation available' };
-  }
+  if (!best) return { pass: false, detail: 'no independent Playwright canvas layout observation available' };
   const issueDetail = best.issueTypes.length ? ` issues=${best.issueTypes.join(',')}` : '';
   return {
     pass: false,
     detail: `independent canvas layout insufficient at best phase ${best.phase}: regions=${best.regions}/${minRegions}, issueCount=${best.issues}, scoreProgress=${best.scoreProgress}${issueDetail}`
   };
+}
+
+function evaluateRestartAfterTerminal(report) {
+  const scenarios = Array.isArray(report?.proofScenarios) ? report.proofScenarios : [];
+  const terminal = scenarios.filter((scenario) => ['success-proof', 'failure-proof'].includes(scenario?.id));
+  if (!terminal.length) return { pass: false, detail: 'no independent terminal proof scenarios available for restart verification' };
+
+  const failures = [];
+  for (const scenario of terminal) {
+    const expectedState = scenario.id === 'success-proof' ? 'success' : 'failure';
+    if (scenario.endState !== expectedState) {
+      failures.push(`${scenario.id} did not reach ${expectedState} (end=${scenario.endState ?? 'missing'})`);
+      continue;
+    }
+    if (scenario.postRestartState !== 'playing') {
+      failures.push(`${scenario.id} did not return to playing after harness restart (post=${scenario.postRestartState ?? 'missing'})`);
+    }
+  }
+  return failures.length
+    ? { pass: false, detail: failures.join('; ') }
+    : { pass: true, detail: `harness restarted ${terminal.map((s) => s.id).join(' and ')} into playing without page reload` };
 }
 
 function evaluateProbe(probe, report, events) {
@@ -114,6 +141,7 @@ function evaluateProbe(probe, report, events) {
   if (!SUPPORTED_KINDS.has(kind)) return { pass: false, detail: `unsupported evidence kind: ${kind ?? 'missing'}` };
 
   if (kind === 'layout_no_overlap') return evaluateLayoutNoOverlap(effectiveProbe, report);
+  if (kind === 'restart_after_terminal') return evaluateRestartAfterTerminal(report);
   if (kind === 'event') {
     const candidates = events.filter((event) => event?.type === effectiveProbe.eventType);
     if (!candidates.length) return { pass: false, detail: `missing event ${effectiveProbe.eventType}` };
@@ -146,7 +174,7 @@ function evaluateProbe(probe, report, events) {
   if (kind === 'state_reached') {
     const wanted = String(effectiveProbe.state || '');
     const pass = (report?.timeline || []).some((entry) => entry?.snapshot?.state === wanted);
-    return { pass, detail: pass ? `state ${wanted} reached` : `state ${wanted} not reached` };
+    return { pass, detail: pass ? `state ${wanted} reached in verifier scenarios` : `state ${wanted} not reached in verifier scenarios` };
   }
   if (kind === 'started_by_early') {
     const early = (report?.timeline || []).find((entry) => entry?.phase === 'early')?.snapshot;
@@ -159,6 +187,7 @@ function evaluateProbe(probe, report, events) {
 function evidenceSource(probe) {
   const effectiveProbe = normalizeProbe(probe);
   if (effectiveProbe?.kind === 'layout_no_overlap') return 'harness-observed-canvas-geometry';
+  if (effectiveProbe?.kind === 'restart_after_terminal') return 'harness-observed-terminal-restart';
   if (HARNESS_OBSERVED_KINDS.has(effectiveProbe?.kind)) return 'harness-observed';
   if (effectiveProbe?.kind === 'event' && effectiveProbe?.strength === 'correlated_gameplay') return 'generated-game-event+runtime-correlation';
   if (GENERATED_EVENT_KINDS.has(effectiveProbe?.kind)) return 'generated-game-event-dependent';
@@ -186,7 +215,7 @@ function coverageSummary(requirementIds, criteria) {
     generatedGameEventDependentRequirementIds,
     correlatedGeneratedGameEventRequirementIds,
     unstructuredBriefContentEvaluated: false,
-    scope: 'Product Fidelity evaluates only structured Owner Contract MH/NG requirements. layout_no_overlap is independently observed by the Playwright harness from actual Canvas text/rectangle draw geometry. event/event_value_change/event_absent evidence depends on generated-game event instrumentation; correlated_gameplay additionally requires harness-observed gameplay timing, state and score change. Descriptive originalBrief content outside MH/NG is not evaluated here.'
+    scope: 'Product Fidelity evaluates only structured Owner Contract MH/NG requirements. layout_no_overlap and restart_after_terminal are independently observed by the Playwright harness. state_reached can be satisfied by separate deterministic product-proof scenarios. event/event_value_change/event_absent evidence depends on generated-game event instrumentation; correlated_gameplay additionally requires harness-observed gameplay timing, state and score change. Descriptive originalBrief content outside MH/NG is not evaluated here.'
   };
 }
 
@@ -210,9 +239,9 @@ export function evaluateProductFidelity({ ownerContract, gdd, report } = {}) {
       acceptanceId: expectedAcceptanceId,
       probeId: expectedProbeId,
       kind: effectiveProbe?.kind ?? null,
-      declaredKind: probe?.kind ?? null,
+      declaredKind: probe?.declaredKind ?? probe?.kind ?? null,
       strength: effectiveProbe?.strength ?? null,
-      eventType: probe?.eventType ?? null,
+      eventType: probe?.eventType ?? probe?.legacyEventType ?? null,
       evidenceSource: evidenceSource(effectiveProbe),
       pass: !!(traceable && observed.pass),
       traceable,
