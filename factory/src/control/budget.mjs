@@ -242,9 +242,13 @@ export function settleAttempt(id, { usage = {}, providerCostUsd = null } = {}) {
 
   const tokens = usageTokens(usage);
   const calculated = modelCost(entry, tokens);
-  const providerCost = Number.isFinite(Number(providerCostUsd)) && Number(providerCostUsd) >= 0
-    ? Number(providerCostUsd)
-    : null;
+  const hasProviderCost =
+    providerCostUsd !== null &&
+    providerCostUsd !== undefined &&
+    providerCostUsd !== '' &&
+    Number.isFinite(Number(providerCostUsd)) &&
+    Number(providerCostUsd) >= 0;
+  const providerCost = hasProviderCost ? Number(providerCostUsd) : null;
 
   let charged;
   let source;
