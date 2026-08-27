@@ -1,8 +1,18 @@
 # Game Factory — Umsetzungskatalog 27.08.2026
 
-## Current status
+## Current status — corrected final audit view
 
-P0 remains complete. Controlled Improvement v1 plus OpenRouter/model-agnostic infrastructure is now implemented on the controlled-improvement branch and regression-tested.
+P0 remains complete. Controlled Improvement v1 plus OpenRouter/model-agnostic infrastructure is implemented and regression-tested.
+
+**Important correction:** this does **not** yet mean the normal Factory runtime has a fully integrated autonomous cross-run learning loop. The learning components exist and Titan #3 proved a real evidence-to-candidate path, but the normal durable Production/Review flow does not yet automatically execute the complete `Aggregate -> Trigger -> bounded Analysis -> inactive Candidate` chain after every applicable run/review.
+
+Current execution backlog: GitHub Issue `#8` — **Final Factory Closure — Learning Orchestration + Secret Migration**.
+
+Durable handoff: `docs/strategy/FINAL-FACTORY-CLOSURE-HANDOFF-2026-08-27.md`.
+
+Runtime baseline before the new documentation-only commits:
+- `main`: `cc6dbb4bec60883ec9711ffa0992778090fb0687`
+- Post-merge Full Verifier Run `33088856658`: **SUCCESS**
 
 Reference Production Canary remains `Titan Core: Reforged`:
 - Production Run `33069903383`
@@ -13,9 +23,11 @@ Reference Production Canary remains `Titan Core: Reforged`:
 - Cost `$0.442821` / `109703` tokens
 - Owner hands-on result **PRODUCT ACCEPTANCE FAIL**
 
-No new paid Game/Titan Canary was started during this implementation.
+No new paid Game/Titan Canary was started during this documentation/closure preparation.
 
-Detailed implementation record:
+Owner reports that GitHub Actions repository secrets `OPENAI_PRODUCTION` and `OPENROUTER_PRODUCTION` are now provisioned with the real provider keys. The connector cannot inspect secret values. Current `produce.yml` still uses legacy `GF_LLM_API_KEY` for OpenAI, so runtime Secret Migration remains open.
+
+Detailed Controlled Improvement implementation record:
 `docs/strategy/CONTROLLED-IMPROVEMENT-V1-IMPLEMENTATION-2026-08-27.md`
 
 ## P0 — complete
@@ -61,7 +73,7 @@ Owner feedback captures exact raw body plus issue/comment identity, parsed comma
 
 Classification remains a claim only; it cannot make a lesson globally valid.
 
-## L3 — Deterministic aggregator — implemented and corrected against real evidence
+## L3 — Deterministic aggregator — component implemented and corrected against real evidence
 
 `factory/src/learning/aggregate.mjs` consumes:
 - canonical `runs/**/RUN-EVIDENCE.json` shape;
@@ -80,7 +92,9 @@ Outputs include:
 
 A real-schema mismatch was discovered when applying the implementation to Titan #3 and fixed before acceptance. Identical input remains deterministic.
 
-## L4 — Deterministic trigger — implemented
+**Open integration gap:** the normal Production/Review path does not yet automatically invoke deterministic aggregation as a complete cross-run learning orchestration step.
+
+## L4 — Deterministic trigger — component implemented
 
 Policy: `controlled-improvement-trigger-v1`.
 
@@ -91,7 +105,9 @@ Current rules:
 
 Trigger has `canValidate=false`, `canActivate=false`.
 
-## L5 — Bounded Improvement Analysis — implemented
+**Open integration gap:** trigger evaluation must be automatically connected to the durable aggregate in the normal learning flow.
+
+## L5 — Bounded Improvement Analysis — implemented guard
 
 Authority:
 - MAY propose a scoped candidate.
@@ -99,6 +115,8 @@ Authority:
 - MUST NOT edit Production directly.
 - MUST NOT change its own authority.
 - MUST NOT weaken release gates.
+
+**Open integration gap:** when a deterministic trigger is allowed, the normal learning flow still needs to invoke bounded analysis and persist at most an inactive candidate.
 
 ## L6 — Validation / regression — implemented mechanism
 
@@ -120,7 +138,7 @@ These require separate `human-merge` promotion. Activation is versioned and reve
 
 ## Titan #3 — first real learning case
 
-Durable chain now exists:
+Durable chain exists from already captured evidence:
 
 `real RUN-EVIDENCE + attempt evidence + Owner result -> Aggregate -> Trigger -> bounded Analysis -> inactive Candidate`
 
@@ -153,8 +171,10 @@ Competing hypotheses remain unresolved: intake/Product Truth, Owner Contract dec
 | L-10 protected promotion human-gated | PASS | protected-layer negative test |
 | L-11 deactivate/reversal supported | PASS | lifecycle regression |
 | L-12 Titan #3 captured safely | PASS | Git-backed real evidence-to-candidate chain |
-| L-13 full Production Verifier remains green | PASS | Runs `33083567504`, `33087199746`, `33087639058`, `33088083507` |
+| L-13 full Production Verifier remains green | PASS | Runs `33083567504`, `33087199746`, `33087639058`, `33088083507`; post-merge `33088856658` |
 | L-14 no new paid Canary | PASS | none started |
+
+These gates prove the components and safety boundary; they do not by themselves prove automatic orchestration inside every normal Factory run/review.
 
 ## M0 — OpenRouter clean integration
 
@@ -163,11 +183,16 @@ Infrastructure acceptance: **PASS**.
 - existing provider/router stack retained;
 - canonical OpenRouter route works in regression tests;
 - unknown model/provider and missing credential fail closed;
-- Production workflow uses Production credential lane;
+- Production workflow uses an explicit Production credential lane;
 - OpenAI Production defaults unchanged;
 - no paid game Canary.
 
-Live credential status: **not observable through the current GitHub connector**. No API key was requested in chat or stored in repository content. A tiny live non-game smoke test remains optional after a repository secret exists.
+Credential update:
+- Owner reports `OPENROUTER_PRODUCTION` is provisioned;
+- Owner reports `OPENAI_PRODUCTION` is provisioned;
+- connector cannot inspect secret values;
+- OpenAI workflow migration from legacy `GF_LLM_API_KEY` to `OPENAI_PRODUCTION` remains open;
+- live provider proof is optional only after the safe runtime migration decision and is not a paid Game Canary.
 
 ## M1 — Benchmark-safe model infrastructure
 
@@ -198,6 +223,7 @@ Successful branch Verifier runs:
 - `33087199746` — all-workflow YAML validation / Produce syntax fix
 - `33087639058` — canonical RUN-EVIDENCE regression
 - `33088083507` — attempt-evidence aggregation regression
+- `33088856658` — final post-merge full Verifier on baseline `cc6dbb4bec60883ec9711ffa0992778090fb0687`
 
 A reproduced invalid `produce.yml` failure led to the minimal additional guard: all GitHub workflow YAML is now parsed in Verifier CI.
 
@@ -205,19 +231,36 @@ A reproduced invalid `produce.yml` failure led to the minimal additional guard: 
 
 Current state:
 - Intra-run adaptive repair: **YES — live demonstrated**
-- real cross-run evidence-to-candidate path: **YES — Titan #3 demonstrated**
+- real evidence-to-candidate path: **YES — Titan #3 demonstrated**
+- automatically integrated cross-run controlled-learning orchestration: **NOT YET CLOSED**
 - real validated + human-promoted learning improving a later Owner-accepted game: **NOT YET DEMONSTRATED**
 - fully self-improving Factory: **NO**
 
 Preferred term remains **evidence-driven controlled improvement**.
 
-## Remaining sequence
+## Final Factory Closure — required before next real Game run
 
-1. Merge Controlled Improvement v1 after final branch compare/review.
-2. Optional: add GitHub secret `OPENROUTER_PRODUCTION` and run a tiny bounded non-game provider smoke test if live OpenRouter proof is desired.
-3. P2-07 Model Outcome Benchmarking remains later work.
-4. Do not validate/promote the Titan candidate until independent evidence/regression supports it.
-5. After PoC proof: Productionization / IP & Security Gate and private-core migration decision.
+Canonical checklist: GitHub Issue `#8`.
+
+1. **C1 Production Secret Migration** — OpenAI Production uses `OPENAI_PRODUCTION`; OpenRouter Production uses `OPENROUTER_PRODUCTION`; fail-closed credential isolation regression.
+2. **C2 Automatic Controlled-Learning Orchestration** — durable Production/Review evidence automatically and idempotently reaches Aggregate -> Trigger -> if allowed bounded Analysis -> inactive Candidate; never auto-validate/activate.
+3. **C3 Owner Contract Decomposition** — free-form multi-requirement Owner briefs produce discrete stable traceable Must-Haves/No-Gos instead of one coarse `MH-01`, while preserving original brief/hash/provenance and avoiding invented details.
+4. **C4 Verifier Causality + Visual Activity** — deterministic idle/no-input baseline plus bounded inter-frame/equivalent activity evidence with good/bad fixtures.
+5. **C5 Art-Direction Skill Runtime Truth** — wire `art-direction.md` through canonical prompt assembly and test it, or remove/correct false runtime claims.
+6. Run the complete relevant regression suite and final Full Verifier.
+7. Update GitHub + Notion with final commit/run evidence.
+8. Do not start a new paid Game/Titan Canary without new explicit Owner approval.
+
+## Deliberately later / not closure blockers
+
+- positive learning from repeated approved/high-quality games;
+- advanced Owner feedback preference taxonomy beyond safe candidate scoping;
+- mature Skill stale detection;
+- seed rotation / multi-seed spot checks;
+- P2-07 Model Outcome Benchmarking;
+- deterministic adaptive model policy;
+- Productionization / IP & Security Gate;
+- private-core migration.
 
 ## Non-goals retained
 
