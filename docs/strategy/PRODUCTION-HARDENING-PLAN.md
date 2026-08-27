@@ -13,13 +13,15 @@ Verified hardening state:
 - **L3 Verification & Evidence — DONE**
 - **L4 Production Agents / P0 — DONE**
 
-Final L4 code head before documentation-only commits:
+L4 was merged through PR #5.
 
-`ce0d061cbad98e8f2f5948e0910fd300dbd0b573`
+Verified runtime merge commit on `main`:
 
-Full Verifier Selftest with the dedicated L4 integrity test executed explicitly:
+`f7b5e2ebd75e405d857b3bec19d85231e02eaef8`
 
-- GitHub Actions Run `33050867522`
+Full merged `main` Verifier Selftest with the dedicated L4 integrity test executed explicitly:
+
+- GitHub Actions Run `33051402235`
 - Result: **SUCCESS**
 
 Top-down integrity check:
@@ -84,6 +86,12 @@ Implemented:
 - deterministic `releaseFor(...)` remains sole authority;
 - reference OpenAI role matrix pinned and router-tested;
 - dedicated `factory/src/roles/test-production-agents.mjs` wired into `.github/workflows/verify.yml` and executed successfully.
+
+### L4 closure lesson
+
+The first explicit L4-test Run `33050802610` failed because the selftest assertion was too strict: it rejected any literal `audit.verdict`, including the production line that deletes/sanitizes a stray LLM verdict. This was a test-definition defect, not a production authority defect.
+
+The assertion was corrected to require sanitization. Full branch Run `33050867522` then passed, followed by merged `main` Run `33051402235` — **SUCCESS**.
 
 ## 3. Reference model strategy
 
@@ -194,7 +202,9 @@ A single LLM opinion must not rewrite core rules.
 - [x] Auditor digest/prompt aligned with deterministic release authority and new fidelity evidence.
 - [x] OpenAI GPT-5.6 reference role matrix is the router-tested reference lane.
 - [x] Dedicated `test-production-agents.mjs` executed explicitly in the Verifier workflow.
-- [x] Full Verifier Selftest green after all L4 P0 changes — Run `33050867522`.
+- [x] Full Verifier Selftest green after all L4 P0 changes on branch — Run `33050867522`.
+- [x] L4 merged to `main` via PR #5.
+- [x] Full merged `main` Verifier Selftest green — Run `33051402235`.
 - [x] Top-down integrity check complete — PASS.
 
 ### P1 — after P0, preferably before the second genre
@@ -216,9 +226,11 @@ A single LLM opinion must not rewrite core rules.
 
 ## 9. Canary gate
 
-From a P0 hardening perspective, the platform is now eligible for exactly one controlled `Titan Core: Reforged` Canary #3 **after the L4 branch is merged to `main` and the `main` Verifier Selftest is green**.
+From a P0 hardening perspective, the platform is now eligible for exactly one controlled `Titan Core: Reforged` Canary #3.
 
-This closure task must **not** start that paid canary.
+The prerequisite is satisfied on `main` by merge commit `f7b5e2ebd75e405d857b3bec19d85231e02eaef8` and full Verifier Selftest Run `33051402235` — **SUCCESS**.
+
+**Do not start that paid canary without a new explicit Owner instruction.**
 
 Canary success requires:
 
