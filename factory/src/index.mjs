@@ -1,7 +1,10 @@
 import fs from 'node:fs';
-import { LIMITS } from './config.mjs';
+import path from 'node:path';
+import { LIMITS, PATHS } from './config.mjs';
 import { log } from './util/log.mjs';
+import { readJson, writeJson } from './util/fsx.mjs';
 import { produceGame } from './pipeline/run.mjs';
+import { orchestrateControlledLearning } from './learning/orchestrate.mjs';
 
 function arg(name) {
   const i = process.argv.indexOf(name);
@@ -22,6 +25,23 @@ log.info(`idea source: ${source} | budget: $${budgetUsd} | gate: score>=${LIMITS
 
 try {
   const result = await produceGame({ idea, source, budgetUsd });
+  const runId = path.basename(result.runDir || '');
+  if (!runId) throw new Error('production pipeline returned no durable run id');
+
+  if (result.status === 'success' && result.slug) {
+    const metaFile = path.join(PATHS.drafts, result.slug, 'meta.json');
+    const meta = readJson(metaFile, null);
+    if (!meta) throw new Error(`draft meta missing after successful production: ${result.slug}`);
+    if (meta.runId !== runId) {
+      meta.runId = runId;
+      writeJson(metaFile, meta);
+      result.meta = meta;
+    }
+  }
+
+  const learning = orchestrateControlledLearning({ eventKind: 'production-run', eventId: runId });
+  log.info(`controlled learning: trigger=${learning.triggerAllowed ? 'YES' : 'NO'} candidate=${learning.candidateId || 'none'} active=${learning.candidateActive ?? 'n/a'}`);
+
   if (result.status === 'success') {
     log.step('RUN COMPLETE');
     console.log(`
