@@ -16,11 +16,15 @@ export function loadPrompt(name) {
   return fs.readFileSync(path.join(PATHS.prompts, `${name}.md`), 'utf8');
 }
 
-export function assembleSystemPrompt({ promptName, skillName, lessons = [] }) {
+export function assembleSystemPrompt({ promptName, skillName = null, skillNames = [], lessons = [] }) {
+  const names = [...new Set([
+    ...(Array.isArray(skillNames) ? skillNames : []),
+    ...(skillName ? [skillName] : [])
+  ].filter(Boolean))];
   const normalizedLessons = Array.isArray(lessons) ? lessons.filter(Boolean) : [];
   return (
     loadPrompt(promptName) +
-    loadSkill(skillName) +
+    names.map((name) => loadSkill(name)).join('') +
     (normalizedLessons.length
       ? `\n\n## Lessons from past post-mortems\n${normalizedLessons.join('\n')}`
       : '')
