@@ -1,96 +1,84 @@
-# Game Factory — Hardening Status L4 / Production Agents
+# Game Factory — Hardening Status — Final P0 / Production Agents
 
-Date: 2026-08-27
+Date: 2026-08-27  
 Repository: `Bartekkk87/game-factory`
 
 ## Status
 
-**L4 Production Agents / P0 — DONE and verified on `main`.**
+**L1-L4 plus normalized external-audit P0-01 through P0-05 are DONE and verified on `main`.**
 
-L1 Control Kernel, L2 Model / Provider Layer and L3 Verification & Evidence remain completed and verified.
+Final verified runtime commit:
+
+`69aac9f26d7004aa8be19ed0ec61fc649f3d6565`
+
+Final full `main` Verifier Selftest:
+
+GitHub Actions Run `33060506910` — **SUCCESS**
 
 No paid `Titan Core: Reforged` Canary #3 has been started.
 
-## Final verification
+Technical Canary readiness: **YES**.  
+Operational authorization: **NO until a new explicit Owner instruction is given**.
 
-L4 was merged through PR #5.
+Detailed final acceptance:
 
-Verified runtime merge commit on `main`:
+`docs/strategy/P0-FINAL-ACCEPTANCE-2026-08-27.md`
 
-`f7b5e2ebd75e405d857b3bec19d85231e02eaef8`
+## P0-01 — Skill Integrity — PASS
 
-Full merged `main` Verifier Selftest:
+- `skills/directing.md` and `skills/engineering.md` contain no stale random-input/~15-second verifier rules.
+- Both use fixed deterministic keyboard/pointer input, persisted seed semantics and `start -> early -> mid -> end` evidence expectations.
+- Production-agent integrity regression checks active skill content.
 
-GitHub Actions Run `33051402235` — **SUCCESS**.
+Evidence: Run `33059358311` — SUCCESS.
 
-Verified steps:
+## P0-02 — Skill CI / Assembled Prompt Regression — PASS
 
-- Node syntax checks — PASS
-- L1 Control Kernel budgets + deterministic release gate — PASS
-- L2 model/provider router + capability gates — PASS
-- explicit L4 Production-Agent integrity test — PASS
-- browser installation — PASS
-- Verifier Green/Broken product fixtures — PASS
-- publishing gates + gallery escaping — PASS
+- `skills/**` triggers the complete Verifier Selftest.
+- Director and Engineer use centralized `assembleSystemPrompt(...)`.
+- CI tests the actual assembled runtime system prompt: Base Prompt + Skill + Lessons.
+- Skill injection and Lesson injection are explicitly exercised.
+- A stale random/~15s rule reintroduced into an active prompt causes deterministic failure.
 
-Documentation-only commits after this merge do not alter the verified runtime.
+Evidence: Run `33059654534` — SUCCESS.
 
-## L4 closure history
+## P0-03 — Product Fidelity Hardening — PASS
 
-The dedicated L4 test was added at `factory/src/roles/test-production-agents.mjs` and is now executed explicitly by `.github/workflows/verify.yml`:
+- Positive Must-Have `event` probes are normalized to `correlated_gameplay` evidence.
+- Event-name presence alone cannot satisfy a complex positive Must-Have.
+- The verifier checks engine-captured event state/time/score against the persisted telemetry timeline.
+- A qualifying event must occur in active gameplay no earlier than Early evidence and after independent engine-observed score progress.
+- Dedicated adversarial fixture proves `fake boss_entered event, no mechanic/progress` => Product Fidelity FAIL.
+- Positive control fixture proves genuine post-Early gameplay evidence => PASS.
 
-`node factory/src/roles/test-production-agents.mjs`
+Run `33059960409` initially exposed an obsolete runtime-green fixture that emitted its Boss event before the new Early boundary. Classification: **fixture defect**, not production defect. The fixture was corrected without a blind rerun.
 
-Initial explicit Run `33050802610` exposed an overly strict selftest assertion: it rejected the literal `audit.verdict` even though production code only used that field to sanitize/remove a non-authoritative LLM output.
+Final Evidence: Run `33060152626` — SUCCESS.
 
-This was a **test-definition defect, not a production release-authority defect**.
+## P0-04 — Structural Release Authority Guard — PASS
 
-The assertion was corrected at code commit:
+`evaluateReleaseGate(...)` structurally accepts only:
 
-`ce0d061cbad98e8f2f5948e0910fd300dbd0b573`
+- Technical
+- Product Fidelity
+- Experience score
+- Budget
+- deterministic threshold/policy
 
-Branch Run `33050867522` then passed the complete workflow before merge.
+Unexpected fields are rejected as non-authoritative input.
 
-## Engineer — verified
+Regression explicitly proves `audit` and `playtesterFidelity` cannot enter the Release Gate API.
 
-- deterministic verifier wording replaces stale random-input / ~15-second wording;
-- Build / Repair / Rebuild / Polish receive immutable Owner Contract;
-- Acceptance/Probe mappings are explicit in Engineer context;
-- bounded `game.event(type, data)` evidence is required for product-specific mechanics;
-- missing/invalid contract traceability fails closed;
-- targeted repair, Fresh Rebuild escalation and verified-polish rollback remain intact.
+Evidence: Run `33060326700` — SUCCESS.
 
-## Playtester — verified
+## P0-05 — Model Routing Single Source of Truth — PASS
 
-Playtester receives:
+- Removed legacy competing `LLM` / provider model table from `factory/src/config.mjs`.
+- Canonical runtime selection remains in Role Router + Provider Registry + Model Registry.
+- Router regression guards against reintroducing a second `LLM`/`roleModels` configuration in `config.mjs`.
+- Routing remains fail-closed.
 
-- Owner Contract;
-- compact GDD;
-- Acceptance/Probe mapping;
-- telemetry;
-- bounded runtime events;
-- screenshots;
-- objective metrics;
-- deterministic Product Fidelity result.
-
-It returns separately:
-
-- independent product-fidelity review;
-- Experience score and critique.
-
-Playtester fidelity remains advisory and cannot override deterministic Product Fidelity.
-
-## Auditor — verified
-
-- strictly advisory;
-- no release PASS/FAIL authority;
-- output is consistency assessment/findings/summary;
-- any stray `verdict` field is sanitized;
-- receives Technical, deterministic Fidelity, Playtester fidelity, Experience, Budget and deterministic Release state.
-
-Deterministic `releaseFor(...)` remains sole release authority.
-
-## Reference model route — verified
+Reference route:
 
 - Director -> `gpt-5.6-terra`
 - Engineer Build / Repair / Rebuild / Polish -> `gpt-5.6-terra`
@@ -98,41 +86,56 @@ Deterministic `releaseFor(...)` remains sole release authority.
 - Auditor -> `gpt-5.6-luna`
 - Release Verdict -> no LLM
 
-DeepSeek remains a later benchmark lane.
+Evidence: Run `33060506910` — SUCCESS.
+
+## Final full verification
+
+Final runtime proof Run `33060506910` completed successfully:
+
+- Node syntax checks — PASS
+- L1 Control Kernel budgets + deterministic Release Gate — PASS
+- L2 Model/Provider Router + capability gates — PASS
+- Production-Agent / assembled-prompt integrity — PASS
+- P0-03 adversarial Product Fidelity hardening — PASS
+- browser install — PASS
+- Verifier Green/Broken + runtime fidelity fixtures — PASS
+- publishing gates + gallery escaping — PASS
+
+Documentation commits after `69aac9f26d7004aa8be19ed0ec61fc649f3d6565` do not alter this verified runtime proof.
 
 ## Top-down integrity check — PASS
 
 Verified chain:
 
-`Owner Idea -> Owner Contract -> Director IDs -> Engineer -> Verifier Evidence -> Product Fidelity PASS -> Playtester Fidelity Review -> Experience >= 6.5 -> Budget PASS -> deterministic Release Gate -> Owner Preview`
+`Owner Idea -> Owner Contract -> Director IDs -> Engineer -> Verifier Evidence -> Product Fidelity -> Playtester -> Experience -> Budget -> deterministic Release Gate -> Owner Preview`
 
 ### Owner Idea -> Owner Contract
 
-`produceGame(...)` creates and persists the immutable Owner Contract before Director execution.
+The pipeline creates the immutable Owner Contract before Director execution. Stable MH/NG IDs and contract hash persist the Owner intent.
 
 ### Owner Contract -> Director IDs
 
-Director receives the Owner Contract and stable Owner Requirement -> Acceptance/Probe traceability is compiled and validated.
+Director receives the immutable contract. Traceability compilation requires exactly one stable Acceptance ID and Probe ID for every Owner requirement and fails closed on missing/duplicate/unknown mappings.
 
 ### Director IDs -> Engineer
 
-Build / Repair / Rebuild / Polish receive Owner Contract and the GDD carrying traceability.
+Build, Repair, Fresh Rebuild and Polish receive Owner Contract plus normalized Acceptance/Probe mapping.
 
 ### Engineer -> Verifier Evidence
 
-Every candidate is checked with deterministic seed/input sequence, `start -> early -> mid -> end` telemetry, runtime events, technical checks and candidate SHA evidence.
+Every candidate is checked with deterministic seed/input, persisted `start -> early -> mid -> end` telemetry, bounded runtime events, technical checks and candidate-SHA evidence.
 
 ### Verifier Evidence -> Product Fidelity
 
-`evaluateProductFidelity(...)` binds runtime evidence to Owner Contract requirements and Director traceability. Candidate progression requires Technical PASS and deterministic Product Fidelity PASS.
+Deterministic Product Fidelity binds runtime evidence back to Owner requirements. Positive event probes require correlated gameplay evidence rather than an event-name claim.
 
-### Product Fidelity -> Playtester Review
+### Product Fidelity -> Playtester
 
-Playtester receives the contract/evidence context and independently reviews product fidelity while keeping Experience separate.
+Playtester receives deterministic evidence and provides an independent advisory fidelity review plus Experience score/critique. Its fidelity opinion has no release authority.
 
-### Experience >= 6.5 + Budget PASS
+### Experience + Budget -> Release Gate
 
-Production uses the 6.5 Experience threshold and L1's fail-closed cost report.
+Experience threshold and fail-closed budget report remain deterministic release inputs.
 
 ### deterministic Release Gate
 
@@ -140,22 +143,36 @@ Binding rule:
 
 `Technical PASS + Product Fidelity PASS + Experience >= threshold + Budget PASS`
 
-Auditor or Playtester opinions cannot override it.
+Audit/LLM or Playtester-fidelity fields are structurally rejected from the gate input surface.
 
 ### Release Gate -> Owner Preview
 
-Only after deterministic release PASS is the verified candidate written to `drafts/<slug>/index.html`. The Production workflow commits draft/evidence and creates the Review Issue; Pages exposes the preview on `main`; Owner can then `/approve` or `/reject`.
+Only deterministic release PASS permits the verified candidate to advance to draft/review/preview for Owner `/approve` or `/reject`.
 
-**No Owner requirement disappears between intake and review.**
+Result: **PASS**.
+
+## Remaining risks / deferred scope
+
+These are intentionally deferred to P1/P2 and are not P0 blockers:
+
+- Owner Contract decomposition for complex unstructured briefs;
+- idle-baseline causality proof;
+- stronger inter-frame visual activity proof;
+- art-direction skill wiring cleanup;
+- structured memory schema;
+- candidate-vs-validated lesson governance;
+- self-modification guard for skills/prompts/verifier/contracts;
+- deterministic improvement aggregation and triggers;
+- controlled evidence-driven improvement loop;
+- multi-seed / alternate deterministic input robustness;
+- outcome-based model benchmarking including DeepSeek/Open-Weight lanes.
+
+Therefore the Factory must still **not** be described as fully self-improving.
 
 ## Decision
 
-**L4 Production Agents / P0 is fully DONE on `main`.**
+**Normalized pre-Canary P0 hardening is fully DONE on `main`.**
 
-The hardening prerequisite for exactly one controlled paid `Titan Core: Reforged` Canary #3 is satisfied.
+The technical prerequisite for exactly one controlled paid Titan Canary #3 is satisfied.
 
-**That canary was not started in this closure task and requires a new explicit Owner instruction.**
-
-If it later fails:
-
-`classify cause -> repair platform -> full Verifier Selftest -> only then decide whether another paid run is justified`.
+**STOP. Do not start that Canary until the Owner gives a new explicit instruction.**
