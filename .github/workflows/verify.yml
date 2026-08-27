@@ -6,6 +6,7 @@ on:
       - 'engine/**'
       - 'examples/**'
       - 'factory/src/**'
+      - 'factory/prompts/**'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/verify.yml'
