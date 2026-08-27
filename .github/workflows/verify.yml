@@ -31,6 +31,9 @@ jobs:
       - name: Check all Node modules
         run: find factory/src -name '*.mjs' -print0 | xargs -0 -n1 node --check
 
+      - name: Prove control kernel budgets and release gate
+        run: node factory/src/control/test-control.mjs
+
       - name: Install browser
         run: npx playwright install --with-deps chromium
 

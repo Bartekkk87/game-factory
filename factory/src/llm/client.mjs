@@ -1,16 +1,20 @@
 import { LLM } from '../config.mjs';
 import { log } from '../util/log.mjs';
+import {
+  beginRunBudget,
+  BudgetError,
+  costReport,
+  openLogicalCall,
+  releaseAttempt,
+  reserveAttempt,
+  settleAttempt,
+  settleUncertainAttempt
+} from '../control/budget.mjs';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 export class LlmError extends Error {}
-
-let totalCostUsd = 0;
-let totalTokens = 0;
-
-export function costReport() {
-  return { costUsd: Math.round(totalCostUsd * 10000) / 10000, tokens: totalTokens };
-}
+export { beginRunBudget, costReport };
 
 // Provider-specific request builders. All return {url, headers, body}.
 // Each provider speaks the OpenAI /chat/completions schema (Google AI Studio
@@ -35,7 +39,6 @@ function buildRequest({ model, system, user, images, json, temperature, maxToken
     'content-type': 'application/json'
   };
 
-  // Provider-specific auth + optional extra headers
   switch (LLM.provider) {
     case 'openrouter':
       headers['authorization'] = `Bearer ${LLM.apiKey}`;
@@ -43,12 +46,7 @@ function buildRequest({ model, system, user, images, json, temperature, maxToken
       headers['x-title'] = 'Game Factory';
       break;
     case 'googleai':
-      // Google AI Studio OpenAI-compat endpoint accepts the key as Bearer token
-      headers['authorization'] = `Bearer ${LLM.apiKey}`;
-      break;
     case 'huggingface':
-      headers['authorization'] = `Bearer ${LLM.apiKey}`;
-      break;
     case 'openai':
     default:
       headers['authorization'] = `Bearer ${LLM.apiKey}`;
@@ -64,6 +62,7 @@ function buildRequest({ model, system, user, images, json, temperature, maxToken
 
 export async function chat({
   role = 'engineer',
+  operation = role,
   system,
   user,
   images = [],
@@ -73,37 +72,66 @@ export async function chat({
 }) {
   if (!LLM.apiKey) throw new LlmError('GF_LLM_API_KEY is not set');
   const model = LLM.models[role] || LLM.defaultModel;
+  const logical = openLogicalCall({
+    role,
+    operation,
+    provider: LLM.provider,
+    model,
+    system,
+    user,
+    images
+  });
 
   let lastErr;
   const maxAttempts = 6;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 180000);
+    let reservationId = null;
+    let reservationClosed = false;
     try {
+      // Hard financial gate BEFORE every request, including transport retries.
+      reservationId = reserveAttempt(logical, { transportAttempt: attempt, maxTokens });
       const { url, headers, body } = buildRequest({ model, system, user, images, json, temperature, maxTokens });
       const res = await fetch(url, { method: 'POST', headers, body, signal: controller.signal });
       if (!res.ok) {
         const t = await res.text();
+        releaseAttempt(reservationId, { status: `http-${res.status}`, error: t });
+        reservationClosed = true;
         const err = new LlmError(`HTTP ${res.status}: ${t.slice(0, 400)}`);
         if (res.status === 429 || res.status >= 500) throw err;
         throw Object.assign(err, { fatal: true });
       }
-      const data = await res.json();
+
+      let data;
+      try {
+        data = await res.json();
+      } catch (e) {
+        throw new LlmError(`Invalid JSON response: ${e.message}`);
+      }
       const usage = data.usage ?? {};
-      totalTokens += usage.total_tokens ?? 0;
-      if (typeof usage.cost === 'number') totalCostUsd += usage.cost;
+      const settled = settleAttempt(reservationId, { usage, providerCostUsd: usage.cost });
+      reservationClosed = true;
       const msg = data.choices?.[0]?.message?.content ?? '';
       if (!msg.trim()) throw new LlmError('Empty completion');
-      log.info(`[llm:${role}] provider=${LLM.provider} model=${model} tokens=${usage.total_tokens ?? '?'}`);
-      return { text: msg, usage, model };
+      log.info(`[llm:${role}/${operation}] provider=${LLM.provider} model=${model} tokens=${usage.total_tokens ?? '?'} cost=$${settled.costUsd.toFixed(6)}`);
+      return { text: msg, usage, model, costUsd: settled.costUsd };
     } catch (e) {
       lastErr = e;
-      if (e.fatal) throw e;
-      log.warn(`[llm:${role}] attempt ${attempt}/${maxAttempts} failed: ${e.message}`);
+      if (reservationId && !reservationClosed) {
+        // A transport/parse failure after request dispatch can have uncertain billing.
+        // Charge the conservative reservation and stop: never blindly repeat spend.
+        settleUncertainAttempt(reservationId, e);
+        reservationClosed = true;
+        e.fatal = true;
+      }
+      if (e instanceof BudgetError || e.fatal) throw e;
+      log.warn(`[llm:${role}/${operation}] attempt ${attempt}/${maxAttempts} failed: ${e.message}`);
       if (attempt < maxAttempts) {
-        // Longer backoff for rate limits / overload (503/429): 10s, 20s, 30s...
+        // Retry only requests with a received 429/5xx response whose reservation
+        // was explicitly released. Ambiguous transport failures fail closed above.
         const wait = e.message.includes('503') || e.message.includes('429') ? 10000 * attempt : 1200 * attempt * attempt;
-        log.warn(`[llm:${role}] retrying in ${Math.round(wait / 1000)}s ...`);
+        log.warn(`[llm:${role}/${operation}] retrying in ${Math.round(wait / 1000)}s ...`);
         await sleep(wait);
       }
     } finally {

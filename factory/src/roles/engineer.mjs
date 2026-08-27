@@ -62,20 +62,12 @@ export async function buildGame({ gdd, ownerIdea = '' }) {
   const user = [
     '=== TASK ===',
     'Implement this game now (fresh build). Output ONLY strict JSON with slots title/css/html/js.',
-    '',
-    acceptanceRules(),
-    '',
-    '=== ORIGINAL OWNER IDEA ===',
-    ownerIdea || '(no additional owner brief)',
-    '',
-    '=== GAME DESIGN BRIEFING ===',
-    JSON.stringify(gdd, null, 2),
-    '',
-    '=== MICRO-ENGINE SOURCE (injected automatically before your js - do NOT repeat it) ===',
-    engineSource()
+    '', acceptanceRules(), '',
+    '=== ORIGINAL OWNER IDEA ===', ownerIdea || '(no additional owner brief)', '',
+    '=== GAME DESIGN BRIEFING ===', JSON.stringify(gdd, null, 2), '',
+    '=== MICRO-ENGINE SOURCE (injected automatically before your js - do NOT repeat it) ===', engineSource()
   ].join('\n');
-
-  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.3, maxTokens: 12000 });
+  const { text } = await chat({ role: 'engineer', operation: 'build', system: systemPrompt(), user, json: true, temperature: 0.3, maxTokens: 12000 });
   return validateDesign(extractJson(text));
 }
 
@@ -85,23 +77,14 @@ export async function rebuildGame({ gdd, ownerIdea = '', failureHistory = [] }) 
     'ESCALATION MODE: targeted repairs have stalled. DISCARD the previous implementation architecture and build a genuinely fresh implementation from scratch.',
     'Do not copy the prior code structure. Solve the owner brief with the simplest robust state model that can pass verification.',
     'Output ONLY strict JSON with slots title/css/html/js.',
-    '',
-    acceptanceRules(),
-    '',
+    '', acceptanceRules(), '',
     '=== FAILURES THE NEW ARCHITECTURE MUST AVOID ===',
     ...(failureHistory.length ? failureHistory.map((f) => `- ${f}`) : ['- Previous repair attempts made no progress.']),
-    '',
-    '=== ORIGINAL OWNER IDEA ===',
-    ownerIdea || '(no additional owner brief)',
-    '',
-    '=== GAME DESIGN BRIEFING ===',
-    JSON.stringify(gdd, null, 2),
-    '',
-    '=== MICRO-ENGINE SOURCE ===',
-    engineSource()
+    '', '=== ORIGINAL OWNER IDEA ===', ownerIdea || '(no additional owner brief)', '',
+    '=== GAME DESIGN BRIEFING ===', JSON.stringify(gdd, null, 2), '',
+    '=== MICRO-ENGINE SOURCE ===', engineSource()
   ].join('\n');
-
-  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.6, maxTokens: 12000 });
+  const { text } = await chat({ role: 'engineer', operation: 'rebuild', system: systemPrompt(), user, json: true, temperature: 0.6, maxTokens: 12000 });
   return validateDesign(extractJson(text));
 }
 
@@ -111,26 +94,14 @@ export async function repairGame({ gdd, design, failureSummary, ownerIdea = '' }
     'REPAIR MODE: previous attempt failed verification. Fix exactly the listed failures while preserving every behavior that already works.',
     'IMPORTANT: do NOT return previous code unchanged or near-unchanged.',
     'You MUST actually modify js/css/html so output passes verification.',
-    '',
-    acceptanceRules(),
-    '',
-    '=== FAILURE EVIDENCE ===',
-    failureSummary,
-    '',
-    '=== ORIGINAL OWNER IDEA ===',
-    ownerIdea || '(no additional owner brief)',
-    '',
-    '=== GAME DESIGN BRIEFING ===',
-    JSON.stringify(gdd, null, 2),
-    '',
-    '=== PREVIOUS ATTEMPT (json with title/css/html/js) ===',
-    JSON.stringify(design, null, 2),
-    '',
-    '=== MICRO-ENGINE SOURCE ===',
-    engineSource()
+    '', acceptanceRules(), '',
+    '=== FAILURE EVIDENCE ===', failureSummary, '',
+    '=== ORIGINAL OWNER IDEA ===', ownerIdea || '(no additional owner brief)', '',
+    '=== GAME DESIGN BRIEFING ===', JSON.stringify(gdd, null, 2), '',
+    '=== PREVIOUS ATTEMPT (json with title/css/html/js) ===', JSON.stringify(design, null, 2), '',
+    '=== MICRO-ENGINE SOURCE ===', engineSource()
   ].join('\n');
-
-  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.3, maxTokens: 12000 });
+  const { text } = await chat({ role: 'engineer', operation: 'repair', system: systemPrompt(), user, json: true, temperature: 0.3, maxTokens: 12000 });
   return validateDesign(extractJson(text));
 }
 
@@ -141,28 +112,14 @@ export async function polishGame({ gdd, design, playtest, ownerIdea = '', regres
     'Improve presentation and player experience WITHOUT regressing any verified mechanic, input behavior, score progression, or runtime property.',
     'Apply priorityFixes and address critique while keeping all mechanics working.',
     'Return the FULL corrected JSON (title/css/html/js).',
-    '',
-    acceptanceRules(),
-    ...(regressionNotes.length
-      ? ['', '=== PREVIOUS POLISH REGRESSIONS - DO NOT REPEAT ===', ...regressionNotes.map((n) => `- ${n}`)]
-      : []),
-    '',
-    '=== PLAYTEST REVIEW ===',
-    JSON.stringify(playtest, null, 2),
-    '',
-    '=== ORIGINAL OWNER IDEA ===',
-    ownerIdea || '(no additional owner brief)',
-    '',
-    '=== GAME DESIGN BRIEFING ===',
-    JSON.stringify(gdd, null, 2),
-    '',
-    '=== CURRENT VERIFIED IMPLEMENTATION (json with title/css/html/js) ===',
-    JSON.stringify(design, null, 2),
-    '',
-    '=== MICRO-ENGINE SOURCE ===',
-    engineSource()
+    '', acceptanceRules(),
+    ...(regressionNotes.length ? ['', '=== PREVIOUS POLISH REGRESSIONS - DO NOT REPEAT ===', ...regressionNotes.map((n) => `- ${n}`)] : []),
+    '', '=== PLAYTEST REVIEW ===', JSON.stringify(playtest, null, 2), '',
+    '=== ORIGINAL OWNER IDEA ===', ownerIdea || '(no additional owner brief)', '',
+    '=== GAME DESIGN BRIEFING ===', JSON.stringify(gdd, null, 2), '',
+    '=== CURRENT VERIFIED IMPLEMENTATION (json with title/css/html/js) ===', JSON.stringify(design, null, 2), '',
+    '=== MICRO-ENGINE SOURCE ===', engineSource()
   ].join('\n');
-
-  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.3, maxTokens: 12000 });
+  const { text } = await chat({ role: 'engineer', operation: 'polish', system: systemPrompt(), user, json: true, temperature: 0.3, maxTokens: 12000 });
   return validateDesign(extractJson(text));
 }

@@ -57,9 +57,14 @@ export const LLM = {
 };
 export const LIMITS = {
   maxDebugRounds: num('GF_MAX_DEBUG_ROUNDS', 4),
+  maxRepairCalls: num('GF_MAX_REPAIR_CALLS', 6),
   maxPolishRounds: num('GF_MAX_POLISH_ROUNDS', 3),
+  maxFreshRebuilds: num('GF_MAX_FRESH_REBUILDS', 1),
   minOverallScore: num('GF_MIN_SCORE', 6.5),
   budgetUsd: num('GF_BUDGET_USD', 10),
+  repairBudgetUsd: num('GF_REPAIR_BUDGET_USD', 4),
+  polishBudgetUsd: num('GF_POLISH_BUDGET_USD', 3),
+  freshRebuildBudgetUsd: num('GF_FRESH_REBUILD_BUDGET_USD', 4),
   playSeconds: num('GF_PLAY_SECONDS', 12),
   minFps: num('GF_MIN_FPS', 30)
 };

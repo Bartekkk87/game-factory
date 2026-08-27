@@ -12,17 +12,14 @@ import { runSession } from '../verify/harness.mjs';
 import { evaluateContract } from '../verify/contract.mjs';
 import { assemble } from '../publish/assemble.mjs';
 import { registerProduct, bumpStats } from '../memory/store.mjs';
-import { costReport } from '../llm/client.mjs';
+import { beginRunBudget, costReport } from '../llm/client.mjs';
+import { evaluateReleaseGate } from '../control/release-gate.mjs';
+import { createRunEvidence } from '../control/evidence.mjs';
 
 function stamp() {
   const d = new Date();
   const p = (n) => String(n).padStart(2, '0');
   return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
-}
-
-function overBudget(budgetUsd) {
-  const c = costReport();
-  return c.costUsd > 0 && c.costUsd >= budgetUsd;
 }
 
 function failureBundle(evidence) {
@@ -48,9 +45,7 @@ function failureSignature(bundle) {
 
 function summarizeFailure(bundle) {
   const lines = [
-    `Attempt ${bundle.attempt} failed the technical contract.`,
-    '',
-    'Failed checks:',
+    `Attempt ${bundle.attempt} failed the technical contract.`, '', 'Failed checks:',
     ...bundle.contractFailures.map((f) => `- [${f.id}] ${f.label} :: ${f.detail || 'no detail'}`)
   ];
   if (bundle.consoleErrors.length) lines.push('', 'Console errors:', ...bundle.consoleErrors.map((e) => '- ' + e));
@@ -68,7 +63,6 @@ async function verifyAttempt({ runDir, attempt, design }) {
   fs.writeFileSync(path.join(dir, 'index.html'), html);
   writeJson(path.join(dir, 'design.json'), design);
 
-  // Extract background color from design.js (Game constructor background: ...) or css
   let bgColor = '#101010';
   const bgMatch = design.js?.match(/background\s*:\s*['"`]([^'"`]+)['"`]/);
   if (bgMatch) bgColor = bgMatch[1];
@@ -78,11 +72,7 @@ async function verifyAttempt({ runDir, attempt, design }) {
   }
 
   log.info(`verifying attempt ${attempt} (sha ${sha256(html).slice(0, 12)}) ...`);
-  const report = await runSession({
-    root: dir,
-    seconds: LIMITS.playSeconds,
-    screenshotDir: path.join(dir, 'shots')
-  });
+  const report = await runSession({ root: dir, seconds: LIMITS.playSeconds, screenshotDir: path.join(dir, 'shots') });
   const verdict = await evaluateContract(report, { bgColor });
   const evidence = {
     attempt,
@@ -98,50 +88,105 @@ async function verifyAttempt({ runDir, attempt, design }) {
   return { dir, html, report, verdict, evidence };
 }
 
-function failClosed(runDir, reason, extra = {}) {
-  const payload = { reason, closedAt: new Date().toISOString(), cost: costReport(), ...extra };
+function releaseFor(state) {
+  const budget = costReport();
+  return evaluateReleaseGate({
+    technical: state.technical,
+    productFidelity: state.productFidelity,
+    experienceScore: state.experience?.score,
+    budget,
+    minExperience: LIMITS.minOverallScore
+  });
+}
+
+function writeUnifiedEvidence(runDir, state, status, reason = null, artifacts = {}) {
+  const budget = costReport();
+  const releaseGate = releaseFor(state);
+  const evidence = createRunEvidence({
+    runId: state.runId,
+    status,
+    reason,
+    source: state.source,
+    candidateSha: state.candidateSha,
+    technical: state.technical,
+    productFidelity: state.productFidelity,
+    experience: state.experience,
+    budget,
+    releaseGate,
+    audit: state.audit,
+    counters: state.counters,
+    artifacts
+  });
+  writeJson(path.join(runDir, 'RUN-EVIDENCE.json'), evidence);
+  return evidence;
+}
+
+function failClosed(runDir, state, reason, extra = {}) {
+  const evidence = writeUnifiedEvidence(runDir, state, 'failed', reason);
+  const payload = { reason, closedAt: new Date().toISOString(), cost: costReport(), releaseGate: evidence.gates.release, ...extra };
   writeJson(path.join(runDir, 'FAILURE.json'), payload);
   bumpStats({ failed: 1 });
   log.error(`FAIL-CLOSED: ${reason}`);
   return { status: 'failed', reason, runDir };
 }
 
+function llmFailureReason(error, fallback) {
+  return error?.code === 'BUDGET_BLOCKED' ? 'budget_blocked' : fallback;
+}
+
 function reviewMarkdown(meta) {
   return [
-    `## Review needed: ${meta.title}`,
-    '',
-    `**Preview:** \`drafts/${meta.slug}/index.html\` (live on Pages after push)`,
-    '',
-    `> ${meta.tagline}`,
-    '',
+    `## Review needed: ${meta.title}`, '',
+    `**Preview:** \`drafts/${meta.slug}/index.html\` (live on Pages after push)`, '',
+    `> ${meta.tagline}`, '',
     '| Metric | Value |',
+    `| Release gate | **${meta.releaseGate.pass ? 'PASS' : 'FAIL'}** |`,
     `| Playtest overall | **${meta.overall} / 10** |`,
     `| Visuals / UI / Fun / Perf | ${meta.scores.visuals} / ${meta.scores.uiClarity} / ${meta.scores.funProxy} / ${meta.scores.performance} |`,
     `| Attempts (build+debug) | ${meta.attempts} |`,
     `| Polish rounds | ${meta.polishRounds} |`,
-    `| Candidate SHA | \`${meta.candidateSha.slice(0, 16)}\` |`,
-    '',
-    '**Audit summary:** ' + meta.auditSummary,
-    '',
-    '**Top critique:**',
-    ...(meta.critique.slice(0, 4).map((c) => '- ' + c)),
-    '',
-    '---',
-    `Approve with comment \`/approve\` or reject with \`/reject <reason>\` on this issue.`,
-    ``,
-    `[slug:${meta.slug}]`
+    `| Candidate SHA | \`${meta.candidateSha.slice(0, 16)}\` |`, '',
+    '**Audit summary (advisory):** ' + meta.auditSummary, '',
+    '**Top critique:**', ...(meta.critique.slice(0, 4).map((c) => '- ' + c)), '', '---',
+    `Approve with comment \`/approve\` or reject with \`/reject <reason>\` on this issue.`, '', `[slug:${meta.slug}]`
   ].join('\n');
 }
 
 export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMITS.budgetUsd }) {
   bumpStats({ runs: 1 });
+  const runId = stamp();
+  const runDir = path.join(PATHS.runs, runId);
+  ensureDir(runDir);
+  beginRunBudget({
+    runId,
+    budgetUsd,
+    stageBudgets: {
+      repair: { maxCalls: LIMITS.maxRepairCalls, maxUsd: LIMITS.repairBudgetUsd },
+      polish: { maxCalls: LIMITS.maxPolishRounds, maxUsd: LIMITS.polishBudgetUsd },
+      freshRebuild: { maxCalls: LIMITS.maxFreshRebuilds, maxUsd: LIMITS.freshRebuildBudgetUsd }
+    }
+  });
+  const state = {
+    runId,
+    source,
+    candidateSha: null,
+    technical: { pass: false, checks: null },
+    // L3 will replace this fail-closed placeholder with verifier-backed fidelity evidence.
+    productFidelity: { pass: false, status: 'pending-l3', criteria: null },
+    experience: { score: null, scores: null, critique: [] },
+    audit: null,
+    counters: { attempts: 0, repairCalls: 0, polishRounds: 0, freshRebuilds: 0 }
+  };
+  writeJson(path.join(runDir, 'brief.json'), { idea, source, startedAt: new Date().toISOString(), budgetUsd });
 
   log.step('PHASE A - DIRECTING');
-  const gdd = await runDirector({ idea, source });
+  let gdd;
+  try {
+    gdd = await runDirector({ idea, source });
+  } catch (e) {
+    return failClosed(runDir, state, llmFailureReason(e, 'director_failed'), { error: String(e.message) });
+  }
   const slug = slugify(gdd.title);
-  const runDir = path.join(PATHS.runs, `${stamp()}-${slug}`);
-  ensureDir(runDir);
-  writeJson(path.join(runDir, 'brief.json'), { idea, source, startedAt: new Date().toISOString(), budgetUsd });
   writeJson(path.join(runDir, 'gdd.json'), gdd);
   log.info(`concept: "${gdd.title}" (${gdd.genre}) -> run ${path.basename(runDir)}`);
 
@@ -155,31 +200,30 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
   let attempt = 0;
 
   for (attempt = 1; attempt <= LIMITS.maxDebugRounds + 1; attempt++) {
+    state.counters.attempts = attempt;
     log.step(`PHASE B - BUILD & VERIFY (attempt ${attempt}/${LIMITS.maxDebugRounds + 1})`);
     try {
       if (attempt === 1) {
         design = await buildGame({ gdd, ownerIdea: idea });
       } else if (forceFreshRebuild) {
         log.warn('repair stagnation detected: discarding previous architecture and rebuilding fresh');
-        design = await rebuildGame({
-          gdd,
-          ownerIdea: idea,
-          failureHistory: escalationHistory.slice(-4)
-        });
+        design = await rebuildGame({ gdd, ownerIdea: idea, failureHistory: escalationHistory.slice(-4) });
+        state.counters.freshRebuilds++;
         forceFreshRebuild = false;
       } else {
         design = await repairGame({
-          gdd,
-          design,
-          ownerIdea: idea,
+          gdd, design, ownerIdea: idea,
           failureSummary: summarizeFailure(failureBundles[failureBundles.length - 1])
         });
+        state.counters.repairCalls++;
       }
     } catch (e) {
-      return failClosed(runDir, 'engineer_invalid_output', { error: String(e.message), attempt });
+      return failClosed(runDir, state, llmFailureReason(e, 'engineer_invalid_output'), { error: String(e.message), attempt });
     }
 
     tech = await verifyAttempt({ runDir, attempt, design });
+    state.candidateSha = tech.evidence.candidateSha;
+    state.technical = { pass: tech.verdict.passed, checks: tech.verdict.checks };
     if (tech.verdict.passed) break;
 
     const bundle = failureBundle(tech.evidence);
@@ -187,34 +231,22 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     const candidateSha = tech.evidence.candidateSha;
     const sameFailure = lastFailureSignature !== null && signature === lastFailureSignature;
     const sameCandidate = lastCandidateSha !== null && candidateSha === lastCandidateSha;
-
     failureBundles.push(bundle);
     log.warn(`attempt ${attempt} failed contract (${tech.verdict.failures.length} checks)`);
-    for (const f of tech.verdict.failures) {
-      log.warn(`  FAILED CHECK [${f.id}] ${f.label} :: ${f.detail || 'no detail'}`);
-    }
+    for (const f of tech.verdict.failures) log.warn(`  FAILED CHECK [${f.id}] ${f.label} :: ${f.detail || 'no detail'}`);
 
     if (sameFailure || sameCandidate) {
-      const trigger = [sameFailure ? 'same failure signature' : null, sameCandidate ? 'identical candidate' : null]
-        .filter(Boolean)
-        .join(' + ');
-      const summary = summarizeFailure(bundle);
-      escalationHistory.push(`${trigger}: ${summary}`);
+      const trigger = [sameFailure ? 'same failure signature' : null, sameCandidate ? 'identical candidate' : null].filter(Boolean).join(' + ');
+      escalationHistory.push(`${trigger}: ${summarizeFailure(bundle)}`);
       forceFreshRebuild = true;
       log.warn(`repair made no meaningful progress (${trigger}); next attempt will use fresh rebuild escalation`);
     }
-
     lastFailureSignature = signature;
     lastCandidateSha = candidateSha;
-
-    if (overBudget(budgetUsd)) return failClosed(runDir, 'budget_exceeded_during_debug');
   }
+
   if (!tech?.verdict.passed) {
-    return failClosed(runDir, 'debug_exhausted', {
-      attempts: attempt,
-      bundles: failureBundles,
-      escalations: escalationHistory
-    });
+    return failClosed(runDir, state, 'debug_exhausted', { attempts: attempt, bundles: failureBundles, escalations: escalationHistory });
   }
   log.info('technical contract PASSED');
 
@@ -236,66 +268,73 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     try {
       playtest = await runPlaytester({ metrics, images: gameplayShots });
     } catch (e) {
-      return failClosed(runDir, 'playtester_failed', { error: String(e.message) });
+      return failClosed(runDir, state, llmFailureReason(e, 'playtester_failed'), { error: String(e.message) });
     }
     writeJson(path.join(runDir, `evidence-exp-${polishRounds}.json`), playtest);
+    state.experience = { score: playtest.overall, scores: playtest.scores, critique: playtest.critique ?? [] };
     log.info(`overall score ${playtest.overall}/10 (gate ${LIMITS.minOverallScore})`);
 
     if (playtest.overall >= LIMITS.minOverallScore) break;
     if (polishRounds >= LIMITS.maxPolishRounds) break;
-    if (overBudget(budgetUsd)) break;
 
     polishRounds++;
+    state.counters.polishRounds = polishRounds;
     log.step(`PHASE C - POLISH ROUND ${polishRounds}/${LIMITS.maxPolishRounds}`);
     const stableDesign = design;
     const stableTech = tech;
     try {
       design = await polishGame({ gdd, design, playtest, ownerIdea: idea, regressionNotes: polishRegressionNotes });
     } catch (e) {
-      return failClosed(runDir, 'engineer_polish_invalid', { error: String(e.message) });
+      return failClosed(runDir, state, llmFailureReason(e, 'engineer_polish_invalid'), { error: String(e.message) });
     }
     attempt++;
+    state.counters.attempts = attempt;
     tech = await verifyAttempt({ runDir, attempt, design });
+    state.candidateSha = tech.evidence.candidateSha;
+    state.technical = { pass: tech.verdict.passed, checks: tech.verdict.checks };
     let repairs = 0;
     while (!tech.verdict.passed && repairs < 2) {
       repairs++;
       failureBundles.push(failureBundle(tech.evidence));
-      design = await repairGame({
-        gdd,
-        design,
-        ownerIdea: idea,
-        failureSummary: summarizeFailure(failureBundles[failureBundles.length - 1])
-      });
+      try {
+        design = await repairGame({
+          gdd, design, ownerIdea: idea,
+          failureSummary: summarizeFailure(failureBundles[failureBundles.length - 1])
+        });
+        state.counters.repairCalls++;
+      } catch (e) {
+        return failClosed(runDir, state, llmFailureReason(e, 'engineer_repair_invalid'), { error: String(e.message), polishRound: polishRounds });
+      }
       attempt++;
+      state.counters.attempts = attempt;
       tech = await verifyAttempt({ runDir, attempt, design });
+      state.candidateSha = tech.evidence.candidateSha;
+      state.technical = { pass: tech.verdict.passed, checks: tech.verdict.checks };
     }
     if (!tech.verdict.passed) {
-      const regressionSummary = tech.verdict.failures
-        .map((f) => `[${f.id}] ${f.detail || f.label}`)
-        .join(' | ');
+      const regressionSummary = tech.verdict.failures.map((f) => `[${f.id}] ${f.detail || f.label}`).join(' | ');
       polishRegressionNotes.push(`Round ${polishRounds}: ${regressionSummary}`);
       log.warn(`polish round ${polishRounds} regressed the technical contract after ${repairs} repair attempts; restoring last verified candidate and trying the next polish round`);
       design = stableDesign;
       tech = stableTech;
+      state.candidateSha = tech.evidence.candidateSha;
+      state.technical = { pass: true, checks: tech.verdict.checks };
       continue;
     }
     log.info(`polish round ${polishRounds} preserved technical contract`);
   }
 
   if (!playtest || playtest.overall < LIMITS.minOverallScore) {
-    return failClosed(runDir, 'experience_gate_not_met', {
+    return failClosed(runDir, state, 'experience_gate_not_met', {
       overall: playtest?.overall ?? null,
       required: LIMITS.minOverallScore,
       polishRounds,
       polishRegressions: polishRegressionNotes
     });
   }
-  if (overBudget(budgetUsd)) {
-    return failClosed(runDir, 'budget_exceeded_before_audit', { budgetUsd, cost: costReport() });
-  }
 
-  log.step('PHASE C - AUDIT');
-  const cost = costReport();
+  log.step('PHASE C - AUDIT (ADVISORY)');
+  const beforeAudit = costReport();
   const digest = {
     product: { title: gdd.title, genre: gdd.genre },
     attemptsTotal: attempt,
@@ -306,19 +345,22 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     playtestOverall: playtest.overall,
     scoreGate: LIMITS.minOverallScore,
     budgetUsd,
-    spentUsd: cost.costUsd,
-    tokensUsed: cost.tokens
+    spentUsd: beforeAudit.costUsd,
+    tokensUsed: beforeAudit.tokens
   };
-  let audit;
   try {
-    audit = await runAuditor({ digest });
+    state.audit = await runAuditor({ digest });
+    log.info(`audit verdict (advisory): ${state.audit.verdict}`);
   } catch (e) {
-    return failClosed(runDir, 'auditor_failed', { error: String(e.message) });
+    state.audit = { verdict: 'UNAVAILABLE', summary: String(e.message) };
+    log.warn(`auditor unavailable (non-authoritative): ${e.message}`);
   }
-  writeJson(path.join(runDir, 'audit.json'), { digest, ...audit });
-  log.info(`audit verdict: ${audit.verdict}`);
-  if (audit.verdict !== 'PASS') {
-    return failClosed(runDir, 'audit_rejected', { audit });
+
+  // L1 deterministic release authority. Until L3 supplies real fidelity evidence,
+  // Product Fidelity remains false and production fails closed here by design.
+  const finalRelease = releaseFor(state);
+  if (!finalRelease.pass) {
+    return failClosed(runDir, state, 'release_gate_not_met', { releaseGate: finalRelease });
   }
 
   log.step('PHASE D - PUBLISH DRAFT');
@@ -329,6 +371,7 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     const b64 = shot.dataUrl.split(',')[1];
     fs.writeFileSync(path.join(draftDir, `${shot.name}.png`), Buffer.from(b64, 'base64'));
   }
+  const cost = costReport();
   const meta = {
     slug,
     title: gdd.title,
@@ -344,8 +387,10 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     scores: playtest.scores,
     overall: playtest.overall,
     critique: playtest.critique ?? [],
-    auditVerdict: audit.verdict,
-    auditSummary: audit.summary ?? '',
+    auditVerdict: state.audit?.verdict ?? 'UNAVAILABLE',
+    auditSummary: state.audit?.summary ?? '',
+    releaseGate: finalRelease,
+    budget: cost,
     costUsd: cost.costUsd,
     tokens: cost.tokens
   };
@@ -353,8 +398,11 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
   writeText(path.join(draftDir, 'REVIEW.md'), reviewMarkdown(meta));
   registerProduct({ slug, title: gdd.title, genre: gdd.genre, date: meta.date, status: 'draft', score: playtest.overall });
 
-  writeJson(path.join(runDir, 'RESULT.json'), { status: 'success', slug, meta });
+  const unified = writeUnifiedEvidence(runDir, state, 'release-eligible', null, {
+    draft: `drafts/${slug}`,
+    candidateSha: tech.evidence.candidateSha
+  });
+  writeJson(path.join(runDir, 'RESULT.json'), { status: 'success', slug, meta, evidenceSchema: unified.schema });
   log.info(`draft ready: drafts/${slug}`);
-
   return { status: 'success', slug, runDir, meta };
 }
