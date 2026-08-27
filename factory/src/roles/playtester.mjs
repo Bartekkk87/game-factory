@@ -1,10 +1,58 @@
 import fs from 'node:fs/promises';
-import path from 'node:path';
 import { chat } from '../llm/client.mjs';
 import { extractJson } from '../llm/json.mjs';
 import { loadPrompt } from '../util/skills.mjs';
+import { ownerRequirementIds } from '../contract/owner.mjs';
 
-function validate(pt) {
+function compactGdd(gdd) {
+  return {
+    title: gdd?.title ?? null,
+    tagline: gdd?.tagline ?? null,
+    genre: gdd?.genre ?? null,
+    mechanics: Array.isArray(gdd?.mechanics) ? gdd.mechanics : [],
+    difficulty: gdd?.difficulty ?? null,
+    juice: gdd?.juice ?? null,
+    artDirection: gdd?.artDirection ?? null,
+    acceptanceCriteria: Array.isArray(gdd?.acceptanceCriteria) ? gdd.acceptanceCriteria : [],
+    probePlan: {
+      scoreEvents: Array.isArray(gdd?.probePlan?.scoreEvents) ? gdd.probePlan.scoreEvents : [],
+      requirementProbes: Array.isArray(gdd?.probePlan?.requirementProbes) ? gdd.probePlan.requirementProbes : []
+    }
+  };
+}
+
+function validateContext({ ownerContract, gdd, telemetry, runtimeEvents, deterministicProductFidelity }) {
+  if (!ownerContract?.contractSha256 || ownerContract.immutable !== true) {
+    throw new Error('playtester requires immutable Owner Contract');
+  }
+  const ids = ownerRequirementIds(ownerContract);
+  if (!ids.length) throw new Error('playtester Owner Contract has no requirements');
+  if (!Array.isArray(gdd?.acceptanceCriteria) || !Array.isArray(gdd?.probePlan?.requirementProbes)) {
+    throw new Error('playtester requires acceptance/probe mapping');
+  }
+  if (!Array.isArray(telemetry) || !Array.isArray(runtimeEvents)) {
+    throw new Error('playtester requires telemetry and runtime events');
+  }
+  if (typeof deterministicProductFidelity?.pass !== 'boolean') {
+    throw new Error('playtester requires deterministic Product Fidelity result');
+  }
+}
+
+function validate(pt, ownerContract) {
+  const knownIds = new Set(ownerRequirementIds(ownerContract));
+  if (!['PASS', 'FAIL'].includes(pt.fidelityVerdict)) throw new Error('playtester missing fidelityVerdict');
+  pt.missingRequirements = Array.isArray(pt.missingRequirements) ? [...new Set(pt.missingRequirements.map(String))] : [];
+  for (const id of pt.missingRequirements) {
+    if (!knownIds.has(id)) throw new Error(`playtester referenced unknown Owner requirement: ${id}`);
+  }
+  if (pt.fidelityVerdict === 'PASS' && pt.missingRequirements.length) {
+    throw new Error('playtester fidelity PASS cannot include missing requirements');
+  }
+  if (pt.fidelityVerdict === 'FAIL' && !pt.missingRequirements.length) {
+    throw new Error('playtester fidelity FAIL must identify missing Owner requirement IDs');
+  }
+  pt.fidelityCritique = Array.isArray(pt.fidelityCritique) ? pt.fidelityCritique : [];
+
   const s = pt.scores ?? {};
   for (const k of ['visuals', 'uiClarity', 'funProxy', 'performance']) {
     if (typeof s[k] !== 'number') throw new Error(`playtester missing score: ${k}`);
@@ -17,7 +65,16 @@ function validate(pt) {
   return pt;
 }
 
-export async function runPlaytester({ metrics, images }) {
+export async function runPlaytester({
+  metrics,
+  images,
+  ownerContract,
+  gdd,
+  telemetry,
+  runtimeEvents,
+  deterministicProductFidelity
+}) {
+  validateContext({ ownerContract, gdd, telemetry, runtimeEvents, deterministicProductFidelity });
   const system = loadPrompt('playtester');
 
   const dataUrls = [];
@@ -33,11 +90,27 @@ export async function runPlaytester({ metrics, images }) {
     }
   }
 
+  const gddCompact = compactGdd(gdd);
   const user = [
-    'Objective session metrics:',
+    '=== IMMUTABLE OWNER CONTRACT ===',
+    JSON.stringify(ownerContract, null, 2),
+    '',
+    '=== COMPACT GAME DESIGN BRIEFING + ACCEPTANCE/PROBE MAPPING ===',
+    JSON.stringify(gddCompact, null, 2),
+    '',
+    '=== DETERMINISTIC PRODUCT FIDELITY (MACHINE AUTHORITY; DO NOT OVERRIDE) ===',
+    JSON.stringify(deterministicProductFidelity, null, 2),
+    '',
+    '=== OBJECTIVE SESSION METRICS ===',
     JSON.stringify(metrics, null, 2),
     '',
-    `Below: ${Math.min(dataUrls.length, 4)} screenshots captured during automated play, in chronological order. Judge them now.`
+    '=== DETERMINISTIC TELEMETRY TIMELINE ===',
+    JSON.stringify(telemetry, null, 2),
+    '',
+    '=== BOUNDED RUNTIME / MECHANIC EVENTS ===',
+    JSON.stringify(runtimeEvents, null, 2),
+    '',
+    `Below: ${Math.min(dataUrls.length, 4)} screenshots captured during deterministic automated play, in chronological order. Return both the independent fidelity review and the separate experience review now.`
   ].join('\n');
 
   let lastErr;
@@ -51,7 +124,7 @@ export async function runPlaytester({ metrics, images }) {
         json: true,
         temperature: 0.3
       });
-      return validate(extractJson(text));
+      return validate(extractJson(text), ownerContract);
     } catch (e) {
       lastErr = e;
     }
