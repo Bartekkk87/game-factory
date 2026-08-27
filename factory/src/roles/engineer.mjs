@@ -30,6 +30,8 @@ function acceptanceRules() {
     '- Preserve readable HUD layout with no overlapping labels.',
     '- Score must increase deterministically within 4 seconds of ordinary simulated keyboard/mouse gameplay. Never make this depend on a lucky random collision, rare spawn, or precise aim.',
     '- The game must remain playable under WASD/arrows/Space/Enter and pointer clicks as applicable.',
+    '- Use ONLY APIs and properties that actually exist in the supplied MICRO-ENGINE SOURCE. Do not invent engine methods or state containers.',
+    '- Prefer simple scene-owned arrays/state over unnecessary abstractions. game.currentScene is a safe getter for the active registered scene after play has started.',
     '- No external URLs or assets. Keep runtime free of console/page/probe errors and maintain >=30 FPS.',
     '- Keep JavaScript multiline and reasonably readable.'
   ].join('\n');
@@ -74,6 +76,32 @@ export async function buildGame({ gdd, ownerIdea = '' }) {
   ].join('\n');
 
   const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.3, maxTokens: 12000 });
+  return validateDesign(extractJson(text));
+}
+
+export async function rebuildGame({ gdd, ownerIdea = '', failureHistory = [] }) {
+  const user = [
+    '=== TASK ===',
+    'ESCALATION MODE: targeted repairs have stalled. DISCARD the previous implementation architecture and build a genuinely fresh implementation from scratch.',
+    'Do not copy the prior code structure. Solve the owner brief with the simplest robust state model that can pass verification.',
+    'Output ONLY strict JSON with slots title/css/html/js.',
+    '',
+    acceptanceRules(),
+    '',
+    '=== FAILURES THE NEW ARCHITECTURE MUST AVOID ===',
+    ...(failureHistory.length ? failureHistory.map((f) => `- ${f}`) : ['- Previous repair attempts made no progress.']),
+    '',
+    '=== ORIGINAL OWNER IDEA ===',
+    ownerIdea || '(no additional owner brief)',
+    '',
+    '=== GAME DESIGN BRIEFING ===',
+    JSON.stringify(gdd, null, 2),
+    '',
+    '=== MICRO-ENGINE SOURCE ===',
+    engineSource()
+  ].join('\n');
+
+  const { text } = await chat({ role: 'engineer', system: systemPrompt(), user, json: true, temperature: 0.6, maxTokens: 12000 });
   return validateDesign(extractJson(text));
 }
 
