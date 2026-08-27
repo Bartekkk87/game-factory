@@ -5,40 +5,36 @@
 **L1 Control Kernel — DONE**  
 **L2 Model / Provider Layer — DONE**  
 **L3 Verification & Evidence — DONE**  
-**L4 Production Agents — NEXT / P0**
+**L4 Production Agents — IMPLEMENTED / FINAL CLOSURE PENDING**
 
-Verifizierter Runtime-Stand auf `main`:
+Aktueller L4-Code-Head vor den Dokumentationscommits:
 
-`52e843bba72bd3fe83ea2b34475a32e2076dcdee`
+`b19ac17243326235eebdd8c62079c0df667ca46d`
 
-Vollständiger Verifier-Selftest auf diesem Stand:
+Letzter vollständiger bestehender Verifier-Selftest:
 
-GitHub Actions Run `33046180562` — **SUCCESS**
+GitHub Actions Run `33049921260` — **SUCCESS**
 
 **Kein bezahlter Titan Canary #3 wurde gestartet.**
 
-Der Bottom-up-Katalog bleibt unverändert verbindlich: zuerst die unteren Schichten belastbar machen, danach Top-down gegenprüfen. L1–L3 sind jetzt abgeschlossen; deshalb ist L4 der aktive Arbeitsblock.
+Detaillierter L4-Nachweis: `docs/strategy/HARDENING-STATUS-2026-08-27-L4.md`.
 
 ---
 
 ### L1 — Control Kernel / Fundament — DONE
 
-**Behalten:** GitHub Actions als Execution Runtime, Git als Source of Truth, Fail-Closed, Candidate-SHA, serialisierte Produktionsläufe, Fresh-Rebuild bei Stagnation und Rollback nach schlechtem Polish.
-
 Umgesetzt und verifiziert:
 
-- echtes Kosten-Tracking;
-- Kosten pro Modell, Rolle, Operation und Attempt;
-- Budgetprüfung und Reservierung vor bezahlten LLM-Aufrufen;
-- klare maximale Repair-/Polish-/Rebuild-Budgets;
-- Release-PASS als deterministische Maschinenlogik;
-- einheitliches Evidence-Schema pro Run.
+- echtes modellbezogenes Kosten-Tracking;
+- Kosten pro Rolle / Modell / Operation / Attempt;
+- Budgetreservierung vor bezahlten Calls;
+- Repair-/Polish-/Fresh-Rebuild-Budgets;
+- deterministisches Release Gate unabhängig vom Auditor;
+- einheitliches Run-Evidence-Schema.
 
 Verbindliche Release-Regel:
 
 `Technical PASS + Product Fidelity PASS + Experience >= 6.5 + Budget PASS`
-
-**Priorität: P0 — abgeschlossen.**
 
 ---
 
@@ -46,252 +42,162 @@ Verbindliche Release-Regel:
 
 Umgesetzt und verifiziert:
 
-- Role Router;
-- Modellregister;
-- Preisregister;
-- Capability-Register;
-- Context-/Output-Limits als Modellmetadaten;
-- Provideradapter;
-- keine stillen Providerwechsel;
-- Modell und Version in der Usage-/Evidence-Kette;
-- Provider-/Capability-Prüfung vor Transport.
+- fail-closed Role Router;
+- Provider Registry;
+- Modell-, Capability- und Preisregister;
+- kein stiller Cross-Provider-Fallback;
+- Provider-/Capability-Prüfung vor Transport;
+- Modell und Version in Usage/Evidence.
 
-Vorbereitete OpenAI-Referenzmatrix:
+Referenzmatrix:
 
 ```text
-Director
-   → gpt-5.6-terra
-
-Engineer Build / Repair / Rebuild / Polish
-   → gpt-5.6-terra
-
-Playtester
-   → gpt-5.6-terra
-
-Audit Summary
-   → gpt-5.6-luna
-
-Release Verdict
-   → kein LLM
+Director                         -> gpt-5.6-terra
+Engineer Build/Repair/Rebuild   -> gpt-5.6-terra
+Engineer Polish                  -> gpt-5.6-terra
+Playtester                       -> gpt-5.6-terra
+Auditor                          -> gpt-5.6-luna
+Release Verdict                  -> kein LLM
 ```
 
-DeepSeek bleibt **priorisierter Benchmark-Kandidat**, aber noch kein Produktionsstandard. Kein unbenchmarked DeepSeek für den nächsten Referenz-Titan.
-
-**Priorität: P0-Basis abgeschlossen; Benchmark P2.**
+DeepSeek bleibt Benchmark-Lane für später und ist nicht ungeprüft Teil des Referenz-Titan.
 
 ---
 
 ### L3 — Verification & Evidence — DONE
 
-Die Factory kann jetzt nicht nur beweisen:
-
-> „Das Spiel läuft.“
-
-sondern deterministisch prüfen:
-
-> „Gibt es belastbare Evidence dafür, dass die bestellten Must-Haves umgesetzt und No-Gos nicht verletzt wurden?“
-
-Die drei Gates sind getrennt:
-
-**Technical**  
-→ Runtime, Errors, Assets, Start, Interaktion, FPS, Visual Smoke.
-
-**Product Fidelity**  
-→ maschinenlesbare Owner-IDs + Acceptance/Probe-Traceability + Runtime-Evidence.
-
-**Experience**  
-→ visuelle/spielerische Bewertung durch den Playtester; bleibt getrennt von der deterministischen Fidelity-Authority.
-
 Umgesetzt und verifiziert:
 
 - immutable Owner Contract;
-- stabile `MH-xx` Must-Have-IDs und `NG-xx` No-Go-IDs;
+- stabile `MH-xx` Must-Have- und `NG-xx` No-Go-IDs;
 - deterministischer Contract-Hash;
-- Director-Traceability von Owner-ID zu Acceptance-/Probe-ID;
-- fester Verifier-Seed;
-- gespeicherte deterministische Input-Sequenz;
-- `start -> early -> mid -> end` Telemetrie;
-- Interaktivitätsnachweis über die Early-Timeline statt nur Mid -> End;
-- bounded Gameplay-/Mechanic-Events;
-- Engine-Events für Score-/State-Änderungen;
+- Owner-ID -> Director Acceptance-/Probe-ID Traceability;
+- deterministischer Verifier-Seed und gespeicherte Input-Sequenz;
+- Telemetrie `start -> early -> mid -> end`;
+- Early-Interaktivitätsnachweis;
+- bounded Runtime-/Mechanic-Events;
 - deterministisches Product Fidelity PASS/FAIL;
-- Integration von Technical + Fidelity in Build/Repair/Polish;
-- Green- und Broken-Fixtures für neue Hard Checks;
-- echter assemblierten Runtime-Selftest: echter Gameplay-Wertwechsel PASS, dekoratives Fake-Upgrade FAIL.
+- Technical + Fidelity in Build/Repair/Polish verbindlich;
+- Green-/Broken-Fixtures und echter Runtime-End-to-End-Test.
 
-L3-Verifikation:
-
-- Run `33045193747` — SUCCESS
-- Run `33045457760` — SUCCESS
-- Run `33045637678` — SUCCESS
-- Run `33045912220` — SUCCESS
-- Run `33046078946` — SUCCESS
-- final `main` Run `33046180562` — SUCCESS
-
-**Priorität: P0 — abgeschlossen.**
+Finaler L3-`main`-Run: `33046180562` — **SUCCESS**.
 
 ---
 
-### L4 — Production Agents — NEXT / P0
+### L4 — Production Agents — IMPLEMENTED / FINAL CLOSURE PENDING
 
-Jetzt werden Director, Engineer, Playtester und Auditor vollständig an die bereits verifizierten Contracts angebunden.
+Die Produktionsrollen sind jetzt an die L1–L3-Contracts angebunden.
 
-#### Director
+#### Engineer — umgesetzt
 
-Der Director ist bereits teilweise im L3-Traceability-Pfad verankert:
+- stale `random input / ~15 seconds` Verifier-Text entfernt;
+- Prompt auf festen deterministischen Seed/Input-Ablauf und `start -> early -> mid -> end` ausgerichtet;
+- bounded `game.event(type, data)` Evidence für produktspezifische Mechaniken verlangt;
+- immutable Owner Contract explizit in Build / Repair / Rebuild / Polish;
+- Acceptance-/Probe-Mapping explizit im Engineer-Kontext;
+- fail-closed bei fehlendem Owner Contract oder instabiler Traceability;
+- Repair / Fresh Rebuild / Verified Polish Rollback erhalten.
 
-```text
-Owner Idea
-↓
-Owner Contract
-↓
-Director GDD
-↓
-Acceptance / Probe IDs
-```
+#### Playtester — umgesetzt
 
-Offen in L4 ist vor allem die saubere Weitergabe dieses Contracts an die nachfolgenden Agenten.
+Er erhält:
 
-#### Engineer
-
-P0 jetzt:
-
-- stale Prompt-Text entfernen: kein `random input / ~15 seconds` mehr;
-- deterministischen Verifier-Ablauf korrekt beschreiben;
-- immutable Owner Contract explizit in Build / Repair / Rebuild / Polish geben;
-- relevante Acceptance-/Probe-Mappings explizit mitgeben;
-- bei produktspezifischen Anforderungen die bounded Runtime-Event-Schnittstelle nutzen;
-- bereits bewährte Repair-/Fresh-Rebuild-/Polish-Rollback-Logik erhalten.
-
-P1 später:
-
-```text
-Engine API Contract
-+ relevante Codebereiche
-+ Fehler
-→ bounded patch
-```
-
-Full Rebuild bleibt ausdrücklich erhalten, wenn die Architektur selbst defekt ist.
-
-#### Playtester
-
-Große P0-Änderung:
-
-Er bekommt künftig:
-
-- Screenshots;
-- objektive Metriken;
-- Telemetrie;
-- Gameplay-/Mechanic-Events;
 - Owner Contract;
 - kompaktes GDD;
-- Acceptance-/Probe-Mapping.
+- Acceptance-/Probe Mapping;
+- Telemetrie;
+- bounded Runtime Events;
+- Screenshots;
+- objektive Metriken;
+- deterministisches Product-Fidelity-Ergebnis.
 
 Er liefert getrennt:
 
 ```text
-Independent Product Fidelity Review: PASS / FAIL
-Experience: 0–10
+Independent Product Fidelity Review
+Experience Score + Kritik
 ```
 
-Die deterministische Product-Fidelity-Logik bleibt die Maschinen-Authority. Der Playtester darf sie nicht überschreiben; er liefert eine unabhängige Produktperspektive.
+Die unabhängige Playtester-Fidelity bleibt advisory. Die deterministische Product Fidelity bleibt Maschinen-Authority.
 
-#### Auditor
+#### Auditor — umgesetzt
 
-Der Auditor darf erklären:
+- strikt advisory only;
+- kein eigener Release-`PASS/FAIL` mehr;
+- Assessment `CONSISTENT` / `CONCERNS` plus Findings/Summary;
+- Digest enthält Technical, deterministische Fidelity, Playtester Fidelity, Experience, Budget und deterministic Release Gate;
+- Release-Entscheidung bleibt ausschließlich bei `releaseFor(...)`.
 
-> „Warum ist dieses Game freigabereif oder warum nicht?“
+#### CI / Referenzroute — umgesetzt
 
-Er entscheidet aber **nicht**, ob ein Kandidat freigabereif ist.
+- Änderungen unter `factory/prompts/**` triggern jetzt ebenfalls den vollständigen Verifier-Selftest;
+- Routertests pinnen Terra für Director/Engineer/Playtester und Luna für Auditor;
+- Release Verdict nutzt kein LLM.
 
-Sein Digest soll Technical Gate, deterministische Fidelity, Playtester-Fidelity, Experience, Budget und Release Verdict konsistent zusammenfassen.
+L4-Verifikationsruns nach relevanten Änderungen:
 
-**Priorität: P0.**
+`33048507658`, `33048635648`, `33048970244`, `33049092906`, `33049183969`, `33049293313`, `33049385943`, `33049485667`, `33049672597`, `33049770257`, `33049921260` — alle **SUCCESS**.
+
+#### Noch offen zur formalen L4-Abnahme
+
+`factory/src/roles/test-production-agents.mjs` wurde als dedizierter L4-Integritätstest angelegt. Er prüft die Rollenverträge, Advisory-Grenzen, Referenzroute und die Owner-Contract-zu-Release-Gate-Kette.
+
+**Dieser Test ist noch nicht als expliziter Ausführungsschritt in `.github/workflows/verify.yml` verdrahtet.** Der bestehende Komplett-Selftest ist grün, aber der neue L4-Test wurde dabei bisher nur syntaktisch geprüft, nicht ausgeführt.
+
+Deshalb nächste Reihenfolge:
+
+1. dedizierten L4-Test als Workflow-Step verdrahten;
+2. vollständigen Verifier-Selftest erneut grün bestätigen;
+3. Top-down-Integritätscheck durchführen;
+4. L4/P0 erst dann auf DONE setzen.
 
 ---
 
 ### L5 — Owner / Product Layer
 
-Ganz oben bleibt die Owner-Rolle klein:
+Owner-Rolle bleibt bewusst klein:
 
 ```text
 Idee eingeben
-↓
-Factory arbeitet
-↓
-Preview
-↓
-Approve / Reject
+-> Factory arbeitet
+-> Preview
+-> Approve / Reject
 ```
 
-Später für eine echte Plattform kommen:
-
-- Briefing UI;
-- Login;
-- Projekte;
-- Versionshistorie;
-- Quoten;
-- Credits/Billing;
-- sichere Sandboxes;
-- Source Export.
-
-**Das ist derzeit ausdrücklich nicht P0.**
-
-Kein SaaS-Frontend vor einem belastbaren Produktionskern und mehreren erfolgreichen Genres.
+SaaS-/Frontend-Themen bleiben außerhalb P0, bis der Produktionskern mehrere belastbare Genres bewiesen hat.
 
 ---
 
-## Top-down-Gegencheck
+## Top-down-Gegencheck — NEXT
 
-Nach L4 muss dieselbe Kette vollständig erhalten bleiben:
+Nach finaler L4-Abnahme muss die komplette Kette geprüft werden:
 
 ```text
-Owner sagt:
-„Titan + Salvage + Upgrades + Risk/Reward“
-
-↓ Immutable Owner Contract
-
-Director:
-„So wird daraus ein Game.“
-
-↓ Acceptance / Probe IDs
-
-Engineer:
-„Ich implementiere genau diese Anforderungen.“
-
-↓ Code + bounded Runtime Events
-
-Verifier:
-„Ich habe deterministische Evidence für diese Anforderungen.“
-
-↓ Technical PASS + Product Fidelity PASS
-
-Playtester:
-„Das verlangte Produkt ist erkennbar vorhanden
-und Experience >= 6.5.“
-
-↓ Budget PASS
-
-Deterministic Release Gate:
-PASS / FAIL
-
-↓
-Owner erhält Preview
+Owner Idea
+-> Immutable Owner Contract
+-> Director Acceptance / Probe IDs
+-> Engineer
+-> Deterministic Verifier Evidence
+-> Technical PASS + Product Fidelity PASS
+-> Playtester Independent Fidelity Review
+-> Experience >= 6.5
+-> Budget PASS
+-> Deterministic Release Gate
+-> Owner Preview
 ```
 
-**Kein Teil darf unterwegs die ursprüngliche Owner-Anforderung verlieren.**
+**Keine Owner-Anforderung darf unterwegs verschwinden.**
 
-### Aktuelle Reihenfolge
+## Verbindliche Reihenfolge ab jetzt
 
-**1. L1 Control Kernel — DONE**  
-**2. L2 Model / Provider Layer — DONE**  
-**3. L3 Verification & Evidence — DONE**  
-**4. L4 Production Agents — JETZT**  
-**5. Full Selftest nach L4 vollständig grün**  
-**6. Top-down-Integritätscheck**  
-**7. Genau ein Titan Core: Reforged Canary #3**
+1. L1 Control Kernel — **DONE**
+2. L2 Model / Provider Layer — **DONE**
+3. L3 Verification & Evidence — **DONE**
+4. L4 Production Agents — **IMPLEMENTED; REGRESSION-INTEGRATION PENDING**
+5. L4 Integrity Test in Workflow + vollständiger Selftest — **NEXT**
+6. Top-down-Integritätscheck
+7. Erst danach genau ein `Titan Core: Reforged` Canary #3
 
-Wenn Canary #3 scheitert:
+Wenn Canary #3 später scheitert:
 
 `Fehler klassifizieren -> Plattform reparieren -> vollständiger Selftest -> erst dann über einen weiteren bezahlten Lauf entscheiden.`
