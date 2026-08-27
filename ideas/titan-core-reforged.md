@@ -21,4 +21,4 @@ Dunkle Sci-Fi-/Cyberpunk-Arena, klare Neon-Silhouetten, schnelle direkte Steueru
 - Kein komplexes Tutorial vor Spielbeginn; der Kernloop muss sofort spielbar sein.
 
 ## Canary
-OpenAI canary after deterministic idea-selection and role-model-default repairs.
+OpenAI Canary 2 after owner-contract enforcement, deterministic verifier input, and verified-baseline rollback for failed polish.
