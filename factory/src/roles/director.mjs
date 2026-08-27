@@ -1,16 +1,15 @@
 import { chat } from '../llm/client.mjs';
 import { extractJson } from '../llm/json.mjs';
 import { compileDirectorTraceability } from '../contract/traceability.mjs';
-import { loadPrompt, loadSkill } from '../util/skills.mjs';
+import { assembleSystemPrompt } from '../util/skills.mjs';
 import { lessonsFor, knownConcepts } from '../memory/store.mjs';
 
 export async function runDirector({ idea, source, ownerContract }) {
-  const system =
-    loadPrompt('director') +
-    loadSkill('directing') +
-    (lessonsFor('director').length
-      ? `\n\n## Lessons from past post-mortems\n${lessonsFor('director').join('\n')}`
-      : '');
+  const system = assembleSystemPrompt({
+    promptName: 'director',
+    skillName: 'directing',
+    lessons: lessonsFor('director')
+  });
 
   const user = JSON.stringify(
     {
