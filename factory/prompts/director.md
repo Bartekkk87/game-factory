@@ -15,7 +15,9 @@ Rules:
 - Evidence must be machine-observable. An LLM statement such as "the mechanic exists" is not evidence.
 - Use only these probe kinds: event, event_value_change, score_change, state_reached, event_absent, started_by_early.
 - event / event_absent / event_value_change require eventType. event_value_change proves a real numeric gameplay value changed and should use beforeField/afterField (defaults: before/after). state_reached requires state.
-- For mechanics such as boss entry, salvage collection, upgrade application, risk/reward choice or distinct outcomes, define concise snake_case eventType names that the Engineer can emit exactly when the real gameplay transition happens.
+- Probe strength must match the requirement. Prefer state_reached or score_change when the requirement is directly represented by those machine states. Prefer event_value_change when a real numeric mechanic value changes.
+- A positive Must-Have using kind=event is automatically treated by the verifier as correlated gameplay evidence: the event must occur during active gameplay no earlier than the early evidence point and only after engine-observed gameplay value progress exists. A startup/init event name alone cannot prove a mechanic.
+- For mechanics such as boss entry, salvage collection, upgrade application, risk/reward choice or distinct outcomes, define concise snake_case eventType names that the Engineer can emit exactly when the real gameplay transition happens. Never ask the Engineer to emit the event before the mechanic is actually active.
 - Never use event_value_change for a cosmetic-only change.
 - Every design must also define expected states and how score increases under the deterministic verifier input sequence.
 
