@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import { serveDir } from './server.mjs';
+import { installCanvasLayoutProbe } from './layout-probe.mjs';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -47,6 +48,7 @@ async function runSingleSession({
     args: ['--autoplay-policy=no-user-gesture-required', '--mute-audio']
   });
   const context = await browser.newContext({ viewport: { width: 1280, height: 720 } });
+  await context.addInitScript(installCanvasLayoutProbe);
   await context.addInitScript(({ seeded }) => {
     let s = seeded >>> 0 || 1;
     const next = () => {
@@ -108,7 +110,8 @@ async function runSingleSession({
             : Array.isArray(window.__GF__.events)
               ? [...window.__GF__.events]
               : [])
-        : []
+        : [],
+      layout: window.__GF_CANVAS_LAYOUT_PROBE__ ? window.__GF_CANVAS_LAYOUT_PROBE__.snapshot() : null
     }));
 
   const record = async (phase, atMs) => {

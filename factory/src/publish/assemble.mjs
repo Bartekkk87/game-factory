@@ -10,6 +10,10 @@ const PROBE_EXTENSION = `
   class EvidencedGame extends BaseGame {
     constructor(options) {
       super(options);
+      if (this.canvas) {
+        this.canvas.width = this.W;
+        this.canvas.height = this.H;
+      }
       this._probeEvents = [];
       this._probeSeq = 0;
       window.__GF__.events = this._probeEvents;

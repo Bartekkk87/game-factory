@@ -1,8 +1,8 @@
 import { ownerRequirementIds } from '../contract/owner.mjs';
 
-const SUPPORTED_KINDS = new Set(['event', 'event_value_change', 'score_change', 'state_reached', 'event_absent', 'started_by_early']);
+const SUPPORTED_KINDS = new Set(['event', 'event_value_change', 'score_change', 'state_reached', 'event_absent', 'started_by_early', 'layout_no_overlap']);
 const GENERATED_EVENT_KINDS = new Set(['event', 'event_value_change', 'event_absent']);
-const HARNESS_OBSERVED_KINDS = new Set(['score_change', 'state_reached', 'started_by_early']);
+const HARNESS_OBSERVED_KINDS = new Set(['score_change', 'state_reached', 'started_by_early', 'layout_no_overlap']);
 
 function allEvents(report) {
   const timeline = Array.isArray(report?.timeline) ? report.timeline : [];
@@ -50,41 +50,101 @@ function correlatedGameplayEvent(event, report) {
   return { pass: true, detail: `event correlated with active gameplay at t=${eventTime}s and engine-observed score ${startScore} -> ${eventScore}` };
 }
 
-function evaluateProbe(probe, report, events) {
+function normalizeProbe(probe) {
   const kind = probe?.kind;
+  const eventType = String(probe?.eventType || '');
+  if ((kind === 'event' && eventType === 'hud_layout_clear') || (kind === 'event_absent' && eventType === 'hud_overlap_detected')) {
+    return {
+      ...probe,
+      declaredKind: kind,
+      legacyEventType: eventType,
+      kind: 'layout_no_overlap',
+      minRegions: Number.isFinite(Number(probe?.minRegions)) ? Math.max(1, Math.trunc(Number(probe.minRegions))) : 3,
+      requireScoreProgress: probe?.requireScoreProgress !== false
+    };
+  }
+  return probe || {};
+}
+
+function evaluateLayoutNoOverlap(probe, report) {
+  const timeline = Array.isArray(report?.timeline) ? report.timeline : [];
+  const startScore = Number(timeline.find((entry) => entry?.phase === 'start')?.snapshot?.score);
+  const minRegions = Number.isFinite(Number(probe?.minRegions)) ? Math.max(1, Math.min(12, Math.trunc(Number(probe.minRegions)))) : 3;
+  const requireScoreProgress = probe?.requireScoreProgress !== false;
+  let best = null;
+
+  for (const entry of timeline) {
+    const snapshot = entry?.snapshot;
+    const layout = snapshot?.layout;
+    if (!layout || layout.source !== 'playwright-canvas-draw-observation-v1') continue;
+    if (!snapshot || snapshot.state === 'title' || snapshot.state === 'boot') continue;
+    const regions = Array.isArray(layout.regions) ? layout.regions : [];
+    const issues = Array.isArray(layout.issues) ? layout.issues : [];
+    const score = Number(snapshot.score);
+    const scoreProgress = !requireScoreProgress || (Number.isFinite(startScore) && Number.isFinite(score) && score > startScore);
+    const candidate = {
+      phase: entry?.phase ?? 'unknown',
+      regions: regions.length,
+      issues: issues.length,
+      scoreProgress,
+      issueTypes: [...new Set(issues.map((issue) => issue?.type || 'unknown'))]
+    };
+    if (!best || candidate.regions > best.regions || (candidate.regions === best.regions && candidate.issues < best.issues)) best = candidate;
+    if (regions.length >= minRegions && issues.length === 0 && scoreProgress) {
+      return {
+        pass: true,
+        detail: `independent canvas layout observed at ${candidate.phase}: ${regions.length} HUD regions, no overlap/out-of-bounds issues${requireScoreProgress ? ', with score progress' : ''}`
+      };
+    }
+  }
+
+  if (!best) {
+    return { pass: false, detail: 'no independent Playwright canvas layout observation available' };
+  }
+  const issueDetail = best.issueTypes.length ? ` issues=${best.issueTypes.join(',')}` : '';
+  return {
+    pass: false,
+    detail: `independent canvas layout insufficient at best phase ${best.phase}: regions=${best.regions}/${minRegions}, issueCount=${best.issues}, scoreProgress=${best.scoreProgress}${issueDetail}`
+  };
+}
+
+function evaluateProbe(probe, report, events) {
+  const effectiveProbe = normalizeProbe(probe);
+  const kind = effectiveProbe?.kind;
   if (!SUPPORTED_KINDS.has(kind)) return { pass: false, detail: `unsupported evidence kind: ${kind ?? 'missing'}` };
 
+  if (kind === 'layout_no_overlap') return evaluateLayoutNoOverlap(effectiveProbe, report);
   if (kind === 'event') {
-    const candidates = events.filter((event) => event?.type === probe.eventType);
-    if (!candidates.length) return { pass: false, detail: `missing event ${probe.eventType}` };
-    if (probe?.strength === 'correlated_gameplay') {
+    const candidates = events.filter((event) => event?.type === effectiveProbe.eventType);
+    if (!candidates.length) return { pass: false, detail: `missing event ${effectiveProbe.eventType}` };
+    if (effectiveProbe?.strength === 'correlated_gameplay') {
       const evaluated = candidates.map((event) => correlatedGameplayEvent(event, report));
       const passing = evaluated.find((result) => result.pass);
-      return passing || { pass: false, detail: `${probe.eventType} observed but not as correlated gameplay evidence: ${evaluated.map((result) => result.detail).join('; ')}` };
+      return passing || { pass: false, detail: `${effectiveProbe.eventType} observed but not as correlated gameplay evidence: ${evaluated.map((result) => result.detail).join('; ')}` };
     }
-    return { pass: true, detail: `event ${probe.eventType} observed` };
+    return { pass: true, detail: `event ${effectiveProbe.eventType} observed` };
   }
   if (kind === 'event_absent') {
-    const found = events.find((event) => event?.type === probe.eventType);
-    return { pass: !found, detail: found ? `forbidden event ${probe.eventType} observed` : `event ${probe.eventType} absent` };
+    const found = events.find((event) => event?.type === effectiveProbe.eventType);
+    return { pass: !found, detail: found ? `forbidden event ${effectiveProbe.eventType} observed` : `event ${effectiveProbe.eventType} absent` };
   }
   if (kind === 'event_value_change') {
     const found = events.find((event) => {
-      if (event?.type !== probe.eventType) return false;
-      const beforeKey = probe.beforeField || 'before';
-      const afterKey = probe.afterField || 'after';
+      if (event?.type !== effectiveProbe.eventType) return false;
+      const beforeKey = effectiveProbe.beforeField || 'before';
+      const afterKey = effectiveProbe.afterField || 'after';
       const before = event?.data?.[beforeKey];
       const after = event?.data?.[afterKey];
       return typeof before === 'number' && typeof after === 'number' && before !== after;
     });
-    return { pass: !!found, detail: found ? `event ${probe.eventType} changed gameplay value` : `no value-changing ${probe.eventType} event` };
+    return { pass: !!found, detail: found ? `event ${effectiveProbe.eventType} changed gameplay value` : `no value-changing ${effectiveProbe.eventType} event` };
   }
   if (kind === 'score_change') {
     const pass = scoreChanged(report);
     return { pass, detail: pass ? 'score changed across telemetry' : 'score did not change across telemetry' };
   }
   if (kind === 'state_reached') {
-    const wanted = String(probe.state || '');
+    const wanted = String(effectiveProbe.state || '');
     const pass = (report?.timeline || []).some((entry) => entry?.snapshot?.state === wanted);
     return { pass, detail: pass ? `state ${wanted} reached` : `state ${wanted} not reached` };
   }
@@ -97,9 +157,11 @@ function evaluateProbe(probe, report, events) {
 }
 
 function evidenceSource(probe) {
-  if (HARNESS_OBSERVED_KINDS.has(probe?.kind)) return 'harness-observed';
-  if (probe?.kind === 'event' && probe?.strength === 'correlated_gameplay') return 'generated-game-event+runtime-correlation';
-  if (GENERATED_EVENT_KINDS.has(probe?.kind)) return 'generated-game-event-dependent';
+  const effectiveProbe = normalizeProbe(probe);
+  if (effectiveProbe?.kind === 'layout_no_overlap') return 'harness-observed-canvas-geometry';
+  if (HARNESS_OBSERVED_KINDS.has(effectiveProbe?.kind)) return 'harness-observed';
+  if (effectiveProbe?.kind === 'event' && effectiveProbe?.strength === 'correlated_gameplay') return 'generated-game-event+runtime-correlation';
+  if (GENERATED_EVENT_KINDS.has(effectiveProbe?.kind)) return 'generated-game-event-dependent';
   return 'unknown';
 }
 
@@ -114,13 +176,17 @@ function coverageSummary(requirementIds, criteria) {
   const harnessObservedRequirementIds = uniqueIds(
     criteria.filter((criterion) => HARNESS_OBSERVED_KINDS.has(criterion.kind)).map((criterion) => criterion.requirementId)
   );
+  const canvasGeometryRequirementIds = uniqueIds(
+    criteria.filter((criterion) => criterion.kind === 'layout_no_overlap').map((criterion) => criterion.requirementId)
+  );
   return {
     evaluatedRequirementIds: [...requirementIds],
     harnessObservedRequirementIds,
+    canvasGeometryRequirementIds,
     generatedGameEventDependentRequirementIds,
     correlatedGeneratedGameEventRequirementIds,
     unstructuredBriefContentEvaluated: false,
-    scope: 'Product Fidelity evaluates only structured Owner Contract MH/NG requirements. event/event_value_change/event_absent evidence depends on generated-game event instrumentation; correlated_gameplay additionally requires harness-observed gameplay timing, state and score change. Descriptive originalBrief content outside MH/NG is not evaluated here.'
+    scope: 'Product Fidelity evaluates only structured Owner Contract MH/NG requirements. layout_no_overlap is independently observed by the Playwright harness from actual Canvas text/rectangle draw geometry. event/event_value_change/event_absent evidence depends on generated-game event instrumentation; correlated_gameplay additionally requires harness-observed gameplay timing, state and score change. Descriptive originalBrief content outside MH/NG is not evaluated here.'
   };
 }
 
@@ -136,16 +202,18 @@ export function evaluateProductFidelity({ ownerContract, gdd, report } = {}) {
     const expectedProbeId = `PR-${requirementId}`;
     const ac = acceptance.find((item) => item?.ownerRequirementId === requirementId);
     const probe = probes.find((item) => item?.ownerRequirementId === requirementId);
+    const effectiveProbe = normalizeProbe(probe);
     const traceable = ac?.id === expectedAcceptanceId && probe?.id === expectedProbeId && probe?.acceptanceId === expectedAcceptanceId;
-    const observed = traceable ? evaluateProbe(probe, report, events) : { pass: false, detail: 'missing or unstable acceptance/probe traceability' };
+    const observed = traceable ? evaluateProbe(effectiveProbe, report, events) : { pass: false, detail: 'missing or unstable acceptance/probe traceability' };
     criteria.push({
       requirementId,
       acceptanceId: expectedAcceptanceId,
       probeId: expectedProbeId,
-      kind: probe?.kind ?? null,
-      strength: probe?.strength ?? null,
+      kind: effectiveProbe?.kind ?? null,
+      declaredKind: probe?.kind ?? null,
+      strength: effectiveProbe?.strength ?? null,
       eventType: probe?.eventType ?? null,
-      evidenceSource: evidenceSource(probe),
+      evidenceSource: evidenceSource(effectiveProbe),
       pass: !!(traceable && observed.pass),
       traceable,
       detail: observed.detail

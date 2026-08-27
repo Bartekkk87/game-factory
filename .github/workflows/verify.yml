@@ -56,6 +56,8 @@ jobs:
         run: node factory/src/verify/test-fidelity-hardening.mjs
       - name: Install browser
         run: npx playwright install --with-deps chromium
+      - name: Prove independent HUD geometry verifier
+        run: node factory/src/verify/test-layout-geometry.mjs
       - name: Prove verifier causality and visual activity controls
         run: node factory/src/verify/test-causality-visual.mjs
       - name: Prove verifier accepts good and rejects bad products
