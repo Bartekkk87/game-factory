@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "learning-candidate-v1",
+  "id": "candidate-harbor-courier-proof-reachability-20260827",
+  "status": "candidate",
+  "role": "director",
+  "scope": "verification-design",
+  "targetLayer": "verifier",
+  "text": "Hypothesis only: Director proof plans need an explicit reachability check against the verifier observation model before paid Engineer repair loops begin. Harbor Courier canary #2 used a 75-second gameplay timeout while the factory verifier observes 12 seconds, yet PR-MH-04 requires state=failure from timeout. The same single active verifier session is also expected to prove state=success, third_delivery_completed, route_detour_completed and fresh_run_started. The current traceability compiler validates IDs/cardinality/evidence kinds but not whether all required probes are temporally and logically reachable under the fixed verifier seed/input/window. Validate whether the factory should fail closed before paid build/repair when a proof plan is unreachable, and whether independent scenario probes are required for mutually exclusive states such as success and timeout failure. Do not change Production or promote this candidate until deterministic regression fixtures prove the failure mode and the minimal remedy.",
+  "sourceRunIds": [
+    "20260827-210323"
+  ],
+  "sourceKind": "post-failure-evidence-analysis",
+  "sourceEvidenceRefs": [
+    "runs/20260827-210323/FAILURE.json",
+    "runs/20260827-210323/gdd.json",
+    "runs/20260827-210323/attempt-04/evidence-tech.json",
+    "factory/src/config.mjs",
+    "factory/src/verify/harness.mjs",
+    "factory/src/verify/fidelity.mjs",
+    "factory/src/contract/traceability.mjs"
+  ],
+  "ownerFeedbackIds": [],
+  "candidateSha": null,
+  "confidence": 0.8,
+  "evidenceCount": 7,
+  "createdAt": "2026-08-27T21:15:00.000Z",
+  "validatedAt": null,
+  "expiresAfter": null,
+  "supersedes": null,
+  "validationEvidence": [],
+  "regressionResults": [],
+  "active": false,
+  "activatedAt": null,
+  "promotionRef": null,
+  "deactivatedAt": null,
+  "deactivatedBy": null,
+  "rollbackOf": null,
+  "reversalReason": null
+}
