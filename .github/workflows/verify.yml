@@ -38,6 +38,9 @@ jobs:
       - name: Prove model/provider router and capability gates
         run: node factory/src/llm/test-router.mjs
 
+      - name: Prove L4 production-agent integrity
+        run: node factory/src/roles/test-production-agents.mjs
+
       - name: Install browser
         run: npx playwright install --with-deps chromium
 
