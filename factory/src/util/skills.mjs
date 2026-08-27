@@ -15,3 +15,14 @@ export function loadSkill(name) {
 export function loadPrompt(name) {
   return fs.readFileSync(path.join(PATHS.prompts, `${name}.md`), 'utf8');
 }
+
+export function assembleSystemPrompt({ promptName, skillName, lessons = [] }) {
+  const normalizedLessons = Array.isArray(lessons) ? lessons.filter(Boolean) : [];
+  return (
+    loadPrompt(promptName) +
+    loadSkill(skillName) +
+    (normalizedLessons.length
+      ? `\n\n## Lessons from past post-mortems\n${normalizedLessons.join('\n')}`
+      : '')
+  );
+}
