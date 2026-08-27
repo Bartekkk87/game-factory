@@ -1,130 +1,114 @@
 # Game Factory — Umsetzungskatalog 27.08.2026
 
-## Current status — corrected final audit view
+## Final Audit Recheck — normalized status
 
-P0 remains complete. Controlled Improvement v1 plus OpenRouter/model-agnostic infrastructure is implemented and regression-tested.
+The full audit/closure catalog was re-checked against the executable `main` runtime after Final Factory Closure C1-C5.
 
-**Important correction:** this does **not** yet mean the normal Factory runtime has a fully integrated autonomous cross-run learning loop. The learning components exist and Titan #3 proved a real evidence-to-candidate path, but the normal durable Production/Review flow does not yet automatically execute the complete `Aggregate -> Trigger -> bounded Analysis -> inactive Candidate` chain after every applicable run/review.
+Runtime baseline before this documentation/test-housekeeping branch:
 
-Current execution backlog: GitHub Issue `#8` — **Final Factory Closure — Learning Orchestration + Secret Migration**.
+- `main`: `5d8ca9194877b788c9941ca445d1f1e96b163760`
+- Post-merge Full Verifier Run `33097463622`: **SUCCESS**
+- GitHub Issue `#8` Final Factory Closure: **CLOSED / COMPLETED**
+- No new paid Game/Titan Canary was run during closure or this recheck.
 
-Durable handoff: `docs/strategy/FINAL-FACTORY-CLOSURE-HANDOFF-2026-08-27.md`.
+## Recheck conclusion
 
-Runtime baseline before the new documentation-only commits:
-- `main`: `cc6dbb4bec60883ec9711ffa0992778090fb0687`
-- Post-merge Full Verifier Run `33088856658`: **SUCCESS**
+**No additional architecture or mandatory learning component is missing from the audit closure scope.**
 
-Reference Production Canary remains `Titan Core: Reforged`:
-- Production Run `33069903383`
-- Technical **PASS**
-- Product Fidelity **PASS** after one autonomous repair
-- Experience **7.7/10** after one autonomous polish
-- Budget / deterministic Release Gate **PASS**
-- Cost `$0.442821` / `109703` tokens
-- Owner hands-on result **PRODUCT ACCEPTANCE FAIL**
+One stale audit issue and stale documentation were found during the recheck:
 
-No new paid Game/Titan Canary was started during this documentation/closure preparation.
+1. GitHub Issue `#2` (`GF_BUDGET_USD` fail-closed cost gate) remained open although the cost kernel had already been implemented. This housekeeping branch adds the remaining explicit edge-case regression evidence required by the issue: below-budget, exact-budget, above-budget, unknown-price, explicit pricing override, and uncertain/missing-usage fail-closed behavior.
+2. `README.md` still described the legacy `GF_LLM_API_KEY`, old provider/model defaults, direct rejection-to-lesson behavior and contradictory fallback semantics. It is corrected to the verified runtime contract.
+3. GitHub Issue `#3` still displayed historical P1/P2 items as unchecked even though many are now implemented. Its status must be normalized after this branch passes full regression.
 
-Owner reports that GitHub Actions repository secrets `OPENAI_PRODUCTION` and `OPENROUTER_PRODUCTION` are now provisioned with the real provider keys. The connector cannot inspect secret values. Current `produce.yml` still uses legacy `GF_LLM_API_KEY` for OpenAI, so runtime Secret Migration remains open.
+This is **audit housekeeping / evidence closure**, not a new Factory architecture layer.
 
-Detailed Controlled Improvement implementation record:
-`docs/strategy/CONTROLLED-IMPROVEMENT-V1-IMPLEMENTATION-2026-08-27.md`
+---
 
-## P0 — complete
+# P0 — complete
 
-- P0-01 Skill Integrity: **PASS**
-- P0-02 Skill CI / assembled prompt regression: **PASS**
-- P0-03 Product Fidelity hardening: **PASS**
-- P0-04 Release Authority structural guard: **PASS**
-- P0-05 Model Routing single source of truth: **PASS**
+## P0 cost/budget guard — complete after final edge-case regression
+
+The current Cost Kernel in `factory/src/control/budget.mjs` provides:
+
+- separate input / cached-input / output token accounting;
+- provider-reported cost when available;
+- explicit model-registry cost calculation otherwise;
+- explicit pricing overrides through `GF_MODEL_PRICING_JSON`;
+- fail-closed unknown pricing before transport;
+- conservative pre-call reservation against `GF_BUDGET_USD`;
+- exact-budget allowance and projected-overspend rejection;
+- conservative non-zero accounting when usage is missing/uncertain;
+- `accountingComplete=false` plus fail-closed refusal of subsequent paid calls after uncertain billing;
+- per-role/model/operation cost evidence;
+- separate Repair/Polish/Fresh-Rebuild call/USD caps.
+
+Provider-side spend/credit limits remain the final external safety net and are now stated in `README.md`.
+
+## External audit P0-01 through P0-05 — complete
+
+- **P0-01 Skill Integrity:** PASS
+- **P0-02 Skill CI / assembled prompt regression:** PASS
+- **P0-03 Product Fidelity hardening:** PASS
+- **P0-04 Release Authority structural guard:** PASS
+- **P0-05 Model Routing single source of truth:** PASS
 
 Binding release rule remains:
 
 `Technical PASS + Product Fidelity PASS + Experience >= 6.5 + Budget PASS`
 
-Auditor and qualitative Playtester Fidelity remain advisory.
+Auditor and qualitative Playtester Fidelity remain advisory and have no release authority.
 
-## L0 — Learning Safety Gate — implemented
+---
+
+# Controlled Improvement v1 — complete mechanism set
+
+## L0 — Learning Safety Gate — PASS
 
 - `/reject` creates no active Director lesson.
 - `/reject` and `/feedback` preserve durable raw Owner evidence.
-- raw comment text is unchanged; interpretation is separate metadata.
-- `lessonsFor(role)` returns only validated + active lessons.
-- legacy lessons fail closed as unvalidated/inactive.
-- candidate and validated-inactive learning cannot enter Production prompts.
+- raw feedback is preserved; interpretation is separate metadata.
+- Production prompt visibility is restricted to `validated && active` learning.
+- legacy/unvalidated/inactive learning fails closed.
 
-## L1 — Structured lifecycle — implemented
+## L1 — Structured lifecycle — PASS
 
-Candidate records include lifecycle/provenance fields for source runs, feedback IDs, candidate SHA, confidence/evidence count, validation/regression, activation, deactivation, supersession/reversal and promotion reference.
-
-States are explicit:
+Explicit lifecycle/provenance exists for candidate, validation, activation, deactivation/reversal, supersession and promotion reference.
 
 `candidate -> validated inactive -> active -> deactivated/reversed`
 
 No implicit promotion exists.
 
-## L2 — Owner feedback — implemented
+## L2 — Owner feedback evidence — PASS
 
-Canonical GitHub comment path:
+Owner feedback is stored durably with exact raw body, source identity, parsed command/reason, candidate/run provenance and timestamps. Feedback classification remains a claim and cannot self-promote to Production truth.
 
-`learning/evidence/owner-feedback/gh-issue-<issue>-comment-<comment>.json`
+## L3 — Deterministic aggregation — PASS and automatically integrated
 
-Owner feedback captures exact raw body plus issue/comment identity, parsed command/reason, candidate/run provenance and timestamps. `/feedback` can record evidence without approving/rejecting a product.
+The normal durable Factory flow now automatically reaches deterministic aggregation from Production/Owner evidence through the canonical controlled-learning orchestration path.
 
-Classification remains a claim only; it cannot make a lesson globally valid.
+## L4 — Deterministic trigger — PASS and automatically integrated
 
-## L3 — Deterministic aggregator — component implemented and corrected against real evidence
+Current trigger policy includes:
 
-`factory/src/learning/aggregate.mjs` consumes:
-- canonical `runs/**/RUN-EVIDENCE.json` shape;
-- relevant attempt evidence;
-- Owner feedback evidence.
+- negative/feedback Owner evidence -> bounded `product-feedback` analysis may run;
+- same engineering failure signature across at least two independent runs -> bounded engineering analysis may run;
+- one isolated engineering failure remains intra-run repair evidence.
 
-Outputs include:
-- final Technical/Product Fidelity failures;
-- attempt-level failure signatures;
-- recurring signatures;
-- repair/rebuild/polish counts;
-- Experience result;
-- Owner verdicts/classification claims;
-- token/cost by role/model/operation;
-- recurring positives where evidence exists.
+Trigger authority remains `canValidate=false`, `canActivate=false`.
 
-A real-schema mismatch was discovered when applying the implementation to Titan #3 and fixed before acceptance. Identical input remains deterministic.
+## L5 — Bounded Improvement Analysis — PASS and automatically integrated
 
-**Open integration gap:** the normal Production/Review path does not yet automatically invoke deterministic aggregation as a complete cross-run learning orchestration step.
+An allowed trigger may produce only bounded analysis plus at most an **inactive candidate**. Automatic orchestration cannot validate, activate, promote, weaken gates or change its own authority.
 
-## L4 — Deterministic trigger — component implemented
+## L6 — Validation / regression mechanism — PASS
 
-Policy: `controlled-improvement-trigger-v1`.
+Validation requires explicit evidence and supplied regression results to pass. A model assertion is insufficient. Validated candidates remain inactive until separate promotion.
 
-Current rules:
-- Owner negative/feedback evidence -> bounded `product-feedback` analysis may run.
-- same engineering failure signature across >=2 independent runs -> bounded engineering analysis may run.
-- one isolated engineering failure remains intra-run evidence.
+## L7 — Human-gated promotion — PASS
 
-Trigger has `canValidate=false`, `canActivate=false`.
+Protected layers include:
 
-**Open integration gap:** trigger evaluation must be automatically connected to the durable aggregate in the normal learning flow.
-
-## L5 — Bounded Improvement Analysis — implemented guard
-
-Authority:
-- MAY propose a scoped candidate.
-- MUST NOT activate Production.
-- MUST NOT edit Production directly.
-- MUST NOT change its own authority.
-- MUST NOT weaken release gates.
-
-**Open integration gap:** when a deterministic trigger is allowed, the normal learning flow still needs to invoke bounded analysis and persist at most an inactive candidate.
-
-## L6 — Validation / regression — implemented mechanism
-
-Validation requires explicit validation evidence and all supplied regression results to pass. A model assertion is insufficient. Validated candidates remain inactive until separate promotion.
-
-## L7 — Human-gated promotion — implemented mechanism
-
-Protected layers:
 - skill
 - prompt
 - owner-contract
@@ -134,140 +118,120 @@ Protected layers:
 - engine-contract
 - control-plane
 
-These require separate `human-merge` promotion. Activation is versioned and reversible; deactivation removes the lesson from Production visibility.
+Protected changes require separate human-merge promotion. Activation is versioned/reversible; deactivation removes Production visibility.
 
-## Titan #3 — first real learning case
+---
 
-Durable chain exists from already captured evidence:
+# Final Factory Closure C1-C5 — complete
 
-`real RUN-EVIDENCE + attempt evidence + Owner result -> Aggregate -> Trigger -> bounded Analysis -> inactive Candidate`
+- **C1 Production Secret Migration:** PASS — OpenAI Production -> `OPENAI_PRODUCTION`; OpenRouter Production -> `OPENROUTER_PRODUCTION`; approved Production paths are fail-closed isolated.
+- **C2 Automatic Controlled-Learning Orchestration:** PASS — durable Production/Owner evidence automatically and idempotently reaches Aggregate -> Trigger -> if allowed bounded Analysis -> inactive Candidate; no auto-validation/activation.
+- **C3 Owner Contract Decomposition:** PASS — free-form briefs produce stable `MH-*` / `NG-*`; ambiguities remain `UN-*`; original brief/hash/provenance preserved.
+- **C4 Verifier Causality + Visual Activity:** PASS — deterministic same-seed idle control, input-causality comparison and inter-frame activity evidence with good/bad regression.
+- **C5 Art-Direction Runtime Truth:** PASS — Director loads `directing` + `art-direction` through the canonical prompt assembler; runtime regression proves the path.
 
-Artifacts:
-- `learning/evidence/owner-feedback/titan-canary-3-owner-result-2026-08-27.json`
-- `learning/aggregates/titan-canary-3-2026-08-27.json`
-- `learning/triggers/titan-canary-3-2026-08-27.json`
-- `learning/analysis/titan-canary-3-product-acceptance-analysis-v1.json`
-- `learning/candidates/titan-canary-3-visual-target-intake-v1.json`
+Final C1-C5 proof before this housekeeping branch:
 
-No Owner GitHub `/reject` comment existed on Issue #6, so no comment was fabricated. The approved handoff's exact Owner-result statement is preserved; richer visual expectations are explicitly marked as summarized context.
+- PR `#11`: merged
+- `main`: `5d8ca9194877b788c9941ca445d1f1e96b163760`
+- Final branch Full Verifier `33097190173`: SUCCESS
+- Post-merge Full Verifier `33097463622`: SUCCESS
 
-The candidate targets protected layer `owner-contract`, remains `status=candidate`, `active=false`, and has no Production effect.
+---
 
-Competing hypotheses remain unresolved: intake/Product Truth, Owner Contract decomposition, Director reinterpretation, Product/Visual Fidelity, Experience evaluation, or combination.
+# Historical P1/P2 backlog — normalized against current implementation
 
-## Acceptance gates L-01 through L-14
+The old Issue `#3` list mixed already completed implementation with deliberately later evidence-driven work. The correct status is:
 
-| Gate | Result | Evidence |
-|---|---|---|
-| L-01 reject creates no active lesson | PASS | learning selftest + finalize change |
-| L-02 raw Owner feedback unchanged | PASS | exact multiline raw-body regression |
-| L-03 candidate absent Production | PASS | `lessonsFor` regression |
-| L-04 validated inactive absent | PASS | lifecycle regression |
-| L-05 only validated+active injected | PASS | lifecycle/memory regression |
-| L-06 candidate provenance/source run | PASS | schema + regression + Titan candidate |
-| L-07 aggregator deterministic | PASS | repeated-input regression |
-| L-08 trigger deterministic | PASS | repeated trigger regression |
-| L-09 analysis cannot activate | PASS | authority/runtime regression |
-| L-10 protected promotion human-gated | PASS | protected-layer negative test |
-| L-11 deactivate/reversal supported | PASS | lifecycle regression |
-| L-12 Titan #3 captured safely | PASS | Git-backed real evidence-to-candidate chain |
-| L-13 full Production Verifier remains green | PASS | Runs `33083567504`, `33087199746`, `33087639058`, `33088083507`; post-merge `33088856658` |
-| L-14 no new paid Canary | PASS | none started |
+## Completed from the old P1/P2 list
 
-These gates prove the components and safety boundary; they do not by themselves prove automatic orchestration inside every normal Factory run/review.
+- Owner Contract decomposition into stable requirements — **DONE (C3)**
+- deterministic idle/no-input control — **DONE (C4)**
+- inter-frame visual activity proof — **DONE (C4)**
+- `art-direction.md` runtime truth — **DONE (C5)**
+- structured learning lifecycle/provenance — **DONE (L1-L7)**
+- candidates absent from Production until validated+active — **DONE (L0/L1)**
+- protected skill/prompt/verifier/release/engine/control changes human-gated — **DONE (L7)**
+- deterministic zero-LLM aggregation in normal durable flow — **DONE (C2/L3)**
+- explicit deterministic trigger rules — **DONE (C2/L4)**
+- Engineer candidate only after repeated cross-run failure signatures — **DONE (C2/L4)**
+- triggered bounded analysis producing scoped inactive candidates only — **DONE (C2/L5)**
+- candidate validation/regression mechanism — **DONE (L6)**
 
-## M0 — OpenRouter clean integration
+## Deliberately later — not current audit/closure blockers
 
-Infrastructure acceptance: **PASS**.
+These remain valid future improvement topics, but the audit catalog explicitly does **not** require them before the next normal Factory step:
 
-- existing provider/router stack retained;
-- canonical OpenRouter route works in regression tests;
-- unknown model/provider and missing credential fail closed;
-- Production workflow uses an explicit Production credential lane;
-- OpenAI Production defaults unchanged;
-- no paid game Canary.
+- positive learning from repeated approved/high-quality games without homogenizing output;
+- advanced Owner-feedback preference taxonomy beyond safe candidate scoping;
+- mature Skill stale-detection policy;
+- verifier seed rotation / multi-seed spot checks / alternate deterministic input schedules;
+- P2-07 Model Outcome Benchmarking (`cost per verified + owner-accepted outcome`);
+- deterministic adaptive model policy based on benchmark evidence;
+- Productionization / IP & Security Gate;
+- private-core migration after PoC evidence.
 
-Credential update:
-- Owner reports `OPENROUTER_PRODUCTION` is provisioned;
-- Owner reports `OPENAI_PRODUCTION` is provisioned;
-- connector cannot inspect secret values;
-- OpenAI workflow migration from legacy `GF_LLM_API_KEY` to `OPENAI_PRODUCTION` remains open;
-- live provider proof is optional only after the safe runtime migration decision and is not a paid Game Canary.
+These are future evidence-driven roadmap items, **not unresolved defects in the current audit closure**.
 
-## M1 — Benchmark-safe model infrastructure
+---
 
-Infrastructure acceptance: **PASS**.
+# Model / Provider infrastructure — current status
 
-Registered challenger:
-`openrouter:deepseek/deepseek-chat-v3.1`
+- one canonical Router / Provider Registry / Model Registry / Client stack;
+- OpenAI Production defaults remain reference defaults;
+- OpenRouter challenger is registered but cannot silently become Production default;
+- Production credential lanes: `OPENAI_PRODUCTION`, `OPENROUTER_PRODUCTION`;
+- isolated later OpenRouter lanes: `OPENROUTER_BENCHMARK`, `OPENROUTER_IMPROVEMENT`;
+- unknown Provider/Model, missing credentials and capability mismatch fail closed;
+- no automatic cross-provider fallback;
+- no LLM-owned routing/promotion authority.
 
-Verified 27.08.2026 against official OpenRouter metadata:
-- context `163840`
-- max output `32768`
-- structured outputs supported
-- `$0.25/M` input
-- `$0.13/M` cache read
-- `$0.95/M` output
+---
 
-Credential lanes:
-- `OPENROUTER_PRODUCTION`
-- `OPENROUTER_BENCHMARK`
-- `OPENROUTER_IMPROVEMENT`
+# Reference real case
 
-Benchmark/Improvement do not fall back silently to Production. Challenger configuration cannot silently replace OpenAI defaults. Role and operation overrides remain available.
+`Titan Core: Reforged` remains the reference Production/Owner-evidence case:
 
-## Regression evidence
+- Production Run `33069903383`
+- Technical PASS
+- Product Fidelity PASS after autonomous repair
+- Experience `7.7/10` after autonomous polish
+- Budget / deterministic Release Gate PASS
+- Cost `$0.442821` / `109703` tokens
+- Owner hands-on result: **PRODUCT ACCEPTANCE FAIL**
 
-Successful branch Verifier runs:
-- `33083567504` — Learning/OpenRouter base safety
-- `33087199746` — all-workflow YAML validation / Produce syntax fix
-- `33087639058` — canonical RUN-EVIDENCE regression
-- `33088083507` — attempt-evidence aggregation regression
-- `33088856658` — final post-merge full Verifier on baseline `cc6dbb4bec60883ec9711ffa0992778090fb0687`
+Existing evidence produced the real controlled-learning chain:
 
-A reproduced invalid `produce.yml` failure led to the minimal additional guard: all GitHub workflow YAML is now parsed in Verifier CI.
+`RUN-EVIDENCE + attempt evidence + Owner result -> Aggregate -> Trigger -> bounded Analysis -> inactive Candidate`
 
-## Terminology / proof boundary
+No paid rerun was used to build the learning evidence.
 
-Current state:
-- Intra-run adaptive repair: **YES — live demonstrated**
-- real evidence-to-candidate path: **YES — Titan #3 demonstrated**
-- automatically integrated cross-run controlled-learning orchestration: **NOT YET CLOSED**
-- real validated + human-promoted learning improving a later Owner-accepted game: **NOT YET DEMONSTRATED**
-- fully self-improving Factory: **NO**
+---
+
+# Proof boundary
+
+Current justified terminology:
+
+- intra-run adaptive repair: **YES — live demonstrated**
+- real evidence-to-candidate path: **YES — demonstrated**
+- automatic controlled cross-run orchestration: **YES — implemented and regression-tested**
+- automatic candidate validation/activation: **NO — intentionally prohibited**
+- real validated + human-promoted candidate measurably improving a later Owner-accepted game: **NOT YET DEMONSTRATED**
+- fully self-improving Factory: **NOT YET JUSTIFIED**
 
 Preferred term remains **evidence-driven controlled improvement**.
 
-## Final Factory Closure — required before next real Game run
+---
 
-Canonical checklist: GitHub Issue `#8`.
+# Audit closure decision
 
-1. **C1 Production Secret Migration** — OpenAI Production uses `OPENAI_PRODUCTION`; OpenRouter Production uses `OPENROUTER_PRODUCTION`; fail-closed credential isolation regression.
-2. **C2 Automatic Controlled-Learning Orchestration** — durable Production/Review evidence automatically and idempotently reaches Aggregate -> Trigger -> if allowed bounded Analysis -> inactive Candidate; never auto-validate/activate.
-3. **C3 Owner Contract Decomposition** — free-form multi-requirement Owner briefs produce discrete stable traceable Must-Haves/No-Gos instead of one coarse `MH-01`, while preserving original brief/hash/provenance and avoiding invented details.
-4. **C4 Verifier Causality + Visual Activity** — deterministic idle/no-input baseline plus bounded inter-frame/equivalent activity evidence with good/bad fixtures.
-5. **C5 Art-Direction Skill Runtime Truth** — wire `art-direction.md` through canonical prompt assembly and test it, or remove/correct false runtime claims.
-6. Run the complete relevant regression suite and final Full Verifier.
-7. Update GitHub + Notion with final commit/run evidence.
-8. Do not start a new paid Game/Titan Canary without new explicit Owner approval.
+After the final recheck, there are **no further mandatory audit-catalog implementation items** beyond the small test/documentation housekeeping in this branch.
 
-## Deliberately later / not closure blockers
+Final acceptance of this housekeeping change requires:
 
-- positive learning from repeated approved/high-quality games;
-- advanced Owner feedback preference taxonomy beyond safe candidate scoping;
-- mature Skill stale detection;
-- seed rotation / multi-seed spot checks;
-- P2-07 Model Outcome Benchmarking;
-- deterministic adaptive model policy;
-- Productionization / IP & Security Gate;
-- private-core migration.
-
-## Non-goals retained
-
-- no automatic best-model router;
-- no LLM-owned routing policy;
-- no silent provider fallback;
-- no automatic DeepSeek/GLM Production default;
-- no per-Agent API-key proliferation;
-- no unvalidated learning in Production;
-- no new paid game/Titan Canary without explicit Owner approval.
+1. full Verifier SUCCESS on the branch;
+2. merge to `main`;
+3. post-merge Full Verifier SUCCESS;
+4. close stale Issues `#2` and `#3` with the final evidence;
+5. update Notion to the same normalized status;
+6. no paid Game/Titan Canary without new explicit Owner authorization.
