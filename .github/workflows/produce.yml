@@ -16,14 +16,9 @@ on:
         required: false
         default: 'openai'
         type: choice
-        options:
-          - openai
-          - openrouter
-          - googleai
-          - huggingface
+        options: [openai, openrouter, googleai, huggingface]
   push:
-    paths:
-      - 'ideas/**'
+    paths: ['ideas/**']
     branches: [main]
 
 concurrency:
@@ -39,27 +34,25 @@ jobs:
       issues: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
+        with: { fetch-depth: 0 }
       - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
+        with: { node-version: '24' }
 
       - name: Check API configuration
         env:
           GF_LLM_API_KEY: ${{ secrets.GF_LLM_API_KEY }}
+          OPENROUTER_PRODUCTION: ${{ secrets.OPENROUTER_PRODUCTION }}
           GF_LLM_PROVIDER: ${{ github.event.inputs.provider || 'openai' }}
         run: |
-          if [ -z "$GF_LLM_API_KEY" ]; then
-            echo "GF_LLM_API_KEY is missing in repository secrets" >&2
-            exit 1
+          if [ "$GF_LLM_PROVIDER" = "openrouter" ]; then
+            test -n "$OPENROUTER_PRODUCTION" || { echo "OPENROUTER_PRODUCTION is missing in repository secrets" >&2; exit 1; }
+          else
+            test -n "$GF_LLM_API_KEY" || { echo "GF_LLM_API_KEY is missing in repository secrets" >&2; exit 1; }
           fi
-          echo "Using provider: $GF_LLM_PROVIDER"
+          echo "Using provider: $GF_LLM_PROVIDER (production credential lane)"
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
-
       - name: Install browser
         run: npx playwright install --with-deps chromium
 
@@ -73,32 +66,24 @@ jobs:
             echo "Using manual trigger idea"
           elif [ "$GITHUB_EVENT_NAME" = "push" ]; then
             IDEA_FILE=$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" -- 'ideas/*.md' | head -n1)
-            if [ -z "$IDEA_FILE" ]; then
-              echo "Push trigger did not contain an idea file" >&2
-              exit 1
-            fi
+            if [ -z "$IDEA_FILE" ]; then echo "Push trigger did not contain an idea file" >&2; exit 1; fi
             cp "$IDEA_FILE" /tmp/idea.txt
             echo "Using pushed idea: $IDEA_FILE"
           else
             LATEST=$(git log -1 --format= --name-only -- 'ideas/*.md' | head -n1)
-            if [ -z "$LATEST" ]; then
-              echo "No idea file found in ideas/" >&2
-              exit 1
-            fi
+            if [ -z "$LATEST" ]; then echo "No idea file found in ideas/" >&2; exit 1; fi
             cp "$LATEST" /tmp/idea.txt
             echo "Using most recently committed idea: $LATEST"
           fi
           B64=$(base64 -w0 /tmp/idea.txt)
-          {
-            echo 'IDEA_B64<<GF_EOF'
-            echo "$B64"
-            echo 'GF_EOF'
-          } >> "$GITHUB_OUTPUT"
+          { echo 'IDEA_B64<<GF_EOF'; echo "$B64"; echo 'GF_EOF'; } >> "$GITHUB_OUTPUT"
 
       - name: Run production pipeline
         env:
           GF_LLM_API_KEY: ${{ secrets.GF_LLM_API_KEY }}
+          OPENROUTER_PRODUCTION: ${{ secrets.OPENROUTER_PRODUCTION }}
           GF_LLM_PROVIDER: ${{ github.event.inputs.provider || 'openai' }}
+          GF_LLM_LANE: production
           GF_MODEL: ${{ vars.GF_MODEL }}
           GF_MODEL_DIRECTOR: ${{ vars.GF_MODEL_DIRECTOR }}
           GF_MODEL_ENGINEER: ${{ vars.GF_MODEL_ENGINEER }}

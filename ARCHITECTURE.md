@@ -1,25 +1,25 @@
-# Game Factory — Architektur v2.4 (Studio OS)
+# Game Factory — Architektur v2.5 (Studio OS)
 
-Autonome, evidence-first Game-Development-Plattform auf GitHub. Ziel ist, Spiele nicht nur zu generieren, sondern reproduzierbar nachzuweisen, dass ein Owner-Brief technisch und produktseitig erfüllt wurde — und die Factory selbst nur kontrolliert aus Evidence zu verbessern.
+Autonome, evidence-first Game-Development-Plattform auf GitHub. GitHub ist die executable/durable Source of Truth für Code, Runs, Evidence, Learning-Artefakte und Promotionen. Notion spiegelt Entscheidungen und Status.
 
-GitHub Actions ist aktuell die Execution Runtime. GitHub bleibt durable Source of Truth für Code, Evidence, Drafts, Entscheidungen und Lernartefakte. Der aktuelle Public-Repo-Betrieb ist eine PoC-Entscheidung, **kein endgültiges Plattformziel**.
+Stand: 27.08.2026 — Controlled Improvement v1 ist technisch implementiert; Titan Canary #3 ist der erste reale Evidence-to-Candidate-Fall.
 
 ## 1. Architekturprinzipien
 
 1. **LLM-Output ist ein Claim, keine Wahrheit.** Fortschritt entsteht erst durch Evidence.
-2. **Fail closed.** Fehlende oder widersprüchliche Nachweise führen nicht zu Release oder Promotion.
-3. **Owner-Intent ist ein Vertrag.** Must-Haves und No-Gos dürfen in späteren Rollen nicht verloren gehen.
-4. **Determinismus dort, wo getestet wird.** Kandidat + Seed + Eingabesequenz erzeugen reproduzierbare Verifier-Evidence.
-5. **Modelle sind Worker, keine Control Plane.** Budget, Gates, SHA-Binding, Release- und Promotion-Entscheidungen sind Maschinen-/Governance-Logik.
-6. **Provider und Modelle bleiben austauschbar.** Kein stiller Cross-Provider- oder Challenger-Fallback in Production.
-7. **Lernen braucht Evidence.** Keine unvalidierte Prompt-/Skill-/Contract-Selbstmutation.
-8. **Production Factory und Improvement Factory bleiben getrennt.** Produktionsläufe dürfen keine ungeprüften dauerhaften Factory-Regeln aktivieren.
-9. **Model Routing ist policy-gesteuert.** Der stärkste oder teuerste Worker ist nicht automatisch die richtige Wahl für jede Aufgabe.
-10. **IP/Security ist ein eigener Productionization-Gate.** Ein öffentliches Produkt erfordert keine öffentliche Factory-Kernarchitektur.
+2. **Fail closed.** Fehlende oder widersprüchliche Nachweise führen nicht zu Release, Learning-Promotion oder Provider-Fallback.
+3. **Owner Intent ist Vertrag.** Must-Haves/No-Gos und konkrete durable Referenzen dürfen downstream nicht still verschwinden.
+4. **Modelle sind Worker, keine Control Plane.** Budget, SHA-Binding, Release und Learning-Promotion bleiben deterministisch/governed.
+5. **Production Factory und Improvement Factory sind getrennt.** Kein ungeprüfter Candidate darf Production beeinflussen.
+6. **Provider/Modelle sind austauschbar.** Kein stiller Challenger- oder Cross-Provider-Fallback.
+7. **Promotion ist explizit und reversibel.** Geschützte Layer benötigen separaten Human-Merge.
+8. **Git-backed Evidence vor unsichtbarer Memory.** Dauerhafte Claims müssen nachvollziehbare Provenance haben.
+9. **Keine neue Kontrollkomponente ohne reproduzierten Failure Mode.**
+10. **Kein Paid Game/Titan Canary ohne neue Owner-Freigabe.**
 
 Authority Order:
 
-`Control Plane > Owner Contract > Engine/API Contract > Verified Skill > Memory Lesson`
+`Control Plane > Owner Contract > Engine/API Contract > Verified Skill > Validated Active Memory Lesson`
 
 ## 2. Schichten
 
@@ -31,133 +31,217 @@ L5 PRODUCTION LINE
    Director -> Engineer -> Repair/Rebuild -> Playtester -> Polish -> Auditor -> Draft
 
 L4 EVIDENCE & QUALITY
-   Technical Verifier -> Product Fidelity -> Experience -> Release Gate
+   Technical Verifier -> Product Fidelity -> Experience -> Budget -> Release Gate
 
 L3 IMPROVEMENT FACTORY
-   Raw Evidence -> Aggregation -> Trigger -> Analysis -> Candidate -> Validation -> Promotion
+   Raw Evidence -> Aggregate -> Trigger -> Analysis -> Candidate -> Validation -> Promotion
 
-L2 MODEL / PROVIDER LAYER
-   Role/Operation Router -> Model Policy -> Provider Adapter -> Capability/Price Registry
+L2 MODEL / PROVIDER
+   Role/Operation Router -> Model Registry -> Provider Registry -> Adapter -> Credential Lane
 
 L1 CONTROL KERNEL
-   GitHub Actions -> fail-closed state -> SHA binding -> budget -> runs/evidence -> durable memory
+   GitHub Actions -> SHA binding -> budgets -> gates -> durable runs/evidence
 ```
 
-## 3. Current verified Production status — 27.08.2026
+## 3. Verified Production reference
 
-Audit-P0-01 through P0-05 are **DONE**.
-
-Reference Production Canary:
-- Game: `Titan Core: Reforged`
-- GitHub Actions Run: `33069903383`
+Titan Canary #3 / `Titan Core: Reforged`:
+- Production Actions Run: `33069903383`
 - Production commit: `6d16e97f6ce7e880323f61408cad704b96bdb120`
+- Run evidence: `runs/20260827-120138/RUN-EVIDENCE.json`
 - Technical: **PASS**
-- Product Fidelity: **PASS**
-- Experience: **7.7 / 10**
+- Product Fidelity: **PASS** after one autonomous repair
+- Experience: **7.7/10** after one autonomous polish
 - Budget: **PASS**
-- Deterministic Release Gate: **PASS**
-- LLM/API cost: **$0.442821** / `109703` tokens
-- Owner hands-on review: **Product Acceptance FAIL**
-- `/approve` / `/reject`: **not issued yet by design**
+- Release Gate: **PASS**
+- Cost: **$0.442821 / 109,703 tokens**
+- Owner hands-on result: **PRODUCT ACCEPTANCE FAIL**
 
-The Owner intentionally has not used `/reject`, because the current legacy reject path still records an immediately usable Director lesson. That behavior is unsafe for controlled cross-run learning and must be disabled by L0 before Titan feedback becomes durable learning input.
+This proves the Production loop but not that machine gates predict Owner acceptance perfectly.
 
-Detailed references:
-- `docs/strategy/TITAN-CANARY-3-RESULT-2026-08-27.md`
-- `docs/strategy/IMPLEMENTATION-CATALOG-2026-08-27.md`
-- `docs/strategy/PLATFORM-MODEL-ARCHITECTURE-DECISION-2026-08-27.md`
-
-## 4. Production Factory — verified process
+## 4. Production Factory
 
 ```text
 Owner Idea
-  -> immutable Owner Contract (MH/NG IDs + hash)
-  -> Director: GDD + Acceptance/Probe traceability
-  -> Engineer Build / Repair / Fresh Rebuild / Polish
-  -> assemble candidate + bounded probe extension
-  -> deterministic headless verifier
-       -> fixed seed + input sequence
-       -> start/early/mid/end telemetry
-       -> runtime/mechanic evidence
-       -> Technical PASS/FAIL
-       -> Product Fidelity PASS/FAIL
-  -> targeted repair / rebuild if needed
-  -> Playtester
-       -> advisory fidelity review
-       -> Experience score + critique
-  -> polish from verified baseline only
-       -> full reverify
-       -> rollback on regression
-  -> LLM Auditor (strictly advisory)
-  -> deterministic Release Gate
-       Technical PASS
-       + Product Fidelity PASS
-       + Experience >= 6.5
-       + Budget PASS
-  -> draft + Review Issue
-  -> Owner Preview
+ -> immutable Owner Contract
+ -> Director GDD + stable requirement/probe mapping
+ -> Engineer Build
+ -> deterministic Technical + Product Fidelity verification
+ -> bounded Repair/Rebuild when needed
+ -> independent Playtester Experience review
+ -> bounded Polish from verified baseline
+ -> full re-verification
+ -> advisory Auditor
+ -> deterministic Budget + Release Gate
+ -> Draft / Review Issue
+ -> Owner milestone review
 ```
 
-No Owner requirement may disappear silently between intake and review.
+Binding release rule:
+
+`Technical PASS + Product Fidelity PASS + Experience >= threshold + Budget PASS`
+
+Playtester-fidelity opinion and Auditor remain advisory; neither has Release Authority.
 
 ## 5. Production roles
 
 ### Director
-- receives immutable Owner Contract;
-- maps Owner Requirement IDs to stable Acceptance/Probe traceability;
-- cannot grant release authority;
-- may consume only validated + active learning once L0/L1 is implemented.
+Consumes immutable Owner Contract plus only validated+active role learning. Produces GDD/traceability, not release decisions.
 
 ### Engineer
-- Build / Repair / Rebuild / Polish receive Owner Contract and traceability;
-- operations remain independently routable by the model layer;
-- repair/rebuild/polish cannot weaken deterministic release contracts.
+Build/Repair/Rebuild/Polish remain separately routable operations. Repairs cannot weaken Owner Contract or deterministic gates.
 
 ### Playtester
-Returns independent Product Fidelity opinion plus Experience score/critique. Playtester fidelity remains advisory and outside the Release Gate authority surface.
+Provides independent experience/fidelity critique. Experience score may enter the deterministic threshold; qualitative fidelity remains advisory.
 
 ### Auditor
-Strictly advisory. Audit/LLM fields cannot enter the binding Release Gate input API.
+Advisory only. Cannot alter binding release inputs.
 
-## 6. Model / Provider Layer — single source of truth
+## 6. Learning Safety Gate — implemented
 
-Canonical runtime selection lives in:
+Canonical rule in `factory/src/memory/store.mjs`:
+
+> Production prompt injection is allowed only for lessons with `status === "validated"` **and** `active === true`.
+
+Consequences:
+- legacy lessons are normalized fail-closed as unvalidated/inactive;
+- candidates are absent from Production prompts;
+- validated but inactive learning is absent from Production prompts;
+- `/reject` no longer writes an active Director lesson;
+- raw Owner feedback is captured before interpretation.
+
+Canonical GitHub-comment evidence path:
+
+`learning/evidence/owner-feedback/gh-issue-<issue>-comment-<comment>.json`
+
+The record preserves exact `rawText` plus separate parsed metadata/provenance.
+
+## 7. Controlled Improvement v1 — implemented lifecycle
+
+```text
+RAW EVIDENCE
+ -> deterministic aggregate
+ -> deterministic trigger
+ -> bounded analysis
+ -> scoped candidate (inactive)
+ -> validation evidence + regression
+ -> validated inactive
+ -> explicit promotion
+ -> active learning
+ -> optional deactivation / rollback / supersession
+```
+
+Implementation:
+- `factory/src/learning/owner-feedback.mjs`
+- `factory/src/learning/aggregate.mjs`
+- `factory/src/learning/trigger.mjs`
+- `factory/src/learning/analysis.mjs`
+- `factory/src/learning/lifecycle.mjs`
+
+### Candidate schema
+
+Required core fields include:
+`id`, `status`, `role`, `scope`, `targetLayer`, `text`, `sourceRunIds`, `sourceKind`, `ownerFeedbackIds`, `candidateSha`, `confidence`, `evidenceCount`, timestamps, validation/regression evidence, `active`, promotion and reversal provenance.
+
+### Deterministic aggregate
+
+The aggregator consumes canonical `RUN-EVIDENCE.json`, explicit relevant attempt evidence, and Owner feedback. It preserves:
+- final Technical/Product Fidelity failure counts;
+- attempt-level failure signatures separately;
+- repair/rebuild/polish counts;
+- Experience result;
+- Owner verdicts/classification claims;
+- role/model/operation costs and tokens;
+- recurring failures/positive patterns where evidence exists.
+
+Identical inputs produce deterministic output; generated timestamps are excluded from aggregate semantics.
+
+### Trigger
+
+Policy version: `controlled-improvement-trigger-v1`.
+
+Current bounded rules:
+- Owner negative/feedback evidence may allow `product-feedback` analysis.
+- the same engineering failure signature across >=2 independent runs may allow `engineering` analysis.
+- trigger only authorizes analysis; it cannot validate or activate.
+
+### Improvement Analysis authority
+
+May:
+- propose a scoped Learning Candidate.
+
+Must not:
+- activate Production;
+- edit Production directly;
+- change its own authority;
+- weaken release gates.
+
+### Validation / promotion
+
+A candidate becomes validated only with explicit validation evidence plus passing regression results. A model calling something “validated” is insufficient.
+
+Protected layers:
+`skill`, `prompt`, `owner-contract`, `verifier`, `product-fidelity`, `release-gate`, `engine-contract`, `control-plane`.
+
+Protected promotion requires a separate `human-merge`. Activation is versioned/reversible; deactivation updates both candidate and active-memory representation.
+
+## 8. Titan #3 — first real controlled learning case
+
+Raw backfill evidence:
+
+`learning/evidence/owner-feedback/titan-canary-3-owner-result-2026-08-27.json`
+
+No Owner GitHub `/reject` comment existed on Review Issue #6. The backfill therefore does **not** fabricate one; it preserves the exact Owner-result wording from the approved implementation handoff and separately labels the richer expectation context as a handoff summary.
+
+Durable chain:
+- aggregate: `learning/aggregates/titan-canary-3-2026-08-27.json`
+- trigger: `learning/triggers/titan-canary-3-2026-08-27.json`
+- analysis: `learning/analysis/titan-canary-3-product-acceptance-analysis-v1.json`
+- candidate: `learning/candidates/titan-canary-3-visual-target-intake-v1.json`
+
+The analysis keeps multiple root-cause hypotheses open: intake/Product Truth, Owner Contract decomposition, Director reinterpretation, Product/Visual Fidelity, Experience evaluation, or combination.
+
+The candidate targets protected layer `owner-contract`, is `status=candidate`, `active=false`, and has **no Production effect**.
+
+Proof boundary:
+
+> Real `Evidence -> Aggregate -> Trigger -> Analysis -> inactive Candidate` is demonstrated. A real candidate being validated, human-promoted, then improving a later Owner-accepted production game is **not yet demonstrated**.
+
+## 9. Model / Provider layer — one router
+
+Canonical runtime stack:
 - `factory/src/llm/router.mjs`
 - `factory/src/llm/provider-registry.mjs`
 - `factory/src/llm/model-registry.mjs`
+- `factory/src/llm/client.mjs`
 
-`factory/src/config.mjs` contains no competing routing authority.
+There is no second Model Router.
 
-Current Production reference defaults:
+Production reference defaults remain:
 
-| Role / Operation | Reference model |
+| Role / Operation | Default |
 |---|---|
-| Director | `gpt-5.6-terra` |
-| Engineer Build/Repair/Rebuild/Polish | `gpt-5.6-terra` |
-| Playtester | `gpt-5.6-terra` |
-| Auditor | `gpt-5.6-luna` |
-| Release PASS/FAIL | no LLM |
+| Director | `openai:gpt-5.6-terra` |
+| Engineer Build/Repair/Rebuild/Polish | `openai:gpt-5.6-terra` |
+| Playtester | `openai:gpt-5.6-terra` |
+| Auditor | `openai:gpt-5.6-luna` |
+| Release PASS/FAIL | deterministic, no LLM |
 
-The router already supports provider/model selection by role and operation. The target is therefore an **extension of the current router**, not a second orchestrator.
+## 10. OpenRouter M0/M1 — implemented infrastructure
 
-### Approved OpenRouter direction
+Explicit challenger:
 
-OpenRouter is an approved provider lane for controlled challenger-model experiments such as DeepSeek and later GLM/open-weight models.
+`openrouter:deepseek/deepseek-chat-v3.1`
 
-Initial rule:
-- OpenAI remains reference baseline;
-- OpenRouter challengers remain benchmark candidates until separately validated/promoted;
-- no silent challenger Production default;
-- capability mismatch fails before dispatch;
-- requested and actual provider/model evidence remains observable where exposed.
+Verified registry properties on 27.08.2026:
+- context 163,840;
+- max output 32,768;
+- structured outputs supported;
+- price $0.25/M input, $0.13/M cache read, $0.95/M output.
 
-The Factory owns Model Policy. A provider must not become an opaque routing authority.
+The challenger is `benchmarkStatus=challenger`, `productionDefault=false`. It cannot silently replace OpenAI defaults. Unknown provider/model and capability mismatch fail before dispatch.
 
-## 7. Credential boundaries
-
-Do not create one API key per Agent merely for cost attribution. Factory evidence already attributes role/model/operation usage.
-
-Preferred future trust/budget boundaries:
+Credential trust lanes:
 
 ```text
 OPENROUTER_PRODUCTION
@@ -165,227 +249,53 @@ OPENROUTER_BENCHMARK
 OPENROUTER_IMPROVEMENT
 ```
 
-This isolates Production spend, experimental benchmarking and Improvement Factory activity while keeping credential count bounded.
+Benchmark/Improvement do not silently fall back to Production credentials. `GF_LLM_LANE` selects the trust lane. The Produce workflow uses `production`.
 
-## 8. Future deterministic Model Policy
+A live OpenRouter API smoke test is not required for the code acceptance and has not been run because repository-secret availability cannot be read through the current connector. No key is stored in code/docs/issues/artifacts.
 
-Long-term, model choice may differ by role and operation:
+## 11. Regression / CI evidence
 
-```text
-Director              -> planning/reasoning
-Engineer / Build      -> coding
-Engineer / Repair     -> debugging/repair
-Engineer / Rebuild    -> stronger escalation
-Engineer / Polish     -> implementation/product quality
-Playtester            -> multimodal experience review
-Auditor               -> economical precise review
-Improvement Analysis  -> bounded reasoning
-```
+Successful implementation-branch Verifier runs:
+- `33083567504` — learning/OpenRouter safety suite
+- `33087199746` — all-workflow YAML syntax validation after reproduced Produce YAML failure
+- `33087639058` — canonical production `RUN-EVIDENCE` aggregation
+- `33088083507` — relevant attempt-evidence aggregation
 
-This is a capability target, not a fixed assignment.
+The Verifier now parses every `.github/workflows/*.yml|yaml`; this guard was added only after a real invalid-workflow failure was reproduced.
 
-Model quality must be measured by outcome, not call price alone:
-
-`MODEL x ROLE x OPERATION -> verified outcome + convergence + cost`
-
-Relevant measures include first-pass success, repair success, repair/rebuild count, Technical/Product Fidelity, Experience, Owner acceptance, tokens, cost and regressions.
-
-Primary economic target:
-
-**cost per verified and owner-accepted outcome**.
-
-A future escalation policy such as `economy -> stronger repair -> reference/rescue` is allowed only after benchmark evidence and deterministic regression coverage prove value.
-
-## 9. Verification & Release authority
-
-Binding release rule:
-
-`Technical PASS + Product Fidelity PASS + Experience >= 6.5 + Budget PASS`
-
-`evaluateReleaseGate(...)` structurally accepts only deterministic release inputs. Auditor disagreement, Playtester fidelity opinions, Improvement Analysis or model-routing preferences cannot alter release authority.
-
-## 10. Durable Production Evidence
-
-Per run the relevant durable evidence includes:
+## 12. Durable evidence layout
 
 ```text
-brief.json
-owner-contract.json
-gdd.json
-attempt-XX/
-  design.json
-  evidence-tech.json
-  evidence-fidelity.json
-  telemetry.json
-  shots/
-experience-XX.json
-audit.json
-RUN-EVIDENCE.json
-RESULT.json | FAILURE.json
+runs/<run>/                       production evidence
+learning/evidence/owner-feedback/ raw owner evidence
+learning/aggregates/              deterministic aggregates
+learning/triggers/                deterministic trigger decisions
+learning/analysis/                bounded claims/hypotheses
+learning/candidates/              inactive/validated candidate records
+learning/validations/             validation records
+learning/promotions/              activation records
+memory/                           only production-visible validated+active lessons
 ```
 
-This evidence is the foundation for controlled cross-run improvement.
+## 13. Repository strategy
 
-## 11. Improvement Factory — target lifecycle
+Current public repository remains the approved PoC location. After PoC proof, a separate Productionization / IP & Security Gate should decide private-core migration. Historical public disclosure cannot be undone by later privacy changes.
 
-Approved lifecycle:
+## 14. Next architecture work
 
-```text
-RUN / OWNER REVIEW
-  -> RAW LEARNING EVIDENCE
-  -> DETERMINISTIC AGGREGATION
-  -> DETERMINISTIC TRIGGER
-  -> BOUNDED IMPROVEMENT ANALYSIS
-  -> SCOPED LEARNING CANDIDATE
-  -> VALIDATION
-  -> REGRESSION
-  -> VALIDATED
-  -> HUMAN-GATED ACTIVATION
-  -> ACTIVE LESSON / SKILL / RULE / EVAL
-```
+1. Finish PR/merge and documentation sync for Controlled Improvement v1.
+2. If OpenRouter Production execution is desired, provision `OPENROUTER_PRODUCTION` through GitHub Secrets and run only a tiny bounded non-game smoke test.
+3. P2-07 Model Outcome Benchmarking remains later work.
+4. Validate learning candidates only when evidence/reproducibility justify it; do not promote Titan candidate merely because it exists.
+5. After PoC proof: Productionization / IP & Security Gate.
 
-Hard invariant:
+## 15. Explicit non-goals
 
-> Candidate must NEVER enter Production prompts. Only validated + active learning may be injected.
-
-Not allowed:
-
-`Failure -> LLM -> Prompt Edit -> Production`
-
-Current terminology:
-- Intra-run adaptive repair: **YES**
-- Cross-run learning: **limited / partial**
-- Self-improving Factory: **NOT YET**
-- Target: **evidence-driven controlled improvement**
-
-## 12. Learning Safety Gate L0
-
-L0 is the next implementation priority and must prove:
-1. `/reject` does not create an active lesson.
-2. raw Owner feedback is preserved as durable evidence.
-3. candidates do not enter Production prompts.
-4. validated + inactive learning does not enter Production prompts.
-5. only validated + active learning can be injected.
-6. legacy untyped lessons are treated as unvalidated/inactive.
-
-Titan #3 feedback must not be processed through the unsafe legacy learning path before this gate passes.
-
-## 13. Model Infrastructure M0/M1
-
-Immediately after L0, before the broader L1-L7 build:
-
-### M0 — OpenRouter clean integration
-- prove canonical OpenRouter credential/provider path;
-- keep Production defaults unchanged;
-- preserve fail-closed routing and budgets;
-- no paid game Canary.
-
-### M1 — Benchmark-safe model infrastructure
-- safely register challenger models;
-- preserve role/operation overrides;
-- preserve capability checks;
-- preserve provider/model/token/cost evidence;
-- keep experimental models out of Production defaults;
-- prepare Production / Benchmark / Improvement credential boundaries;
-- no automatic best-model selection.
-
-## 14. Controlled Improvement L1-L7
-
-After L0 + M0/M1:
-- structured learning lifecycle and provenance;
-- immutable Owner feedback evidence;
-- deterministic aggregator;
-- deterministic trigger;
-- bounded analysis with no write/activation authority;
-- validation and regression;
-- human-gated, versioned, reversible promotion.
-
-Changes to skills, prompts, Owner Contracts, Verifier, Release Gate, Engine Contract or Control Plane require a separate reviewable promotion path.
-
-## 15. Titan #3 — first real learning evidence case
-
-After L0-L7 foundation is available, Titan #3 Owner feedback becomes the first real controlled learning case.
-
-The system must evaluate competing hypotheses rather than hard-code a root cause. Current evidence leaves open at least:
-- upstream intake/Product Truth loss;
-- Owner Contract decomposition weakness;
-- Director reinterpretation;
-- Visual/Product Fidelity evaluation weakness;
-- Experience evaluation weakness.
-
-Learning analysis may propose scoped candidates, but cannot activate them.
-
-## 16. Platform / repository strategy
-
-The current public repository remains acceptable during the PoC.
-
-Post-PoC target:
-- private proprietary Factory core;
-- private Production evidence/projects where appropriate;
-- optional public games/showcases by deliberate choice.
-
-The public-to-private move is a separate **Productionization / IP & Security Gate**, not part of the active learning refactor.
-
-Anything already published publicly must be treated as previously disclosed.
-
-Security principle:
-
-> The product may be public without making the Factory that produces it public.
-
-## 17. Provider / data security hardening — later
-
-Mature Production must distinguish:
-- Model Policy
-- Provider Policy
-- Data Policy
-
-Potential policy dimensions include approved endpoints/providers, controlled fallbacks, data-retention/collection requirements, source-code exposure constraints, capability requirements and hard spend ceilings.
-
-Provider convenience cannot override Factory evidence, IP policy or production security constraints.
-
-## 18. Repo layout
-
-```text
-engine/                    Micro-Engine + API Contract/Manifest
-factory/src/contract/      Owner Contract + Traceability
-factory/src/control/       Budget / Release Authority / Unified Evidence
-factory/src/llm/           Role Router / Provider / Capability / Price Registry
-factory/src/roles/         Director / Engineer / Playtester / Auditor
-factory/src/verify/        Harness / Technical Contract / Product Fidelity
-factory/src/improvement/   planned controlled improvement modules
-factory/prompts/           role prompts
-skills/                    versioned role guidance
-ideas/                     Owner inputs
-drafts/                    verified candidates before Owner gate
-products/                  published games
-runs/                      run/attempt evidence
-memory/                    registry / active validated learning state
-docs/strategy/             architecture / decisions / hardening
-examples/fixtures/         deterministic regression/adversarial cases
-.github/workflows/         Produce / Verify / Review / Pages / future gated improvement actions
-```
-
-## 19. Active implementation order
-
-```text
-1. L0 Learning Safety Gate
-2. M0 OpenRouter clean integration
-3. M1 Benchmark-safe model infrastructure
-4. L1-L7 Evidence-Driven Controlled Improvement v1
-5. Titan #3 feedback as first real learning evidence case
-6. P2-07 Model Outcome Benchmarking
-7. Later: deterministic adaptive Model Policy / escalation routing
-8. After PoC proof: Productionization / IP & Security Gate + private-core migration decision
-```
-
-## 20. Explicit non-goals for the next implementation milestone
-
-- no new paid Titan/game Canary;
 - no automatic best-model router;
-- no LLM-owned routing policy;
-- no silent cross-provider fallback;
-- no automatic DeepSeek/GLM Production default;
-- no per-Agent API-key proliferation without demonstrated need;
-- no private-platform migration during the learning refactor;
-- no weakening of deterministic release authority;
-- no unvalidated learning in Production.
+- no LLM-owned routing or release policy;
+- no silent provider/model promotion;
+- no unvalidated learning in Production;
+- no new scheduler/supervisor/database without proven failure mode;
+- no new paid game/Titan Canary without explicit Owner approval.
+
+Detailed implementation status: `docs/strategy/CONTROLLED-IMPROVEMENT-V1-IMPLEMENTATION-2026-08-27.md`.

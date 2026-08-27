@@ -10,30 +10,44 @@ const EMPTY = {
   stats: { runs: 0, published: 0, rejected: 0, failed: 0, tokens: 0, costUsd: 0 }
 };
 
+function normalizeLesson(l) {
+  if (l && typeof l === 'object' && Object.hasOwn(l, 'status') && Object.hasOwn(l, 'active')) return { ...l };
+  return { ...(l || {}), status: 'legacy-unvalidated', active: false };
+}
+
 export function loadMemory() {
   const stored = readJson(FILE, {});
   const merged = structuredClone(EMPTY);
   merged.products = stored.products ?? [];
-  merged.lessons = stored.lessons ?? [];
+  merged.lessons = (stored.lessons ?? []).map(normalizeLesson);
   merged.stats = { ...merged.stats, ...(stored.stats ?? {}) };
   return merged;
 }
 
 export function saveMemory(m) {
-  writeJson(FILE, m);
+  writeJson(FILE, { ...m, lessons: (m.lessons ?? []).map(normalizeLesson) });
 }
 
 export function lessonsFor(role, limit = 12) {
   return loadMemory()
-    .lessons.filter((l) => l.role === role)
+    .lessons.filter((l) => l.role === role && l.status === 'validated' && l.active === true)
     .slice(-limit)
     .map((l) => `- ${l.text}`);
 }
 
-export function recordLesson(role, text) {
+// Direct calls are fail-closed. Promotion through learning/lifecycle.mjs is the
+// only supported way to create an active production lesson.
+export function recordLesson(role, text, metadata = {}) {
   const m = loadMemory();
   if (!m.lessons.some((l) => l.text === text && l.role === role)) {
-    m.lessons.push({ date: new Date().toISOString().slice(0, 10), role, text });
+    m.lessons.push({
+      date: new Date().toISOString().slice(0, 10),
+      role,
+      text,
+      ...metadata,
+      status: metadata.status === 'validated' ? 'validated' : 'candidate',
+      active: metadata.status === 'validated' && metadata.active === true
+    });
   }
   saveMemory(m);
 }

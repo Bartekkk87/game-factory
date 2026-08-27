@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "owner-feedback-v1",
+  "id": "historical-titan-canary-3-owner-result-2026-08-27",
+  "sourceKind": "owner-feedback",
+  "sourceRepresentation": "approved-implementation-handoff-backfill",
+  "issue": {
+    "number": 6,
+    "commentId": null,
+    "issueUrl": "https://github.com/Bartekkk87/game-factory/issues/6",
+    "commentUrl": null,
+    "author": "owner"
+  },
+  "rawText": "The Owner has played the candidate and considers it\nPRODUCT ACCEPTANCE FAIL.",
+  "rawTextQualification": "Exact owner-result wording preserved from the approved implementation handoff. No direct GitHub Owner comment existed, so this record does not fabricate a /reject or /feedback command.",
+  "parsedCommand": null,
+  "parsedReason": null,
+  "verdict": "reject",
+  "classificationClaims": [],
+  "candidate": {
+    "slug": "titan-core-reforged"
+  },
+  "sourceRunIds": [
+    "20260827-120138"
+  ],
+  "githubActionsRunId": 33069903383,
+  "candidateSha": "0c675f626042c25c49326bca19b9aba95860d54845b02e91bfc600c05884110d",
+  "expectationContext": {
+    "provenanceType": "handoff-summary-not-direct-owner-comment",
+    "items": [
+      "detailed isometric sci-fi/mech industrial arena",
+      "recognisable mech/player",
+      "large mechanical opponent",
+      "depth/textures/lighting",
+      "weapons/shields",
+      "ground telegraphing",
+      "commercial indie visual quality"
+    ]
+  },
+  "createdAt": "2026-08-27",
+  "provenance": {
+    "system": "approved-implementation-handoff-backfill",
+    "immutableIdentity": "titan-canary-3-owner-result-2026-08-27",
+    "captureVersion": "owner-feedback-v1",
+    "directOwnerIssueCommentAvailable": false,
+    "legacyDirectLearningUsed": false
+  },
+  "auditNote": "The handoff explicitly requires competing hypotheses for the acceptance gap. This evidence does not attribute causality to Director, intake, Owner Contract, verifier, Product Fidelity, or Experience evaluation."
+}

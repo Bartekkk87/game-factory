@@ -13,7 +13,7 @@ jobs:
     if: >
       github.event.issue.pull_request == null &&
       github.event.comment.user.login == github.repository_owner &&
-      (startsWith(github.event.comment.body, '/approve') || startsWith(github.event.comment.body, '/reject'))
+      (startsWith(github.event.comment.body, '/approve') || startsWith(github.event.comment.body, '/reject') || startsWith(github.event.comment.body, '/feedback'))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -31,24 +31,42 @@ jobs:
           SLUG=$(printf '%s' "$ISSUE_BODY" | grep -oE '\[slug:[a-z0-9-]+\]' | head -n 1 | tr -d '[]' | sed 's/^slug://')
           if printf '%s' "$COMMENT" | grep -q '^/approve'; then
             ACTION=approve
-            REASON=''
-          else
+          elif printf '%s' "$COMMENT" | grep -q '^/reject'; then
             ACTION=reject
-            REASON=$(printf '%s' "$COMMENT" | sed -E '1s#^/reject[[:space:]]*##' | head -n 3 | tr '\n' ' ' | sed -E 's/[[:space:]]+$//')
+          else
+            ACTION=feedback
           fi
           echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
           echo "action=$ACTION" >> "$GITHUB_OUTPUT"
-          echo "reason=$REASON" >> "$GITHUB_OUTPUT"
+
+      - name: Capture immutable Owner feedback evidence
+        if: steps.parse.outputs.slug != ''
+        env:
+          GF_OWNER_ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GF_OWNER_COMMENT_ID: ${{ github.event.comment.id }}
+          GF_OWNER_ISSUE_URL: ${{ github.event.issue.html_url }}
+          GF_OWNER_COMMENT_URL: ${{ github.event.comment.html_url }}
+          GF_OWNER_AUTHOR: ${{ github.event.comment.user.login }}
+          GF_OWNER_COMMENT: ${{ github.event.comment.body }}
+          GF_OWNER_SLUG: ${{ steps.parse.outputs.slug }}
+          GF_OWNER_CREATED_AT: ${{ github.event.comment.created_at }}
+        run: node factory/src/learning/owner-feedback.mjs
 
       - name: Finalize verdict
-        if: steps.parse.outputs.slug != ''
+        if: steps.parse.outputs.slug != '' && steps.parse.outputs.action != 'feedback'
         env:
           SLUG: ${{ steps.parse.outputs.slug }}
           ACTION: ${{ steps.parse.outputs.action }}
-          REASON: ${{ steps.parse.outputs.reason }}
-        run: node factory/src/publish/finalize.mjs --slug "$SLUG" --action "$ACTION" --reason "$REASON"
+          COMMENT: ${{ github.event.comment.body }}
+        run: |
+          if [ "$ACTION" = "reject" ]; then
+            REASON=$(printf '%s' "$COMMENT" | sed -E '1s#^/reject[[:space:]]*##')
+            node factory/src/publish/finalize.mjs --slug "$SLUG" --action reject --reason "$REASON"
+          else
+            node factory/src/publish/finalize.mjs --slug "$SLUG" --action approve
+          fi
 
-      - name: Commit publication state
+      - name: Commit review state and evidence
         if: steps.parse.outputs.slug != ''
         run: |
           git config user.name "game-factory-bot"
@@ -57,21 +75,26 @@ jobs:
           git diff --cached --quiet || git commit -m "review: ${{ steps.parse.outputs.action }} ${{ steps.parse.outputs.slug }}"
           git push
 
-      - name: Close review issue
-        if: success() && steps.parse.outputs.slug != ''
+      - name: Close verdict review issue
+        if: success() && steps.parse.outputs.slug != '' && steps.parse.outputs.action != 'feedback'
         env:
           GH_TOKEN: ${{ github.token }}
           ACTION: ${{ steps.parse.outputs.action }}
           SLUG: ${{ steps.parse.outputs.slug }}
-          REASON: ${{ steps.parse.outputs.reason }}
         run: |
           if [ "$ACTION" = "approve" ]; then
-            MSG="Published to the Game Library under \`products/$SLUG/\`. Thanks for playing!"
+            MSG="Published to the Game Library under \`products/$SLUG/\`. Owner evidence was captured."
           else
-            MSG="Archived. The rejection reason was recorded as a lesson for future runs.${REASON:+ Reason: }$REASON"
+            MSG="Archived. Owner rejection was captured as raw learning evidence; no Production lesson was activated."
           fi
           gh issue comment ${{ github.event.issue.number }} --body "$MSG"
           gh issue close ${{ github.event.issue.number }}
+
+      - name: Acknowledge feedback-only capture
+        if: success() && steps.parse.outputs.slug != '' && steps.parse.outputs.action == 'feedback'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue comment ${{ github.event.issue.number }} --body "Feedback captured as durable learning evidence. Product state and Production prompts were not changed."
 
       - name: Warn about missing slug
         if: steps.parse.outputs.slug == ''
