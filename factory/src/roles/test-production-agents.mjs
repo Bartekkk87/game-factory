@@ -145,25 +145,25 @@ const fidelity = evaluateProductFidelity({ ownerContract, gdd, report });
 assert.equal(fidelity.pass, true);
 assert.equal(fidelity.criteria.every((criterion) => criterion.traceable && criterion.pass), true);
 
-const release = evaluateReleaseGate({
+const releaseInput = {
   technical: { pass: true },
   productFidelity: fidelity,
   experienceScore: 7.2,
   budget: { pass: true, spentUsd: 0.25, budgetUsd: 1 },
   minExperience: 6.5
-});
+};
+const release = evaluateReleaseGate(releaseInput);
 assert.equal(release.pass, true);
 assert.deepEqual(release.reasons, []);
 
-const advisoryDisagreementDoesNotChangeRelease = evaluateReleaseGate({
-  technical: { pass: true },
-  productFidelity: fidelity,
-  experienceScore: 7.2,
-  budget: { pass: true, spentUsd: 0.25, budgetUsd: 1 },
-  minExperience: 6.5,
-  audit: { assessment: 'CONCERNS' },
-  playtesterFidelity: { verdict: 'FAIL' }
-});
-assert.equal(advisoryDisagreementDoesNotChangeRelease.pass, true);
+// P0-04: advisory LLM opinions are structurally outside the release-gate API.
+assert.throws(
+  () => evaluateReleaseGate({ ...releaseInput, audit: { assessment: 'CONCERNS' } }),
+  /non-authoritative input: audit/
+);
+assert.throws(
+  () => evaluateReleaseGate({ ...releaseInput, playtesterFidelity: { verdict: 'FAIL' } }),
+  /non-authoritative input: playtesterFidelity/
+);
 
 console.log('L4 production-agent integrity selftest: PASS');
