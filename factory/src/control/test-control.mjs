@@ -23,7 +23,7 @@ assert.deepEqual(getModelPricing('openai', 'gpt-4o-mini'), {
   inputUsdPerM: 0.15,
   cachedInputUsdPerM: 0.075,
   outputUsdPerM: 0.6,
-  source: 'builtin-verified-2026-08-27'
+  source: 'openai-official-2026-08-27'
 });
 
 // Real token accounting is stored per role/model/attempt.
