@@ -18,6 +18,9 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -52,6 +55,13 @@ jobs:
           GF_OWNER_CREATED_AT: ${{ github.event.comment.created_at }}
         run: node factory/src/learning/owner-feedback.mjs
 
+      - name: Run controlled learning orchestration
+        if: steps.parse.outputs.slug != ''
+        env:
+          GF_LEARNING_EVENT_KIND: owner-feedback
+          GF_LEARNING_EVENT_ID: gh-issue-${{ github.event.issue.number }}-comment-${{ github.event.comment.id }}
+        run: node factory/src/learning/orchestrate.mjs
+
       - name: Finalize verdict
         if: steps.parse.outputs.slug != '' && steps.parse.outputs.action != 'feedback'
         env:
@@ -85,7 +95,7 @@ jobs:
           if [ "$ACTION" = "approve" ]; then
             MSG="Published to the Game Library under \`products/$SLUG/\`. Owner evidence was captured."
           else
-            MSG="Archived. Owner rejection was captured as raw learning evidence; no Production lesson was activated."
+            MSG="Archived. Owner rejection was captured as raw learning evidence; any resulting learning candidate remains inactive pending validation and human promotion."
           fi
           gh issue comment ${{ github.event.issue.number }} --body "$MSG"
           gh issue close ${{ github.event.issue.number }}
@@ -94,7 +104,7 @@ jobs:
         if: success() && steps.parse.outputs.slug != '' && steps.parse.outputs.action == 'feedback'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh issue comment ${{ github.event.issue.number }} --body "Feedback captured as durable learning evidence. Product state and Production prompts were not changed."
+        run: gh issue comment ${{ github.event.issue.number }} --body "Feedback captured as durable learning evidence. Controlled learning orchestration ran; Product state and Production prompts were not changed, and no candidate can be auto-validated or auto-activated."
 
       - name: Warn about missing slug
         if: steps.parse.outputs.slug == ''
