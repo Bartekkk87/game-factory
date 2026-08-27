@@ -42,6 +42,8 @@ jobs:
         run: node factory/src/contract/test-owner-contract.mjs
       - name: Prove controlled learning safety and lifecycle
         run: node factory/src/learning/test-learning.mjs
+      - name: Prove cross-run learning trigger threshold
+        run: node factory/src/learning/test-cross-run-trigger.mjs
       - name: Prove automatic controlled learning orchestration
         run: node factory/src/learning/test-orchestration.mjs
       - name: Prove L4 production-agent integrity
