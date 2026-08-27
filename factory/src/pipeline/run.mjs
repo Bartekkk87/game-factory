@@ -17,6 +17,7 @@ import { registerProduct, bumpStats } from '../memory/store.mjs';
 import { beginRunBudget, costReport } from '../llm/client.mjs';
 import { evaluateReleaseGate } from '../control/release-gate.mjs';
 import { createRunEvidence } from '../control/evidence.mjs';
+import { retainBestFailed } from '../control/repair-policy.mjs';
 
 function stamp() {
   const d = new Date();
@@ -253,6 +254,7 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
 
   let design = null;
   let tech = null;
+  let bestFailed = null;
   const failureBundles = [];
   const escalationHistory = [];
   let lastFailureSignature = null;
@@ -272,9 +274,17 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
         state.counters.freshRebuilds++;
         forceFreshRebuild = false;
       } else {
+        const repairBase = bestFailed || {
+          design,
+          tech,
+          bundle: failureBundles[failureBundles.length - 1]
+        };
+        if (bestFailed && design !== bestFailed.design) {
+          log.warn(`repair regression rollback: using best evidenced attempt ${bestFailed.bundle.attempt} (${bestFailed.bundle.failures.length} failed checks) instead of latest failed design`);
+        }
         design = await repairGame({
-          gdd, design, ownerIdea: idea, ownerContract,
-          failureSummary: summarizeFailure(failureBundles[failureBundles.length - 1])
+          gdd, design: repairBase.design, ownerIdea: idea, ownerContract,
+          failureSummary: summarizeFailure(repairBase.bundle)
         });
         state.counters.repairCalls++;
       }
@@ -295,6 +305,22 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     log.warn(`attempt ${attempt} failed verification (${bundle.failures.length} checks)`);
     for (const f of bundle.failures) log.warn(`  FAILED CHECK [${f.id}] ${f.label} :: ${f.detail || 'no detail'}`);
 
+    const retained = retainBestFailed({
+      best: bestFailed,
+      current: { design, tech, bundle }
+    });
+    bestFailed = retained.best;
+    if (retained.evaluation.regressed) {
+      const runtimeDetail = retained.evaluation.newRuntimeErrors.length
+        ? `; new runtime errors: ${retained.evaluation.newRuntimeErrors.join(' | ')}`
+        : '';
+      const regression = `repair regression on attempt ${attempt}: ${retained.evaluation.currentFailures} failed checks vs best ${retained.evaluation.bestFailures}${runtimeDetail}`;
+      escalationHistory.push(regression);
+      log.warn(`${regression}; best attempt ${bestFailed.bundle.attempt} remains the next repair base`);
+    } else if (retained.evaluation.acceptAsBest) {
+      log.info(`best failed candidate updated to attempt ${attempt} (${bundle.failures.length} failed checks)`);
+    }
+
     if (sameFailure || sameCandidate) {
       const trigger = [sameFailure ? 'same failure signature' : null, sameCandidate ? 'identical candidate' : null].filter(Boolean).join(' + ');
       escalationHistory.push(`${trigger}: ${summarizeFailure(bundle)}`);
@@ -306,7 +332,19 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
   }
 
   if (!tech?.passed) {
-    return failClosed(runDir, state, 'debug_exhausted', { attempts: attempt, bundles: failureBundles, escalations: escalationHistory });
+    if (bestFailed?.tech && tech !== bestFailed.tech) {
+      design = bestFailed.design;
+      tech = bestFailed.tech;
+      applyVerificationState(state, tech);
+      log.warn(`debug exhausted after a regressed final attempt; retaining best evidenced attempt ${bestFailed.bundle.attempt} (${bestFailed.bundle.failures.length} failed checks) as failure evidence baseline`);
+    }
+    return failClosed(runDir, state, 'debug_exhausted', {
+      attempts: attempt,
+      bundles: failureBundles,
+      escalations: escalationHistory,
+      bestAttempt: bestFailed?.bundle?.attempt ?? null,
+      bestFailedChecks: bestFailed?.bundle?.failures?.length ?? null
+    });
   }
   log.info('technical contract + product fidelity PASSED');
 
