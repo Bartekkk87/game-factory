@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "improvement-analysis-v1",
+  "id": "auto-production-run-a685bdcf0ba74525",
+  "triggerRef": "learning/triggers/auto-production-run-a685bdcf0ba74525.json",
+  "aggregateRef": "learning/aggregates/auto-production-run-a685bdcf0ba74525.json",
+  "event": {
+    "kind": "production-run",
+    "id": "20260827-210323"
+  },
+  "scope": "engineering",
+  "authority": {
+    "may": [
+      "propose-scoped-learning-candidate"
+    ],
+    "mustNot": [
+      "activate-production",
+      "edit-production",
+      "change-own-authority",
+      "weaken-release-gates"
+    ]
+  },
+  "facts": [
+    "Recurring deterministic cross-run failure evidence involving current production event 20260827-210323: product-fidelity:MH-04:PR-MH-04:state_reached:failed x10 across 2 runs; product-fidelity:MH-05:PR-MH-05:layout_no_overlap:failed x5 across 2 runs; product-fidelity:MH-06:PR-MH-06:state_reached:failed x10 across 2 runs; product-fidelity:MH-07:PR-MH-07:event:fresh_run_started:missing x8 across 2 runs; product-fidelity:MH-08:PR-MH-08:layout_no_overlap:failed x5 across 2 runs; technical:input_causality:failed x4 across 2 runs.",
+    "Independent source runs for those recurring signatures: 2."
+  ],
+  "conclusion": "Evidence supports one inactive hypothesis candidate (candidate-production-run-a685bdcf0ba74525); validation and activation remain prohibited.",
+  "candidateId": "candidate-production-run-a685bdcf0ba74525",
+  "blocked": null,
+  "canValidate": false,
+  "canActivate": false
+}

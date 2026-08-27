@@ -1,0 +1,632 @@
+{
+  "schema": "game-factory.run-evidence/v1",
+  "generatedAt": "2026-08-27T21:11:31.866Z",
+  "run": {
+    "id": "20260827-210323",
+    "status": "failed",
+    "reason": "debug_exhausted",
+    "source": "ideas-folder",
+    "candidateSha": "e0118c0ed022f4491f6e051bd6f29a24314125e8efbd9279bb70cf4b91e6d0a0"
+  },
+  "gates": {
+    "technical": {
+      "pass": true,
+      "checks": [
+        {
+          "id": "probe_present",
+          "label": "Test-Hook __GF__ vorhanden",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "id": "deterministic_seed",
+          "label": "Deterministischer Verifier-Seed ist vorhanden",
+          "pass": true,
+          "detail": "seed=1207618270"
+        },
+        {
+          "id": "telemetry_timeline",
+          "label": "Telemetry enthält start/early/mid/end",
+          "pass": true,
+          "detail": "start:title/0@0ms -> early:playing/0@1200ms -> mid:playing/25@3500ms -> end:playing/25@12000ms"
+        },
+        {
+          "id": "idle_baseline",
+          "label": "Deterministische Idle-Control mit gleichem Seed ist vorhanden",
+          "pass": true,
+          "detail": "mode=idle seed=1207618270 timeline=start:title/0@0ms -> early:playing/0@1200ms -> mid:playing/0@3500ms -> end:playing/0@12000ms"
+        },
+        {
+          "id": "no_runtime_errors",
+          "label": "Keine Laufzeitfehler",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "id": "assets_ok",
+          "label": "Alle Assets geladen",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "id": "started_playing",
+          "label": "Spiel verlässt den Titelbildschirm",
+          "pass": true,
+          "detail": "endState=playing"
+        },
+        {
+          "id": "interactivity",
+          "label": "Spiel zeigt deterministischen Gameplay-Fortschritt in der Telemetry",
+          "pass": true,
+          "detail": "start:title/0@0ms -> early:playing/0@1200ms -> mid:playing/25@3500ms -> end:playing/25@12000ms"
+        },
+        {
+          "id": "input_causality",
+          "label": "Gameplay-Fortschritt ist gegenüber der Idle-Control auf Eingaben zurückführbar",
+          "pass": true,
+          "detail": "active(score+25,events+3,end=playing) vs idle(score+0,events+0,end=playing)"
+        },
+        {
+          "id": "fps_ok",
+          "label": "Performance >= 30 FPS",
+          "pass": true,
+          "detail": "fps=61"
+        },
+        {
+          "id": "visual_content",
+          "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+          "pass": true,
+          "detail": "shot-2-gameplay: VISIBLE (97.18% diff) | shot-3-gameplay: VISIBLE (97.17% diff)"
+        },
+        {
+          "id": "visual_activity",
+          "label": "Gameplay zeigt deterministische Inter-Frame-Aktivität",
+          "pass": true,
+          "detail": "0.6876% pixels changed"
+        }
+      ]
+    },
+    "productFidelity": {
+      "pass": false,
+      "status": "failed",
+      "criteria": [
+        {
+          "requirementId": "MH-01",
+          "acceptanceId": "AC-MH-01",
+          "probeId": "PR-MH-01",
+          "kind": "event",
+          "declaredKind": "event",
+          "strength": "correlated_gameplay",
+          "eventType": "courier_scooter_delivery_started",
+          "evidenceSource": "generated-game-event+runtime-correlation",
+          "pass": true,
+          "traceable": true,
+          "detail": "event correlated with active gameplay at t=1.467s and engine-observed score 0 -> 25"
+        },
+        {
+          "requirementId": "MH-02",
+          "acceptanceId": "AC-MH-02",
+          "probeId": "PR-MH-02",
+          "kind": "event",
+          "declaredKind": "event",
+          "strength": "correlated_gameplay",
+          "eventType": "third_delivery_completed",
+          "evidenceSource": "generated-game-event+runtime-correlation",
+          "pass": false,
+          "traceable": true,
+          "detail": "missing event third_delivery_completed"
+        },
+        {
+          "requirementId": "MH-03",
+          "acceptanceId": "AC-MH-03",
+          "probeId": "PR-MH-03",
+          "kind": "event",
+          "declaredKind": "event",
+          "strength": "correlated_gameplay",
+          "eventType": "route_detour_completed",
+          "evidenceSource": "generated-game-event+runtime-correlation",
+          "pass": false,
+          "traceable": true,
+          "detail": "missing event route_detour_completed"
+        },
+        {
+          "requirementId": "MH-04",
+          "acceptanceId": "AC-MH-04",
+          "probeId": "PR-MH-04",
+          "kind": "state_reached",
+          "declaredKind": "state_reached",
+          "strength": null,
+          "eventType": null,
+          "evidenceSource": "harness-observed",
+          "pass": false,
+          "traceable": true,
+          "detail": "state failure not reached"
+        },
+        {
+          "requirementId": "MH-05",
+          "acceptanceId": "AC-MH-05",
+          "probeId": "PR-MH-05",
+          "kind": "layout_no_overlap",
+          "declaredKind": "layout_no_overlap",
+          "strength": null,
+          "eventType": null,
+          "evidenceSource": "harness-observed-canvas-geometry",
+          "pass": true,
+          "traceable": true,
+          "detail": "independent canvas layout observed at mid: 11 HUD regions, no overlap/out-of-bounds issues, with score progress"
+        },
+        {
+          "requirementId": "MH-06",
+          "acceptanceId": "AC-MH-06",
+          "probeId": "PR-MH-06",
+          "kind": "state_reached",
+          "declaredKind": "state_reached",
+          "strength": null,
+          "eventType": null,
+          "evidenceSource": "harness-observed",
+          "pass": false,
+          "traceable": true,
+          "detail": "state success not reached"
+        },
+        {
+          "requirementId": "MH-07",
+          "acceptanceId": "AC-MH-07",
+          "probeId": "PR-MH-07",
+          "kind": "event",
+          "declaredKind": "event",
+          "strength": "correlated_gameplay",
+          "eventType": "fresh_run_started",
+          "evidenceSource": "generated-game-event+runtime-correlation",
+          "pass": false,
+          "traceable": true,
+          "detail": "missing event fresh_run_started"
+        },
+        {
+          "requirementId": "MH-08",
+          "acceptanceId": "AC-MH-08",
+          "probeId": "PR-MH-08",
+          "kind": "layout_no_overlap",
+          "declaredKind": "layout_no_overlap",
+          "strength": null,
+          "eventType": null,
+          "evidenceSource": "harness-observed-canvas-geometry",
+          "pass": true,
+          "traceable": true,
+          "detail": "independent canvas layout observed at mid: 11 HUD regions, no overlap/out-of-bounds issues, with score progress"
+        },
+        {
+          "requirementId": "NG-01",
+          "acceptanceId": "AC-NG-01",
+          "probeId": "PR-NG-01",
+          "kind": "event_absent",
+          "declaredKind": "event_absent",
+          "strength": null,
+          "eventType": "combat_action",
+          "evidenceSource": "generated-game-event-dependent",
+          "pass": true,
+          "traceable": true,
+          "detail": "event combat_action absent"
+        },
+        {
+          "requirementId": "NG-02",
+          "acceptanceId": "AC-NG-02",
+          "probeId": "PR-NG-02",
+          "kind": "event_absent",
+          "declaredKind": "event_absent",
+          "strength": null,
+          "eventType": "boss_entered",
+          "evidenceSource": "generated-game-event-dependent",
+          "pass": true,
+          "traceable": true,
+          "detail": "event boss_entered absent"
+        },
+        {
+          "requirementId": "NG-03",
+          "acceptanceId": "AC-NG-03",
+          "probeId": "PR-NG-03",
+          "kind": "event_absent",
+          "declaredKind": "event_absent",
+          "strength": null,
+          "eventType": "upgrade_applied",
+          "evidenceSource": "generated-game-event-dependent",
+          "pass": true,
+          "traceable": true,
+          "detail": "event upgrade_applied absent"
+        },
+        {
+          "requirementId": "NG-04",
+          "acceptanceId": "AC-NG-04",
+          "probeId": "PR-NG-04",
+          "kind": "event_absent",
+          "declaredKind": "event_absent",
+          "strength": null,
+          "eventType": "cyberpunk_visual_applied",
+          "evidenceSource": "generated-game-event-dependent",
+          "pass": true,
+          "traceable": true,
+          "detail": "event cyberpunk_visual_applied absent"
+        }
+      ]
+    },
+    "experience": {
+      "pass": false,
+      "score": 0,
+      "threshold": 6.5,
+      "scores": null,
+      "critique": []
+    },
+    "budget": {
+      "pass": true,
+      "spentUsd": 0.486036,
+      "budgetUsd": 10
+    },
+    "release": {
+      "pass": false,
+      "rule": "Technical PASS + Product Fidelity PASS + Experience >= threshold + Budget PASS",
+      "reasons": [
+        "product_fidelity_not_passed",
+        "experience_below_threshold"
+      ]
+    }
+  },
+  "costs": {
+    "schema": "game-factory.cost-ledger/v1",
+    "runId": "20260827-210323",
+    "budgetUsd": 10,
+    "costUsd": 0.486036,
+    "spentUsd": 0.486036,
+    "reservedUsd": 0,
+    "remainingUsd": 9.513964,
+    "tokens": 122149,
+    "tokenBreakdown": {
+      "inputTokens": 90716,
+      "cachedInputTokens": 40329,
+      "outputTokens": 31433,
+      "totalTokens": 122149
+    },
+    "accountingComplete": true,
+    "pass": true,
+    "stageBudgets": {
+      "repair": {
+        "maxCalls": 6,
+        "maxUsd": 4,
+        "calls": 4,
+        "spentUsd": 0.356761,
+        "remainingUsd": 3.643239
+      },
+      "polish": {
+        "maxCalls": 3,
+        "maxUsd": 3,
+        "calls": 0,
+        "spentUsd": 0,
+        "remainingUsd": 3
+      },
+      "freshRebuild": {
+        "maxCalls": 1,
+        "maxUsd": 4,
+        "calls": 0,
+        "spentUsd": 0,
+        "remainingUsd": 4
+      }
+    },
+    "byRole": {
+      "director": {
+        "costUsd": 0.054552,
+        "attempts": 1,
+        "inputTokens": 4530,
+        "cachedInputTokens": 0,
+        "outputTokens": 3791
+      },
+      "engineer": {
+        "costUsd": 0.431484,
+        "attempts": 5,
+        "inputTokens": 86186,
+        "cachedInputTokens": 40329,
+        "outputTokens": 27642
+      }
+    },
+    "byModel": {
+      "gpt-5.6-terra": {
+        "costUsd": 0.486036,
+        "attempts": 6,
+        "inputTokens": 90716,
+        "cachedInputTokens": 40329,
+        "outputTokens": 31433
+      }
+    },
+    "byOperation": {
+      "director": {
+        "costUsd": 0.054552,
+        "attempts": 1,
+        "inputTokens": 4530,
+        "cachedInputTokens": 0,
+        "outputTokens": 3791
+      },
+      "build": {
+        "costUsd": 0.074723,
+        "attempts": 1,
+        "inputTokens": 13901,
+        "cachedInputTokens": 1453,
+        "outputTokens": 4128
+      },
+      "repair": {
+        "costUsd": 0.356761,
+        "attempts": 4,
+        "inputTokens": 72285,
+        "cachedInputTokens": 38876,
+        "outputTokens": 23514
+      }
+    },
+    "attempts": [
+      {
+        "id": "llm-attempt-1",
+        "logicalCallId": "call-1",
+        "role": "director",
+        "operation": "director",
+        "scope": null,
+        "provider": "openai",
+        "model": "gpt-5.6-terra",
+        "modelVersion": "gpt-5.6-terra",
+        "modelAliasKind": "rolling-alias",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 2,
+          "cachedInputUsdPerM": 0.2,
+          "outputUsdPerM": 12,
+          "longContext": {
+            "inputThresholdTokens": 272000,
+            "inputMultiplier": 2,
+            "cachedInputMultiplier": 2,
+            "outputMultiplier": 1.5
+          },
+          "source": "openai-official-2026-08-27"
+        },
+        "estimatedInputTokens": 20892,
+        "maxOutputTokens": 8192,
+        "reservedUsd": 0.140088,
+        "costUsd": 0.054552,
+        "status": "settled",
+        "startedAt": "2026-08-27T21:03:23.915Z",
+        "usage": {
+          "inputTokens": 4530,
+          "cachedInputTokens": 0,
+          "outputTokens": 3791,
+          "totalTokens": 8321
+        },
+        "responseModelId": "gpt-5.6-terra",
+        "providerReportedCostUsd": null,
+        "modelCalculatedCostUsd": 0.054552,
+        "pricingTier": "standard",
+        "costSource": "model-registry",
+        "endedAt": "2026-08-27T21:04:13.331Z"
+      },
+      {
+        "id": "llm-attempt-2",
+        "logicalCallId": "call-2",
+        "role": "engineer",
+        "operation": "build",
+        "scope": null,
+        "provider": "openai",
+        "model": "gpt-5.6-terra",
+        "modelVersion": "gpt-5.6-terra",
+        "modelAliasKind": "rolling-alias",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 2,
+          "cachedInputUsdPerM": 0.2,
+          "outputUsdPerM": 12,
+          "longContext": {
+            "inputThresholdTokens": 272000,
+            "inputMultiplier": 2,
+            "cachedInputMultiplier": 2,
+            "outputMultiplier": 1.5
+          },
+          "source": "openai-official-2026-08-27"
+        },
+        "estimatedInputTokens": 54809,
+        "maxOutputTokens": 12000,
+        "reservedUsd": 0.253618,
+        "costUsd": 0.074723,
+        "status": "settled",
+        "startedAt": "2026-08-27T21:04:13.333Z",
+        "usage": {
+          "inputTokens": 13901,
+          "cachedInputTokens": 1453,
+          "outputTokens": 4128,
+          "totalTokens": 18029
+        },
+        "responseModelId": "gpt-5.6-terra",
+        "providerReportedCostUsd": null,
+        "modelCalculatedCostUsd": 0.074723,
+        "pricingTier": "standard",
+        "costSource": "model-registry",
+        "endedAt": "2026-08-27T21:04:57.495Z"
+      },
+      {
+        "id": "llm-attempt-3",
+        "logicalCallId": "call-3",
+        "role": "engineer",
+        "operation": "repair",
+        "scope": "repair",
+        "provider": "openai",
+        "model": "gpt-5.6-terra",
+        "modelVersion": "gpt-5.6-terra",
+        "modelAliasKind": "rolling-alias",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 2,
+          "cachedInputUsdPerM": 0.2,
+          "outputUsdPerM": 12,
+          "longContext": {
+            "inputThresholdTokens": 272000,
+            "inputMultiplier": 2,
+            "cachedInputMultiplier": 2,
+            "outputMultiplier": 1.5
+          },
+          "source": "openai-official-2026-08-27"
+        },
+        "estimatedInputTokens": 66366,
+        "maxOutputTokens": 12000,
+        "reservedUsd": 0.276732,
+        "costUsd": 0.099097,
+        "status": "settled",
+        "startedAt": "2026-08-27T21:05:26.080Z",
+        "usage": {
+          "inputTokens": 17988,
+          "cachedInputTokens": 1453,
+          "outputTokens": 5478,
+          "totalTokens": 23466
+        },
+        "responseModelId": "gpt-5.6-terra",
+        "providerReportedCostUsd": null,
+        "modelCalculatedCostUsd": 0.099097,
+        "pricingTier": "standard",
+        "costSource": "model-registry",
+        "endedAt": "2026-08-27T21:06:24.461Z"
+      },
+      {
+        "id": "llm-attempt-4",
+        "logicalCallId": "call-4",
+        "role": "engineer",
+        "operation": "repair",
+        "scope": "repair",
+        "provider": "openai",
+        "model": "gpt-5.6-terra",
+        "modelVersion": "gpt-5.6-terra",
+        "modelAliasKind": "rolling-alias",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 2,
+          "cachedInputUsdPerM": 0.2,
+          "outputUsdPerM": 12,
+          "longContext": {
+            "inputThresholdTokens": 272000,
+            "inputMultiplier": 2,
+            "cachedInputMultiplier": 2,
+            "outputMultiplier": 1.5
+          },
+          "source": "openai-official-2026-08-27"
+        },
+        "estimatedInputTokens": 66366,
+        "maxOutputTokens": 12000,
+        "reservedUsd": 0.276732,
+        "costUsd": 0.073863,
+        "status": "settled",
+        "startedAt": "2026-08-27T21:06:50.585Z",
+        "usage": {
+          "inputTokens": 17988,
+          "cachedInputTokens": 17985,
+          "outputTokens": 5855,
+          "totalTokens": 23843
+        },
+        "responseModelId": "gpt-5.6-terra",
+        "providerReportedCostUsd": null,
+        "modelCalculatedCostUsd": 0.073863,
+        "pricingTier": "standard",
+        "costSource": "model-registry",
+        "endedAt": "2026-08-27T21:07:58.876Z"
+      },
+      {
+        "id": "llm-attempt-5",
+        "logicalCallId": "call-5",
+        "role": "engineer",
+        "operation": "repair",
+        "scope": "repair",
+        "provider": "openai",
+        "model": "gpt-5.6-terra",
+        "modelVersion": "gpt-5.6-terra",
+        "modelAliasKind": "rolling-alias",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 2,
+          "cachedInputUsdPerM": 0.2,
+          "outputUsdPerM": 12,
+          "longContext": {
+            "inputThresholdTokens": 272000,
+            "inputMultiplier": 2,
+            "cachedInputMultiplier": 2,
+            "outputMultiplier": 1.5
+          },
+          "source": "openai-official-2026-08-27"
+        },
+        "estimatedInputTokens": 66366,
+        "maxOutputTokens": 12000,
+        "reservedUsd": 0.276732,
+        "costUsd": 0.076611,
+        "status": "settled",
+        "startedAt": "2026-08-27T21:08:25.091Z",
+        "usage": {
+          "inputTokens": 17988,
+          "cachedInputTokens": 17985,
+          "outputTokens": 6084,
+          "totalTokens": 24072
+        },
+        "responseModelId": "gpt-5.6-terra",
+        "providerReportedCostUsd": null,
+        "modelCalculatedCostUsd": 0.076611,
+        "pricingTier": "standard",
+        "costSource": "model-registry",
+        "endedAt": "2026-08-27T21:09:30.927Z"
+      },
+      {
+        "id": "llm-attempt-6",
+        "logicalCallId": "call-6",
+        "role": "engineer",
+        "operation": "repair",
+        "scope": "repair",
+        "provider": "openai",
+        "model": "gpt-5.6-terra",
+        "modelVersion": "gpt-5.6-terra",
+        "modelAliasKind": "rolling-alias",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 2,
+          "cachedInputUsdPerM": 0.2,
+          "outputUsdPerM": 12,
+          "longContext": {
+            "inputThresholdTokens": 272000,
+            "inputMultiplier": 2,
+            "cachedInputMultiplier": 2,
+            "outputMultiplier": 1.5
+          },
+          "source": "openai-official-2026-08-27"
+        },
+        "estimatedInputTokens": 67180,
+        "maxOutputTokens": 12000,
+        "reservedUsd": 0.27836,
+        "costUsd": 0.107191,
+        "status": "settled",
+        "startedAt": "2026-08-27T21:09:57.119Z",
+        "usage": {
+          "inputTokens": 18321,
+          "cachedInputTokens": 1453,
+          "outputTokens": 6097,
+          "totalTokens": 24418
+        },
+        "responseModelId": "gpt-5.6-terra",
+        "providerReportedCostUsd": null,
+        "modelCalculatedCostUsd": 0.107191,
+        "pricingTier": "standard",
+        "costSource": "model-registry",
+        "endedAt": "2026-08-27T21:11:05.660Z"
+      }
+    ],
+    "violations": []
+  },
+  "counters": {
+    "attempts": 5,
+    "repairCalls": 4,
+    "polishRounds": 0,
+    "freshRebuilds": 0
+  },
+  "audit": null,
+  "artifacts": {
+    "ownerContract": "owner-contract.json"
+  }
+}

@@ -1,0 +1,363 @@
+{
+  "pass": false,
+  "status": "failed",
+  "contractSha256": "d3a83649db0972a9e5f03568402d4248f28c0c9cc0058a6a990472247c70e3c1",
+  "requirementIds": [
+    "MH-01",
+    "MH-02",
+    "MH-03",
+    "MH-04",
+    "MH-05",
+    "MH-06",
+    "MH-07",
+    "MH-08",
+    "NG-01",
+    "NG-02",
+    "NG-03",
+    "NG-04"
+  ],
+  "criteria": [
+    {
+      "requirementId": "MH-01",
+      "acceptanceId": "AC-MH-01",
+      "probeId": "PR-MH-01",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "courier_scooter_delivery_started",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": true,
+      "traceable": true,
+      "detail": "event correlated with active gameplay at t=1.567s and engine-observed score 0 -> 25"
+    },
+    {
+      "requirementId": "MH-02",
+      "acceptanceId": "AC-MH-02",
+      "probeId": "PR-MH-02",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "third_delivery_completed",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "missing event third_delivery_completed"
+    },
+    {
+      "requirementId": "MH-03",
+      "acceptanceId": "AC-MH-03",
+      "probeId": "PR-MH-03",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "route_detour_completed",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "missing event route_detour_completed"
+    },
+    {
+      "requirementId": "MH-04",
+      "acceptanceId": "AC-MH-04",
+      "probeId": "PR-MH-04",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": false,
+      "traceable": true,
+      "detail": "state failure not reached"
+    },
+    {
+      "requirementId": "MH-05",
+      "acceptanceId": "AC-MH-05",
+      "probeId": "PR-MH-05",
+      "kind": "layout_no_overlap",
+      "declaredKind": "layout_no_overlap",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed-canvas-geometry",
+      "pass": false,
+      "traceable": true,
+      "detail": "independent canvas layout insufficient at best phase early: regions=13/3, issueCount=1, scoreProgress=false issues=out-of-bounds"
+    },
+    {
+      "requirementId": "MH-06",
+      "acceptanceId": "AC-MH-06",
+      "probeId": "PR-MH-06",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": false,
+      "traceable": true,
+      "detail": "state success not reached"
+    },
+    {
+      "requirementId": "MH-07",
+      "acceptanceId": "AC-MH-07",
+      "probeId": "PR-MH-07",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "fresh_run_started",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "missing event fresh_run_started"
+    },
+    {
+      "requirementId": "MH-08",
+      "acceptanceId": "AC-MH-08",
+      "probeId": "PR-MH-08",
+      "kind": "layout_no_overlap",
+      "declaredKind": "layout_no_overlap",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed-canvas-geometry",
+      "pass": false,
+      "traceable": true,
+      "detail": "independent canvas layout insufficient at best phase early: regions=13/4, issueCount=1, scoreProgress=false issues=out-of-bounds"
+    },
+    {
+      "requirementId": "NG-01",
+      "acceptanceId": "AC-NG-01",
+      "probeId": "PR-NG-01",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "combat_action",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event combat_action absent"
+    },
+    {
+      "requirementId": "NG-02",
+      "acceptanceId": "AC-NG-02",
+      "probeId": "PR-NG-02",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "boss_entered",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event boss_entered absent"
+    },
+    {
+      "requirementId": "NG-03",
+      "acceptanceId": "AC-NG-03",
+      "probeId": "PR-NG-03",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "upgrade_applied",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event upgrade_applied absent"
+    },
+    {
+      "requirementId": "NG-04",
+      "acceptanceId": "AC-NG-04",
+      "probeId": "PR-NG-04",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "cyberpunk_visual_applied",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event cyberpunk_visual_applied absent"
+    }
+  ],
+  "failures": [
+    {
+      "requirementId": "MH-02",
+      "acceptanceId": "AC-MH-02",
+      "probeId": "PR-MH-02",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "third_delivery_completed",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "missing event third_delivery_completed"
+    },
+    {
+      "requirementId": "MH-03",
+      "acceptanceId": "AC-MH-03",
+      "probeId": "PR-MH-03",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "route_detour_completed",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "missing event route_detour_completed"
+    },
+    {
+      "requirementId": "MH-04",
+      "acceptanceId": "AC-MH-04",
+      "probeId": "PR-MH-04",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": false,
+      "traceable": true,
+      "detail": "state failure not reached"
+    },
+    {
+      "requirementId": "MH-05",
+      "acceptanceId": "AC-MH-05",
+      "probeId": "PR-MH-05",
+      "kind": "layout_no_overlap",
+      "declaredKind": "layout_no_overlap",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed-canvas-geometry",
+      "pass": false,
+      "traceable": true,
+      "detail": "independent canvas layout insufficient at best phase early: regions=13/3, issueCount=1, scoreProgress=false issues=out-of-bounds"
+    },
+    {
+      "requirementId": "MH-06",
+      "acceptanceId": "AC-MH-06",
+      "probeId": "PR-MH-06",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": false,
+      "traceable": true,
+      "detail": "state success not reached"
+    },
+    {
+      "requirementId": "MH-07",
+      "acceptanceId": "AC-MH-07",
+      "probeId": "PR-MH-07",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "fresh_run_started",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "missing event fresh_run_started"
+    },
+    {
+      "requirementId": "MH-08",
+      "acceptanceId": "AC-MH-08",
+      "probeId": "PR-MH-08",
+      "kind": "layout_no_overlap",
+      "declaredKind": "layout_no_overlap",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed-canvas-geometry",
+      "pass": false,
+      "traceable": true,
+      "detail": "independent canvas layout insufficient at best phase early: regions=13/4, issueCount=1, scoreProgress=false issues=out-of-bounds"
+    }
+  ],
+  "coverage": {
+    "evaluatedRequirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-03",
+      "MH-04",
+      "MH-05",
+      "MH-06",
+      "MH-07",
+      "MH-08",
+      "NG-01",
+      "NG-02",
+      "NG-03",
+      "NG-04"
+    ],
+    "harnessObservedRequirementIds": [
+      "MH-04",
+      "MH-05",
+      "MH-06",
+      "MH-08"
+    ],
+    "canvasGeometryRequirementIds": [
+      "MH-05",
+      "MH-08"
+    ],
+    "generatedGameEventDependentRequirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-03",
+      "MH-07",
+      "NG-01",
+      "NG-02",
+      "NG-03",
+      "NG-04"
+    ],
+    "correlatedGeneratedGameEventRequirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-03",
+      "MH-07"
+    ],
+    "unstructuredBriefContentEvaluated": false,
+    "scope": "Product Fidelity evaluates only structured Owner Contract MH/NG requirements. layout_no_overlap is independently observed by the Playwright harness from actual Canvas text/rectangle draw geometry. event/event_value_change/event_absent evidence depends on generated-game event instrumentation; correlated_gameplay additionally requires harness-observed gameplay timing, state and score change. Descriptive originalBrief content outside MH/NG is not evaluated here."
+  },
+  "observedEvents": [
+    {
+      "seq": 1,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 2,
+      "type": "score_changed",
+      "time": 1.567,
+      "state": "playing",
+      "score": 25,
+      "data": {
+        "before": 0,
+        "after": 25,
+        "delta": 25
+      }
+    },
+    {
+      "seq": 3,
+      "type": "parcel_collected",
+      "time": 1.567,
+      "state": "playing",
+      "score": 25,
+      "data": {
+        "stop": 1,
+        "before": 0,
+        "after": 25
+      }
+    },
+    {
+      "seq": 4,
+      "type": "courier_scooter_delivery_started",
+      "time": 1.567,
+      "state": "playing",
+      "score": 25,
+      "data": {
+        "stop": 1,
+        "target": "Lighthouse Café"
+      }
+    }
+  ]
+}

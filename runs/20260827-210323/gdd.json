@@ -1,0 +1,250 @@
+{
+  "title": "Harbor Courier",
+  "tagline": "Thread the sunny waterfront streets and beat the tide-clock, one parcel at a time.",
+  "genre": "arcade",
+  "pitch": "Harbor Courier is a compact top-down scooter delivery sprint through a bright coastal town. Pick up a marked parcel, follow its colored harbor beacon through real street corridors, dock at the matching address, and repeat three times before the tide-clock empties. Every successful doorstep handoff pops with a bell, confetti, and a satisfying little scooter skid.",
+  "coreLoop": "Drive the courier scooter from the active parcel crate to its color-matched destination, using openings between buildings, water barriers, docks, and planters instead of cutting through them. Each completed delivery reveals the next parcel and target, while the countdown turns route decisions into pressure.",
+  "mechanics": [
+    {
+      "name": "Three-stop courier run",
+      "description": "A run contains three sequential parcel pickups and three distinct destinations: Lighthouse Café, Coral Market, and Seabreeze Hotel. A delivery only counts after the active parcel has been collected and brought into the matching destination's generous docking zone."
+    },
+    {
+      "name": "Responsive top-down scooter",
+      "description": "The player steers a small teal scooter in eight directions with responsive acceleration, gentle coast, and a short turning skid. The scooter is clearly outlined and leaves a tiny tire-spark trail on sharp direction changes."
+    },
+    {
+      "name": "Street-corridor navigation",
+      "description": "Colorful building blocks, water edges, dock stacks, hedges, and parked carts are solid. The map has several readable routes around these barriers, with direct-looking lines deliberately blocked and alternate street openings clearly visible."
+    },
+    {
+      "name": "Beacon route reading",
+      "description": "The active parcel and destination use the same bold color and icon. A pulsing edge-arrow points generally toward the current objective, but the player still chooses which open street corridor to take."
+    },
+    {
+      "name": "Tide-clock",
+      "description": "A visible 75-second countdown runs during play. Fast deliveries earn small fixed time cushions, making clean route execution rewarding without making the timer irrelevant."
+    },
+    {
+      "name": "Dock-and-handoff signature moment",
+      "description": "Entering the correct delivery circle while carrying a parcel triggers a brief handbrake skid, a warm address-stamp flash, parcel confetti, a bell chord, and a 0.08-second hit-stop before the next route appears."
+    },
+    {
+      "name": "Fresh dispatch",
+      "description": "Success and timeout screens both offer a large \"PRESS ENTER TO DISPATCH AGAIN\" action that immediately resets parcels, score, timer, scooter position, and delivery progress without a page reload."
+    }
+  ],
+  "controls": {
+    "keyboard": "Arrow Keys or WASD drive the scooter. Enter starts a run and dispatches a fresh run from a result screen.",
+    "mouse": "Click START on the title screen or DISPATCH AGAIN on a result screen.",
+    "touch": "optional"
+  },
+  "artDirection": {
+    "mood": "sunny postcard coastal arcade",
+    "palette": [
+      "#16385C",
+      "#4DC6D8",
+      "#FFF3C4",
+      "#FF7C63",
+      "#37A66A"
+    ],
+    "shapes": "smooth-vector",
+    "backgroundFx": "A subtly shifting turquoise water gradient sits beyond the streets; slow wave lines and tiny sailboats drift on one parallax layer while gull-like white specks and harbor pennants move on another."
+  },
+  "audioDirection": {
+    "musicMood": "light marimba-and-ukulele arcade loop with a gently ticking percussion layer as time runs down",
+    "sfx": [
+      "soft scooter motor hum",
+      "crate pickup pop",
+      "dock skid",
+      "bright delivery bell chord",
+      "countdown warning tick",
+      "timeout horn",
+      "success fanfare",
+      "button click"
+    ]
+  },
+  "difficulty": {
+    "start": "The first café route is short, uses wide streets, and introduces the parcel-to-destination color match with an obvious beacon.",
+    "progression": "The market and hotel routes place more solid waterfront blocks and dock stacks between start and destination, requiring one or two readable detours while retaining wide collision forgiveness and clear edge guidance.",
+    "peak": "The final hotel handoff is the longest route and occurs with the fastest warning ticks, but includes two viable corridors and a generous destination radius."
+  },
+  "winLose": {
+    "win": "Deliver all 3 parcels before the tide-clock reaches 0 to enter the clear SUCCESS state, show the final score, and offer a fresh dispatch.",
+    "lose": "If the countdown reaches 0 with fewer than 3 deliveries complete, enter the clear TIME'S UP failure state and offer a fresh dispatch."
+  },
+  "juice": {
+    "screenShake": "A 4px, 0.16-second shake on each delivery handoff; a restrained 6px, 0.28-second shake on timeout.",
+    "particles": "Parcel-colored paper flecks burst on delivery, small foam puffs appear at dock-side skids, and a few tire sparks appear only on sharp scooter turns.",
+    "hitStop": "0.08 seconds on a successful parcel handoff.",
+    "flash": "A warm destination-colored flash at alpha 0.35 on delivery, and a pale coral alpha-0.4 flash when time expires."
+  },
+  "scopeNotes": "Do not build combat, enemies, attacks, weapons, health, damage, boss encounters, mechs, robots, crafting, salvage, forging, upgrades, shops, inventory, progression systems, scrolling districts, procedural maps, traffic AI, or online features. Keep the game to one fixed 960x540 harbor map, one scooter, three sequential parcels, three destinations, and title/playing/success/failure states.",
+  "acceptanceCriteria": [
+    {
+      "id": "AC-MH-01",
+      "ownerRequirementId": "MH-01",
+      "statement": "During active play, the player drives a small top-down courier scooter and a courier_scooter_delivery_started event is emitted only when the carried scooter begins a real delivery leg."
+    },
+    {
+      "id": "AC-MH-02",
+      "ownerRequirementId": "MH-02",
+      "statement": "A complete run requires collection and successful delivery of three sequential parcels to the distinct Lighthouse Café, Coral Market, and Seabreeze Hotel destinations, with third_delivery_completed emitted on the third real handoff."
+    },
+    {
+      "id": "AC-MH-03",
+      "ownerRequirementId": "MH-03",
+      "statement": "Solid harbor obstacles block direct travel and a route_detour_completed event is emitted only after the scooter has been blocked by an obstacle, navigated around it through an open street route, and completed that delivery."
+    },
+    {
+      "id": "AC-MH-04",
+      "ownerRequirementId": "MH-04",
+      "statement": "The active HUD displays a countdown timer, and expiry at zero before all three deliveries transitions the game into the clear failure state."
+    },
+    {
+      "id": "AC-MH-05",
+      "ownerRequirementId": "MH-05",
+      "statement": "During active gameplay, separate visible HUD panels show the current target name/color and delivery progress alongside the time display."
+    },
+    {
+      "id": "AC-MH-06",
+      "ownerRequirementId": "MH-06",
+      "statement": "Completing the third delivery while time remains transitions the game into the clear success state."
+    },
+    {
+      "id": "AC-MH-07",
+      "ownerRequirementId": "MH-07",
+      "statement": "After either success or failure, activating Dispatch Again starts a genuinely fresh playing run without reloading the page and emits fresh_run_started."
+    },
+    {
+      "id": "AC-MH-08",
+      "ownerRequirementId": "MH-08",
+      "statement": "The active-game score, timer, target, and delivery-progress HUD regions are readable, stay inside the 960x540 canvas, and do not overlap."
+    },
+    {
+      "id": "AC-NG-01",
+      "ownerRequirementId": "NG-01",
+      "statement": "No combat action, weapon, attack, damage-dealing, or fightable-enemy gameplay event is present."
+    },
+    {
+      "id": "AC-NG-02",
+      "ownerRequirementId": "NG-02",
+      "statement": "No mech, Titan, combat robot, boss arena, or boss-fight gameplay event is present."
+    },
+    {
+      "id": "AC-NG-03",
+      "ownerRequirementId": "NG-03",
+      "statement": "No crafting, salvage, forge, or equipment-upgrade gameplay event is present."
+    },
+    {
+      "id": "AC-NG-04",
+      "ownerRequirementId": "NG-04",
+      "statement": "No cyberpunk, military, or heavy-industrial visual-mode event is present."
+    }
+  ],
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing",
+      "success",
+      "failure"
+    ],
+    "scoreEvents": [
+      "parcel_collected increases score by 25 when the active parcel is physically collected.",
+      "delivery_completed increases score by 100 when the carried parcel enters its matching destination docking zone.",
+      "third_delivery_completed follows the third delivery_completed event and can transition playing to success while timerRemaining is greater than 0."
+    ],
+    "requirementProbes": [
+      {
+        "id": "PR-MH-01",
+        "acceptanceId": "AC-MH-01",
+        "ownerRequirementId": "MH-01",
+        "kind": "event",
+        "eventType": "courier_scooter_delivery_started",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-02",
+        "acceptanceId": "AC-MH-02",
+        "ownerRequirementId": "MH-02",
+        "kind": "event",
+        "eventType": "third_delivery_completed",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-03",
+        "acceptanceId": "AC-MH-03",
+        "ownerRequirementId": "MH-03",
+        "kind": "event",
+        "eventType": "route_detour_completed",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-04",
+        "acceptanceId": "AC-MH-04",
+        "ownerRequirementId": "MH-04",
+        "kind": "state_reached",
+        "state": "failure"
+      },
+      {
+        "id": "PR-MH-05",
+        "acceptanceId": "AC-MH-05",
+        "ownerRequirementId": "MH-05",
+        "kind": "layout_no_overlap",
+        "minRegions": 3,
+        "requireScoreProgress": true
+      },
+      {
+        "id": "PR-MH-06",
+        "acceptanceId": "AC-MH-06",
+        "ownerRequirementId": "MH-06",
+        "kind": "state_reached",
+        "state": "success"
+      },
+      {
+        "id": "PR-MH-07",
+        "acceptanceId": "AC-MH-07",
+        "ownerRequirementId": "MH-07",
+        "kind": "event",
+        "eventType": "fresh_run_started",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-08",
+        "acceptanceId": "AC-MH-08",
+        "ownerRequirementId": "MH-08",
+        "kind": "layout_no_overlap",
+        "minRegions": 4,
+        "requireScoreProgress": true
+      },
+      {
+        "id": "PR-NG-01",
+        "acceptanceId": "AC-NG-01",
+        "ownerRequirementId": "NG-01",
+        "kind": "event_absent",
+        "eventType": "combat_action"
+      },
+      {
+        "id": "PR-NG-02",
+        "acceptanceId": "AC-NG-02",
+        "ownerRequirementId": "NG-02",
+        "kind": "event_absent",
+        "eventType": "boss_entered"
+      },
+      {
+        "id": "PR-NG-03",
+        "acceptanceId": "AC-NG-03",
+        "ownerRequirementId": "NG-03",
+        "kind": "event_absent",
+        "eventType": "upgrade_applied"
+      },
+      {
+        "id": "PR-NG-04",
+        "acceptanceId": "AC-NG-04",
+        "ownerRequirementId": "NG-04",
+        "kind": "event_absent",
+        "eventType": "cyberpunk_visual_applied"
+      }
+    ]
+  }
+}

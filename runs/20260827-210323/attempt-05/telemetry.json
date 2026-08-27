@@ -1,0 +1,856 @@
+{
+  "seed": 1207618270,
+  "inputSequence": {
+    "mode": "active",
+    "seed": 1207618270,
+    "startImpulse": [
+      "Enter",
+      "pointer@640,400"
+    ],
+    "keys": [
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+      "Space",
+      "KeyW",
+      "KeyA",
+      "KeyS",
+      "KeyD",
+      "Enter"
+    ],
+    "pointerPath": [
+      [
+        420,
+        300
+      ],
+      [
+        640,
+        280
+      ],
+      [
+        820,
+        360
+      ],
+      [
+        700,
+        480
+      ],
+      [
+        480,
+        460
+      ],
+      [
+        560,
+        350
+      ]
+    ],
+    "keyEveryMs": 190,
+    "keyHoldMs": 110,
+    "pointerEveryMs": 450,
+    "clickEveryMs": 1300
+  },
+  "timeline": [
+    {
+      "phase": "start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 63,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": [],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 444.98,
+                "top": 493.5,
+                "right": 515.02,
+                "bottom": 506.5,
+                "width": 70.04,
+                "height": 13
+              },
+              "labels": [
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 70,
+          "recentTextDraws": 3,
+          "hudTextDraws": 1
+        }
+      }
+    },
+    {
+      "phase": "early",
+      "atMs": 1200,
+      "snapshot": {
+        "state": "playing",
+        "score": 25,
+        "best": 25,
+        "fps": 60,
+        "time": 1.2666999999999997,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 0.05,
+            "state": "playing",
+            "score": 25,
+            "data": {
+              "before": 0,
+              "after": 25,
+              "delta": 25
+            }
+          },
+          {
+            "seq": 3,
+            "type": "parcel_collected",
+            "time": 0.05,
+            "state": "playing",
+            "score": 25,
+            "data": {
+              "stop": 1,
+              "before": 0,
+              "after": 25
+            }
+          },
+          {
+            "seq": 4,
+            "type": "courier_scooter_delivery_started",
+            "time": 0.05,
+            "state": "playing",
+            "score": 25,
+            "data": {
+              "stop": 1,
+              "target": "Lighthouse Café",
+              "score": 25
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 16,
+                "top": 12,
+                "right": 190,
+                "bottom": 57,
+                "width": 174,
+                "height": 45
+              },
+              "labels": [
+                "TIDE-CLOCK",
+                "72s",
+                "71s"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 202,
+                "top": 12,
+                "right": 542,
+                "bottom": 57,
+                "width": 340,
+                "height": 45
+              },
+              "labels": [
+                "DELIVER TO",
+                "Lighthouse Café",
+                "25"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 554,
+                "top": 12,
+                "right": 740,
+                "bottom": 57,
+                "width": 186,
+                "height": 45
+              },
+              "labels": [
+                "DELIVERIES",
+                "0 / 3"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 752,
+                "top": 12,
+                "right": 944,
+                "bottom": 57,
+                "width": 192,
+                "height": 45
+              },
+              "labels": [
+                "SCORE",
+                "25",
+                "BEST 25"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 721.02,
+                "top": 62.5,
+                "right": 848.98,
+                "bottom": 77.5,
+                "width": 127.96,
+                "height": 15
+              },
+              "labels": [
+                "Lighthouse Café"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-06",
+              "bounds": {
+                "left": 779.17,
+                "top": 108,
+                "right": 790.83,
+                "bottom": 118,
+                "width": 11.66,
+                "height": 10
+              },
+              "labels": [
+                "☕"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-07",
+              "bounds": {
+                "left": 148.53,
+                "top": 122.5,
+                "right": 161.47,
+                "bottom": 131.5,
+                "width": 12.94,
+                "height": 9
+              },
+              "labels": [
+                "M"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-08",
+              "bounds": {
+                "left": 80,
+                "top": 251,
+                "right": 240,
+                "bottom": 347,
+                "width": 160,
+                "height": 96
+              },
+              "labels": [
+                "Parcel Post"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-09",
+              "bounds": {
+                "left": 778.56,
+                "top": 386.5,
+                "right": 789.44,
+                "bottom": 395.5,
+                "width": 10.88,
+                "height": 9
+              },
+              "labels": [
+                "H"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-10",
+              "bounds": {
+                "left": 278,
+                "top": 438,
+                "right": 366,
+                "bottom": 476,
+                "width": 88,
+                "height": 38
+              },
+              "labels": [
+                "Dock Stacks"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-11",
+              "bounds": {
+                "left": 264.09,
+                "top": 506,
+                "right": 695.91,
+                "bottom": 518,
+                "width": 431.82,
+                "height": 12
+              },
+              "labels": [
+                "SOLID HARBOR BLOCK — FIND AN OPEN STREET"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 705,
+          "recentTextDraws": 21,
+          "hudTextDraws": 18
+        }
+      }
+    },
+    {
+      "phase": "mid",
+      "atMs": 3500,
+      "snapshot": {
+        "state": "playing",
+        "score": 25,
+        "best": 25,
+        "fps": 60,
+        "time": 3.5664999999999942,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 0.05,
+            "state": "playing",
+            "score": 25,
+            "data": {
+              "before": 0,
+              "after": 25,
+              "delta": 25
+            }
+          },
+          {
+            "seq": 3,
+            "type": "parcel_collected",
+            "time": 0.05,
+            "state": "playing",
+            "score": 25,
+            "data": {
+              "stop": 1,
+              "before": 0,
+              "after": 25
+            }
+          },
+          {
+            "seq": 4,
+            "type": "courier_scooter_delivery_started",
+            "time": 0.05,
+            "state": "playing",
+            "score": 25,
+            "data": {
+              "stop": 1,
+              "target": "Lighthouse Café",
+              "score": 25
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 16,
+                "top": 12,
+                "right": 190,
+                "bottom": 57,
+                "width": 174,
+                "height": 45
+              },
+              "labels": [
+                "TIDE-CLOCK",
+                "65s",
+                "64s"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 202,
+                "top": 12,
+                "right": 542,
+                "bottom": 57,
+                "width": 340,
+                "height": 45
+              },
+              "labels": [
+                "DELIVER TO",
+                "Lighthouse Café",
+                "25"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 554,
+                "top": 12,
+                "right": 740,
+                "bottom": 57,
+                "width": 186,
+                "height": 45
+              },
+              "labels": [
+                "DELIVERIES",
+                "0 / 3"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 752,
+                "top": 12,
+                "right": 944,
+                "bottom": 57,
+                "width": 192,
+                "height": 45
+              },
+              "labels": [
+                "SCORE",
+                "25",
+                "BEST 25"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 721.02,
+                "top": 62.5,
+                "right": 848.98,
+                "bottom": 77.5,
+                "width": 127.96,
+                "height": 15
+              },
+              "labels": [
+                "Lighthouse Café"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-06",
+              "bounds": {
+                "left": 779.17,
+                "top": 108,
+                "right": 790.83,
+                "bottom": 118,
+                "width": 11.66,
+                "height": 10
+              },
+              "labels": [
+                "☕"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-07",
+              "bounds": {
+                "left": 148.53,
+                "top": 122.5,
+                "right": 161.47,
+                "bottom": 131.5,
+                "width": 12.94,
+                "height": 9
+              },
+              "labels": [
+                "M"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-08",
+              "bounds": {
+                "left": 80,
+                "top": 251,
+                "right": 240,
+                "bottom": 347,
+                "width": 160,
+                "height": 96
+              },
+              "labels": [
+                "Parcel Post"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-09",
+              "bounds": {
+                "left": 778.56,
+                "top": 386.5,
+                "right": 789.44,
+                "bottom": 395.5,
+                "width": 10.88,
+                "height": 9
+              },
+              "labels": [
+                "H"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-10",
+              "bounds": {
+                "left": 278,
+                "top": 438,
+                "right": 366,
+                "bottom": 476,
+                "width": 88,
+                "height": 38
+              },
+              "labels": [
+                "Dock Stacks"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-11",
+              "bounds": {
+                "left": 264.09,
+                "top": 506,
+                "right": 695.91,
+                "bottom": 518,
+                "width": 431.82,
+                "height": 12
+              },
+              "labels": [
+                "SOLID HARBOR BLOCK — FIND AN OPEN STREET"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 705,
+          "recentTextDraws": 21,
+          "hudTextDraws": 18
+        }
+      }
+    },
+    {
+      "phase": "end",
+      "atMs": 12000,
+      "snapshot": {
+        "state": "playing",
+        "score": 25,
+        "best": 25,
+        "fps": 60,
+        "time": 12.066199999999979,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 0.05,
+            "state": "playing",
+            "score": 25,
+            "data": {
+              "before": 0,
+              "after": 25,
+              "delta": 25
+            }
+          },
+          {
+            "seq": 3,
+            "type": "parcel_collected",
+            "time": 0.05,
+            "state": "playing",
+            "score": 25,
+            "data": {
+              "stop": 1,
+              "before": 0,
+              "after": 25
+            }
+          },
+          {
+            "seq": 4,
+            "type": "courier_scooter_delivery_started",
+            "time": 0.05,
+            "state": "playing",
+            "score": 25,
+            "data": {
+              "stop": 1,
+              "target": "Lighthouse Café",
+              "score": 25
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 16,
+                "top": 12,
+                "right": 190,
+                "bottom": 57,
+                "width": 174,
+                "height": 45
+              },
+              "labels": [
+                "TIDE-CLOCK",
+                "36s"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 202,
+                "top": 12,
+                "right": 542,
+                "bottom": 57,
+                "width": 340,
+                "height": 45
+              },
+              "labels": [
+                "DELIVER TO",
+                "Lighthouse Café",
+                "25"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 554,
+                "top": 12,
+                "right": 740,
+                "bottom": 57,
+                "width": 186,
+                "height": 45
+              },
+              "labels": [
+                "DELIVERIES",
+                "0 / 3"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 752,
+                "top": 12,
+                "right": 944,
+                "bottom": 57,
+                "width": 192,
+                "height": 45
+              },
+              "labels": [
+                "SCORE",
+                "25",
+                "BEST 25"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 721.02,
+                "top": 62.5,
+                "right": 848.98,
+                "bottom": 77.5,
+                "width": 127.96,
+                "height": 15
+              },
+              "labels": [
+                "Lighthouse Café"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-06",
+              "bounds": {
+                "left": 779.17,
+                "top": 108,
+                "right": 790.83,
+                "bottom": 118,
+                "width": 11.66,
+                "height": 10
+              },
+              "labels": [
+                "☕"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-07",
+              "bounds": {
+                "left": 148.53,
+                "top": 122.5,
+                "right": 161.47,
+                "bottom": 131.5,
+                "width": 12.94,
+                "height": 9
+              },
+              "labels": [
+                "M"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-08",
+              "bounds": {
+                "left": 80,
+                "top": 251,
+                "right": 240,
+                "bottom": 347,
+                "width": 160,
+                "height": 96
+              },
+              "labels": [
+                "Parcel Post"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-09",
+              "bounds": {
+                "left": 778.56,
+                "top": 386.5,
+                "right": 789.44,
+                "bottom": 395.5,
+                "width": 10.88,
+                "height": 9
+              },
+              "labels": [
+                "H"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-10",
+              "bounds": {
+                "left": 278,
+                "top": 438,
+                "right": 366,
+                "bottom": 476,
+                "width": 88,
+                "height": 38
+              },
+              "labels": [
+                "Dock Stacks"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-11",
+              "bounds": {
+                "left": 264.09,
+                "top": 506,
+                "right": 695.91,
+                "bottom": 518,
+                "width": 431.82,
+                "height": 12
+              },
+              "labels": [
+                "SOLID HARBOR BLOCK — FIND AN OPEN STREET"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 705,
+          "recentTextDraws": 20,
+          "hudTextDraws": 17
+        }
+      }
+    }
+  ]
+}
