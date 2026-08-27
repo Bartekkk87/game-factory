@@ -48,7 +48,7 @@ function summarizeFailure(bundle) {
   if (bundle.pageErrors.length) lines.push('', 'Page errors:', ...bundle.pageErrors.map((e) => '- ' + e));
   if (bundle.probeErrors.length) lines.push('', 'Probe-reported game errors:', ...bundle.probeErrors.map((e) => '- ' + e));
   lines.push('', `Measured FPS: ${bundle.fps ?? 'n/a'} | states: mid=${bundle.states?.mid?.state} -> end=${bundle.states?.end?.state}, score ${bundle.states?.mid?.score} -> ${bundle.states?.end?.score}`);
-  lines.push('', 'Reminder: score must increase through real gameplay within ~15s of random input; no runtime errors allowed.');
+  lines.push('', 'Reminder: score must increase deterministically under ordinary simulated keyboard/mouse input within the first few seconds; do not rely on lucky random collisions or rare events. No runtime errors are allowed.');
   return lines.join('\n');
 }
 
@@ -146,8 +146,8 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     try {
       design =
         attempt === 1
-          ? await buildGame({ gdd })
-          : await repairGame({ gdd, design, failureSummary: summarizeFailure(failureBundles[failureBundles.length - 1]) });
+          ? await buildGame({ gdd, ownerIdea: idea })
+          : await repairGame({ gdd, design, ownerIdea: idea, failureSummary: summarizeFailure(failureBundles[failureBundles.length - 1]) });
     } catch (e) {
       return failClosed(runDir, 'engineer_invalid_output', { error: String(e.message), attempt });
     }
@@ -167,6 +167,7 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
 
   let playtest = null;
   let polishRounds = 0;
+  const polishRegressionNotes = [];
   for (;;) {
     log.step(`PHASE C - PLAYTEST (round ${polishRounds})`);
     const gameplayShots = (tech.report._images || []).filter((s) => s.name !== 'shot-1-title').slice(-3);
@@ -193,8 +194,10 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
 
     polishRounds++;
     log.step(`PHASE C - POLISH ROUND ${polishRounds}/${LIMITS.maxPolishRounds}`);
+    const stableDesign = design;
+    const stableTech = tech;
     try {
-      design = await polishGame({ gdd, design, playtest });
+      design = await polishGame({ gdd, design, playtest, ownerIdea: idea, regressionNotes: polishRegressionNotes });
     } catch (e) {
       return failClosed(runDir, 'engineer_polish_invalid', { error: String(e.message) });
     }
@@ -204,20 +207,34 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     while (!tech.verdict.passed && repairs < 2) {
       repairs++;
       failureBundles.push(failureBundle(tech.evidence));
-      design = await repairGame({ gdd, design, failureSummary: summarizeFailure(failureBundles[failureBundles.length - 1]) });
+      design = await repairGame({
+        gdd,
+        design,
+        ownerIdea: idea,
+        failureSummary: summarizeFailure(failureBundles[failureBundles.length - 1])
+      });
       attempt++;
       tech = await verifyAttempt({ runDir, attempt, design });
     }
     if (!tech.verdict.passed) {
-      return failClosed(runDir, 'regression_after_polish', { attempts: attempt });
+      const regressionSummary = tech.verdict.failures
+        .map((f) => `[${f.id}] ${f.detail || f.label}`)
+        .join(' | ');
+      polishRegressionNotes.push(`Round ${polishRounds}: ${regressionSummary}`);
+      log.warn(`polish round ${polishRounds} regressed the technical contract after ${repairs} repair attempts; restoring last verified candidate and trying the next polish round`);
+      design = stableDesign;
+      tech = stableTech;
+      continue;
     }
+    log.info(`polish round ${polishRounds} preserved technical contract`);
   }
 
   if (!playtest || playtest.overall < LIMITS.minOverallScore) {
     return failClosed(runDir, 'experience_gate_not_met', {
       overall: playtest?.overall ?? null,
       required: LIMITS.minOverallScore,
-      polishRounds
+      polishRounds,
+      polishRegressions: polishRegressionNotes
     });
   }
   if (overBudget(budgetUsd)) {
@@ -288,4 +305,3 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
 
   return { status: 'success', slug, runDir, meta };
 }
-
