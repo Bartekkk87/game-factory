@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "improvement-analysis-v1",
+  "id": "titan-canary-3-product-acceptance-analysis-v1",
+  "triggerRef": "learning/triggers/titan-canary-3-2026-08-27.json",
+  "aggregateRef": "learning/aggregates/titan-canary-3-2026-08-27.json",
+  "scope": "product-feedback",
+  "authority": {
+    "may": ["propose-scoped-learning-candidate"],
+    "mustNot": ["activate-production","edit-production","change-own-authority","weaken-release-gates"]
+  },
+  "facts": [
+    "Machine release gates passed after one repair and one polish round.",
+    "Final machine experience score was 7.7/10.",
+    "Owner result in the approved handoff is PRODUCT ACCEPTANCE FAIL.",
+    "The executable Titan idea did not contain the richer isometric/commercial-quality expectation described after play."
+  ],
+  "classificationClaims": [
+    {"type":"unmet-product-requirement","status":"claim","confidence":0.55},
+    {"type":"visual-reference-mismatch","status":"claim","confidence":0.55},
+    {"type":"process-factory-failure","status":"claim","confidence":0.45}
+  ],
+  "competingHypotheses": [
+    {"id":"A","claim":"Owner intent was lost before executable Product Truth or intake.","resolved":false},
+    {"id":"B","claim":"Owner Contract decomposition was too coarse.","resolved":false},
+    {"id":"C","claim":"Director reinterpreted the executable brief inadequately.","resolved":false},
+    {"id":"D","claim":"Product or Visual Fidelity gates were insufficient for the intended quality bar.","resolved":false},
+    {"id":"E","claim":"Experience evaluation was insufficient to predict Owner acceptance.","resolved":false},
+    {"id":"F","claim":"The acceptance gap resulted from multiple layers in combination.","resolved":false}
+  ],
+  "conclusion": "Evidence justifies a bounded candidate for stronger executable visual-target capture, but does not establish a single root cause and does not justify activation.",
+  "canValidate": false,
+  "canActivate": false
+}
