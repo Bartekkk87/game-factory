@@ -52,8 +52,9 @@ const evidence={runEvidence:[
 const aggregate1=aggregateEvidence(evidence),aggregate2=aggregateEvidence(evidence);
 assert.equal(JSON.stringify(aggregate1),JSON.stringify(aggregate2));
 
-// Canonical RUN-EVIDENCE.json regression: real production evidence nests run id,
-// gate results and cost ledger under run/gates/costs rather than test-only aliases.
+// Canonical RUN-EVIDENCE + attempt-evidence regression. The real production
+// schema nests run id, final gates and costs; intra-run verifier failures live
+// under attempt evidence and must not disappear merely because the final gate passes.
 const canonical = aggregateEvidence({runEvidence:[{
   schema:'game-factory.run-evidence/v1',
   run:{id:'20260827-120138',candidateSha:'abc'},
@@ -67,10 +68,22 @@ const canonical = aggregateEvidence({runEvidence:[{
       {role:'playtester',operation:'playtester',model:'gpt-ref',responseModelId:'gpt-ref',costUsd:0.10,usage:{totalTokens:25}}
     ]
   }
+}],attemptEvidence:[{
+  runId:'20260827-120138',attemptId:'attempt-01',kind:'product-fidelity',sourceRef:'runs/20260827-120138/attempt-01/evidence-fidelity.json',
+  evidence:{pass:false,failures:[
+    {requirementId:'MH-02',probeId:'PR-MH-02',kind:'event',eventType:'titan_and_threats_active',detail:'event occurred too early for correlated gameplay evidence'},
+    {requirementId:'MH-04',probeId:'PR-MH-04',kind:'event',eventType:'hud_layout_clear',detail:'event occurred too early for correlated gameplay evidence'}
+  ]}
 }],ownerFeedback:[{id:'titan-feedback',verdict:'reject',classificationClaims:[]}]});
 assert.deepEqual(canonical.input.runIds,['20260827-120138']);
+assert.equal(canonical.input.attemptEvidence.length,1);
 assert.equal(canonical.failures.technicalFailures,0);
 assert.equal(canonical.failures.productFidelityFailures,0);
+assert.equal(canonical.failures.attemptTechnicalFailures,0);
+assert.equal(canonical.failures.attemptProductFidelityFailures,1);
+assert.equal(canonical.failures.signatures['product-fidelity:MH-02:PR-MH-02:event:titan_and_threats_active:correlated-too-early'],1);
+assert.equal(canonical.failures.signatures['product-fidelity:MH-04:PR-MH-04:event:hud_layout_clear:correlated-too-early'],1);
+assert.deepEqual(canonical.failures.recurring,[]);
 assert.equal(canonical.convergence.repairCount,1);
 assert.equal(canonical.convergence.freshRebuildCount,0);
 assert.equal(canonical.convergence.polishCount,1);
