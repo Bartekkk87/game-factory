@@ -15,7 +15,13 @@ const num = (k, d) => {
 const PROVIDERS = {
   openai: {
     baseUrl: 'https://api.openai.com/v1',
-    defaultModel: 'gpt-4o-mini'
+    defaultModel: 'gpt-4o-mini',
+    roleModels: {
+      director: 'gpt-4o-mini',
+      engineer: 'gpt-4o',
+      playtester: 'gpt-4o-mini',
+      auditor: 'gpt-4o-mini'
+    }
   },
   openrouter: {
     baseUrl: 'https://openrouter.ai/api/v1',
@@ -34,17 +40,19 @@ const PROVIDERS = {
 };
 const providerKey = env('GF_LLM_PROVIDER', 'openai').toLowerCase();
 const provider = PROVIDERS[providerKey] || PROVIDERS.openai;
-const baseModel = env('GF_MODEL', provider.defaultModel);
+const explicitBaseModel = process.env.GF_MODEL?.trim();
+const baseModel = explicitBaseModel || provider.defaultModel;
+const roleDefault = (role) => explicitBaseModel || provider.roleModels?.[role] || baseModel;
 export const LLM = {
   provider: PROVIDERS[providerKey] ? providerKey : 'openai',
   baseUrl: env('GF_LLM_BASE_URL', provider.baseUrl).replace(/\/$/, ''),
   apiKey: env('GF_LLM_API_KEY', ''),
   defaultModel: baseModel,
   models: {
-    director: env('GF_MODEL_DIRECTOR', baseModel),
-    engineer: env('GF_MODEL_ENGINEER', baseModel),
-    playtester: env('GF_MODEL_PLAYTESTER', env('GF_VISION_MODEL', baseModel)),
-    auditor: env('GF_MODEL_AUDITOR', baseModel)
+    director: env('GF_MODEL_DIRECTOR', roleDefault('director')),
+    engineer: env('GF_MODEL_ENGINEER', roleDefault('engineer')),
+    playtester: env('GF_MODEL_PLAYTESTER', env('GF_VISION_MODEL', roleDefault('playtester'))),
+    auditor: env('GF_MODEL_AUDITOR', roleDefault('auditor'))
   }
 };
 export const LIMITS = {
