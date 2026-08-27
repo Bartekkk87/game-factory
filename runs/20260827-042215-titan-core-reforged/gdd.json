@@ -1,0 +1,70 @@
+{
+  "title": "Titan Core: Reforged",
+  "tagline": "Deconstruct, upgrade, and dominate in a cyber arena!",
+  "genre": "action",
+  "pitch": "Engage in fast-paced battles against mechanical titans, tearing them down to collect valuable components. Use your loot to enhance your core abilities in real-time, creating a thrilling loop of risk and reward.",
+  "coreLoop": "Players fight against a titan, collect components upon victory, and immediately apply these upgrades to enhance their combat capabilities for the next encounter. The loop encourages quick decision-making and rapid growth.",
+  "mechanics": [
+    {
+      "name": "Component Collection",
+      "description": "Defeated enemies drop components that can be picked up immediately to enhance the player's strength and abilities."
+    },
+    {
+      "name": "Titan Encounters",
+      "description": "Face off against clearly defined titan bosses that require strategic movement and attacks to defeat."
+    },
+    {
+      "name": "Upgrade System",
+      "description": "Utilize collected components to upgrade player stats or abilities instantly during gameplay."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD for movement, SPACE for attack",
+    "mouse": "Click to interact or pick up components",
+    "touch": "optional"
+  },
+  "artDirection": {
+    "mood": "dark sci-fi/cyberpunk",
+    "palette": [
+      "#1e1e2f",
+      "#00ffcc",
+      "#ff007f",
+      "#ffffff"
+    ],
+    "shapes": "geometric",
+    "backgroundFx": "subtle moving grid lines or pulses"
+  },
+  "audioDirection": {
+    "musicMood": "intense and electronic",
+    "sfx": [
+      "hit",
+      "pickup",
+      "upgrade"
+    ]
+  },
+  "difficulty": {
+    "start": "Easy, with slow and predictable titan attacks.",
+    "progression": "Increased titan aggression and complexity of attacks as the player upgrades.",
+    "peak": "Fast-paced encounters with multiple titans and projectiles, requiring precise movement and timing."
+  },
+  "winLose": {
+    "win": "Defeat the titan and successfully upgrade your core.",
+    "lose": "Player's core is destroyed or health reaches zero."
+  },
+  "juice": {
+    "screenShake": "upon defeating titans",
+    "particles": "when collecting components and performing upgrades",
+    "hitStop": "when a player is hit or delivers a critical attack",
+    "flash": "when the core upgrades are activated"
+  },
+  "scopeNotes": "No complex AI, no multi-screen arenas, no unnecessary visual clutter, no decorative upgrades. Avoid intricate narratives; gameplay should be immediate and accessible.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing"
+    ],
+    "scoreEvents": [
+      "score increases by defeating enemies, collecting components, and successfully upgrading core"
+    ]
+  }
+}
