@@ -1,7 +1,16 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { getModelRecord, getModelPricing } from './model-registry.mjs';
 import { resolveRoleRoute, ModelCapabilityError } from './router.mjs';
 import { UnknownProviderError } from './provider-registry.mjs';
+
+const configSource = fs.readFileSync(new URL('../config.mjs', import.meta.url), 'utf8');
+const routerSource = fs.readFileSync(new URL('./router.mjs', import.meta.url), 'utf8');
+assert.doesNotMatch(configSource, /export const LLM\b/);
+assert.doesNotMatch(configSource, /roleModels\s*:/);
+assert.match(routerSource, /const ROLE_DEFAULTS/);
+assert.match(routerSource, /gpt-5\.6-terra/);
+assert.match(routerSource, /gpt-5\.6-luna/);
 
 const managed = [
   'GF_LLM_PROVIDER', 'GF_MODEL', 'GF_LLM_PROVIDER_DIRECTOR', 'GF_LLM_PROVIDER_ENGINEER', 'GF_LLM_PROVIDER_PLAYTESTER', 'GF_LLM_PROVIDER_AUDITOR',
