@@ -43,6 +43,17 @@ const explicitConstraint = createOwnerContract({
 assert.deepEqual(explicitConstraint.mustHaves.map((r) => r.text), ['Das Spiel muss Top-down sein.']);
 assert.deepEqual(explicitConstraint.unknowns.map((r) => r.text), ['Dunkle Industrie-Atmosphaere.']);
 
+const nonCombat = createOwnerContract({
+  idea: 'Create a minimalist puzzle game. It should feel like Monument Valley. Solving a puzzle must increase the score.',
+  source: 'non-combat-overfitting-regression'
+});
+assert.deepEqual(nonCombat.mustHaves.map((r) => r.text), [
+  'Create a minimalist puzzle game.',
+  'Solving a puzzle must increase the score.'
+]);
+assert.deepEqual(nonCombat.unknowns.map((r) => r.text), ['It should feel like Monument Valley.']);
+assert.equal(nonCombat.mustHaves.some((r) => /camera|combat|boss|lighting|player identity/i.test(r.text)), false);
+
 const ambiguous = createOwnerContract({
   idea: 'Maybe a boss would be cool. Perhaps meta progression later.',
   source: 'adversarial-selftest'
