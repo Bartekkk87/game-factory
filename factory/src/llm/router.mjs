@@ -42,10 +42,8 @@ function selected(role, operation) {
   const opModel = process.env[`GF_MODEL_${roleKey}_${opKey}`]?.trim();
   const roleModel = process.env[`GF_MODEL_${roleKey}`]?.trim();
   const globalModel = process.env.GF_MODEL?.trim();
-  let modelId = opModel || roleModel || globalModel;
-  if (!modelId) modelId = provider === roleDefault.provider ? roleDefault.model : PROVIDER_DEFAULT_MODELS[provider];
-  if (!modelId) throw new Error(`No model configured for provider ${provider}`);
-  return { provider, modelId };
+  const explicitModel = opModel || roleModel || globalModel || null;
+  return { provider, explicitModel, roleDefault };
 }
 
 function requireCapability(model, name) {
@@ -53,8 +51,10 @@ function requireCapability(model, name) {
 }
 
 export function resolveRoleRoute({ role = 'engineer', operation = role, requirements = {} } = {}) {
-  const { provider: providerId, modelId } = selected(role, operation);
-  const provider = runtimeProvider(providerId); // throws; never falls back cross-provider
+  const choice = selected(role, operation);
+  const provider = runtimeProvider(choice.provider); // validate provider first; never falls back cross-provider
+  const modelId = choice.explicitModel || (provider.id === choice.roleDefault.provider ? choice.roleDefault.model : PROVIDER_DEFAULT_MODELS[provider.id]);
+  if (!modelId) throw new Error(`No model configured for provider ${provider.id}`);
   const model = getModelRecord(provider.id, modelId); // throws; never borrows another provider's model
 
   requireCapability(model, 'text');
