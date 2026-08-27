@@ -5,6 +5,7 @@ import { loadMemory, saveMemory } from '../memory/store.mjs';
 
 export const LEARNING_SCHEMA = 'learning-candidate-v1';
 export const PROTECTED_LAYERS = Object.freeze(new Set(['skill','prompt','owner-contract','verifier','product-fidelity','release-gate','engine-contract','control-plane']));
+export const LESSON_PROMOTION_TARGET_LAYER = 'prompt';
 const DIRS = Object.freeze({ candidates: path.join(ROOT,'learning','candidates'), validations: path.join(ROOT,'learning','validations'), promotions: path.join(ROOT,'learning','promotions') });
 const candidatePath = (id) => path.join(DIRS.candidates, `${id}.json`);
 
@@ -39,6 +40,7 @@ export function promoteCandidate(id,{approvedBy,approvalKind,promotionRef,activa
   const c=assertCandidate(readJson(candidatePath(id),null));
   if(c.status!=='validated'||c.active) throw new Error(`candidate ${id} must be validated and inactive`);
   if(!approvedBy||!promotionRef) throw new Error('promotion requires approvedBy and promotionRef');
+  if(c.targetLayer!==LESSON_PROMOTION_TARGET_LAYER) throw new Error(`candidate ${id} targets ${c.targetLayer}; lesson promotion only supports targetLayer ${LESSON_PROMOTION_TARGET_LAYER}`);
   if(PROTECTED_LAYERS.has(c.targetLayer)&&approvalKind!=='human-merge') throw new Error(`protected layer ${c.targetLayer} requires human-merge promotion`);
   const at=activatedAt||new Date().toISOString();
   writeJson(path.join(DIRS.promotions,`${id}.json`),{schemaVersion:'learning-promotion-v1',candidateId:id,approvedBy,approvalKind,promotionRef,activatedAt:at,reversible:true});

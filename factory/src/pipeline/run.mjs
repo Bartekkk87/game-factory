@@ -80,7 +80,8 @@ function applyVerificationState(state, verified) {
     pass: verified.fidelity.pass,
     status: verified.fidelity.status,
     contractSha256: verified.fidelity.contractSha256,
-    criteria: verified.fidelity.criteria
+    criteria: verified.fidelity.criteria,
+    coverage: verified.fidelity.coverage
   };
 }
 
@@ -180,6 +181,10 @@ function llmFailureReason(error, fallback) {
 }
 
 function reviewMarkdown(meta) {
+  const coverage = meta.productFidelity?.coverage;
+  const coverageSummary = coverage
+    ? `structured MH/NG only; ${coverage.harnessObservedRequirementIds?.length ?? 0} harness-observed; ${coverage.generatedGameEventDependentRequirementIds?.length ?? 0} generated-event-dependent; unstructured brief evaluated=${coverage.unstructuredBriefContentEvaluated === true ? 'yes' : 'no'}`
+    : 'coverage metadata unavailable';
   return [
     `## Review needed: ${meta.title}`, '',
     `**Preview:** \`drafts/${meta.slug}/index.html\` (live on Pages after push)`, '',
@@ -187,6 +192,7 @@ function reviewMarkdown(meta) {
     '| Metric | Value |',
     `| Release gate | **${meta.releaseGate.pass ? 'PASS' : 'FAIL'}** |`,
     `| Product fidelity | **${meta.productFidelity.pass ? 'PASS' : 'FAIL'}** |`,
+    `| Product fidelity scope | ${coverageSummary} |`,
     `| Playtester fidelity (advisory) | **${meta.playtesterFidelity?.verdict ?? 'UNAVAILABLE'}** |`,
     `| Playtest overall | **${meta.overall} / 10** |`,
     `| Visuals / UI / Fun / Perf | ${meta.scores.visuals} / ${meta.scores.uiClarity} / ${meta.scores.funProxy} / ${meta.scores.performance} |`,
@@ -225,7 +231,8 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
       pass: false,
       status: 'pending-verification',
       contractSha256: ownerContract.contractSha256,
-      criteria: null
+      criteria: null,
+      coverage: null
     },
     experience: { score: null, scores: null, critique: [], fidelityReview: null },
     audit: null,
@@ -334,7 +341,8 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
         deterministicProductFidelity: {
           pass: tech.fidelity.pass,
           status: tech.fidelity.status,
-          criteria: tech.fidelity.criteria
+          criteria: tech.fidelity.criteria,
+          coverage: tech.fidelity.coverage
         }
       });
     } catch (e) {
@@ -426,7 +434,8 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     deterministicProductFidelity: {
       pass: tech.fidelity.pass,
       status: tech.fidelity.status,
-      criteria: tech.fidelity.criteria
+      criteria: tech.fidelity.criteria,
+      coverage: tech.fidelity.coverage
     },
     playtesterFidelity: state.experience.fidelityReview,
     experience: {

@@ -1,6 +1,8 @@
 import { ownerRequirementIds } from '../contract/owner.mjs';
 
 const SUPPORTED_KINDS = new Set(['event', 'event_value_change', 'score_change', 'state_reached', 'event_absent', 'started_by_early']);
+const GENERATED_EVENT_KINDS = new Set(['event', 'event_value_change', 'event_absent']);
+const HARNESS_OBSERVED_KINDS = new Set(['score_change', 'state_reached', 'started_by_early']);
 
 function allEvents(report) {
   const timeline = Array.isArray(report?.timeline) ? report.timeline : [];
@@ -94,6 +96,34 @@ function evaluateProbe(probe, report, events) {
   return { pass: false, detail: 'unreachable evidence kind' };
 }
 
+function evidenceSource(probe) {
+  if (HARNESS_OBSERVED_KINDS.has(probe?.kind)) return 'harness-observed';
+  if (probe?.kind === 'event' && probe?.strength === 'correlated_gameplay') return 'generated-game-event+runtime-correlation';
+  if (GENERATED_EVENT_KINDS.has(probe?.kind)) return 'generated-game-event-dependent';
+  return 'unknown';
+}
+
+function coverageSummary(requirementIds, criteria) {
+  const uniqueIds = (items) => [...new Set(items)].sort();
+  const generatedGameEventDependentRequirementIds = uniqueIds(
+    criteria.filter((criterion) => GENERATED_EVENT_KINDS.has(criterion.kind)).map((criterion) => criterion.requirementId)
+  );
+  const correlatedGeneratedGameEventRequirementIds = uniqueIds(
+    criteria.filter((criterion) => criterion.kind === 'event' && criterion.strength === 'correlated_gameplay').map((criterion) => criterion.requirementId)
+  );
+  const harnessObservedRequirementIds = uniqueIds(
+    criteria.filter((criterion) => HARNESS_OBSERVED_KINDS.has(criterion.kind)).map((criterion) => criterion.requirementId)
+  );
+  return {
+    evaluatedRequirementIds: [...requirementIds],
+    harnessObservedRequirementIds,
+    generatedGameEventDependentRequirementIds,
+    correlatedGeneratedGameEventRequirementIds,
+    unstructuredBriefContentEvaluated: false,
+    scope: 'Product Fidelity evaluates only structured Owner Contract MH/NG requirements. event/event_value_change/event_absent evidence depends on generated-game event instrumentation; correlated_gameplay additionally requires harness-observed gameplay timing, state and score change. Descriptive originalBrief content outside MH/NG is not evaluated here.'
+  };
+}
+
 export function evaluateProductFidelity({ ownerContract, gdd, report } = {}) {
   const requirementIds = ownerRequirementIds(ownerContract);
   const probes = Array.isArray(gdd?.probePlan?.requirementProbes) ? gdd.probePlan.requirementProbes : [];
@@ -115,6 +145,7 @@ export function evaluateProductFidelity({ ownerContract, gdd, report } = {}) {
       kind: probe?.kind ?? null,
       strength: probe?.strength ?? null,
       eventType: probe?.eventType ?? null,
+      evidenceSource: evidenceSource(probe),
       pass: !!(traceable && observed.pass),
       traceable,
       detail: observed.detail
@@ -129,6 +160,7 @@ export function evaluateProductFidelity({ ownerContract, gdd, report } = {}) {
     requirementIds,
     criteria,
     failures,
+    coverage: coverageSummary(requirementIds, criteria),
     observedEvents: events.slice(-128)
   };
 }

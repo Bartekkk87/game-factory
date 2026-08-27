@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { createOwnerContract } from '../contract/owner.mjs';
 import { compileDirectorTraceability } from '../contract/traceability.mjs';
 import { evaluateProductFidelity } from './fidelity.mjs';
@@ -46,10 +47,17 @@ const fakeEventReport = {
 const fakeVerdict = evaluateProductFidelity({ ownerContract, gdd, report: fakeEventReport });
 assert.equal(fakeVerdict.pass, false);
 assert.match(fakeVerdict.failures[0].detail, /correlated gameplay evidence|too early|value change/i);
+assert.equal(fakeVerdict.criteria[0].evidenceSource, 'generated-game-event+runtime-correlation');
+assert.deepEqual(fakeVerdict.coverage.generatedGameEventDependentRequirementIds, ['MH-01']);
+assert.deepEqual(fakeVerdict.coverage.correlatedGeneratedGameEventRequirementIds, ['MH-01']);
+assert.deepEqual(fakeVerdict.coverage.harnessObservedRequirementIds, []);
+assert.equal(fakeVerdict.coverage.unstructuredBriefContentEvaluated, false);
+assert.match(fakeVerdict.coverage.scope, /generated-game event instrumentation/i);
 
 // Control fixture: the same event is emitted only after active deterministic play has
 // progressed. Event time/state/score are captured by the engine probe extension, not
-// supplied by the LLM event payload.
+// supplied by the LLM event payload. The event identity itself remains generated-game
+// instrumentation, which the coverage metadata must disclose.
 const realMechanicReport = {
   timeline: [
     { phase: 'start', snapshot: { state: 'title', score: 0, time: 0, events: [] } },
@@ -67,5 +75,37 @@ const realMechanicReport = {
 const realVerdict = evaluateProductFidelity({ ownerContract, gdd, report: realMechanicReport });
 assert.equal(realVerdict.pass, true);
 assert.equal(realVerdict.criteria[0].strength, 'correlated_gameplay');
+assert.equal(realVerdict.criteria[0].evidenceSource, 'generated-game-event+runtime-correlation');
+assert.deepEqual(realVerdict.coverage.generatedGameEventDependentRequirementIds, ['MH-01']);
+assert.deepEqual(realVerdict.coverage.correlatedGeneratedGameEventRequirementIds, ['MH-01']);
+
+const harnessContract = createOwnerContract({
+  source: 'harness-observed-fixture',
+  idea: '## Must-Have\n- Score must increase during play.'
+});
+const harnessGdd = compileDirectorTraceability({
+  title: 'Harness Evidence Fixture',
+  genre: 'test',
+  acceptanceCriteria: [
+    { ownerRequirementId: 'MH-01', statement: 'Score increases during active play.' }
+  ],
+  probePlan: {
+    scoreEvents: ['Space'],
+    requirementProbes: [
+      { ownerRequirementId: 'MH-01', kind: 'score_change' }
+    ]
+  }
+}, harnessContract);
+const harnessVerdict = evaluateProductFidelity({ ownerContract: harnessContract, gdd: harnessGdd, report: realMechanicReport });
+assert.equal(harnessVerdict.pass, true);
+assert.equal(harnessVerdict.criteria[0].evidenceSource, 'harness-observed');
+assert.deepEqual(harnessVerdict.coverage.harnessObservedRequirementIds, ['MH-01']);
+assert.deepEqual(harnessVerdict.coverage.generatedGameEventDependentRequirementIds, []);
+
+// The coverage boundary must survive the pipeline into durable result/review metadata.
+const pipelineSource = fs.readFileSync(new URL('../pipeline/run.mjs', import.meta.url), 'utf8');
+assert.match(pipelineSource, /coverage:\s*verified\.fidelity\.coverage/);
+assert.match(pipelineSource, /Product fidelity scope/);
+assert.match(pipelineSource, /coverage:\s*tech\.fidelity\.coverage/);
 
 console.log('P0-03 fidelity hardening selftest: PASS');
