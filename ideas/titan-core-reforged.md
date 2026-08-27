@@ -19,3 +19,6 @@ Dunkle Sci-Fi-/Cyberpunk-Arena, klare Neon-Silhouetten, schnelle direkte Steueru
 - Keine unlesbaren oder überlappenden HUD-Elemente.
 - Keine rein dekorativen Upgrades ohne spürbaren Gameplay-Effekt.
 - Kein komplexes Tutorial vor Spielbeginn; der Kernloop muss sofort spielbar sein.
+
+## Canary
+OpenAI canary after deterministic idea-selection and role-model-default repairs.
