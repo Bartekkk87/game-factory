@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "learning-validation-v1",
+  "candidateId": "candidate-harbor-courier-repair-regression-20260827",
+  "validatedAt": "2026-08-27T20:58:16.000Z",
+  "sourceRunId": "20260827-203110",
+  "sourceWorkflowRunId": "33113644525",
+  "failureMode": {
+    "trajectory": [9, 5, 2, 8, 9],
+    "bestAttempt": 3,
+    "finalRuntimeError": "CanvasRenderingContext2D.ellipse called with 6 arguments instead of 7"
+  },
+  "implementation": {
+    "pullRequest": 18,
+    "mergeSha": "9e07c632bf12b8d117e41c176e200e4e5d15fdd9",
+    "policy": "retain best evidenced failed candidate; do not replace it with a candidate that has more failed checks or introduces a new runtime error"
+  },
+  "validationEvidence": [
+    "runs/20260827-203110/FAILURE.json",
+    "factory/src/control/test-repair-policy.mjs",
+    "GitHub Actions Verifier Selftest 33115440655",
+    "GitHub Actions post-merge Verifier Selftest 33115704784"
+  ],
+  "regressionResults": [
+    {
+      "name": "branch-full-verifier",
+      "runId": "33115440655",
+      "commitSha": "a33915619e7272bb2e78614dd0233386d9ed8aba",
+      "passed": true
+    },
+    {
+      "name": "post-merge-full-verifier",
+      "runId": "33115704784",
+      "commitSha": "9e07c632bf12b8d117e41c176e200e4e5d15fdd9",
+      "passed": true
+    }
+  ],
+  "outcome": "validated-inactive",
+  "active": false,
+  "promotionAuthorized": false,
+  "paidCanaryRunStarted": false
+}
