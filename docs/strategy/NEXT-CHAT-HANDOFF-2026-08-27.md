@@ -32,8 +32,6 @@ Full Verifier Selftest on that runtime head:
 
 - GitHub Actions Run `33046180562` — **SUCCESS**
 
-It verified Node syntax, L1 Control Kernel, L2 Model/Provider routing, L3 deterministic seed/timeline, immutable Owner Contract, Director traceability, Product Fidelity fixtures, real assembled runtime fidelity evidence, and publishing gates.
-
 Documentation commits after this runtime head do not change the verified platform code.
 
 ## Completed
@@ -75,26 +73,11 @@ After every meaningful change, the **full Verifier Selftest must be green before
 - require bounded runtime evidence for product-specific mechanics when generic score/state cannot prove them;
 - preserve repair, fresh rebuild and verified-polish rollback behavior.
 
-Do not pull P1 incremental-patch work into P0 unless a concrete regression requires it.
-
 ### Playtester
 
-Pass:
+Pass Owner Contract, compact GDD, acceptance/probe mapping, telemetry, runtime/mechanic events, screenshots and objective metrics.
 
-- Owner Contract;
-- compact GDD;
-- acceptance/probe mapping;
-- telemetry;
-- runtime/mechanic events;
-- screenshots;
-- objective metrics.
-
-Return separate outputs for:
-
-- independent product-fidelity review (`PASS/FAIL`, missing Must-Haves / suspected No-Go violations);
-- Experience score and critique.
-
-Deterministic Product Fidelity remains machine authority; the LLM Playtester cannot override it.
+Return separate outputs for independent product-fidelity review and Experience score/critique. Deterministic Product Fidelity remains machine authority.
 
 ### Auditor
 
