@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "learning-aggregate-v1",
+  "input": {
+    "runIds": ["20260827-120138"],
+    "attemptEvidence": [{"runId":"20260827-120138","attemptId":"attempt-01","kind":"product-fidelity","sourceRef":"runs/20260827-120138/attempt-01/evidence-fidelity.json"}],
+    "ownerFeedbackIds": ["historical-titan-canary-3-owner-result-2026-08-27"],
+    "sourceRefs": ["runs/20260827-120138/RUN-EVIDENCE.json","runs/20260827-120138/attempt-01/evidence-fidelity.json","learning/evidence/owner-feedback/titan-canary-3-owner-result-2026-08-27.json"]
+  },
+  "failures": {
+    "signatures": {
+      "product-fidelity:MH-02:PR-MH-02:event:titan_and_threats_active:correlated-too-early": 1,
+      "product-fidelity:MH-04:PR-MH-04:event:hud_layout_clear:correlated-too-early": 1
+    },
+    "recurring": [],
+    "technicalFailures": 0,
+    "productFidelityFailures": 0,
+    "attemptTechnicalFailures": 0,
+    "attemptProductFidelityFailures": 1
+  },
+  "positives": {"signatures":{},"recurring":[]},
+  "convergence": {"repairCount":1,"freshRebuildCount":0,"polishCount":1},
+  "experience": {"scores":[7.7],"latest":7.7},
+  "owner": {"verdicts":{"reject":1},"classificationClaims":{}},
+  "economics": {
+    "costUsd": 0.442821,
+    "tokens": 109703,
+    "costByRole": {"auditor":0.002004,"director":0.044238,"engineer":0.317589,"playtester":0.07899},
+    "costByModel": {"gpt-5.6-luna":0.002004,"gpt-5.6-terra":0.440817},
+    "costByOperation": {"auditor":0.002004,"build":0.094834,"director":0.044238,"playtester":0.07899,"polish":0.112265,"repair":0.110491}
+  },
+  "deterministic": true,
+  "note": "Final release gates passed after repair and polish. Attempt-level Product Fidelity failure remains visible; no recurring cross-run failure is claimed from one run."
+}
