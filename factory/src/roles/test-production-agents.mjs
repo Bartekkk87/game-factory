@@ -39,8 +39,8 @@ assert.match(pipelineSource, /playtesterFidelity: state\.experience\.fidelityRev
 
 assert.match(auditorPrompt, /STRICTLY ADVISORY/);
 assert.match(auditorPrompt, /MUST NOT issue PASS\/FAIL/);
-assert.doesNotMatch(auditorSource, /audit\.verdict/);
 assert.match(auditorSource, /audit\.assessment/);
+assert.match(auditorSource, /if \('verdict' in audit\) delete audit\.verdict;/);
 assert.match(pipelineSource, /const finalRelease = releaseFor\(state\)/);
 assert.match(pipelineSource, /if \(!finalRelease\.pass\)/);
 assert.doesNotMatch(pipelineSource, /evaluateReleaseGate\([^)]*audit/s);
