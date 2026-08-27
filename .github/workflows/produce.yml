@@ -102,31 +102,7 @@ jobs:
           BUDGET: ${{ github.event.inputs.budget_usd || '10' }}
         run: |
           printf '%s' "$IDEA_B64" | base64 -d > /tmp/idea-decoded.txt
-          if [ -d runs ]; then
-            find runs -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort > /tmp/gf-runs-before
-          else
-            : > /tmp/gf-runs-before
-          fi
-          set +e
           node factory/src/index.mjs --idea-file /tmp/idea-decoded.txt --budget "$BUDGET"
-          STATUS=$?
-          set -e
-          if [ -d runs ]; then
-            find runs -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort > /tmp/gf-runs-after
-            RUN_ID=$(comm -13 /tmp/gf-runs-before /tmp/gf-runs-after | tail -n1)
-            if [ -n "$RUN_ID" ]; then printf '%s\n' "$RUN_ID" > /tmp/gf-run-id; fi
-          fi
-          exit "$STATUS"
-
-      - name: Run controlled learning orchestration
-        if: always()
-        run: |
-          if [ -s /tmp/gf-run-id ]; then
-            RUN_ID=$(cat /tmp/gf-run-id)
-            GF_LEARNING_EVENT_KIND=production-run GF_LEARNING_EVENT_ID="$RUN_ID" node factory/src/learning/orchestrate.mjs
-          else
-            echo "No new durable production run evidence was created; learning orchestration skipped."
-          fi
 
       - name: Identify latest draft
         id: meta
