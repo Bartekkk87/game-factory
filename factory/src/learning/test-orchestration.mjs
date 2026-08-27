@@ -5,6 +5,15 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../../..');
+const productionSource = fs.readFileSync(path.join(root, 'factory', 'src', 'index.mjs'), 'utf8');
+const reviewWorkflow = fs.readFileSync(path.join(root, '.github', 'workflows', 'review.yml'), 'utf8');
+const orchestrationSource = fs.readFileSync(path.join(root, 'factory', 'src', 'learning', 'orchestrate.mjs'), 'utf8');
+assert.match(productionSource, /orchestrateControlledLearning\(\{\s*eventKind:\s*'production-run'/s);
+assert.match(reviewWorkflow, /Run controlled learning orchestration/);
+assert.match(reviewWorkflow, /GF_LEARNING_EVENT_KIND:\s*owner-feedback/);
+assert.match(reviewWorkflow, /node factory\/src\/learning\/orchestrate\.mjs/);
+assert.doesNotMatch(orchestrationSource, /\bvalidateCandidate\b|\bpromoteCandidate\b|\bdeactivateCandidate\b/);
+
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gf-orchestration-'));
 fs.cpSync(path.join(root, 'factory'), path.join(tmp, 'factory'), { recursive: true });
 fs.mkdirSync(path.join(tmp, 'memory'), { recursive: true });
