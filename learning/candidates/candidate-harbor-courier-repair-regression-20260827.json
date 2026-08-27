@@ -1,11 +1,11 @@
 {
   "schemaVersion": "learning-candidate-v1",
   "id": "candidate-harbor-courier-repair-regression-20260827",
-  "status": "candidate",
+  "status": "validated",
   "role": "engineer",
   "scope": "engineering",
   "targetLayer": "skill",
-  "text": "Hypothesis only: the repair loop needs a regression-aware repair-base policy. In production run 20260827-203110, verification improved from 9 failed checks to 5 and then 2, but subsequent repairs regressed to 8 and 9 failed checks. The final repair also introduced a new deterministic Canvas runtime error by calling CanvasRenderingContext2D.ellipse with 6 instead of the required 7 arguments. Validate whether later repairs should be based on the best evidenced prior attempt rather than unconditionally on the latest failed design, and whether newly introduced runtime errors should force rollback to the best prior candidate before another repair. Do not activate or change Production until this hypothesis is validated with deterministic regression tests.",
+  "text": "Hypothesis validated: the repair loop needs a regression-aware repair-base policy. In production run 20260827-203110, verification improved from 9 failed checks to 5 and then 2, but subsequent repairs regressed to 8 and 9 failed checks. The final repair also introduced a new deterministic Canvas runtime error by calling CanvasRenderingContext2D.ellipse with 6 instead of the required 7 arguments. The validated repair keeps the best evidenced failed candidate as the next repair base and prevents a worse or new-runtime-error candidate from replacing it. This candidate remains inactive and is not promoted as an active production lesson.",
   "sourceRunIds": [
     "20260827-203110"
   ],
@@ -18,15 +18,33 @@
     "runs/20260827-203110/attempt-05/index.html"
   ],
   "ownerFeedbackIds": [],
-  "candidateSha": null,
-  "confidence": null,
+  "candidateSha": "9e07c632bf12b8d117e41c176e200e4e5d15fdd9",
+  "confidence": 1,
   "evidenceCount": 5,
   "createdAt": "2026-08-27T20:45:00.000Z",
-  "validatedAt": null,
+  "validatedAt": "2026-08-27T20:58:16.000Z",
   "expiresAfter": null,
   "supersedes": null,
-  "validationEvidence": [],
-  "regressionResults": [],
+  "validationEvidence": [
+    "factory/src/control/test-repair-policy.mjs",
+    "PR #18",
+    "GitHub Actions Verifier Selftest 33115440655 on a33915619e7272bb2e78614dd0233386d9ed8aba",
+    "GitHub Actions post-merge Verifier Selftest 33115704784 on 9e07c632bf12b8d117e41c176e200e4e5d15fdd9"
+  ],
+  "regressionResults": [
+    {
+      "name": "branch-full-verifier",
+      "runId": "33115440655",
+      "commitSha": "a33915619e7272bb2e78614dd0233386d9ed8aba",
+      "passed": true
+    },
+    {
+      "name": "post-merge-full-verifier",
+      "runId": "33115704784",
+      "commitSha": "9e07c632bf12b8d117e41c176e200e4e5d15fdd9",
+      "passed": true
+    }
+  ],
   "active": false,
   "activatedAt": null,
   "promotionRef": null,
