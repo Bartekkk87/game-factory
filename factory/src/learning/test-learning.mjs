@@ -113,4 +113,16 @@ const active=lifecycle.promoteCandidate('candidate-fixture',{approvedBy:'owner',
 assert.equal(active.active,true);assert.equal(store.lessonsFor('director').includes('- Scoped test candidate'),true);
 const deactivated=lifecycle.deactivateCandidate('candidate-fixture',{by:'owner',reason:'rollback test',at:'2026-08-27T12:40:00Z'});
 assert.equal(deactivated.active,false);assert.equal(store.lessonsFor('director').includes('- Scoped test candidate'),false);
+
+const wrongLayer=lifecycle.createCandidate({id:'candidate-owner-contract-layer',role:'director',scope:'product-feedback',targetLayer:'owner-contract',text:'Must never become a Director prompt lesson through this adapter',sourceRunIds:['run-1'],sourceKind:'owner-feedback',ownerFeedbackIds:[captured.record.id],candidateSha,confidence:0.5,evidenceCount:1,createdAt:'2026-08-27T12:41:00Z'});
+assert.equal(wrongLayer.active,false);
+lifecycle.validateCandidate('candidate-owner-contract-layer',{validationEvidence:[{kind:'fixture',passed:true}],regressionResults:[{suite:'learning',passed:true}],validatedAt:'2026-08-27T12:42:00Z'});
+const lessonsBeforeWrongLayerPromotion=store.loadMemory().lessons.length;
+assert.throws(()=>lifecycle.promoteCandidate('candidate-owner-contract-layer',{approvedBy:'owner',approvalKind:'human-merge',promotionRef:'pr-wrong-layer'}),/lesson promotion only supports targetLayer prompt/);
+assert.equal(store.loadMemory().lessons.length,lessonsBeforeWrongLayerPromotion);
+assert.equal(store.lessonsFor('director').includes('- Must never become a Director prompt lesson through this adapter'),false);
+const wrongLayerStored=JSON.parse(fs.readFileSync(path.join(tmp,'learning','candidates','candidate-owner-contract-layer.json'),'utf8'));
+assert.equal(wrongLayerStored.active,false);
+assert.equal(wrongLayerStored.promotionRef,null);
+
 console.log('controlled learning selftest: PASS');
