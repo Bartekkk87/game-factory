@@ -6,6 +6,14 @@ import { serveDir } from './server.mjs';
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const PLAY_KEYS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Enter'];
+const POINTER_PATH = [
+  [420, 300],
+  [640, 280],
+  [820, 360],
+  [700, 480],
+  [480, 460],
+  [560, 350]
+];
 
 export async function runSession({ root, entry = '/index.html', seconds = 10, screenshotDir = null }) {
   const { url, close } = await serveDir(root);
@@ -79,16 +87,27 @@ export async function runSession({ root, entry = '/index.html', seconds = 10, sc
       await page.keyboard.press('Enter');
       await page.mouse.click(640, 400);
 
+      // Deterministic input sequence: verification evidence must be reproducible.
+      // We intentionally cover movement, action keys and pointer input instead of
+      // relying on Math.random(), which made identical candidates pass/fail by luck.
+      let keyIndex = 0;
+      let pointerIndex = 0;
+      let clickIndex = 0;
       const inputTimer = setInterval(() => {
-        const key = PLAY_KEYS[(Math.random() * PLAY_KEYS.length) | 0];
+        const key = PLAY_KEYS[keyIndex % PLAY_KEYS.length];
+        keyIndex++;
         page.keyboard.down(key).catch(() => {});
         setTimeout(() => page.keyboard.up(key).catch(() => {}), 110);
       }, 190);
       const mouseTimer = setInterval(() => {
-        page.mouse.move(300 + Math.random() * 680, 200 + Math.random() * 320).catch(() => {});
+        const [x, y] = POINTER_PATH[pointerIndex % POINTER_PATH.length];
+        pointerIndex++;
+        page.mouse.move(x, y).catch(() => {});
       }, 450);
       const clickTimer = setInterval(() => {
-        page.mouse.click(400 + Math.random() * 480, 250 + Math.random() * 260).catch(() => {});
+        const [x, y] = POINTER_PATH[clickIndex % POINTER_PATH.length];
+        clickIndex++;
+        page.mouse.click(x, y).catch(() => {});
       }, 1300);
 
       try {
