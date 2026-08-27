@@ -31,6 +31,17 @@ function normalizeSeed(seed) {
   return Number.isFinite(n) ? (Math.trunc(n) >>> 0) : DEFAULT_VERIFIER_SEED;
 }
 
+function readProofPlan(root) {
+  try {
+    const gddPath = path.resolve(root, '..', 'gdd.json');
+    if (!fs.existsSync(gddPath)) return null;
+    const gdd = JSON.parse(fs.readFileSync(gddPath, 'utf8'));
+    return gdd?.proofPlan?.pass === true ? gdd.proofPlan : null;
+  } catch {
+    return null;
+  }
+}
+
 async function runSingleSession({
   root,
   entry = '/index.html',
@@ -38,7 +49,8 @@ async function runSingleSession({
   screenshotDir = null,
   seed = DEFAULT_VERIFIER_SEED,
   inputMode = 'active',
-  captureScreenshots = true
+  captureScreenshots = true,
+  restartAtEnd = false
 }) {
   const verifierSeed = normalizeSeed(seed);
   if (!['active', 'idle'].includes(inputMode)) throw new Error(`unsupported verifier input mode: ${inputMode}`);
@@ -92,6 +104,7 @@ async function runSingleSession({
   let earlySnapshot = null;
   let midSnapshot = null;
   let endSnapshot = null;
+  let postRestartSnapshot = null;
   let fps = null;
   const timeline = [];
 
@@ -213,6 +226,12 @@ async function runSingleSession({
         for (const timer of timers) clearInterval(timer);
       }
       endSnapshot = await record('end', seconds * 1000);
+      if (restartAtEnd && ['success', 'failure', 'won', 'gameover'].includes(endSnapshot?.state)) {
+        await page.keyboard.press('Enter');
+        await page.mouse.click(640, 400);
+        await sleep(450);
+        postRestartSnapshot = await record('post_restart', seconds * 1000 + 450);
+      }
     }
   } catch (e) {
     pageErrors.push(String(e?.message || e));
@@ -248,6 +267,7 @@ async function runSingleSession({
     earlySnapshot,
     midSnapshot,
     endSnapshot,
+    postRestartSnapshot,
     screenshots: shots.map((s) => ({ name: s.name })),
     _images: shots.map((s) => ({ name: s.name, dataUrl: s.dataUrl }))
   };
@@ -256,8 +276,48 @@ async function runSingleSession({
 export async function runSession(options) {
   const active = await runSingleSession({ ...options, inputMode: 'active', captureScreenshots: true });
   const idle = await runSingleSession({ ...options, inputMode: 'idle', screenshotDir: null, captureScreenshots: false });
+  const proofPlan = readProofPlan(options.root);
+  const proofScenarios = [];
+  const extraTimeline = [];
+  const extraPageErrors = [];
+  const extraConsoleErrors = [];
+  const extraRequestFailed = [];
+
+  for (const scenario of proofPlan?.scenarios || []) {
+    if (!scenario || scenario.id === 'base') continue;
+    const report = await runSingleSession({
+      ...options,
+      seconds: Number(scenario.seconds),
+      inputMode: scenario.inputMode,
+      screenshotDir: null,
+      captureScreenshots: false,
+      restartAtEnd: scenario.restartAtEnd === true
+    });
+    proofScenarios.push({
+      id: scenario.id,
+      purpose: scenario.purpose,
+      inputMode: scenario.inputMode,
+      seconds: Number(scenario.seconds),
+      stopStates: Array.isArray(scenario.stopStates) ? [...scenario.stopStates] : [],
+      endState: report.endSnapshot?.state ?? null,
+      postRestartState: report.postRestartSnapshot?.state ?? null
+    });
+    for (const entry of report.timeline || []) {
+      extraTimeline.push({ ...entry, scenarioId: scenario.id, phase: `${scenario.id}:${entry.phase}` });
+    }
+    extraPageErrors.push(...(report.pageErrors || []).map((e) => `[${scenario.id}] ${e}`));
+    extraConsoleErrors.push(...(report.consoleErrors || []).map((e) => `[${scenario.id}] ${e}`));
+    extraRequestFailed.push(...(report.requestFailed || []).map((e) => `[${scenario.id}] ${e}`));
+  }
+
   return {
     ...active,
+    timeline: [...(active.timeline || []), ...extraTimeline],
+    pageErrors: [...(active.pageErrors || []), ...extraPageErrors],
+    consoleErrors: [...(active.consoleErrors || []), ...extraConsoleErrors],
+    requestFailed: [...(active.requestFailed || []), ...extraRequestFailed],
+    proofPlan: proofPlan || null,
+    proofScenarios,
     idleBaseline: {
       seed: idle.seed,
       inputMode: idle.inputMode,
