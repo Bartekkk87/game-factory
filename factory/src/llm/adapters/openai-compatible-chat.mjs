@@ -5,12 +5,16 @@ export function buildOpenAiCompatibleChatRequest({ route, system, user, images =
   const body = {
     model: route.model.id,
     temperature,
-    max_tokens: maxTokens,
     messages: [
       { role: 'system', content: system },
       { role: 'user', content }
     ]
   };
+  // OpenAI's current Chat Completions models (including GPT-5.6) require
+  // max_completion_tokens. Other OpenAI-compatible providers still commonly
+  // implement max_tokens, so keep their existing request shape unchanged.
+  if (route.provider.id === 'openai') body.max_completion_tokens = maxTokens;
+  else body.max_tokens = maxTokens;
   if (json) body.response_format = { type: 'json_object' };
 
   const headers = {
