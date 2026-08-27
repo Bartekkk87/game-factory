@@ -1,4 +1,4 @@
-# Art Direction — polish standards consulted by Engineer & Playtester.
+# Art Direction — visual standards consulted by Director through the canonical prompt assembler.
 
 - Backgrounds need life: two parallax layers, animated gradient, drifting stars/grid or slow color cycling. A flat solid-color background caps the visuals score at 6.
 - Strong contrast between gameplay entities and background. Outline or glow critical objects (player, bullets, pickups) - readability beats realism.
