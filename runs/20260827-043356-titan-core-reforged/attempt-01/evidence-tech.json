@@ -1,0 +1,89 @@
+{
+  "attempt": 1,
+  "candidateSha": "c932745d3aae3ecc66b1ee1dbe6d641640b15ebf5e2ffcaa6646318f5df1178d",
+  "fps": 61,
+  "states": {
+    "mid": {
+      "state": "playing",
+      "score": 0,
+      "best": 0,
+      "fps": 60,
+      "time": 3.2997999999999985,
+      "flags": [],
+      "errors": []
+    },
+    "end": {
+      "state": "playing",
+      "score": 0,
+      "best": 0,
+      "fps": 60,
+      "time": 11.382799999999996,
+      "flags": [],
+      "errors": []
+    }
+  },
+  "contract": {
+    "passed": false,
+    "checks": [
+      {
+        "id": "probe_present",
+        "label": "Test-Hook __GF__ vorhanden",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "assets_ok",
+        "label": "Alle Assets geladen",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "started_playing",
+        "label": "Spiel verlässt den Titelbildschirm",
+        "pass": true,
+        "detail": "endState=playing"
+      },
+      {
+        "id": "interactivity",
+        "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+        "pass": false,
+        "detail": "score 0 -> 0, states playing->playing"
+      },
+      {
+        "id": "fps_ok",
+        "label": "Performance >= 30 FPS",
+        "pass": true,
+        "detail": "fps=61"
+      },
+      {
+        "id": "visual_content",
+        "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+        "pass": false,
+        "detail": "shot-2-gameplay: BLACK (0.44% diff) | shot-3-gameplay: BLACK (0.44% diff)"
+      }
+    ],
+    "failures": [
+      {
+        "id": "interactivity",
+        "label": "Spiel reagiert auf simulierte Eingaben (Score/Zustand ändert sich)",
+        "pass": false,
+        "detail": "score 0 -> 0, states playing->playing"
+      },
+      {
+        "id": "visual_content",
+        "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+        "pass": false,
+        "detail": "shot-2-gameplay: BLACK (0.44% diff) | shot-3-gameplay: BLACK (0.44% diff)"
+      }
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "probeErrors": []
+}

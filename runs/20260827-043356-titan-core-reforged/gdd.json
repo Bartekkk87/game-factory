@@ -1,0 +1,73 @@
+{
+  "title": "Titan Core: Reforged",
+  "tagline": "Forge your strength by dismantling titanic foes!",
+  "genre": "action",
+  "pitch": "In this fast-paced top-down arcade action game, players engage in thrilling battles against massive enemy Titans. Defeat foes to salvage powerful components that immediately enhance your abilities, creating an exhilarating cycle of destruction and empowerment.",
+  "coreLoop": "Players move swiftly around the arena, attacking enemy Titans while dodging incoming projectiles and collecting salvaged components. Each successful attack leads to immediate rewards that augment the player's capabilities, creating a satisfying feedback loop.",
+  "mechanics": [
+    {
+      "name": "Attack & Salvage",
+      "description": "Players can perform quick melee attacks on Titans, and upon defeating them, salvage components to enhance their core abilities."
+    },
+    {
+      "name": "Core Upgrade",
+      "description": "Each salvaged component provides immediate upgrades, such as increased speed, damage, or health, directly impacting gameplay."
+    },
+    {
+      "name": "Risk/Reward Extraction",
+      "description": "After defeating a Titan, players choose between extracting components for permanent upgrades or risking deeper challenges for greater rewards."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD to move, SPACE to attack",
+    "mouse": "Aim and click to attack",
+    "touch": "Tap to move, swipe to attack"
+  },
+  "artDirection": {
+    "mood": "dark sci-fi/cyberpunk",
+    "palette": [
+      "#0f0f0f",
+      "#ff3e00",
+      "#00ffe0",
+      "#ffffff"
+    ],
+    "shapes": "geometric",
+    "backgroundFx": "subtle moving lines to create a dynamic atmosphere"
+  },
+  "audioDirection": {
+    "musicMood": "intense and rhythmic electronic",
+    "sfx": [
+      "attack",
+      "salvage",
+      "explosion",
+      "upgrade"
+    ]
+  },
+  "difficulty": {
+    "start": "Easy, with slow-moving Titans and simple projectiles.",
+    "progression": "Titan attacks become faster and more complex as rounds progress.",
+    "peak": "Defeating the final Titan requires precise dodging and strategic use of upgraded abilities."
+  },
+  "winLose": {
+    "win": "Players win by defeating a series of Titans within the time limit.",
+    "lose": "Players lose if their core health drops to zero."
+  },
+  "juice": {
+    "screenShake": "when hitting a Titan or when a Titan attacks",
+    "particles": "upon the destruction of a Titan and when collecting salvage",
+    "hitStop": "when the player lands a successful hit or is hit",
+    "flash": "when collecting components or upgrading the core"
+  },
+  "scopeNotes": "No complex tutorials, no overlapping HUD elements, no purely decorative upgrades, and no prolonged introduction sequences.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing",
+      "gameOver",
+      "victory"
+    ],
+    "scoreEvents": [
+      "score increases with each Titan defeated and component salvaged, machine-verifiable through event logging"
+    ]
+  }
+}
