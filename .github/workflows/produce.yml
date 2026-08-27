@@ -16,7 +16,7 @@ on:
         required: false
         default: 'openai'
         type: choice
-        options: [openai, openrouter, googleai, huggingface]
+        options: [openai, openrouter]
   push:
     paths: ['ideas/**']
     branches: [main]
