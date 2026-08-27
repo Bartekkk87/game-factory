@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT } from '../config.mjs';
 import { createOwnerContract } from '../contract/owner.mjs';
+import { compileDirectorTraceability } from '../contract/traceability.mjs';
 import { runSession } from './harness.mjs';
 import { evaluateContract } from './contract.mjs';
 import { evaluateProductFidelity } from './fidelity.mjs';
@@ -71,6 +72,44 @@ if (!idsCorrect || !immutable || !stable) {
   console.error(`owner contract failed: ids=${idsCorrect} immutable=${immutable} stable=${stable}`);
 } else {
   console.log(`owner contract: stable IDs + immutable hash ${ownerA.contractSha256.slice(0, 12)} verified`);
+}
+
+console.log('\n--- director traceability fixture ---');
+const rawTraceGdd = {
+  acceptanceCriteria: [
+    { id: 'wrong-id', ownerRequirementId: 'MH-01', statement: 'Boss event is observed.' },
+    { id: 'wrong-id-2', ownerRequirementId: 'MH-02', statement: 'Upgrade changes a real value.' },
+    { id: 'wrong-id-3', ownerRequirementId: 'NG-01', statement: 'Fake upgrade violation is absent.' }
+  ],
+  probePlan: {
+    scoreEvents: ['score changes'],
+    requirementProbes: [
+      { id: 'wrong', acceptanceId: 'wrong', ownerRequirementId: 'MH-01', kind: 'event', eventType: 'boss_entered' },
+      { id: 'wrong2', acceptanceId: 'wrong2', ownerRequirementId: 'MH-02', kind: 'event_value_change', eventType: 'upgrade_applied' },
+      { id: 'wrong3', acceptanceId: 'wrong3', ownerRequirementId: 'NG-01', kind: 'event_absent', eventType: 'fake_upgrade_applied' }
+    ]
+  }
+};
+try {
+  const compiled = compileDirectorTraceability(rawTraceGdd, ownerA);
+  const stableIds = compiled.acceptanceCriteria.map((a) => a.id).join(',') === 'AC-MH-01,AC-MH-02,AC-NG-01'
+    && compiled.probePlan.requirementProbes.map((p) => p.id).join(',') === 'PR-MH-01,PR-MH-02,PR-NG-01';
+  if (!stableIds) {
+    ok = false;
+    console.error('director traceability failed to normalize stable IDs');
+  } else {
+    console.log('director traceability: all Owner IDs mapped to stable AC/PR IDs');
+  }
+} catch (e) {
+  ok = false;
+  console.error(`director traceability green fixture failed: ${e.message}`);
+}
+try {
+  compileDirectorTraceability({ ...rawTraceGdd, probePlan: { scoreEvents: ['score changes'], requirementProbes: rawTraceGdd.probePlan.requirementProbes.filter((p) => p.ownerRequirementId !== 'MH-02') } }, ownerA);
+  ok = false;
+  console.error('director traceability broken fixture was incorrectly accepted');
+} catch (e) {
+  console.log(`director traceability broken fixture: correctly rejected (${e.message})`);
 }
 
 for (const name of ['green', 'broken']) {

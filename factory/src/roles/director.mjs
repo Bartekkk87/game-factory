@@ -1,9 +1,10 @@
 import { chat } from '../llm/client.mjs';
 import { extractJson } from '../llm/json.mjs';
+import { compileDirectorTraceability } from '../contract/traceability.mjs';
 import { loadPrompt, loadSkill } from '../util/skills.mjs';
 import { lessonsFor, knownConcepts } from '../memory/store.mjs';
 
-export async function runDirector({ idea, source }) {
+export async function runDirector({ idea, source, ownerContract }) {
   const system =
     loadPrompt('director') +
     loadSkill('directing') +
@@ -13,8 +14,9 @@ export async function runDirector({ idea, source }) {
 
   const user = JSON.stringify(
     {
-      instruction: 'Create the Game Design Briefing JSON now.',
+      instruction: 'Create the Game Design Briefing JSON now. Preserve every Owner Contract requirement and map each one to exactly one observable acceptance criterion and verifier probe.',
       ownerIdea: idea || '(no specific idea - propose something original and highly playable)',
+      ownerContract,
       ideaSource: source,
       alreadyBuiltConcepts_avoidDuplicates: knownConcepts()
     },
@@ -29,14 +31,14 @@ export async function runDirector({ idea, source }) {
     json: true,
     temperature: 0.9
   });
-  const gdd = extractJson(text);
+  const rawGdd = extractJson(text);
 
   const missing = [];
-  if (!gdd.title) missing.push('title');
-  if (!Array.isArray(gdd.mechanics) || gdd.mechanics.length < 1) missing.push('mechanics');
-  if (!Array.isArray(gdd.artDirection?.palette) || gdd.artDirection.palette.length < 3) missing.push('artDirection.palette');
-  if (!gdd.probePlan?.scoreEvents?.length) missing.push('probePlan.scoreEvents');
+  if (!rawGdd.title) missing.push('title');
+  if (!Array.isArray(rawGdd.mechanics) || rawGdd.mechanics.length < 1) missing.push('mechanics');
+  if (!Array.isArray(rawGdd.artDirection?.palette) || rawGdd.artDirection.palette.length < 3) missing.push('artDirection.palette');
+  if (!rawGdd.probePlan?.scoreEvents?.length) missing.push('probePlan.scoreEvents');
   if (missing.length) throw new Error(`Director GDD incomplete, missing: ${missing.join(', ')}`);
 
-  return gdd;
+  return compileDirectorTraceability(rawGdd, ownerContract);
 }
