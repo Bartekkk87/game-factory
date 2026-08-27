@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { aggregateEvidence } from './aggregate.mjs';
 import { evaluateImprovementTrigger } from './trigger.mjs';
 
+// Event-causal thresholding: recurrence may only affect the production event that actually participates in it.
 const sameRun = aggregateEvidence({
   runEvidence: [
     { runId: 'run-1', events: [{ failureSignature: 'E1' }, { failureSignature: 'E1' }] },
