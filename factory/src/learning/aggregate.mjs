@@ -19,11 +19,14 @@ function gateFailed(gate) {
 function recurring(map, runMembership = null) {
   return [...map.entries()]
     .filter(([, count]) => Number(count) >= 2)
-    .map(([signature, count]) => ({
-      signature,
-      count,
-      ...(runMembership ? { runCount: runMembership.get(signature)?.size || 0 } : {})
-    }))
+    .map(([signature, count]) => {
+      const runIds = runMembership ? [...(runMembership.get(signature) || [])].map(String).sort() : [];
+      return {
+        signature,
+        count,
+        ...(runMembership ? { runCount: runIds.length, runIds } : {})
+      };
+    })
     .sort((a, b) => a.signature.localeCompare(b.signature));
 }
 function detailClass(detail) {
@@ -37,6 +40,7 @@ function failureSignature(kind, failure) {
   if (failure?.failureSignature || failure?.signature || failure?.errorCode) return failure.failureSignature || failure.signature || failure.errorCode;
   return [
     kind || 'attempt',
+    failure?.id || failure?.checkId || null,
     failure?.requirementId || null,
     failure?.probeId || null,
     failure?.kind || null,
