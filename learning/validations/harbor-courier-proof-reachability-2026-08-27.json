@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "learning-validation-v1",
+  "candidateId": "candidate-harbor-courier-proof-reachability-20260827",
+  "validatedAt": "2026-08-27T21:34:30.000Z",
+  "sourceRunId": "20260827-210323",
+  "sourceWorkflowRunId": "33116251376",
+  "failureMode": {
+    "baseVerifierSeconds": 12,
+    "declaredHarborTimeoutSeconds": 75,
+    "requiredTerminalStates": ["success", "failure"],
+    "restartRequired": true,
+    "summary": "The prior single observation model could not naturally prove a 75-second timeout within the 12-second base verifier window while also proving mutually exclusive success and subsequent fresh restart behavior."
+  },
+  "implementation": {
+    "pullRequest": 19,
+    "mergeSha": "11a02908b43805dd0e07ccfe7342262b2a6e0349",
+    "policy": "compile and validate proof reachability after Director traceability and before Engineer spend; keep the short technical active/idle control; execute separate bounded harness-owned terminal browser scenarios only when required; stop at the target terminal state; prove restart by terminal-to-playing transition"
+  },
+  "validationEvidence": [
+    "runs/20260827-210323/FAILURE.json",
+    "runs/20260827-210323/gdd.json",
+    "factory/src/verify/test-proof-reachability.mjs",
+    "factory/src/verify/test-proof-scenarios.mjs",
+    "GitHub Actions Verifier Selftest 33118304172",
+    "GitHub Actions post-merge Verifier Selftest 33118561201"
+  ],
+  "regressionResults": [
+    {
+      "name": "branch-full-verifier",
+      "runId": "33118304172",
+      "commitSha": "0dcc7dc2c7245bdb7246eeda3770e00256a17d6f",
+      "passed": true
+    },
+    {
+      "name": "post-merge-full-verifier",
+      "runId": "33118561201",
+      "commitSha": "11a02908b43805dd0e07ccfe7342262b2a6e0349",
+      "passed": true
+    }
+  ],
+  "outcome": "validated-inactive",
+  "active": false,
+  "promotionAuthorized": false,
+  "paidCanaryRunStarted": false
+}
