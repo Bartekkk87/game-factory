@@ -1,0 +1,208 @@
+{
+  "title": "Titan Core: Reforged",
+  "tagline": "Rip apart war machines, socket their cores, then gamble the escape.",
+  "genre": "action",
+  "pitch": "Titan Core: Reforged is a compact neon arena run where a mobile assault core blasts drones, breaks a towering machine Titan, and vacuums up the components it leaves behind. Salvage is spent instantly between clashes to overcharge the player's cannon, armor, or pulse radius, culminating in a sharp choice: bank the run or descend into a more dangerous final wave.",
+  "coreLoop": "Move around a single-screen arena, aim and fire a rapid core cannon, then collect dropped salvage before the next threat closes in. Spend collected salvage at a brief Forge Ring to gain a real stat increase, defeat the Titan, and choose extraction or a high-risk bonus descent.",
+  "mechanics": [
+    {
+      "name": "Core Cannon",
+      "description": "WASD movement combines with mouse aim and held primary fire or Space fire. Shots create a bright impact spark, enemy recoil flash, short hit-stop, and a readable damage pip on contact."
+    },
+    {
+      "name": "Titan Encounter",
+      "description": "A large segmented hex-frame Titan enters after the opening drone squad. Its oversized health bar, named warning banner, stomp shockwaves, and rotating bolt spread clearly distinguish it from small drones."
+    },
+    {
+      "name": "Salvage Magnet",
+      "description": "Destroyed drones and Titan armor nodes eject glowing component shards. Entering pickup range pulls shards into the player and increases the Salvage counter."
+    },
+    {
+      "name": "Forge Ring Upgrades",
+      "description": "At an illuminated center ring, collected salvage can immediately buy one of three compact upgrades: Cannon Output increases shot damage, Core Plating increases maximum and current core health, and Pulse Coil increases the knockback pulse radius. Each purchase changes a live gameplay stat and visibly changes the player's core geometry."
+    },
+    {
+      "name": "Extraction Gamble",
+      "description": "After the Titan falls, a full-screen-clear but non-blocking decision gate presents two large choices: EXTRACT banks the run for victory, while DESCEND starts a short bonus wave with doubled score value and more projectile pressure."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD or Arrow Keys move; Space fires toward the pointer; E confirms EXTRACT; R confirms DESCEND.",
+    "mouse": "Move to aim; hold left button to fire; click the large extraction-choice panels.",
+    "touch": "Optional: left-side drag moves, right-side drag aims and fires; tap a choice panel to confirm."
+  },
+  "artDirection": {
+    "mood": "dark cyberpunk foundry",
+    "palette": [
+      "#07111F",
+      "#14D9FF",
+      "#FF3B81",
+      "#FFBF3F"
+    ],
+    "shapes": "smooth-vector",
+    "backgroundFx": "A deep navy arena grid slowly parallax-scrolls beneath faint furnace haze, drifting sparks, and occasional cyan circuit pulses."
+  },
+  "audioDirection": {
+    "musicMood": "tense synthetic foundry pulse that intensifies during the Titan phase",
+    "sfx": [
+      "tight plasma cannon chirp",
+      "metallic hit crack",
+      "salvage vacuum chime",
+      "upgrade power-up sweep",
+      "Titan stomp bass impact",
+      "extraction confirmation tone"
+    ]
+  },
+  "difficulty": {
+    "start": "The first slow drones approach from broad lanes with low health, giving immediate safe targets and plentiful salvage.",
+    "progression": "Drone count and projectile cadence rise gently; the Titan alternates readable stomp and bolt patterns while salvage upgrades keep player power ahead of pressure.",
+    "peak": "DESCEND lasts roughly 25 seconds, adds fast bolt drones around the arena edge, and rewards doubled score before a clean victory or core collapse."
+  },
+  "winLose": {
+    "win": "Defeat the Titan and choose EXTRACT, or survive the bonus DESCEND wave; the final screen reports banked Score, Salvage spent, and Core level.",
+    "lose": "Core health reaches zero during combat."
+  },
+  "juice": {
+    "screenShake": "Light shake on cannon impacts, medium shake on Titan stomps, and a heavy two-beat shake when the Titan is destroyed.",
+    "particles": "Plasma fragments burst on every hit; drones spill magnetic shards; the Titan sheds large orange armor flakes and cyan energy arcs.",
+    "hitStop": "A 45 ms stop occurs on lethal drone hits and an 80 ms stop occurs when a Titan armor segment breaks.",
+    "flash": "The target flashes white-cyan on damage, the player core blooms on upgrade purchase, and the entire arena briefly inverts cyan-orange on Titan defeat."
+  },
+  "scopeNotes": "Do not build scrolling levels, procedural maps, inventory grids, dialogue trees, multiple weapon families, online features, external art/audio, or a pre-game tutorial sequence. This is a newly authored single-screen implementation with a Forge Ring and post-Titan extraction gate, not a recreation or visual reskin of Titan Core: Salvage.",
+  "acceptanceCriteria": [
+    {
+      "id": "AC-MH-01",
+      "ownerRequirementId": "MH-01",
+      "statement": "During playing, a player-fired Core Cannon shot can land on a hostile and emits attack_landed only when the real hit reaction, damage application, and impact feedback occur."
+    },
+    {
+      "id": "AC-MH-02",
+      "ownerRequirementId": "MH-02",
+      "statement": "During playing, titan_and_threats_active is emitted only while the named large Titan is active in the arena and at least one smaller drone or hostile projectile is simultaneously active."
+    },
+    {
+      "id": "AC-MH-03",
+      "ownerRequirementId": "MH-03",
+      "statement": "Spending collected salvage at the Forge Ring emits salvage_upgrade_applied with a live numeric player combat or survivability stat greater after the purchase than before it."
+    },
+    {
+      "id": "AC-MH-04",
+      "ownerRequirementId": "MH-04",
+      "statement": "During active play after score progress, hud_layout_clear is emitted only when distinct Core, Score/Salvage, and Progress HUD regions are rendered within non-overlapping layout bounds."
+    },
+    {
+      "id": "AC-MH-05",
+      "ownerRequirementId": "MH-05",
+      "statement": "After the Titan is defeated, confirming either EXTRACT or DESCEND emits extraction_choice_made only when the selected risk/reward outcome becomes active."
+    },
+    {
+      "id": "AC-NG-01",
+      "ownerRequirementId": "NG-01",
+      "statement": "The complete observed run emits no legacy_salvage_mode event, demonstrating that no compatibility mode or reused Titan Core: Salvage flow is active."
+    },
+    {
+      "id": "AC-NG-02",
+      "ownerRequirementId": "NG-02",
+      "statement": "The complete observed run emits no hud_overlap_detected event; the HUD layout checker must emit that event if any mandatory HUD bounds overlap or leave the canvas."
+    },
+    {
+      "id": "AC-NG-03",
+      "ownerRequirementId": "NG-03",
+      "statement": "Every observed upgrade application changes a real numeric gameplay stat, as evidenced by salvage_upgrade_applied carrying a greater after value than before value."
+    },
+    {
+      "id": "AC-NG-04",
+      "ownerRequirementId": "NG-04",
+      "statement": "A run started from title reaches active playing by the verifier early evidence point with movement, firing, and hostile targets already available, without a tutorial state."
+    }
+  ],
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing",
+      "forge",
+      "extraction_choice",
+      "bonus_wave",
+      "victory",
+      "defeat"
+    ],
+    "scoreEvents": [
+      "score increases when a drone is destroyed",
+      "score increases by a larger fixed value when a Titan armor segment is destroyed and when the Titan is defeated",
+      "score increases at doubled values for enemies destroyed during bonus_wave",
+      "Salvage collection increases the Salvage value but does not itself increase Score"
+    ],
+    "requirementProbes": [
+      {
+        "id": "PR-MH-01",
+        "acceptanceId": "AC-MH-01",
+        "ownerRequirementId": "MH-01",
+        "kind": "event",
+        "eventType": "attack_landed",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-02",
+        "acceptanceId": "AC-MH-02",
+        "ownerRequirementId": "MH-02",
+        "kind": "event",
+        "eventType": "titan_and_threats_active",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-03",
+        "acceptanceId": "AC-MH-03",
+        "ownerRequirementId": "MH-03",
+        "kind": "event_value_change",
+        "eventType": "salvage_upgrade_applied",
+        "beforeField": "beforeStat",
+        "afterField": "afterStat"
+      },
+      {
+        "id": "PR-MH-04",
+        "acceptanceId": "AC-MH-04",
+        "ownerRequirementId": "MH-04",
+        "kind": "event",
+        "eventType": "hud_layout_clear",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-05",
+        "acceptanceId": "AC-MH-05",
+        "ownerRequirementId": "MH-05",
+        "kind": "event",
+        "eventType": "extraction_choice_made",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-NG-01",
+        "acceptanceId": "AC-NG-01",
+        "ownerRequirementId": "NG-01",
+        "kind": "event_absent",
+        "eventType": "legacy_salvage_mode"
+      },
+      {
+        "id": "PR-NG-02",
+        "acceptanceId": "AC-NG-02",
+        "ownerRequirementId": "NG-02",
+        "kind": "event_absent",
+        "eventType": "hud_overlap_detected"
+      },
+      {
+        "id": "PR-NG-03",
+        "acceptanceId": "AC-NG-03",
+        "ownerRequirementId": "NG-03",
+        "kind": "event_value_change",
+        "eventType": "salvage_upgrade_applied",
+        "beforeField": "beforeStat",
+        "afterField": "afterStat"
+      },
+      {
+        "id": "PR-NG-04",
+        "acceptanceId": "AC-NG-04",
+        "ownerRequirementId": "NG-04",
+        "kind": "started_by_early"
+      }
+    ]
+  }
+}

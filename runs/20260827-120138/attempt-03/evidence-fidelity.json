@@ -1,0 +1,646 @@
+{
+  "pass": true,
+  "status": "passed",
+  "contractSha256": "6719afcb7c4d1c2e3614ea8c079e20afdc72e7160eba577d91a5f26fad715c48",
+  "requirementIds": [
+    "MH-01",
+    "MH-02",
+    "MH-03",
+    "MH-04",
+    "MH-05",
+    "NG-01",
+    "NG-02",
+    "NG-03",
+    "NG-04"
+  ],
+  "criteria": [
+    {
+      "requirementId": "MH-01",
+      "acceptanceId": "AC-MH-01",
+      "probeId": "PR-MH-01",
+      "kind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "attack_landed",
+      "pass": true,
+      "traceable": true,
+      "detail": "event correlated with active gameplay at t=1.316s and engine-observed score 0 -> 100"
+    },
+    {
+      "requirementId": "MH-02",
+      "acceptanceId": "AC-MH-02",
+      "probeId": "PR-MH-02",
+      "kind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "titan_and_threats_active",
+      "pass": true,
+      "traceable": true,
+      "detail": "event correlated with active gameplay at t=1.266s and engine-observed score 0 -> 100"
+    },
+    {
+      "requirementId": "MH-03",
+      "acceptanceId": "AC-MH-03",
+      "probeId": "PR-MH-03",
+      "kind": "event_value_change",
+      "strength": null,
+      "eventType": "salvage_upgrade_applied",
+      "pass": true,
+      "traceable": true,
+      "detail": "event salvage_upgrade_applied changed gameplay value"
+    },
+    {
+      "requirementId": "MH-04",
+      "acceptanceId": "AC-MH-04",
+      "probeId": "PR-MH-04",
+      "kind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "hud_layout_clear",
+      "pass": true,
+      "traceable": true,
+      "detail": "event correlated with active gameplay at t=1.266s and engine-observed score 0 -> 100"
+    },
+    {
+      "requirementId": "MH-05",
+      "acceptanceId": "AC-MH-05",
+      "probeId": "PR-MH-05",
+      "kind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "extraction_choice_made",
+      "pass": true,
+      "traceable": true,
+      "detail": "event correlated with active gameplay at t=3.416s and engine-observed score 0 -> 470"
+    },
+    {
+      "requirementId": "NG-01",
+      "acceptanceId": "AC-NG-01",
+      "probeId": "PR-NG-01",
+      "kind": "event_absent",
+      "strength": null,
+      "eventType": "legacy_salvage_mode",
+      "pass": true,
+      "traceable": true,
+      "detail": "event legacy_salvage_mode absent"
+    },
+    {
+      "requirementId": "NG-02",
+      "acceptanceId": "AC-NG-02",
+      "probeId": "PR-NG-02",
+      "kind": "event_absent",
+      "strength": null,
+      "eventType": "hud_overlap_detected",
+      "pass": true,
+      "traceable": true,
+      "detail": "event hud_overlap_detected absent"
+    },
+    {
+      "requirementId": "NG-03",
+      "acceptanceId": "AC-NG-03",
+      "probeId": "PR-NG-03",
+      "kind": "event_value_change",
+      "strength": null,
+      "eventType": "salvage_upgrade_applied",
+      "pass": true,
+      "traceable": true,
+      "detail": "event salvage_upgrade_applied changed gameplay value"
+    },
+    {
+      "requirementId": "NG-04",
+      "acceptanceId": "AC-NG-04",
+      "probeId": "PR-NG-04",
+      "kind": "started_by_early",
+      "strength": null,
+      "eventType": null,
+      "pass": true,
+      "traceable": true,
+      "detail": "early state=playing"
+    }
+  ],
+  "failures": [],
+  "observedEvents": [
+    {
+      "seq": 1,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 2,
+      "type": "score_changed",
+      "time": 0.233,
+      "state": "playing",
+      "score": 20,
+      "data": {
+        "before": 0,
+        "after": 20,
+        "delta": 20
+      }
+    },
+    {
+      "seq": 3,
+      "type": "score_changed",
+      "time": 0.517,
+      "state": "playing",
+      "score": 40,
+      "data": {
+        "before": 20,
+        "after": 40,
+        "delta": 20
+      }
+    },
+    {
+      "seq": 4,
+      "type": "score_changed",
+      "time": 1.15,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 40,
+        "after": 100,
+        "delta": 60
+      }
+    },
+    {
+      "seq": 5,
+      "type": "titan_and_threats_active",
+      "time": 1.266,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "titan": "HEX-FRAME TITAN",
+        "threats": 9
+      }
+    },
+    {
+      "seq": 6,
+      "type": "hud_layout_clear",
+      "time": 1.266,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "coreRegion": "left",
+        "scoreSalvageRegion": "bottom_left",
+        "progressRegion": "right"
+      }
+    },
+    {
+      "seq": 7,
+      "type": "attack_landed",
+      "time": 1.316,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "target": "HEX-FRAME TITAN",
+        "damage": 8
+      }
+    },
+    {
+      "seq": 8,
+      "type": "salvage_upgrade_applied",
+      "time": 1.316,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "stat": "damage",
+        "beforeStat": 8,
+        "afterStat": 11
+      }
+    },
+    {
+      "seq": 9,
+      "type": "salvage_upgrade_applied",
+      "time": 1.633,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "stat": "maxHp",
+        "beforeStat": 100,
+        "afterStat": 120
+      }
+    },
+    {
+      "seq": 10,
+      "type": "score_changed",
+      "time": 1.717,
+      "state": "playing",
+      "score": 160,
+      "data": {
+        "before": 100,
+        "after": 160,
+        "delta": 60
+      }
+    },
+    {
+      "seq": 11,
+      "type": "score_changed",
+      "time": 2.016,
+      "state": "playing",
+      "score": 220,
+      "data": {
+        "before": 160,
+        "after": 220,
+        "delta": 60
+      }
+    },
+    {
+      "seq": 12,
+      "type": "score_changed",
+      "time": 2.5,
+      "state": "playing",
+      "score": 470,
+      "data": {
+        "before": 220,
+        "after": 470,
+        "delta": 250
+      }
+    },
+    {
+      "seq": 13,
+      "type": "extraction_choice_made",
+      "time": 3.416,
+      "state": "playing",
+      "score": 470,
+      "data": {
+        "choice": "EXTRACT"
+      }
+    },
+    {
+      "seq": 14,
+      "type": "game_won",
+      "time": 3.416,
+      "state": "won",
+      "score": 470,
+      "data": {
+        "from": "playing",
+        "to": "won"
+      }
+    },
+    {
+      "seq": 15,
+      "type": "score_changed",
+      "time": 0.233,
+      "state": "playing",
+      "score": 20,
+      "data": {
+        "before": 0,
+        "after": 20,
+        "delta": 20
+      }
+    },
+    {
+      "seq": 16,
+      "type": "score_changed",
+      "time": 0.533,
+      "state": "playing",
+      "score": 40,
+      "data": {
+        "before": 20,
+        "after": 40,
+        "delta": 20
+      }
+    },
+    {
+      "seq": 17,
+      "type": "score_changed",
+      "time": 1.183,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 40,
+        "after": 100,
+        "delta": 60
+      }
+    },
+    {
+      "seq": 18,
+      "type": "titan_and_threats_active",
+      "time": 1.267,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "titan": "HEX-FRAME TITAN",
+        "threats": 9
+      }
+    },
+    {
+      "seq": 19,
+      "type": "salvage_upgrade_applied",
+      "time": 1.267,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "stat": "damage",
+        "beforeStat": 8,
+        "afterStat": 11
+      }
+    },
+    {
+      "seq": 20,
+      "type": "hud_layout_clear",
+      "time": 1.267,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "coreRegion": "left",
+        "scoreSalvageRegion": "bottom_left",
+        "progressRegion": "right"
+      }
+    },
+    {
+      "seq": 21,
+      "type": "attack_landed",
+      "time": 1.367,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "target": "HEX-FRAME TITAN",
+        "damage": 11
+      }
+    },
+    {
+      "seq": 22,
+      "type": "score_changed",
+      "time": 1.55,
+      "state": "playing",
+      "score": 160,
+      "data": {
+        "before": 100,
+        "after": 160,
+        "delta": 60
+      }
+    },
+    {
+      "seq": 23,
+      "type": "salvage_upgrade_applied",
+      "time": 1.567,
+      "state": "playing",
+      "score": 160,
+      "data": {
+        "stat": "maxHp",
+        "beforeStat": 100,
+        "afterStat": 120
+      }
+    },
+    {
+      "seq": 24,
+      "type": "score_changed",
+      "time": 1.983,
+      "state": "playing",
+      "score": 220,
+      "data": {
+        "before": 160,
+        "after": 220,
+        "delta": 60
+      }
+    },
+    {
+      "seq": 25,
+      "type": "score_changed",
+      "time": 2.267,
+      "state": "playing",
+      "score": 470,
+      "data": {
+        "before": 220,
+        "after": 470,
+        "delta": 250
+      }
+    },
+    {
+      "seq": 26,
+      "type": "extraction_choice_made",
+      "time": 2.35,
+      "state": "playing",
+      "score": 470,
+      "data": {
+        "choice": "EXTRACT"
+      }
+    },
+    {
+      "seq": 27,
+      "type": "game_won",
+      "time": 2.35,
+      "state": "won",
+      "score": 470,
+      "data": {
+        "from": "playing",
+        "to": "won"
+      }
+    },
+    {
+      "seq": 28,
+      "type": "score_changed",
+      "time": 0.233,
+      "state": "playing",
+      "score": 20,
+      "data": {
+        "before": 0,
+        "after": 20,
+        "delta": 20
+      }
+    },
+    {
+      "seq": 29,
+      "type": "score_changed",
+      "time": 0.55,
+      "state": "playing",
+      "score": 40,
+      "data": {
+        "before": 20,
+        "after": 40,
+        "delta": 20
+      }
+    },
+    {
+      "seq": 30,
+      "type": "titan_and_threats_active",
+      "time": 1.25,
+      "state": "playing",
+      "score": 40,
+      "data": {
+        "titan": "HEX-FRAME TITAN",
+        "threats": 9
+      }
+    },
+    {
+      "seq": 31,
+      "type": "salvage_upgrade_applied",
+      "time": 1.25,
+      "state": "playing",
+      "score": 40,
+      "data": {
+        "stat": "damage",
+        "beforeStat": 8,
+        "afterStat": 11
+      }
+    },
+    {
+      "seq": 32,
+      "type": "hud_layout_clear",
+      "time": 1.25,
+      "state": "playing",
+      "score": 40,
+      "data": {
+        "coreRegion": "left",
+        "scoreSalvageRegion": "bottom_left",
+        "progressRegion": "right"
+      }
+    },
+    {
+      "seq": 33,
+      "type": "attack_landed",
+      "time": 1.333,
+      "state": "playing",
+      "score": 40,
+      "data": {
+        "target": "HEX-FRAME TITAN",
+        "damage": 11
+      }
+    },
+    {
+      "seq": 34,
+      "type": "score_changed",
+      "time": 1.333,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 40,
+        "after": 100,
+        "delta": 60
+      }
+    },
+    {
+      "seq": 35,
+      "type": "salvage_upgrade_applied",
+      "time": 1.617,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "stat": "maxHp",
+        "beforeStat": 100,
+        "afterStat": 120
+      }
+    },
+    {
+      "seq": 36,
+      "type": "score_changed",
+      "time": 1.7,
+      "state": "playing",
+      "score": 160,
+      "data": {
+        "before": 100,
+        "after": 160,
+        "delta": 60
+      }
+    },
+    {
+      "seq": 37,
+      "type": "score_changed",
+      "time": 2.167,
+      "state": "playing",
+      "score": 220,
+      "data": {
+        "before": 160,
+        "after": 220,
+        "delta": 60
+      }
+    },
+    {
+      "seq": 38,
+      "type": "score_changed",
+      "time": 2.533,
+      "state": "playing",
+      "score": 470,
+      "data": {
+        "before": 220,
+        "after": 470,
+        "delta": 250
+      }
+    },
+    {
+      "seq": 39,
+      "type": "extraction_choice_made",
+      "time": 3.133,
+      "state": "playing",
+      "score": 470,
+      "data": {
+        "choice": "DESCEND"
+      }
+    },
+    {
+      "seq": 40,
+      "type": "score_changed",
+      "time": 3.8,
+      "state": "playing",
+      "score": 510,
+      "data": {
+        "before": 470,
+        "after": 510,
+        "delta": 40
+      }
+    },
+    {
+      "seq": 41,
+      "type": "score_changed",
+      "time": 4.166,
+      "state": "playing",
+      "score": 550,
+      "data": {
+        "before": 510,
+        "after": 550,
+        "delta": 40
+      }
+    },
+    {
+      "seq": 42,
+      "type": "salvage_upgrade_applied",
+      "time": 4.233,
+      "state": "playing",
+      "score": 550,
+      "data": {
+        "stat": "pulse",
+        "beforeStat": 82,
+        "afterStat": 106
+      }
+    },
+    {
+      "seq": 43,
+      "type": "salvage_upgrade_applied",
+      "time": 4.316,
+      "state": "playing",
+      "score": 550,
+      "data": {
+        "stat": "damage",
+        "beforeStat": 11,
+        "afterStat": 14
+      }
+    },
+    {
+      "seq": 44,
+      "type": "salvage_upgrade_applied",
+      "time": 4.367,
+      "state": "playing",
+      "score": 550,
+      "data": {
+        "stat": "maxHp",
+        "beforeStat": 120,
+        "afterStat": 140
+      }
+    },
+    {
+      "seq": 45,
+      "type": "salvage_upgrade_applied",
+      "time": 4.433,
+      "state": "playing",
+      "score": 550,
+      "data": {
+        "stat": "pulse",
+        "beforeStat": 106,
+        "afterStat": 130
+      }
+    }
+  ]
+}

@@ -1,0 +1,813 @@
+{
+  "seed": 1207618270,
+  "inputSequence": {
+    "seed": 1207618270,
+    "keys": [
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+      "Space",
+      "KeyW",
+      "KeyA",
+      "KeyS",
+      "KeyD",
+      "Enter"
+    ],
+    "pointerPath": [
+      [
+        420,
+        300
+      ],
+      [
+        640,
+        280
+      ],
+      [
+        820,
+        360
+      ],
+      [
+        700,
+        480
+      ],
+      [
+        480,
+        460
+      ],
+      [
+        560,
+        350
+      ]
+    ],
+    "keyEveryMs": 190,
+    "keyHoldMs": 110,
+    "pointerEveryMs": 450,
+    "clickEveryMs": 1300
+  },
+  "timeline": [
+    {
+      "phase": "start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 63,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": []
+      }
+    },
+    {
+      "phase": "early",
+      "atMs": 1200,
+      "snapshot": {
+        "state": "playing",
+        "score": 40,
+        "best": 40,
+        "fps": 60,
+        "time": 1.1332,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 0.233,
+            "state": "playing",
+            "score": 20,
+            "data": {
+              "before": 0,
+              "after": 20,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 3,
+            "type": "score_changed",
+            "time": 0.517,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "before": 20,
+              "after": 40,
+              "delta": 20
+            }
+          }
+        ]
+      }
+    },
+    {
+      "phase": "mid",
+      "atMs": 3500,
+      "snapshot": {
+        "state": "playing",
+        "score": 470,
+        "best": 470,
+        "fps": 60,
+        "time": 3.0998999999999968,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 0.233,
+            "state": "playing",
+            "score": 20,
+            "data": {
+              "before": 0,
+              "after": 20,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 3,
+            "type": "score_changed",
+            "time": 0.517,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "before": 20,
+              "after": 40,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 4,
+            "type": "score_changed",
+            "time": 1.15,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 40,
+              "after": 100,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 5,
+            "type": "titan_and_threats_active",
+            "time": 1.266,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "titan": "HEX-FRAME TITAN",
+              "threats": 9
+            }
+          },
+          {
+            "seq": 6,
+            "type": "hud_layout_clear",
+            "time": 1.266,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "coreRegion": "left",
+              "scoreSalvageRegion": "bottom_left",
+              "progressRegion": "right"
+            }
+          },
+          {
+            "seq": 7,
+            "type": "attack_landed",
+            "time": 1.316,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "target": "HEX-FRAME TITAN",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 8,
+            "type": "salvage_upgrade_applied",
+            "time": 1.316,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "stat": "damage",
+              "beforeStat": 8,
+              "afterStat": 11
+            }
+          },
+          {
+            "seq": 9,
+            "type": "salvage_upgrade_applied",
+            "time": 1.633,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "stat": "maxHp",
+              "beforeStat": 100,
+              "afterStat": 120
+            }
+          },
+          {
+            "seq": 10,
+            "type": "score_changed",
+            "time": 1.717,
+            "state": "playing",
+            "score": 160,
+            "data": {
+              "before": 100,
+              "after": 160,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 11,
+            "type": "score_changed",
+            "time": 2.016,
+            "state": "playing",
+            "score": 220,
+            "data": {
+              "before": 160,
+              "after": 220,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 12,
+            "type": "score_changed",
+            "time": 2.5,
+            "state": "playing",
+            "score": 470,
+            "data": {
+              "before": 220,
+              "after": 470,
+              "delta": 250
+            }
+          }
+        ]
+      }
+    },
+    {
+      "phase": "end",
+      "atMs": 12000,
+      "snapshot": {
+        "state": "playing",
+        "score": 550,
+        "best": 550,
+        "fps": 60,
+        "time": 4.6331000000000095,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 0.233,
+            "state": "playing",
+            "score": 20,
+            "data": {
+              "before": 0,
+              "after": 20,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 3,
+            "type": "score_changed",
+            "time": 0.517,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "before": 20,
+              "after": 40,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 4,
+            "type": "score_changed",
+            "time": 1.15,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 40,
+              "after": 100,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 5,
+            "type": "titan_and_threats_active",
+            "time": 1.266,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "titan": "HEX-FRAME TITAN",
+              "threats": 9
+            }
+          },
+          {
+            "seq": 6,
+            "type": "hud_layout_clear",
+            "time": 1.266,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "coreRegion": "left",
+              "scoreSalvageRegion": "bottom_left",
+              "progressRegion": "right"
+            }
+          },
+          {
+            "seq": 7,
+            "type": "attack_landed",
+            "time": 1.316,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "target": "HEX-FRAME TITAN",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 8,
+            "type": "salvage_upgrade_applied",
+            "time": 1.316,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "stat": "damage",
+              "beforeStat": 8,
+              "afterStat": 11
+            }
+          },
+          {
+            "seq": 9,
+            "type": "salvage_upgrade_applied",
+            "time": 1.633,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "stat": "maxHp",
+              "beforeStat": 100,
+              "afterStat": 120
+            }
+          },
+          {
+            "seq": 10,
+            "type": "score_changed",
+            "time": 1.717,
+            "state": "playing",
+            "score": 160,
+            "data": {
+              "before": 100,
+              "after": 160,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 11,
+            "type": "score_changed",
+            "time": 2.016,
+            "state": "playing",
+            "score": 220,
+            "data": {
+              "before": 160,
+              "after": 220,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 12,
+            "type": "score_changed",
+            "time": 2.5,
+            "state": "playing",
+            "score": 470,
+            "data": {
+              "before": 220,
+              "after": 470,
+              "delta": 250
+            }
+          },
+          {
+            "seq": 13,
+            "type": "extraction_choice_made",
+            "time": 3.416,
+            "state": "playing",
+            "score": 470,
+            "data": {
+              "choice": "EXTRACT"
+            }
+          },
+          {
+            "seq": 14,
+            "type": "game_won",
+            "time": 3.416,
+            "state": "won",
+            "score": 470,
+            "data": {
+              "from": "playing",
+              "to": "won"
+            }
+          },
+          {
+            "seq": 15,
+            "type": "score_changed",
+            "time": 0.233,
+            "state": "playing",
+            "score": 20,
+            "data": {
+              "before": 0,
+              "after": 20,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 16,
+            "type": "score_changed",
+            "time": 0.533,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "before": 20,
+              "after": 40,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 17,
+            "type": "score_changed",
+            "time": 1.183,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 40,
+              "after": 100,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 18,
+            "type": "titan_and_threats_active",
+            "time": 1.267,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "titan": "HEX-FRAME TITAN",
+              "threats": 9
+            }
+          },
+          {
+            "seq": 19,
+            "type": "salvage_upgrade_applied",
+            "time": 1.267,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "stat": "damage",
+              "beforeStat": 8,
+              "afterStat": 11
+            }
+          },
+          {
+            "seq": 20,
+            "type": "hud_layout_clear",
+            "time": 1.267,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "coreRegion": "left",
+              "scoreSalvageRegion": "bottom_left",
+              "progressRegion": "right"
+            }
+          },
+          {
+            "seq": 21,
+            "type": "attack_landed",
+            "time": 1.367,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "target": "HEX-FRAME TITAN",
+              "damage": 11
+            }
+          },
+          {
+            "seq": 22,
+            "type": "score_changed",
+            "time": 1.55,
+            "state": "playing",
+            "score": 160,
+            "data": {
+              "before": 100,
+              "after": 160,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 23,
+            "type": "salvage_upgrade_applied",
+            "time": 1.567,
+            "state": "playing",
+            "score": 160,
+            "data": {
+              "stat": "maxHp",
+              "beforeStat": 100,
+              "afterStat": 120
+            }
+          },
+          {
+            "seq": 24,
+            "type": "score_changed",
+            "time": 1.983,
+            "state": "playing",
+            "score": 220,
+            "data": {
+              "before": 160,
+              "after": 220,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 25,
+            "type": "score_changed",
+            "time": 2.267,
+            "state": "playing",
+            "score": 470,
+            "data": {
+              "before": 220,
+              "after": 470,
+              "delta": 250
+            }
+          },
+          {
+            "seq": 26,
+            "type": "extraction_choice_made",
+            "time": 2.35,
+            "state": "playing",
+            "score": 470,
+            "data": {
+              "choice": "EXTRACT"
+            }
+          },
+          {
+            "seq": 27,
+            "type": "game_won",
+            "time": 2.35,
+            "state": "won",
+            "score": 470,
+            "data": {
+              "from": "playing",
+              "to": "won"
+            }
+          },
+          {
+            "seq": 28,
+            "type": "score_changed",
+            "time": 0.233,
+            "state": "playing",
+            "score": 20,
+            "data": {
+              "before": 0,
+              "after": 20,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 29,
+            "type": "score_changed",
+            "time": 0.55,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "before": 20,
+              "after": 40,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 30,
+            "type": "titan_and_threats_active",
+            "time": 1.25,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "titan": "HEX-FRAME TITAN",
+              "threats": 9
+            }
+          },
+          {
+            "seq": 31,
+            "type": "salvage_upgrade_applied",
+            "time": 1.25,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "stat": "damage",
+              "beforeStat": 8,
+              "afterStat": 11
+            }
+          },
+          {
+            "seq": 32,
+            "type": "hud_layout_clear",
+            "time": 1.25,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "coreRegion": "left",
+              "scoreSalvageRegion": "bottom_left",
+              "progressRegion": "right"
+            }
+          },
+          {
+            "seq": 33,
+            "type": "attack_landed",
+            "time": 1.333,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "target": "HEX-FRAME TITAN",
+              "damage": 11
+            }
+          },
+          {
+            "seq": 34,
+            "type": "score_changed",
+            "time": 1.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 40,
+              "after": 100,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 35,
+            "type": "salvage_upgrade_applied",
+            "time": 1.617,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "stat": "maxHp",
+              "beforeStat": 100,
+              "afterStat": 120
+            }
+          },
+          {
+            "seq": 36,
+            "type": "score_changed",
+            "time": 1.7,
+            "state": "playing",
+            "score": 160,
+            "data": {
+              "before": 100,
+              "after": 160,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 37,
+            "type": "score_changed",
+            "time": 2.167,
+            "state": "playing",
+            "score": 220,
+            "data": {
+              "before": 160,
+              "after": 220,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 38,
+            "type": "score_changed",
+            "time": 2.533,
+            "state": "playing",
+            "score": 470,
+            "data": {
+              "before": 220,
+              "after": 470,
+              "delta": 250
+            }
+          },
+          {
+            "seq": 39,
+            "type": "extraction_choice_made",
+            "time": 3.133,
+            "state": "playing",
+            "score": 470,
+            "data": {
+              "choice": "DESCEND"
+            }
+          },
+          {
+            "seq": 40,
+            "type": "score_changed",
+            "time": 3.8,
+            "state": "playing",
+            "score": 510,
+            "data": {
+              "before": 470,
+              "after": 510,
+              "delta": 40
+            }
+          },
+          {
+            "seq": 41,
+            "type": "score_changed",
+            "time": 4.166,
+            "state": "playing",
+            "score": 550,
+            "data": {
+              "before": 510,
+              "after": 550,
+              "delta": 40
+            }
+          },
+          {
+            "seq": 42,
+            "type": "salvage_upgrade_applied",
+            "time": 4.233,
+            "state": "playing",
+            "score": 550,
+            "data": {
+              "stat": "pulse",
+              "beforeStat": 82,
+              "afterStat": 106
+            }
+          },
+          {
+            "seq": 43,
+            "type": "salvage_upgrade_applied",
+            "time": 4.316,
+            "state": "playing",
+            "score": 550,
+            "data": {
+              "stat": "damage",
+              "beforeStat": 11,
+              "afterStat": 14
+            }
+          },
+          {
+            "seq": 44,
+            "type": "salvage_upgrade_applied",
+            "time": 4.367,
+            "state": "playing",
+            "score": 550,
+            "data": {
+              "stat": "maxHp",
+              "beforeStat": 120,
+              "afterStat": 140
+            }
+          },
+          {
+            "seq": 45,
+            "type": "salvage_upgrade_applied",
+            "time": 4.433,
+            "state": "playing",
+            "score": 550,
+            "data": {
+              "stat": "pulse",
+              "beforeStat": 106,
+              "afterStat": 130
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

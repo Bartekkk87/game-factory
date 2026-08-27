@@ -1,0 +1,30 @@
+{
+  "fidelityVerdict": "FAIL",
+  "missingRequirements": [
+    "MH-04"
+  ],
+  "fidelityCritique": [
+    "The machine-authoritative deterministic fidelity result passed all probes; this independent review does not override that result.",
+    "Telemetry convincingly evidences immediate play, attacks landing on the named HEX-FRAME TITAN amid nine threats, stat-changing salvage upgrades, and both EXTRACT/DESCEND risk-reward outcomes.",
+    "However, the supplied screenshots only show an enlarged Core HUD crop, not score/salvage or progress regions. More seriously, the second frame reads CORE 106 / 120 while its cyan health bar appears completely full, making the visible Core-state presentation internally contradictory. MH-04 is therefore not convincingly recognizable from the supplied visual evidence."
+  ],
+  "scores": {
+    "visuals": 3,
+    "uiClarity": 3,
+    "funProxy": 2,
+    "performance": 10
+  },
+  "overall": 3.4,
+  "critique": [
+    "Both captures are dominated by a single oversized HUD panel and a sparse dark grid; no player, Titan, drones, projectiles, forge, salvage, or extraction decision is visible.",
+    "The cyan-on-navy palette has appropriate sci-fi intent and the grid provides a faint background layer, but the frame lacks the neon silhouettes, environmental life, and combat effects needed for a polished cyberpunk arena.",
+    "The CORE label and numerals are highly legible, but the 106 / 120 readout conflicts with a visually full health bar in the second screenshot.",
+    "The stills do not communicate the current combat state or playable objective; engagement is supported by telemetry score progression and verified events rather than visible feedback.",
+    "Performance is excellent: session metrics report 61 FPS, with 60 FPS in the captured telemetry snapshots."
+  ],
+  "priorityFixes": [
+    "Correct the Core-bar fill calculation so its visible length precisely reflects current/max Core, then capture full-canvas gameplay frames that also show distinct Score/Salvage and Progress HUD regions.",
+    "Reframe automated screenshots to include the player, HEX-FRAME TITAN, smaller threats/projectiles, and a cannon impact or damage reaction rather than an isolated HUD close-up.",
+    "Increase arena readability and spectacle with clearly visible forge/salvage shards, cyan-orange hit bursts, drifting sparks, and stronger foreground/background separation."
+  ]
+}

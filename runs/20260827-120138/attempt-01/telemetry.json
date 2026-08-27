@@ -1,0 +1,1181 @@
+{
+  "seed": 1207618270,
+  "inputSequence": {
+    "seed": 1207618270,
+    "keys": [
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+      "Space",
+      "KeyW",
+      "KeyA",
+      "KeyS",
+      "KeyD",
+      "Enter"
+    ],
+    "pointerPath": [
+      [
+        420,
+        300
+      ],
+      [
+        640,
+        280
+      ],
+      [
+        820,
+        360
+      ],
+      [
+        700,
+        480
+      ],
+      [
+        480,
+        460
+      ],
+      [
+        560,
+        350
+      ]
+    ],
+    "keyEveryMs": 190,
+    "keyHoldMs": 110,
+    "pointerEveryMs": 450,
+    "clickEveryMs": 1300
+  },
+  "timeline": [
+    {
+      "phase": "start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 62,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": []
+      }
+    },
+    {
+      "phase": "early",
+      "atMs": 1200,
+      "snapshot": {
+        "state": "playing",
+        "score": 60,
+        "best": 60,
+        "fps": 60,
+        "time": 1.1,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "attack_landed",
+            "time": 0.3,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "target": "drone",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 3,
+            "type": "score_changed",
+            "time": 0.3,
+            "state": "playing",
+            "score": 20,
+            "data": {
+              "before": 0,
+              "after": 20,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 4,
+            "type": "hud_layout_clear",
+            "time": 0.3,
+            "state": "playing",
+            "score": 20,
+            "data": {
+              "core": "left",
+              "resources": "center",
+              "progress": "right"
+            }
+          },
+          {
+            "seq": 5,
+            "type": "attack_landed",
+            "time": 0.667,
+            "state": "playing",
+            "score": 20,
+            "data": {
+              "target": "drone",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 6,
+            "type": "score_changed",
+            "time": 0.667,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "before": 20,
+              "after": 40,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 7,
+            "type": "titan_and_threats_active",
+            "time": 0.683,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "titan": "HEX-FRAME TITAN",
+              "threats": 3
+            }
+          },
+          {
+            "seq": 8,
+            "type": "attack_landed",
+            "time": 0.85,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "target": "drone",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 9,
+            "type": "score_changed",
+            "time": 0.85,
+            "state": "playing",
+            "score": 60,
+            "data": {
+              "before": 40,
+              "after": 60,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 10,
+            "type": "attack_landed",
+            "time": 1.05,
+            "state": "playing",
+            "score": 60,
+            "data": {
+              "target": "Titan",
+              "damage": 8
+            }
+          }
+        ]
+      }
+    },
+    {
+      "phase": "mid",
+      "atMs": 3500,
+      "snapshot": {
+        "state": "playing",
+        "score": 470,
+        "best": 470,
+        "fps": 60,
+        "time": 3.099999999999997,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "attack_landed",
+            "time": 0.3,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "target": "drone",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 3,
+            "type": "score_changed",
+            "time": 0.3,
+            "state": "playing",
+            "score": 20,
+            "data": {
+              "before": 0,
+              "after": 20,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 4,
+            "type": "hud_layout_clear",
+            "time": 0.3,
+            "state": "playing",
+            "score": 20,
+            "data": {
+              "core": "left",
+              "resources": "center",
+              "progress": "right"
+            }
+          },
+          {
+            "seq": 5,
+            "type": "attack_landed",
+            "time": 0.667,
+            "state": "playing",
+            "score": 20,
+            "data": {
+              "target": "drone",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 6,
+            "type": "score_changed",
+            "time": 0.667,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "before": 20,
+              "after": 40,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 7,
+            "type": "titan_and_threats_active",
+            "time": 0.683,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "titan": "HEX-FRAME TITAN",
+              "threats": 3
+            }
+          },
+          {
+            "seq": 8,
+            "type": "attack_landed",
+            "time": 0.85,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "target": "drone",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 9,
+            "type": "score_changed",
+            "time": 0.85,
+            "state": "playing",
+            "score": 60,
+            "data": {
+              "before": 40,
+              "after": 60,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 10,
+            "type": "attack_landed",
+            "time": 1.05,
+            "state": "playing",
+            "score": 60,
+            "data": {
+              "target": "Titan",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 11,
+            "type": "attack_landed",
+            "time": 1.233,
+            "state": "playing",
+            "score": 60,
+            "data": {
+              "target": "Titan",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 12,
+            "type": "attack_landed",
+            "time": 1.417,
+            "state": "playing",
+            "score": 60,
+            "data": {
+              "target": "Titan",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 13,
+            "type": "score_changed",
+            "time": 1.417,
+            "state": "playing",
+            "score": 120,
+            "data": {
+              "before": 60,
+              "after": 120,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 14,
+            "type": "salvage_upgrade_applied",
+            "time": 1.433,
+            "state": "playing",
+            "score": 120,
+            "data": {
+              "stat": "damage",
+              "beforeStat": 8,
+              "afterStat": 11
+            }
+          },
+          {
+            "seq": 15,
+            "type": "attack_landed",
+            "time": 1.633,
+            "state": "playing",
+            "score": 120,
+            "data": {
+              "target": "Titan",
+              "damage": 11
+            }
+          },
+          {
+            "seq": 16,
+            "type": "salvage_upgrade_applied",
+            "time": 1.717,
+            "state": "playing",
+            "score": 120,
+            "data": {
+              "stat": "maxHp",
+              "beforeStat": 100,
+              "afterStat": 120
+            }
+          },
+          {
+            "seq": 17,
+            "type": "attack_landed",
+            "time": 1.8,
+            "state": "playing",
+            "score": 120,
+            "data": {
+              "target": "Titan",
+              "damage": 11
+            }
+          },
+          {
+            "seq": 18,
+            "type": "score_changed",
+            "time": 1.8,
+            "state": "playing",
+            "score": 180,
+            "data": {
+              "before": 120,
+              "after": 180,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 19,
+            "type": "attack_landed",
+            "time": 1.95,
+            "state": "playing",
+            "score": 180,
+            "data": {
+              "target": "Titan",
+              "damage": 11
+            }
+          },
+          {
+            "seq": 20,
+            "type": "attack_landed",
+            "time": 2.15,
+            "state": "playing",
+            "score": 180,
+            "data": {
+              "target": "Titan",
+              "damage": 11
+            }
+          },
+          {
+            "seq": 21,
+            "type": "score_changed",
+            "time": 2.15,
+            "state": "playing",
+            "score": 430,
+            "data": {
+              "before": 180,
+              "after": 430,
+              "delta": 250
+            }
+          },
+          {
+            "seq": 22,
+            "type": "extraction_choice_made",
+            "time": 2.267,
+            "state": "playing",
+            "score": 430,
+            "data": {
+              "choice": "DESCEND"
+            }
+          },
+          {
+            "seq": 23,
+            "type": "attack_landed",
+            "time": 2.867,
+            "state": "playing",
+            "score": 430,
+            "data": {
+              "target": "drone",
+              "damage": 11
+            }
+          },
+          {
+            "seq": 24,
+            "type": "score_changed",
+            "time": 2.867,
+            "state": "playing",
+            "score": 470,
+            "data": {
+              "before": 430,
+              "after": 470,
+              "delta": 40
+            }
+          },
+          {
+            "seq": 25,
+            "type": "salvage_upgrade_applied",
+            "time": 3.067,
+            "state": "playing",
+            "score": 470,
+            "data": {
+              "stat": "pulse",
+              "beforeStat": 82,
+              "afterStat": 106
+            }
+          }
+        ]
+      }
+    },
+    {
+      "phase": "end",
+      "atMs": 12000,
+      "snapshot": {
+        "state": "playing",
+        "score": 910,
+        "best": 910,
+        "fps": 60,
+        "time": 11.04979999999999,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "attack_landed",
+            "time": 0.3,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "target": "drone",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 3,
+            "type": "score_changed",
+            "time": 0.3,
+            "state": "playing",
+            "score": 20,
+            "data": {
+              "before": 0,
+              "after": 20,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 4,
+            "type": "hud_layout_clear",
+            "time": 0.3,
+            "state": "playing",
+            "score": 20,
+            "data": {
+              "core": "left",
+              "resources": "center",
+              "progress": "right"
+            }
+          },
+          {
+            "seq": 5,
+            "type": "attack_landed",
+            "time": 0.667,
+            "state": "playing",
+            "score": 20,
+            "data": {
+              "target": "drone",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 6,
+            "type": "score_changed",
+            "time": 0.667,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "before": 20,
+              "after": 40,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 7,
+            "type": "titan_and_threats_active",
+            "time": 0.683,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "titan": "HEX-FRAME TITAN",
+              "threats": 3
+            }
+          },
+          {
+            "seq": 8,
+            "type": "attack_landed",
+            "time": 0.85,
+            "state": "playing",
+            "score": 40,
+            "data": {
+              "target": "drone",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 9,
+            "type": "score_changed",
+            "time": 0.85,
+            "state": "playing",
+            "score": 60,
+            "data": {
+              "before": 40,
+              "after": 60,
+              "delta": 20
+            }
+          },
+          {
+            "seq": 10,
+            "type": "attack_landed",
+            "time": 1.05,
+            "state": "playing",
+            "score": 60,
+            "data": {
+              "target": "Titan",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 11,
+            "type": "attack_landed",
+            "time": 1.233,
+            "state": "playing",
+            "score": 60,
+            "data": {
+              "target": "Titan",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 12,
+            "type": "attack_landed",
+            "time": 1.417,
+            "state": "playing",
+            "score": 60,
+            "data": {
+              "target": "Titan",
+              "damage": 8
+            }
+          },
+          {
+            "seq": 13,
+            "type": "score_changed",
+            "time": 1.417,
+            "state": "playing",
+            "score": 120,
+            "data": {
+              "before": 60,
+              "after": 120,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 14,
+            "type": "salvage_upgrade_applied",
+            "time": 1.433,
+            "state": "playing",
+            "score": 120,
+            "data": {
+              "stat": "damage",
+              "beforeStat": 8,
+              "afterStat": 11
+            }
+          },
+          {
+            "seq": 15,
+            "type": "attack_landed",
+            "time": 1.633,
+            "state": "playing",
+            "score": 120,
+            "data": {
+              "target": "Titan",
+              "damage": 11
+            }
+          },
+          {
+            "seq": 16,
+            "type": "salvage_upgrade_applied",
+            "time": 1.717,
+            "state": "playing",
+            "score": 120,
+            "data": {
+              "stat": "maxHp",
+              "beforeStat": 100,
+              "afterStat": 120
+            }
+          },
+          {
+            "seq": 17,
+            "type": "attack_landed",
+            "time": 1.8,
+            "state": "playing",
+            "score": 120,
+            "data": {
+              "target": "Titan",
+              "damage": 11
+            }
+          },
+          {
+            "seq": 18,
+            "type": "score_changed",
+            "time": 1.8,
+            "state": "playing",
+            "score": 180,
+            "data": {
+              "before": 120,
+              "after": 180,
+              "delta": 60
+            }
+          },
+          {
+            "seq": 19,
+            "type": "attack_landed",
+            "time": 1.95,
+            "state": "playing",
+            "score": 180,
+            "data": {
+              "target": "Titan",
+              "damage": 11
+            }
+          },
+          {
+            "seq": 20,
+            "type": "attack_landed",
+            "time": 2.15,
+            "state": "playing",
+            "score": 180,
+            "data": {
+              "target": "Titan",
+              "damage": 11
+            }
+          },
+          {
+            "seq": 21,
+            "type": "score_changed",
+            "time": 2.15,
+            "state": "playing",
+            "score": 430,
+            "data": {
+              "before": 180,
+              "after": 430,
+              "delta": 250
+            }
+          },
+          {
+            "seq": 22,
+            "type": "extraction_choice_made",
+            "time": 2.267,
+            "state": "playing",
+            "score": 430,
+            "data": {
+              "choice": "DESCEND"
+            }
+          },
+          {
+            "seq": 23,
+            "type": "attack_landed",
+            "time": 2.867,
+            "state": "playing",
+            "score": 430,
+            "data": {
+              "target": "drone",
+              "damage": 11
+            }
+          },
+          {
+            "seq": 24,
+            "type": "score_changed",
+            "time": 2.867,
+            "state": "playing",
+            "score": 470,
+            "data": {
+              "before": 430,
+              "after": 470,
+              "delta": 40
+            }
+          },
+          {
+            "seq": 25,
+            "type": "salvage_upgrade_applied",
+            "time": 3.067,
+            "state": "playing",
+            "score": 470,
+            "data": {
+              "stat": "pulse",
+              "beforeStat": 82,
+              "afterStat": 106
+            }
+          },
+          {
+            "seq": 26,
+            "type": "salvage_upgrade_applied",
+            "time": 3.117,
+            "state": "playing",
+            "score": 470,
+            "data": {
+              "stat": "damage",
+              "beforeStat": 11,
+              "afterStat": 14
+            }
+          },
+          {
+            "seq": 27,
+            "type": "salvage_upgrade_applied",
+            "time": 3.233,
+            "state": "playing",
+            "score": 470,
+            "data": {
+              "stat": "maxHp",
+              "beforeStat": 120,
+              "afterStat": 140
+            }
+          },
+          {
+            "seq": 28,
+            "type": "salvage_upgrade_applied",
+            "time": 3.333,
+            "state": "playing",
+            "score": 470,
+            "data": {
+              "stat": "pulse",
+              "beforeStat": 106,
+              "afterStat": 130
+            }
+          },
+          {
+            "seq": 29,
+            "type": "attack_landed",
+            "time": 3.617,
+            "state": "playing",
+            "score": 470,
+            "data": {
+              "target": "drone",
+              "damage": 14
+            }
+          },
+          {
+            "seq": 30,
+            "type": "score_changed",
+            "time": 3.617,
+            "state": "playing",
+            "score": 510,
+            "data": {
+              "before": 470,
+              "after": 510,
+              "delta": 40
+            }
+          },
+          {
+            "seq": 31,
+            "type": "attack_landed",
+            "time": 3.816,
+            "state": "playing",
+            "score": 510,
+            "data": {
+              "target": "drone",
+              "damage": 14
+            }
+          },
+          {
+            "seq": 32,
+            "type": "score_changed",
+            "time": 3.816,
+            "state": "playing",
+            "score": 550,
+            "data": {
+              "before": 510,
+              "after": 550,
+              "delta": 40
+            }
+          },
+          {
+            "seq": 33,
+            "type": "attack_landed",
+            "time": 3.95,
+            "state": "playing",
+            "score": 550,
+            "data": {
+              "target": "drone",
+              "damage": 14
+            }
+          },
+          {
+            "seq": 34,
+            "type": "score_changed",
+            "time": 3.95,
+            "state": "playing",
+            "score": 590,
+            "data": {
+              "before": 550,
+              "after": 590,
+              "delta": 40
+            }
+          },
+          {
+            "seq": 35,
+            "type": "attack_landed",
+            "time": 4.333,
+            "state": "playing",
+            "score": 590,
+            "data": {
+              "target": "drone",
+              "damage": 14
+            }
+          },
+          {
+            "seq": 36,
+            "type": "score_changed",
+            "time": 4.333,
+            "state": "playing",
+            "score": 630,
+            "data": {
+              "before": 590,
+              "after": 630,
+              "delta": 40
+            }
+          },
+          {
+            "seq": 37,
+            "type": "salvage_upgrade_applied",
+            "time": 4.583,
+            "state": "playing",
+            "score": 630,
+            "data": {
+              "stat": "damage",
+              "beforeStat": 14,
+              "afterStat": 17
+            }
+          },
+          {
+            "seq": 38,
+            "type": "salvage_upgrade_applied",
+            "time": 4.667,
+            "state": "playing",
+            "score": 630,
+            "data": {
+              "stat": "maxHp",
+              "beforeStat": 140,
+              "afterStat": 160
+            }
+          },
+          {
+            "seq": 39,
+            "type": "salvage_upgrade_applied",
+            "time": 4.717,
+            "state": "playing",
+            "score": 630,
+            "data": {
+              "stat": "pulse",
+              "beforeStat": 130,
+              "afterStat": 154
+            }
+          },
+          {
+            "seq": 40,
+            "type": "attack_landed",
+            "time": 4.75,
+            "state": "playing",
+            "score": 630,
+            "data": {
+              "target": "drone",
+              "damage": 17
+            }
+          },
+          {
+            "seq": 41,
+            "type": "score_changed",
+            "time": 4.75,
+            "state": "playing",
+            "score": 670,
+            "data": {
+              "before": 630,
+              "after": 670,
+              "delta": 40
+            }
+          },
+          {
+            "seq": 42,
+            "type": "attack_landed",
+            "time": 5.15,
+            "state": "playing",
+            "score": 670,
+            "data": {
+              "target": "drone",
+              "damage": 17
+            }
+          },
+          {
+            "seq": 43,
+            "type": "score_changed",
+            "time": 5.15,
+            "state": "playing",
+            "score": 710,
+            "data": {
+              "before": 670,
+              "after": 710,
+              "delta": 40
+            }
+          },
+          {
+            "seq": 44,
+            "type": "attack_landed",
+            "time": 5.383,
+            "state": "playing",
+            "score": 710,
+            "data": {
+              "target": "drone",
+              "damage": 17
+            }
+          },
+          {
+            "seq": 45,
+            "type": "score_changed",
+            "time": 5.383,
+            "state": "playing",
+            "score": 750,
+            "data": {
+              "before": 710,
+              "after": 750,
+              "delta": 40
+            }
+          },
+          {
+            "seq": 46,
+            "type": "salvage_upgrade_applied",
+            "time": 5.417,
+            "state": "playing",
+            "score": 750,
+            "data": {
+              "stat": "damage",
+              "beforeStat": 17,
+              "afterStat": 20
+            }
+          },
+          {
+            "seq": 47,
+            "type": "attack_landed",
+            "time": 6.183,
+            "state": "playing",
+            "score": 750,
+            "data": {
+              "target": "drone",
+              "damage": 20
+            }
+          },
+          {
+            "seq": 48,
+            "type": "score_changed",
+            "time": 6.183,
+            "state": "playing",
+            "score": 790,
+            "data": {
+              "before": 750,
+              "after": 790,
+              "delta": 40
+            }
+          },
+          {
+            "seq": 49,
+            "type": "salvage_upgrade_applied",
+            "time": 6.267,
+            "state": "playing",
+            "score": 790,
+            "data": {
+              "stat": "maxHp",
+              "beforeStat": 160,
+              "afterStat": 180
+            }
+          },
+          {
+            "seq": 50,
+            "type": "salvage_upgrade_applied",
+            "time": 7.15,
+            "state": "playing",
+            "score": 790,
+            "data": {
+              "stat": "pulse",
+              "beforeStat": 154,
+              "afterStat": 178
+            }
+          },
+          {
+            "seq": 51,
+            "type": "attack_landed",
+            "time": 7.467,
+            "state": "playing",
+            "score": 790,
+            "data": {
+              "target": "drone",
+              "damage": 20
+            }
+          },
+          {
+            "seq": 52,
+            "type": "score_changed",
+            "time": 7.467,
+            "state": "playing",
+            "score": 830,
+            "data": {
+              "before": 790,
+              "after": 830,
+              "delta": 40
+            }
+          },
+          {
+            "seq": 53,
+            "type": "attack_landed",
+            "time": 8.85,
+            "state": "playing",
+            "score": 830,
+            "data": {
+              "target": "drone",
+              "damage": 20
+            }
+          },
+          {
+            "seq": 54,
+            "type": "score_changed",
+            "time": 8.85,
+            "state": "playing",
+            "score": 870,
+            "data": {
+              "before": 830,
+              "after": 870,
+              "delta": 40
+            }
+          },
+          {
+            "seq": 55,
+            "type": "salvage_upgrade_applied",
+            "time": 9.8,
+            "state": "playing",
+            "score": 870,
+            "data": {
+              "stat": "damage",
+              "beforeStat": 20,
+              "afterStat": 23
+            }
+          },
+          {
+            "seq": 56,
+            "type": "attack_landed",
+            "time": 9.85,
+            "state": "playing",
+            "score": 870,
+            "data": {
+              "target": "drone",
+              "damage": 23
+            }
+          },
+          {
+            "seq": 57,
+            "type": "score_changed",
+            "time": 9.85,
+            "state": "playing",
+            "score": 910,
+            "data": {
+              "before": 870,
+              "after": 910,
+              "delta": 40
+            }
+          },
+          {
+            "seq": 58,
+            "type": "salvage_upgrade_applied",
+            "time": 10.916,
+            "state": "playing",
+            "score": 910,
+            "data": {
+              "stat": "maxHp",
+              "beforeStat": 180,
+              "afterStat": 200
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

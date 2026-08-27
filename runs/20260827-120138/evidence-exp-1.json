@@ -1,0 +1,29 @@
+{
+  "fidelityVerdict": "PASS",
+  "missingRequirements": [],
+  "fidelityCritique": [
+    "All mapped owner requirements are supported by deterministic evidence: attack_landed targets the HEX-FRAME TITAN; titan_and_threats_active reports the named Titan with 9 concurrent threats; and visible frames show a distinct large boss alongside smaller pink threats.",
+    "Salvage upgrades demonstrably alter live stats (damage 8→11, max HP 100→120, later pulse and damage increases), satisfying both MH-03 and NG-03 rather than indicating cosmetic upgrades.",
+    "The HUD-clear event reports separate left, bottom-left, and right regions, no hud_overlap_detected event occurred, and the screenshots visibly show separated Core, Salvage, score, and progress regions.",
+    "Both EXTRACT and DESCEND outcomes are evidenced by extraction_choice_made; DESCEND is also visibly active in the second frame and produces subsequent doubled 40-point score gains. No legacy_salvage_mode event was observed, and play begins immediately by the early checkpoint. This independent assessment agrees with, but does not replace, the deterministic machine PASS."
+  ],
+  "scores": {
+    "visuals": 7,
+    "uiClarity": 8,
+    "funProxy": 7.5,
+    "performance": 10
+  },
+  "overall": 7.7,
+  "critique": [
+    "The cyan/magenta/orange neon palette, dark grid arena, glowing player core, and boss silhouette form a coherent cyberpunk presentation rather than a default UI prototype.",
+    "The first screenshot clearly communicates an active boss encounter: the labeled HEX-FRAME TITAN, armor bar, orbiting armor blocks, incoming threats, and impact debris give the frame readable combat energy.",
+    "HUD placement is clean and legible: Core Integrity is isolated at upper left, Salvage at lower left, and Run Progress/stat readout at upper right. No visible overlap occurs.",
+    "The arena is visually sparse outside the central forge and combat cluster. Grid and a few sparks establish space, but the supplied stills do not strongly show the promised foundry haze, parallax, circuit pulses, or richer environmental life.",
+    "Telemetry supports a brisk, feedback-rich loop—rapid scoring, damage upgrades, a Titan kill, and a DESCEND branch—but the post-Titan choice itself is not shown in the supplied screenshots, reducing visual readability of the risk/reward beat."
+  ],
+  "priorityFixes": [
+    "Make the extraction gate visually memorable and capture-safe: present large, clearly contrasted EXTRACT and DESCEND panels with explicit banked-score versus doubled-score/projectile-pressure consequences before selection.",
+    "Increase arena depth without compromising readability by layering subtle furnace haze, scrolling circuit traces, distant foundry silhouettes, and restrained drifting sparks behind the grid.",
+    "Strengthen moment-to-moment combat readability with more distinct projectile trails, short-lived damage pips, and high-contrast hit sparks/recoil flashes that remain legible around the Titan."
+  ]
+}

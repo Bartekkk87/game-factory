@@ -7,11 +7,19 @@
       "date": "2026-08-26T13:58:40.074Z",
       "status": "draft",
       "score": 7.5
+    },
+    {
+      "slug": "titan-core-reforged",
+      "title": "Titan Core: Reforged",
+      "genre": "action",
+      "date": "2026-08-27T12:06:19.773Z",
+      "status": "draft",
+      "score": 7.7
     }
   ],
   "lessons": [],
   "stats": {
-    "runs": 30,
+    "runs": 31,
     "published": 0,
     "rejected": 0,
     "failed": 22,
