@@ -40,13 +40,19 @@ Verifizierter Schichtstatus 27.08.2026:
 - **L3 Verification & Evidence — DONE**
 - **L4 Production Agents / P0 — DONE**
 
-Finaler L4-Code-Head vor Dokumentationscommits:
+L4 wurde über PR #5 nach `main` gemergt.
 
-`ce0d061cbad98e8f2f5948e0910fd300dbd0b573`
+Verifizierter Runtime-Merge-Commit:
 
-Vollständiger L4-Verifier-Selftest:
+`f7b5e2ebd75e405d857b3bec19d85231e02eaef8`
 
-GitHub Actions Run `33050867522` — **SUCCESS**.
+Vollständiger gemergter `main` Verifier-Selftest:
+
+GitHub Actions Run `33051402235` — **SUCCESS**.
+
+Der Run enthält den expliziten Schritt:
+
+`node factory/src/roles/test-production-agents.mjs`
 
 Top-down-Integritätscheck — **PASS**.
 
@@ -192,7 +198,13 @@ Only after the deterministic release gate passes:
 
 Published/Draft metadata remains bound to the verified candidate SHA.
 
-## 9. Durable Evidence
+## 9. L4 closure lesson
+
+The first explicit L4-test Run `33050802610` failed because the selftest assertion was too strict: it rejected the literal `audit.verdict` even when production code only deleted/sanitized a stray non-authoritative LLM verdict.
+
+This was a **test-definition defect**, not a release-authority defect. The assertion was corrected to require sanitization. Full branch Run `33050867522` then passed, followed by full merged `main` Run `33051402235` — **SUCCESS**.
+
+## 10. Durable Evidence
 
 Per run the platform preserves the relevant set of:
 
@@ -212,7 +224,7 @@ RUN-EVIDENCE.json
 RESULT.json | FAILURE.json
 ```
 
-## 10. Code/context strategy — P1
+## 11. Code/context strategy — P1
 
 Current risk remains LLM amplification from repeated full-engine/full-game context.
 
@@ -226,7 +238,7 @@ Next optimization layer:
 
 Output-token limits and code-complexity limits remain separate concepts.
 
-## 11. Learning — P2
+## 12. Learning — P2
 
 Safe learning target:
 
@@ -234,7 +246,7 @@ Safe learning target:
 
 A single LLM statement may not autonomously rewrite core rules.
 
-## 12. Repo layout
+## 13. Repo layout
 
 ```text
 engine/                    Micro-Engine + future API Contract/Manifest
@@ -255,13 +267,13 @@ examples/fixtures/         verifier Green/Broken regression cases
 .github/workflows/         Produce, Verify, Review, Pages
 ```
 
-## 13. Current priority
+## 14. Current priority
 
 1. L1 — **DONE**
 2. L2 — **DONE**
 3. L3 — **DONE**
 4. L4 / P0 — **DONE**
-5. Merge verified L4 branch to `main` and confirm the full `main` selftest remains green
-6. Only then is exactly one controlled `Titan Core: Reforged` Canary #3 technically eligible
-7. **Do not start that paid canary as part of this L4 closure task**
+5. `main` merge + complete Verifier Selftest — **DONE / Run 33051402235 SUCCESS**
+6. Top-down integrity check — **PASS**
+7. Exactly one controlled `Titan Core: Reforged` Canary #3 is technically eligible, but requires a new explicit Owner instruction and was not started during hardening closure
 8. After reference evidence: second genre, then P1/P2 optimization
