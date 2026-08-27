@@ -6,75 +6,71 @@ Purpose: record the process audit before the next paid Titan canary. This docume
 
 ## 1. Current verified baseline
 
-The latest platform commit `84eb3ab` passed the full Verifier Selftest. The current pipeline is:
+The verified platform runtime head is now `52e843bba72bd3fe83ea2b34475a32e2076dcdee` and passed the full Verifier Selftest on `main` in GitHub Actions Run `33046180562` — **SUCCESS**.
 
-`Owner idea -> Director -> Engineer build -> technical verifier -> repair/fresh rebuild -> Playtester -> polish/reverify -> Auditor -> draft -> owner review -> publish/reject`
+The current pipeline is:
 
-Already present:
+`Owner idea -> immutable Owner Contract -> Director acceptance/probe traceability -> Engineer -> technical + fidelity verifier -> repair/fresh rebuild -> Playtester -> polish/reverify -> Auditor -> deterministic release gate -> draft -> owner review -> publish/reject`
 
-- deterministic idea selection from the triggering Git commit;
-- provider-aware model selection;
-- deterministic simulated verifier input;
-- fail-closed evidence on failed production runs;
-- candidate SHA binding;
-- repair-stagnation detection and fresh rebuild escalation;
-- polish rollback to the last technically verified candidate;
-- issue-based owner approval/rejection gate.
+Verified hardening state:
+
+- **L1 Control Kernel — DONE**
+- **L2 Model / Provider Layer — DONE**
+- **L3 Verification & Evidence — DONE**
+- **L4 Production Agents — NEXT / P0**
+
+No paid Titan Canary #3 has been started.
 
 ## 2. Audit findings
 
-### P0-A — Product contract is not machine-enforced end to end
+### P0-A — Product contract is machine-enforced end to end through the verifier — DONE in L3
 
-The Director creates a `probePlan`, but the technical verifier currently checks only generic properties such as runtime errors, score/state change, FPS and visible pixels. It does not consume the GDD `probePlan` and cannot prove that owner Must-Haves such as a Titan, salvage, upgrades or a risk/reward choice actually exist.
+Implemented:
 
-Planned change:
+- immutable `ownerContract` from the owner brief;
+- stable Must-Have/No-Go IDs;
+- Director acceptance/probe traceability;
+- verifier-visible owner-contract evidence;
+- deterministic Product Fidelity PASS/FAIL;
+- release requires both generic technical PASS and owner-contract fidelity PASS.
 
-- create an immutable `ownerContract` from the owner brief;
-- give every explicit Must-Have/No-Go a stable ID;
-- Director maps the game design to observable acceptance criteria;
-- verifier receives the contract and records contract-specific evidence;
-- release requires both generic technical PASS and owner-contract PASS.
+Remaining L4 work: make Engineer and Playtester consume this contract explicitly end to end.
 
-### P0-B — Playtester currently judges screenshots without the product brief
+### P0-B — Playtester product context — OPEN for L4
 
-The Playtester receives session metrics and screenshots, but not the owner idea or GDD. It can judge presentation, but not whether the requested game was actually built.
+The deterministic Product Fidelity gate exists, but the Playtester still needs the full product context.
 
-Planned change:
+Required change:
 
-- pass `ownerContract` + compact GDD + gameplay event timeline to Playtester;
-- add a separate `fidelityVerdict` / `missingMustHaves` result;
-- keep the experience score as an experience metric instead of hiding product fidelity inside the number;
-- release gate becomes `technical PASS + fidelity PASS + experience >= threshold`.
+- pass `ownerContract` + compact GDD + acceptance/probe mapping + gameplay event timeline to Playtester;
+- add a separate playtester `fidelityVerdict` / `missingMustHaves` result;
+- keep the experience score as a separate experience metric;
+- deterministic Product Fidelity remains authoritative and cannot be overridden by the LLM Playtester.
 
-### P0-C — OpenAI budget gate is not a real hard gate
+### P0-C — OpenAI budget gate — DONE in L1
 
-`costReport()` currently increments dollars only if a provider returns `usage.cost`. OpenAI token usage does not provide a reliable per-request dollar amount in that field, so a nominal `$10` run budget can remain at `$0` internally while tokens are consumed.
-
-Planned change:
+Implemented:
 
 - model price registry with input/cached-input/output rates;
-- calculate spend from returned token categories;
-- persist spend per role and per attempt;
-- before a new LLM call, derive a conservative maximum affordable output budget from remaining dollars;
-- fail closed before a call that cannot fit the remaining budget;
-- keep the external OpenAI project limit as a second safety layer.
+- calculated spend from token categories;
+- persisted spend per role/model/operation/attempt;
+- conservative pre-call budget reservation;
+- fail closed before unaffordable paid transport.
 
-### P0-D — Verifier still has reproducibility gaps
+### P0-D — Verifier reproducibility gaps — DONE in L3
 
-Input is deterministic now, but the game engine defaults its RNG seed from current time. Also, the interactivity check compares only the mid-session score to the final score. A game that scores correctly before the mid snapshot can therefore fail if the score is unchanged afterwards.
+Implemented:
 
-Planned change:
-
-- deterministic verifier seed while keeping random seeds for normal players;
-- capture start/early/mid/end snapshots or a periodic telemetry timeline;
-- interactivity passes when verified gameplay progress occurs anywhere in the required early window;
-- persist the exact seed and input sequence with evidence.
+- deterministic verifier seed;
+- persisted seed + exact deterministic input sequence;
+- `start -> early -> mid -> end` telemetry timeline;
+- early interactivity/progression evidence;
+- bounded runtime/mechanic events;
+- Green/Broken fixtures and real assembled runtime fidelity fixture.
 
 ## 3. Model strategy
 
-The current OpenAI defaults are `gpt-4o-mini` for Director/Playtester/Auditor and `gpt-4o` for Engineer. They work, but they are no longer the preferred production baseline.
-
-Target baseline to benchmark:
+Target OpenAI reference baseline prepared in L2:
 
 | Role | Proposed model | Why |
 |---|---|---|
@@ -84,12 +80,16 @@ Target baseline to benchmark:
 | Auditor narrative | `gpt-5.6-luna` | Small, bounded evidence-summary task. |
 | Deterministic release verdict | no LLM | Machine gates decide PASS/FAIL; an LLM must not be the authority for facts already machine-checkable. |
 
+Before Canary #3, L4 must confirm this matrix is the actual reference production route and remains covered by router/capability tests.
+
 Later optimization after two different games pass end to end:
 
 - benchmark `gpt-5.6-luna` for Director and Playtester;
 - optionally use Luna for narrowly scoped repair tasks only if evals show no convergence loss;
 - consider a single Sol rescue escalation only when Terra repeatedly proves insufficient and the remaining budget explicitly allows it;
 - add open-weight candidates as comparison lanes, not as an unverified automatic fallback.
+
+DeepSeek remains a benchmark candidate, not the reference production default.
 
 ## 4. Context and code-size strategy
 
@@ -108,7 +108,7 @@ Important: the current `maxTokens: 12000` is not the desired code-size policy. O
 
 ## 5. Verifier evolution
 
-### Generic technical contract — keep
+### Generic technical contract — verified
 
 - probe present;
 - no runtime errors;
@@ -118,32 +118,41 @@ Important: the current `maxTokens: 12000` is not the desired code-size policy. O
 - FPS gate;
 - visual smoke test.
 
-### Add
+### L3 additions — verified
 
 - deterministic RNG seed for test runs;
-- telemetry timeline;
-- engine/version/API-manifest SHA in evidence;
-- owner-contract acceptance IDs;
-- engine-generated events for score/state changes;
-- bounded product events for mechanics that cannot be inferred from generic engine state;
-- stronger visual activity check using more than only distance from one guessed background color.
+- persisted deterministic input sequence;
+- `start / early / mid / end` telemetry timeline;
+- immutable owner-contract IDs;
+- Director acceptance/probe traceability;
+- engine-generated score/state events;
+- bounded product-specific mechanic events;
+- deterministic Product Fidelity PASS/FAIL;
+- Green/Broken fixtures for new hard checks;
+- real assembled runtime fidelity fixture.
 
-The verifier must remain self-tested with known-green and known-broken fixtures. New checks require matching fixtures before they become release gates.
+### Still P1
+
+- engine/version/API-manifest SHA in evidence;
+- stronger visual activity check using more than only distance from one guessed background color.
 
 ## 6. LLM adapter evolution
 
 Current provider portability is useful and should remain. Do not hard-wire the whole platform to an OpenAI-only architecture.
 
-Planned interface:
+Implemented in L2:
 
-- common role-level API (`generateStructured`, usage, model, capability metadata);
-- baseline OpenAI-compatible Chat Completions adapter for portable providers;
-- OpenAI Responses adapter for GPT-5.6 capabilities where useful;
-- JSON Schema/Structured Outputs instead of only generic `json_object` where supported;
-- role-specific reasoning effort;
-- prompt/context caching accounting;
-- provider/model capability registry and price registry;
+- provider registry and fail-closed role routing;
+- capability registry;
+- price registry;
 - no silent cross-provider fallback.
+
+Later evolution remains:
+
+- JSON Schema/Structured Outputs where supported and useful;
+- role-specific reasoning effort tuning;
+- prompt/context caching optimization;
+- identical recorded benchmark lanes across providers.
 
 ## 7. Learning pipeline
 
@@ -161,20 +170,26 @@ Rules:
 - obsolete lessons can be superseded;
 - learning changes must pass the verifier selftest before production.
 
-This Evidence -> Repair -> Learning loop is a core platform differentiator and should be treated as first-class architecture, not prompt text.
+This Evidence -> Repair -> Learning loop remains a core platform differentiator and is P2 after reference validation.
 
 ## 8. Execution checklist before Canary #3
 
 ### P0 — required before the next paid Titan canary
 
-- [ ] Add real OpenAI token-price accounting and enforceable per-run budget.
-- [ ] Align Engineer prompt wording with deterministic verifier behavior (remove stale "random input / ~15 seconds" wording).
-- [ ] Fix interactivity evidence to observe progress across the early gameplay timeline, not only mid -> end.
-- [ ] Make verifier RNG seed deterministic and persist it.
-- [ ] Pass owner contract/GDD context into Playtester and add fidelity gate.
-- [ ] Compile or map Director acceptance criteria into verifier-visible contract evidence.
-- [ ] Update OpenAI role defaults from GPT-4o generation to the benchmark GPT-5.6 matrix.
-- [ ] Run full Verifier Selftest after every P0 code change.
+- [x] Add real OpenAI token-price accounting and enforceable per-run budget.
+- [ ] Align Engineer prompt wording with deterministic verifier behavior; remove stale `random input / ~15 seconds` wording.
+- [x] Fix interactivity evidence to observe progress across the early gameplay timeline, not only mid -> end.
+- [x] Make verifier RNG seed deterministic and persist it.
+- [x] Add immutable Owner Contract with stable Must-Have / No-Go IDs.
+- [x] Compile/map Director acceptance criteria into verifier-visible contract evidence.
+- [x] Add bounded gameplay/mechanic events and deterministic Product Fidelity PASS/FAIL.
+- [ ] Pass Owner Contract/GDD/acceptance mapping/telemetry/events into Playtester and add separate Playtester fidelity review.
+- [ ] Pass immutable Owner Contract + acceptance/probe mapping explicitly into Engineer build/repair/rebuild/polish context.
+- [ ] Align Auditor digest/prompt with deterministic release authority and new fidelity evidence.
+- [ ] Confirm OpenAI GPT-5.6 reference role matrix is the actual production route for the reference lane.
+- [x] Full Verifier Selftest green after L3 P0 changes — Run `33046180562`.
+- [ ] Full Verifier Selftest green after all L4 P0 changes.
+- [ ] Top-down integrity check complete.
 
 ### P1 — after P0, preferably before the second genre
 
@@ -182,30 +197,32 @@ This Evidence -> Repair -> Learning loop is a core platform differentiator and s
 - [ ] Add generated-code/context metrics to evidence.
 - [ ] Add incremental repair output protocol or equivalent token-amplification reduction.
 - [ ] Strengthen visual smoke/activity detection.
-- [ ] Make deterministic release verdict independent from LLM Auditor.
-- [ ] Persist cost/token stats by role and attempt.
+- [x] Make deterministic release verdict independent from LLM Auditor.
+- [x] Persist cost/token stats by role and attempt.
 
 ### P2 — after Titan + second genre both pass
 
 - [ ] Benchmark Luna vs Terra per non-engineer role using recorded eval cases.
 - [ ] Evaluate selective Sol rescue escalation.
-- [ ] Add open-weight comparison lane.
+- [ ] Add open-weight / DeepSeek comparison lane.
 - [ ] Automate evidence-backed learning candidates.
 - [ ] Add multi-game regression suite from accepted products.
 
 ## 9. Canary gate
 
-The next paid `Titan Core: Reforged` canary starts only after all P0 items are implemented and the full selftest is green.
+The next paid `Titan Core: Reforged` canary starts only after all remaining L4 P0 items are implemented, the full selftest is green and the top-down integrity check passes.
 
 Success means:
 
 - exact owner idea selected;
+- immutable owner contract and traceability preserved;
 - budget accounting is real;
 - technical contract PASS;
-- owner-product fidelity PASS;
+- deterministic Product Fidelity PASS;
+- Playtester independently confirms product fidelity;
 - experience score >= 6.5;
-- repair/fresh-rebuild paths converge if needed;
-- audit/release evidence consistent;
+- repair/fresh-rebuild/polish paths converge within budgets;
+- audit/release evidence is consistent;
 - draft and evidence persisted;
 - review issue created;
 - preview playable.
