@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import './test-repair-policy.mjs';
 import {
   beginRunBudget,
   BudgetError,
