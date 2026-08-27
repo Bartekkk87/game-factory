@@ -187,6 +187,7 @@ function reviewMarkdown(meta) {
     '| Metric | Value |',
     `| Release gate | **${meta.releaseGate.pass ? 'PASS' : 'FAIL'}** |`,
     `| Product fidelity | **${meta.productFidelity.pass ? 'PASS' : 'FAIL'}** |`,
+    `| Playtester fidelity (advisory) | **${meta.playtesterFidelity?.verdict ?? 'UNAVAILABLE'}** |`,
     `| Playtest overall | **${meta.overall} / 10** |`,
     `| Visuals / UI / Fun / Perf | ${meta.scores.visuals} / ${meta.scores.uiClarity} / ${meta.scores.funProxy} / ${meta.scores.performance} |`,
     `| Attempts (build+debug) | ${meta.attempts} |`,
@@ -226,7 +227,7 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
       contractSha256: ownerContract.contractSha256,
       criteria: null
     },
-    experience: { score: null, scores: null, critique: [] },
+    experience: { score: null, scores: null, critique: [], fidelityReview: null },
     audit: null,
     counters: { attempts: 0, repairCalls: 0, polishRounds: 0, freshRebuilds: 0 }
   };
@@ -340,8 +341,17 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
       return failClosed(runDir, state, llmFailureReason(e, 'playtester_failed'), { error: String(e.message) });
     }
     writeJson(path.join(runDir, `evidence-exp-${polishRounds}.json`), playtest);
-    state.experience = { score: playtest.overall, scores: playtest.scores, critique: playtest.critique ?? [] };
-    log.info(`overall score ${playtest.overall}/10 (gate ${LIMITS.minOverallScore})`);
+    state.experience = {
+      score: playtest.overall,
+      scores: playtest.scores,
+      critique: playtest.critique ?? [],
+      fidelityReview: {
+        verdict: playtest.fidelityVerdict,
+        missingRequirements: playtest.missingRequirements ?? [],
+        critique: playtest.fidelityCritique ?? []
+      }
+    };
+    log.info(`overall score ${playtest.overall}/10 (gate ${LIMITS.minOverallScore}) | playtester fidelity ${playtest.fidelityVerdict} (advisory)`);
 
     if (playtest.overall >= LIMITS.minOverallScore) break;
     if (polishRounds >= LIMITS.maxPolishRounds) break;
@@ -402,26 +412,37 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
 
   log.step('PHASE C - AUDIT (ADVISORY)');
   const beforeAudit = costReport();
+  const deterministicReleaseBeforeAudit = releaseFor(state);
   const digest = {
     product: { title: gdd.title, genre: gdd.genre },
     ownerContractSha256: ownerContract.contractSha256,
     attemptsTotal: attempt,
     debugRepairRounds: failureBundles.length,
     polishRounds,
-    finalTechnicalChecks: tech.verdict.checks,
-    finalProductFidelity: tech.fidelity.criteria,
-    playtestScores: playtest.scores,
-    playtestOverall: playtest.overall,
-    scoreGate: LIMITS.minOverallScore,
-    budgetUsd,
-    spentUsd: beforeAudit.costUsd,
-    tokensUsed: beforeAudit.tokens
+    technical: {
+      pass: state.technical.pass,
+      checks: tech.verdict.checks
+    },
+    deterministicProductFidelity: {
+      pass: tech.fidelity.pass,
+      status: tech.fidelity.status,
+      criteria: tech.fidelity.criteria
+    },
+    playtesterFidelity: state.experience.fidelityReview,
+    experience: {
+      score: playtest.overall,
+      scores: playtest.scores,
+      threshold: LIMITS.minOverallScore,
+      pass: playtest.overall >= LIMITS.minOverallScore
+    },
+    budget: beforeAudit,
+    deterministicReleaseVerdict: deterministicReleaseBeforeAudit
   };
   try {
     state.audit = await runAuditor({ digest });
-    log.info(`audit verdict (advisory): ${state.audit.verdict}`);
+    log.info(`audit assessment (advisory): ${state.audit.assessment}`);
   } catch (e) {
-    state.audit = { verdict: 'UNAVAILABLE', summary: String(e.message) };
+    state.audit = { assessment: 'UNAVAILABLE', findings: [], summary: String(e.message) };
     log.warn(`auditor unavailable (non-authoritative): ${e.message}`);
   }
 
@@ -450,13 +471,14 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     candidateSha: tech.evidence.candidateSha,
     ownerContractSha256: ownerContract.contractSha256,
     productFidelity: state.productFidelity,
+    playtesterFidelity: state.experience.fidelityReview,
     attempts: attempt,
     debugRepairRounds: failureBundles.length,
     polishRounds,
     scores: playtest.scores,
     overall: playtest.overall,
     critique: playtest.critique ?? [],
-    auditVerdict: state.audit?.verdict ?? 'UNAVAILABLE',
+    auditAssessment: state.audit?.assessment ?? 'UNAVAILABLE',
     auditSummary: state.audit?.summary ?? '',
     releaseGate: finalRelease,
     budget: cost,
