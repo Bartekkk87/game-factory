@@ -6,7 +6,8 @@ export const FIDELITY_EVIDENCE_KINDS = Object.freeze([
   'score_change',
   'state_reached',
   'event_absent',
-  'started_by_early'
+  'started_by_early',
+  'layout_no_overlap'
 ]);
 
 const EVIDENCE_KIND_SET = new Set(FIDELITY_EVIDENCE_KINDS);
@@ -23,6 +24,13 @@ function exactlyOne(items, requirementId, label) {
     throw new Error(`Director traceability requires exactly one ${label} for ${requirementId}; found ${matches.length}`);
   }
   return matches[0];
+}
+
+function normalizeLayoutProbeKind(kind, eventType) {
+  if ((kind === 'event' && eventType === 'hud_layout_clear') || (kind === 'event_absent' && eventType === 'hud_overlap_detected')) {
+    return 'layout_no_overlap';
+  }
+  return kind;
 }
 
 export function compileDirectorTraceability(gdd, ownerContract) {
@@ -51,10 +59,16 @@ export function compileDirectorTraceability(gdd, ownerContract) {
     const probe = exactlyOne(probes, requirementId, 'probe');
     const acceptanceId = `AC-${requirementId}`;
     const probeId = `PR-${requirementId}`;
-    const kind = requireString(probe.kind, `${probeId}.kind`);
-    if (!EVIDENCE_KIND_SET.has(kind)) {
-      throw new Error(`Director probe ${probeId} uses unsupported evidence kind ${kind}`);
+    const declaredKind = requireString(probe.kind, `${probeId}.kind`);
+    if (!EVIDENCE_KIND_SET.has(declaredKind)) {
+      throw new Error(`Director probe ${probeId} uses unsupported evidence kind ${declaredKind}`);
     }
+
+    let eventType = null;
+    if (declaredKind === 'event' || declaredKind === 'event_absent' || declaredKind === 'event_value_change') {
+      eventType = requireString(probe.eventType, `${probeId}.eventType`);
+    }
+    const kind = normalizeLayoutProbeKind(declaredKind, eventType);
 
     const compiledProbe = {
       ...probe,
@@ -64,7 +78,15 @@ export function compileDirectorTraceability(gdd, ownerContract) {
       kind
     };
     if (kind === 'event' || kind === 'event_absent' || kind === 'event_value_change') {
-      compiledProbe.eventType = requireString(probe.eventType, `${probeId}.eventType`);
+      compiledProbe.eventType = eventType;
+    } else if (kind === 'layout_no_overlap') {
+      delete compiledProbe.eventType;
+      delete compiledProbe.strength;
+      compiledProbe.minRegions = Number.isFinite(Number(probe.minRegions))
+        ? Math.max(1, Math.min(12, Math.trunc(Number(probe.minRegions))))
+        : 3;
+      compiledProbe.requireScoreProgress = probe.requireScoreProgress !== false;
+      if (eventType) compiledProbe.legacyEventType = eventType;
     }
     if (kind === 'event' && requirementId.startsWith('MH-')) {
       // Positive product mechanics need more than an event-name claim. The verifier
