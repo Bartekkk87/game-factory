@@ -38,6 +38,7 @@ function writeRun(id, { failure = null, candidateSha = null } = {}) {
 writeRun('run-1', { candidateSha: 'sha-owner' });
 writeRun('run-2', { failure: 'fixture:recurring-verifier-failure' });
 writeRun('run-3', { failure: 'fixture:recurring-verifier-failure' });
+writeRun('run-4');
 
 const feedbackId = 'gh-issue-8-comment-8001';
 fs.writeFileSync(path.join(tmp, 'learning', 'evidence', 'owner-feedback', `${feedbackId}.json`), JSON.stringify({
@@ -57,6 +58,7 @@ const store = await import(pathToFileURL(path.join(tmp, 'factory', 'src', 'memor
 const feedbackFirst = orchestration.orchestrateControlledLearning({ eventKind: 'owner-feedback', eventId: feedbackId });
 assert.equal(feedbackFirst.created, true);
 assert.equal(feedbackFirst.triggerAllowed, true);
+assert.deepEqual(feedbackFirst.triggerReasons, ['owner-negative-or-feedback-evidence']);
 assert.equal(feedbackFirst.focusScope, 'product-feedback');
 assert.ok(feedbackFirst.candidateId);
 assert.equal(feedbackFirst.candidateActive, false);
@@ -75,6 +77,7 @@ assert.equal(fs.readdirSync(path.join(tmp, 'learning', 'candidates')).filter((na
 const engineering = orchestration.orchestrateControlledLearning({ eventKind: 'production-run', eventId: 'run-3' });
 assert.equal(engineering.created, true);
 assert.equal(engineering.triggerAllowed, true);
+assert.deepEqual(engineering.triggerReasons, ['recurring-engineering-failure-across-runs']);
 assert.equal(engineering.focusScope, 'engineering');
 assert.ok(engineering.candidateId);
 assert.equal(engineering.candidateActive, false);
@@ -82,12 +85,18 @@ const engineeringCandidate = JSON.parse(fs.readFileSync(path.join(tmp, 'learning
 assert.equal(engineeringCandidate.status, 'candidate');
 assert.equal(engineeringCandidate.active, false);
 assert.equal(engineeringCandidate.targetLayer, 'skill');
-assert.ok(engineeringCandidate.sourceRunIds.includes('run-2'));
-assert.ok(engineeringCandidate.sourceRunIds.includes('run-3'));
+assert.deepEqual(engineeringCandidate.sourceRunIds, ['run-2', 'run-3']);
 assert.equal(store.lessonsFor('engineer').some((lesson) => lesson.includes(engineering.candidateId)), false);
 
+const unrelatedSuccess = orchestration.orchestrateControlledLearning({ eventKind: 'production-run', eventId: 'run-4' });
+assert.equal(unrelatedSuccess.created, true);
+assert.equal(unrelatedSuccess.triggerAllowed, false);
+assert.deepEqual(unrelatedSuccess.triggerReasons, []);
+assert.equal(unrelatedSuccess.focusScope, null);
+assert.equal(unrelatedSuccess.candidateId, null);
+
 const receiptFiles = fs.readdirSync(path.join(tmp, 'learning', 'orchestration')).filter((name) => name.endsWith('.json'));
-assert.equal(receiptFiles.length, 2);
+assert.equal(receiptFiles.length, 3);
 for (const name of receiptFiles) {
   const receipt = JSON.parse(fs.readFileSync(path.join(tmp, 'learning', 'orchestration', name), 'utf8'));
   assert.equal(receipt.canValidate, false);

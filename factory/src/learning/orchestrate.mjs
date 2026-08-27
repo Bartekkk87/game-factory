@@ -144,21 +144,27 @@ function buildProposal({ eventKind, eventId, trigger, aggregate, durable, candid
   }
 
   if (eventKind === 'production-run' && trigger.allowedScopes?.includes('engineering')) {
-    const recurring = (aggregate?.failures?.recurring || []).filter((item) => Number(item.count) >= 2 && Number(item.runCount) >= 2);
+    const recurring = (aggregate?.failures?.recurring || []).filter((item) =>
+      Number(item.count) >= 2 &&
+      Number(item.runCount) >= 2 &&
+      Array.isArray(item.runIds) &&
+      item.runIds.map(String).includes(String(eventId))
+    );
+    const sourceRunIds = [...new Set(recurring.flatMap((item) => item.runIds || []))].map(String).sort();
     const signatures = recurring.map((item) => `${item.signature} x${item.count} across ${item.runCount} runs`);
     return {
       scope: 'engineering',
       facts: [
-        `Recurring deterministic cross-run failure evidence: ${signatures.join('; ') || 'none'}.`,
-        `Independent durable runs in aggregate: ${new Set(aggregate?.input?.runIds || []).size}.`
+        `Recurring deterministic cross-run failure evidence involving current production event ${eventId}: ${signatures.join('; ') || 'none'}.`,
+        `Independent source runs for those recurring signatures: ${sourceRunIds.length}.`
       ],
       proposal: {
         id: candidateId,
         role: 'engineer',
         scope: 'engineering',
         targetLayer: 'skill',
-        text: `Hypothesis only: recurring deterministic verifier failures observed across independent runs by production event ${eventId} may indicate an engineering-guidance gap. Validate root cause against independent evidence and the full regression suite before proposing any skill change.`,
-        sourceRunIds: [...new Set(aggregate?.input?.runIds || [])].map(String).sort(),
+        text: `Hypothesis only: recurring deterministic verifier failures observed across independent runs including production event ${eventId} may indicate an engineering-guidance gap. Validate root cause against independent evidence and the full regression suite before proposing any skill change.`,
+        sourceRunIds,
         sourceKind: 'controlled-learning-orchestration',
         ownerFeedbackIds: [],
         confidence: 0.4,
@@ -219,8 +225,15 @@ export function orchestrateControlledLearning({ eventKind, eventId } = {}) {
     throw new Error(`owner-feedback evidence not found: ${id}`);
   }
 
+  const eventFeedback = kind === 'owner-feedback'
+    ? durable.ownerFeedback.find((feedback) => feedback.id === id)
+    : null;
   const aggregate = aggregateEvidence(durable);
-  const trigger = evaluateImprovementTrigger(aggregate);
+  const trigger = evaluateImprovementTrigger(aggregate, {
+    eventKind: kind,
+    eventId: id,
+    eventVerdict: eventFeedback?.parsedCommand || eventFeedback?.verdict || ''
+  });
   writeJson(aggregateFile, {
     ...aggregate,
     orchestration: { eventKind: kind, eventId: id, authority: 'deterministic-aggregation-only' }
