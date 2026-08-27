@@ -16,6 +16,11 @@ No paid `Titan Core: Reforged` Canary #3 was started.
 
 Titan Canary #3 remains blocked behind a **new explicit Owner instruction** despite technical readiness.
 
+Notion mirrors:
+
+- Final Acceptance: `https://app.notion.com/p/3c98920148bd81f58073f0b1b6a9c1d3?pvs=204`
+- Final Next-Chat Handoff: `https://app.notion.com/p/3c98920148bd81dab4eec377384025ea?pvs=204`
+
 ---
 
 ## P0 evidence
@@ -40,7 +45,7 @@ Final verification run for this gate: `33059654534` — SUCCESS.
 
 ### P0-03 — Product Fidelity Hardening — PASS
 
-- Positive Must-Have `event` probes are compiled as `correlated_gameplay` evidence.
+- Positive Must-Have `event` probes are compiled as correlated gameplay evidence.
 - Event name presence alone is no longer sufficient.
 - Fidelity now requires the engine-captured event to occur in relevant gameplay state/timing after the early evidence point and after independent engine-observed score progress.
 - Added dedicated adversarial fixture: `fake boss_entered event, no mechanic/progress` => Product Fidelity FAIL.
