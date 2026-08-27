@@ -1,6 +1,8 @@
 import { chat } from '../llm/client.mjs';
 import { extractJson } from '../llm/json.mjs';
 import { compileDirectorTraceability } from '../contract/traceability.mjs';
+import { compileProofPlan } from '../verify/proof-plan.mjs';
+import { LIMITS } from '../config.mjs';
 import { assembleSystemPrompt } from '../util/skills.mjs';
 import { lessonsFor, knownConcepts } from '../memory/store.mjs';
 
@@ -39,5 +41,15 @@ export async function runDirector({ idea, source, ownerContract }) {
   if (!rawGdd.probePlan?.scoreEvents?.length) missing.push('probePlan.scoreEvents');
   if (missing.length) throw new Error(`Director GDD incomplete, missing: ${missing.join(', ')}`);
 
-  return compileDirectorTraceability(rawGdd, ownerContract);
+  const compiled = compileDirectorTraceability(rawGdd, ownerContract);
+  const proofPlan = compileProofPlan({
+    gdd: compiled,
+    baseSeconds: LIMITS.playSeconds,
+    maxProofSeconds: LIMITS.maxProofSeconds
+  });
+  if (!proofPlan.pass) {
+    throw new Error(`Director proof plan unreachable: ${proofPlan.errors.join('; ')}`);
+  }
+
+  return { ...compiled, proofPlan };
 }

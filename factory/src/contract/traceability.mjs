@@ -26,9 +26,12 @@ function exactlyOne(items, requirementId, label) {
   return matches[0];
 }
 
-function normalizeLayoutProbeKind(kind, eventType) {
+function normalizeProbeKind(kind, eventType) {
   if ((kind === 'event' && eventType === 'hud_layout_clear') || (kind === 'event_absent' && eventType === 'hud_overlap_detected')) {
     return 'layout_no_overlap';
+  }
+  if (kind === 'event' && eventType === 'fresh_run_started') {
+    return 'restart_after_terminal';
   }
   return kind;
 }
@@ -68,7 +71,7 @@ export function compileDirectorTraceability(gdd, ownerContract) {
     if (declaredKind === 'event' || declaredKind === 'event_absent' || declaredKind === 'event_value_change') {
       eventType = requireString(probe.eventType, `${probeId}.eventType`);
     }
-    const kind = normalizeLayoutProbeKind(declaredKind, eventType);
+    const kind = normalizeProbeKind(declaredKind, eventType);
 
     const compiledProbe = {
       ...probe,
@@ -87,6 +90,10 @@ export function compileDirectorTraceability(gdd, ownerContract) {
         : 3;
       compiledProbe.requireScoreProgress = probe.requireScoreProgress !== false;
       if (eventType) compiledProbe.legacyEventType = eventType;
+    } else if (kind === 'restart_after_terminal') {
+      delete compiledProbe.eventType;
+      delete compiledProbe.strength;
+      compiledProbe.legacyEventType = eventType;
     }
     if (kind === 'event' && requirementId.startsWith('MH-')) {
       // Positive product mechanics need more than an event-name claim. The verifier

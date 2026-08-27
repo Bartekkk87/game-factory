@@ -54,8 +54,12 @@ jobs:
         run: node factory/src/roles/test-art-direction-runtime.mjs
       - name: Prove P0-03 product-fidelity event hardening
         run: node factory/src/verify/test-fidelity-hardening.mjs
+      - name: Prove proof-plan reachability before Engineer spend
+        run: node factory/src/verify/test-proof-reachability.mjs
       - name: Install browser
         run: npx playwright install --with-deps chromium
+      - name: Prove independent terminal proof scenarios
+        run: node factory/src/verify/test-proof-scenarios.mjs
       - name: Prove independent HUD geometry verifier
         run: node factory/src/verify/test-layout-geometry.mjs
       - name: Prove verifier causality and visual activity controls
