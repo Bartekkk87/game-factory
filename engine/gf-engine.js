@@ -211,7 +211,7 @@
         }
       }
     }
-  }
+  };
 
   const Draw = {
     text(ctx, str, x, y, { size = 24, color = '#fff', align = 'center', baseline = 'middle', weight = '800', font = 'system-ui, sans-serif' } = {}) {
@@ -320,6 +320,10 @@
         this.input._endFrame();
       };
       requestAnimationFrame(frame);
+    }
+
+    get currentScene() {
+      return this.sceneName ? this.scenes[this.sceneName] || null : null;
     }
 
     _err(msg) {
