@@ -5,15 +5,17 @@
 **L1 Control Kernel — DONE**  
 **L2 Model / Provider Layer — DONE**  
 **L3 Verification & Evidence — DONE**  
-**L4 Production Agents — DONE / P0 VERIFIED**
+**L4 Production Agents — DONE / P0 VERIFIED ON `main`**
 
-Finaler L4-Code-Head vor Dokumentationscommits:
+L4 wurde über PR #5 nach `main` gemergt.
 
-`ce0d061cbad98e8f2f5948e0910fd300dbd0b573`
+Verifizierter Runtime-Merge-Commit:
 
-Vollständiger Verifier-Selftest mit explizit ausgeführtem L4-Integritätstest:
+`f7b5e2ebd75e405d857b3bec19d85231e02eaef8`
 
-GitHub Actions Run `33050867522` — **SUCCESS**
+Vollständiger `main` Verifier-Selftest mit explizit ausgeführtem L4-Integritätstest:
+
+GitHub Actions Run `33051402235` — **SUCCESS**
 
 Top-down-Integritätscheck:
 
@@ -140,7 +142,11 @@ Die unabhängige Playtester-Fidelity bleibt advisory. Die deterministische Produ
 - Routertests pinnen Terra für Director/Engineer/Playtester und Luna für Auditor;
 - Release Verdict nutzt kein LLM.
 
-Finaler L4-Komplettlauf: `33050867522` — **SUCCESS**.
+Erster expliziter L4-Test Run `33050802610` zeigte eine zu strenge Test-Assertion, keinen Produktionsfehler: die Assertion verbot selbst die reine Sanitization-Zeile `delete audit.verdict`. Nach Korrektur der Assertion wurde die gewünschte Advisory-Grenze korrekt geprüft.
+
+Finaler L4-Branch-Komplettlauf: `33050867522` — **SUCCESS**.
+
+Finaler gemergter `main`-Komplettlauf: `33051402235` — **SUCCESS**.
 
 ---
 
@@ -181,15 +187,16 @@ SaaS-/Frontend-Themen bleiben außerhalb P0, bis der Produktionskern mehrere bel
 
 ---
 
-## Nächste Reihenfolge
+## Aktuelle Reihenfolge
 
 1. L1 Control Kernel — **DONE**
 2. L2 Model / Provider Layer — **DONE**
 3. L3 Verification & Evidence — **DONE**
 4. L4 Production Agents / P0 — **DONE**
-5. Branch sauber nach `main` übernehmen und `main`-Selftest grün bestätigen
-6. Danach ist genau ein `Titan Core: Reforged` Canary #3 technisch zulässig — **in dieser Closure-Arbeit nicht starten**
-7. Nach Referenz-PASS: zweites Genre und P1/P2 Optimierungen
+5. `main`-Selftest — **PASS / Run 33051402235**
+6. Top-down-Integritätscheck — **PASS**
+7. Genau ein kontrollierter `Titan Core: Reforged` Canary #3 ist technisch zulässig, wurde aber **nicht gestartet** und benötigt neue explizite Owner-Freigabe
+8. Nach Referenz-PASS: zweites Genre und P1/P2 Optimierungen
 
 Wenn Canary #3 später scheitert:
 
