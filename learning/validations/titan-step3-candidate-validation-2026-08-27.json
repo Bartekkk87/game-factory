@@ -1,0 +1,133 @@
+{
+  "schemaVersion": "learning-validation-assessment-v1",
+  "id": "titan-step3-candidate-validation-2026-08-27",
+  "status": "completed",
+  "scope": "candidate-validation",
+  "authority": {
+    "may": [
+      "record-reproducible-validation-evidence",
+      "classify-candidate-outcomes"
+    ],
+    "mustNot": [
+      "activate-production",
+      "promote-protected-layer",
+      "invent-owner-requirements",
+      "start-paid-game-run"
+    ]
+  },
+  "baseline": {
+    "mainSha": "890582ce9ee2b6c4840b59cfb065e93eda6f5184",
+    "sourceRunId": "20260827-120138",
+    "ownerFeedbackEvidence": "learning/evidence/owner-feedback/gh-issue-6-comment-5443073595.json",
+    "ownerBrief": "ideas/titan-core-reforged-canary-3.md",
+    "ownerContract": "runs/20260827-120138/owner-contract.json",
+    "directorGdd": "runs/20260827-120138/gdd.json",
+    "productionResult": "runs/20260827-120138/RESULT.json"
+  },
+  "validationDesign": {
+    "paidGameRun": false,
+    "authority": [
+      "deterministic-held-out-fixtures",
+      "contract-assertions",
+      "code-path-evidence",
+      "durable-historical-run-evidence",
+      "full-regression-suite"
+    ],
+    "fixtureCases": {
+      "A": "concrete visual brief with explicit perspective, player/boss identity, environment, depth, materials/lighting, telegraphs and quality bar",
+      "B": "intentionally underspecified Sci-Fi action brief; no concrete visual truth may be invented",
+      "C": "mixed brief with explicit and open elements",
+      "D": "explicit gameplay identity separate from hard Must-Haves"
+    },
+    "executableTest": "factory/src/contract/test-titan-candidate-validation.mjs"
+  },
+  "findings": {
+    "authorizedTitanBrief": {
+      "result": "preserved",
+      "facts": [
+        "The durable Titan idea and runs/20260827-120138/brief.json agree.",
+        "The stored Owner Contract originalBrief agrees with the executable Titan idea.",
+        "The authorized Titan brief explicitly requested a Top-down arcade-action prototype, a dark Sci-Fi/Cyberpunk arena, clear neon silhouettes, salvage upgrades and an extract-or-go-deeper risk/reward decision."
+      ]
+    },
+    "lateOwnerExpectations": {
+      "result": "not-present-in-authorized-brief",
+      "facts": [
+        "The later reject adds isometric presentation, recognizable player mech, mechanical boss, industrial environment, spatial depth, textures/lighting, floor telegraphs and a commercial-indie quality bar.",
+        "Those richer targets are absent from the durable executable Titan brief and therefore cannot be retrospectively classified as requirements lost by the Director or Engineer."
+      ]
+    },
+    "ownerContractDecomposition": {
+      "result": "systemic-coverage-gap-proven",
+      "facts": [
+        "When explicit Must-Have/No-Go sections exist, current decomposition structures only those bullet lists into stable Owner requirement IDs.",
+        "Other explicit descriptive sections remain preserved in originalBrief but are not represented by stable requirement IDs.",
+        "Held-out Cases A, C and D reproduce this behavior; Case B proves the factory does not invent the missing concrete details."
+      ]
+    },
+    "directorContext": {
+      "result": "no-prompt-assembly-loss",
+      "facts": [
+        "runDirector passes both the full raw owner idea and the Owner Contract to the Director.",
+        "The canonical Director system prompt includes directing and art-direction skills."
+      ]
+    },
+    "directorAndEngineer": {
+      "result": "materially-aligned-with-authorized-titan-brief",
+      "facts": [
+        "The Titan GDD and final implementation use a dark cyberpunk/neon arena, boss encounter, salvage upgrades and Extract/Descend choice.",
+        "Core Cannon, Forge Ring and Single-Screen Arena are Director design choices, not evidence that the later isometric/mech expectations were lost from the authorized brief."
+      ]
+    },
+    "evaluation": {
+      "result": "structured-requirement-coverage-gap-proven",
+      "facts": [
+        "Product Fidelity enumerates ownerRequirementIds(ownerContract).",
+        "Held-out Case A deterministically obtains Product Fidelity PASS while explicit visual targets outside the structured requirement IDs have no acceptance criterion or verifier probe.",
+        "The historical Titan Product Fidelity PASS therefore proves the structured MH/NG set, not every descriptive sentence in originalBrief and not requirements first stated after play."
+      ]
+    }
+  },
+  "rootCauseAssessment": {
+    "primaryTitanRootCause": "durable-owner-intent-and-acceptance-baseline-mismatch",
+    "explanation": "The specific richer visual/product expectations driving the Owner reject were not present in the durable authorized Titan brief. They cannot be causally attributed to an Owner Contract, Director, Engineer or Verifier loss inside that run.",
+    "secondarySystemicDefect": "explicit descriptive product truth outside structured Must-Have/No-Go IDs is not covered by deterministic Product Fidelity",
+    "causalBoundary": "The secondary defect is real and reproducible, but the current evidence does not prove it caused the specific late isometric/mech expectation gap because those expectations were absent from the source brief."
+  },
+  "candidateOutcomes": [
+    {
+      "candidateId": "titan-canary-3-visual-target-intake-v1",
+      "outcome": "partially-confirmed",
+      "supported": "Held-out Case A proves that when concrete visual targets are supplied outside explicit Must-Have/No-Go lists, they are preserved in originalBrief but are not promoted to stable Product Fidelity requirements.",
+      "falsified": "It is not a valid explanation for the specific Titan isometric/mech/commercial-quality gap because those targets were not supplied in the durable Titan brief.",
+      "lifecycleStatusAfterValidation": "candidate-inactive"
+    },
+    {
+      "candidateId": "candidate-owner-feedback-8e1c9bf738f845cb",
+      "outcome": "partially-confirmed",
+      "supported": "A deterministic Owner Contract decomposition and downstream fidelity coverage gap exists for explicit descriptive sections outside Must-Have/No-Go.",
+      "falsified": "The evidence does not establish that this decomposition gap caused the late Titan expectations; the preserved brief itself lacks those expectations and the full raw idea reached the Director.",
+      "lifecycleStatusAfterValidation": "candidate-inactive"
+    }
+  ],
+  "productionChange": {
+    "runtimeCodeChanged": false,
+    "ownerContractBehaviorChanged": false,
+    "promptBehaviorChanged": false,
+    "productFidelityBehaviorChanged": false,
+    "reason": "Changing the protected owner-contract/product-fidelity semantics would constitute the next human-gated promotion step, not Step 3 validation."
+  },
+  "regressionEvidence": [
+    {
+      "kind": "branch-full-verifier",
+      "runId": "33103781337",
+      "headSha": "14979b40604a6158c982b847c2023f709b0f552f",
+      "passed": true
+    }
+  ],
+  "promotionBoundary": {
+    "eligibleForAutomaticPromotion": false,
+    "nextHumanDecision": "Whether to design a protected-layer promotion that gives explicit descriptive Product Truth its own stable traceability without converting ambiguity or unspecified details into Owner requirements.",
+    "candidateMustRemainInactive": true
+  }
+}
