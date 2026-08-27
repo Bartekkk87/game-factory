@@ -4,70 +4,167 @@ Date: 2026-08-27
 Repository: `Bartekkk87/game-factory`
 
 ## Mission
-Continue `Bartekkk87/game-factory` seamlessly from the verified post-L3 hardening state.
 
-**Start directly with L4 — Production Agents / P0.**
+Continue `Bartekkk87/game-factory` seamlessly from the current post-L4 implementation state.
 
-L1, L2 and L3 are complete and verified. Do not reopen them unless a regression test exposes a concrete defect. **Do not start paid Titan Canary #3 yet.**
+**Start directly with final L4 closure: wire the dedicated L4 integrity test into the Verifier Selftest workflow, prove the full workflow green, then perform the top-down integrity check.**
+
+L1, L2 and L3 are fully complete and verified. L4 implementation is materially complete, but one regression-integration item remains before L4 can be declared DONE.
+
+**Do not start paid Titan Canary #3 yet.**
 
 ## Canonical sources
-1. `docs/strategy/HARDENING-STATUS-2026-08-27-L1-L3.md`
-2. `docs/strategy/IMPLEMENTATION-CATALOG-2026-08-27.md`
-3. `docs/strategy/PRODUCTION-HARDENING-PLAN.md`
-4. `docs/strategy/LLM-SELECTION-REQUIREMENTS.md`
-5. `ARCHITECTURE.md`
-6. GitHub Issue #3 — `Production Hardening before Titan Canary #3`
 
-## Verified baseline
-Runtime commit: `52e843bba72bd3fe83ea2b34475a32e2076dcdee`
+1. `docs/strategy/HARDENING-STATUS-2026-08-27-L4.md`
+2. `docs/strategy/HARDENING-STATUS-2026-08-27-L1-L3.md`
+3. `docs/strategy/IMPLEMENTATION-CATALOG-2026-08-27.md`
+4. `docs/strategy/PRODUCTION-HARDENING-PLAN.md`
+5. `docs/strategy/LLM-SELECTION-REQUIREMENTS.md`
+6. `ARCHITECTURE.md`
+7. GitHub Issue #3 — `Production Hardening before Titan Canary #3`
 
-Full Verifier Selftest: GitHub Actions Run `33046180562` — **SUCCESS**.
+## Current branch and verified code state
 
-Documentation-only commits after this runtime commit do not change the verified platform code.
+Working branch: `hardening/l4-production-agents`
+
+Latest L4 code head before documentation commits:
+
+`b19ac17243326235eebdd8c62079c0df667ca46d`
+
+Latest full existing Verifier Selftest on that head:
+
+GitHub Actions Run `33049921260` — **SUCCESS**.
+
+Important nuance: `factory/src/roles/test-production-agents.mjs` was added at that head, but it is **not yet executed explicitly by `.github/workflows/verify.yml`**. The workflow checked the file syntactically and all existing tests passed, but the dedicated L4 assertions themselves still need to be wired and run.
+
+Documentation commits after `b19ac...` do not alter runtime behavior.
 
 ## Completed
+
 - **L1 Control Kernel — DONE**
 - **L2 Model / Provider Layer — DONE**
 - **L3 Verification & Evidence — DONE**
+- **L4 Production Agents — implementation complete; final regression integration pending**
 
-L3 now provides immutable Owner Contract IDs (`MH-xx` / `NG-xx`), Director Acceptance/Probe traceability, deterministic seed and input sequence, `start -> early -> mid -> end` telemetry, bounded runtime/mechanic events, deterministic Product Fidelity PASS/FAIL, production-path fidelity enforcement, and Green/Broken/end-to-end runtime fixtures.
-
-L3 verification runs `33045193747`, `33045457760`, `33045637678`, `33045912220`, `33046078946`, and final `main` Run `33046180562` all succeeded.
-
-## L4 — immediate work order
-After every meaningful change: **full Verifier Selftest -> continue only when green**.
+## What L4 changed
 
 ### Engineer
-- remove stale `random input / ~15 seconds` wording;
-- align prompt with deterministic fixed verifier input + early evidence;
-- pass immutable Owner Contract explicitly to Build/Repair/Rebuild/Polish;
-- pass Acceptance/Probe mappings explicitly;
-- require bounded runtime evidence for product-specific mechanics;
-- preserve repair, fresh rebuild and verified-polish rollback behavior.
+
+- stale random-input / ~15s verifier wording removed;
+- aligned with fixed deterministic seed/input behavior and `start -> early -> mid -> end` evidence;
+- bounded runtime `game.event(type, data)` evidence required for product-specific mechanics;
+- immutable Owner Contract explicitly passed to Build / Repair / Rebuild / Polish;
+- Acceptance/Probe mapping explicitly supplied;
+- fail-closed when Owner Contract or stable traceability is missing;
+- repair, Fresh Rebuild and verified-polish rollback behavior preserved.
 
 ### Playtester
-Pass Owner Contract, compact GDD, Acceptance/Probe mapping, telemetry, runtime events, screenshots and metrics.
 
-Return separate independent Product Fidelity review and Experience score + critique. Deterministic Product Fidelity remains machine authority.
+Now receives:
+
+- Owner Contract;
+- compact GDD;
+- Acceptance/Probe mapping;
+- telemetry;
+- bounded runtime events;
+- screenshots;
+- objective metrics;
+- deterministic Product Fidelity result.
+
+Returns separate independent product-fidelity review and Experience score/critique. Playtester fidelity is advisory; deterministic Product Fidelity remains authoritative.
 
 ### Auditor
-Remain advisory. Summarize Technical, deterministic Fidelity, Playtester fidelity, Experience, Budget and deterministic Release Verdict without becoming release authority.
+
+- strictly advisory only;
+- no own release PASS/FAIL;
+- returns `CONSISTENT` / `CONCERNS` assessment plus findings/summary;
+- sees Technical, deterministic Fidelity, Playtester fidelity, Experience, Budget and deterministic Release Gate;
+- release authority remains exclusively deterministic `releaseFor(...)`.
 
 ### Reference lane
-Confirm Director/Engineer/Playtester -> `gpt-5.6-terra`, Auditor -> `gpt-5.6-luna`, Release Verdict -> no LLM is the actual reference route and router-tested. Do not use unbenchmarked DeepSeek for the reference Titan.
 
-## Then top-down integrity check
-`Owner idea -> Owner Contract -> Director IDs -> Engineer -> deterministic verifier evidence -> Product Fidelity PASS -> Playtester fidelity review -> Experience >= 6.5 -> Budget PASS -> deterministic Release Gate -> Owner Preview`
+Router tests pin:
 
-No Owner requirement may disappear.
+- Director -> `gpt-5.6-terra`
+- Engineer Build / Repair / Rebuild / Polish -> `gpt-5.6-terra`
+- Playtester -> `gpt-5.6-terra`
+- Auditor -> `gpt-5.6-luna`
+- Release Verdict -> no LLM
+
+No unbenchmarked DeepSeek for the reference Titan.
+
+### CI
+
+`factory/prompts/**` changes now trigger the full Verifier Selftest workflow.
+
+## L4 verification history
+
+All these full existing workflow runs succeeded after the respective production changes:
+
+- `33048507658`
+- `33048635648`
+- `33048970244`
+- `33049092906`
+- `33049183969`
+- `33049293313`
+- `33049385943`
+- `33049485667`
+- `33049672597`
+- `33049770257`
+- `33049921260`
+
+## Immediate next work — do this first
+
+### 1. Wire the dedicated L4 integrity test
+
+File already exists:
+
+`factory/src/roles/test-production-agents.mjs`
+
+Add an explicit workflow step in `.github/workflows/verify.yml`, e.g. execute:
+
+`node factory/src/roles/test-production-agents.mjs`
+
+The test asserts:
+
+- Engineer deterministic-verifier wording and immutable Owner Contract binding;
+- stable Acceptance/Probe traceability;
+- Playtester Fidelity/Experience separation;
+- Auditor advisory-only boundary;
+- deterministic release authority independent of Auditor/Playtester fidelity disagreement;
+- Terra/Luna reference routes;
+- Owner Contract -> Director Traceability -> Product Fidelity -> Release Gate integrity.
+
+### 2. Full Verifier Selftest
+
+After wiring the step, require the entire workflow to finish **SUCCESS** before doing anything else.
+
+If it fails: fix the platform/test issue, rerun the full selftest, and continue only when green.
+
+### 3. Top-down integrity check
+
+Then prove the complete chain:
+
+`Owner Idea -> Owner Contract -> Director IDs -> Engineer -> deterministic Verifier Evidence -> Product Fidelity PASS -> Playtester Fidelity Review -> Experience >= 6.5 -> Budget PASS -> deterministic Release Gate -> Owner Preview`
+
+No Owner requirement may disappear or be downgraded between layers.
+
+After this check is clean, update the canonical status/catalog/Issue #3 and mark L4/P0 DONE.
 
 ## Canary rule
-**No Titan Canary #3 before L4 P0 + full green selftest + top-down integrity check.**
 
-Then exactly one paid `Titan Core: Reforged` reference canary. If it fails: classify -> repair platform -> full selftest -> only then decide on another paid run.
+**No Titan Canary #3 until:**
 
-## Branch note
-`hardening/l4-production-agents` exists from the verified L3 state. No L4 code commit has been accepted as verified. Treat runtime commit `52e843bba72bd3fe83ea2b34475a32e2076dcdee` as canonical until a new L4 commit passes the full selftest.
+1. dedicated L4 integrity test is wired and actually executed;
+2. full Verifier Selftest is green;
+3. top-down integrity check is complete.
+
+Only then run exactly one paid `Titan Core: Reforged` reference Canary #3.
+
+If that canary fails:
+
+`classify -> repair platform -> full selftest -> only then decide on another paid run`
 
 ## Working style
-Brief, simple status communication. Avoid owner terminal work and micromanagement when GitHub/tools can do the work. Gaming Development only.
+
+Brief, simple status communication. No unnecessary Owner terminal work or micromanagement when GitHub/tools can do it. Gaming Development only.
