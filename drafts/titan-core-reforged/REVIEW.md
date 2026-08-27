@@ -26,3 +26,5 @@
 Approve with comment `/approve` or reject with `/reject <reason>` on this issue.
 
 [slug:titan-core-reforged]
+
+<!-- pages-deploy-refresh: 2026-08-27 -->
