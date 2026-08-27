@@ -133,6 +133,7 @@ jobs:
             learning/triggers/
             learning/analysis/
             learning/candidates/
+            learning/orchestration/
           if-no-files-found: ignore
 
       - name: Open review issue
