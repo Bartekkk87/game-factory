@@ -50,6 +50,7 @@ async function runSingleSession({
   seed = DEFAULT_VERIFIER_SEED,
   inputMode = 'active',
   captureScreenshots = true,
+  stopStates = [],
   restartAtEnd = false
 }) {
   const verifierSeed = normalizeSeed(seed);
@@ -189,48 +190,64 @@ async function runSingleSession({
         }, INPUT_PLAN.clickEveryMs));
       }
 
+      const total = seconds * 1000;
+      const sessionStarted = Date.now();
       try {
-        const total = seconds * 1000;
-        const earlyAt = Math.max(500, Math.min(1200, total * 0.2));
-        const midAt = Math.max(earlyAt + 300, Math.min(3500, total * 0.5));
-        const sessionStarted = Date.now();
-        const waitUntil = async (targetMs) => {
-          const remaining = targetMs - (Date.now() - sessionStarted);
-          if (remaining > 0) await sleep(remaining);
-        };
+        const targetStates = new Set((stopStates || []).map(String));
+        if (targetStates.size) {
+          while (Date.now() - sessionStarted < total) {
+            const current = await snap();
+            if (targetStates.has(String(current?.state || ''))) {
+              const atMs = Date.now() - sessionStarted;
+              timeline.push({ phase: 'terminal', atMs, snapshot: current });
+              endSnapshot = current;
+              break;
+            }
+            await sleep(100);
+          }
+          if (!endSnapshot) endSnapshot = await record('end', Math.min(total, Date.now() - sessionStarted));
+        } else {
+          const earlyAt = Math.max(500, Math.min(1200, total * 0.2));
+          const midAt = Math.max(earlyAt + 300, Math.min(3500, total * 0.5));
+          const waitUntil = async (targetMs) => {
+            const remaining = targetMs - (Date.now() - sessionStarted);
+            if (remaining > 0) await sleep(remaining);
+          };
 
-        await waitUntil(earlyAt);
-        earlySnapshot = await record('early', Math.round(earlyAt));
-        await waitUntil(midAt);
-        midSnapshot = await record('mid', Math.round(midAt));
+          await waitUntil(earlyAt);
+          earlySnapshot = await record('early', Math.round(earlyAt));
+          await waitUntil(midAt);
+          midSnapshot = await record('mid', Math.round(midAt));
 
-        fps = await page.evaluate(
-          () =>
-            new Promise((res) => {
-              let c = 0;
-              const t0 = performance.now();
-              const f = () => {
-                c++;
-                if (performance.now() - t0 < 2000) requestAnimationFrame(f);
-                else res(Math.round(c / 2));
-              };
-              requestAnimationFrame(f);
-            })
-        );
-        await waitUntil(total * 0.72);
-        await takeShot('shot-2-gameplay');
-        await waitUntil(total * 0.92);
-        await takeShot('shot-3-gameplay');
-        await waitUntil(total);
+          fps = await page.evaluate(
+            () =>
+              new Promise((res) => {
+                let c = 0;
+                const t0 = performance.now();
+                const f = () => {
+                  c++;
+                  if (performance.now() - t0 < 2000) requestAnimationFrame(f);
+                  else res(Math.round(c / 2));
+                };
+                requestAnimationFrame(f);
+              })
+          );
+          await waitUntil(total * 0.72);
+          await takeShot('shot-2-gameplay');
+          await waitUntil(total * 0.92);
+          await takeShot('shot-3-gameplay');
+          await waitUntil(total);
+          endSnapshot = await record('end', seconds * 1000);
+        }
       } finally {
         for (const timer of timers) clearInterval(timer);
       }
-      endSnapshot = await record('end', seconds * 1000);
+
       if (restartAtEnd && ['success', 'failure', 'won', 'gameover'].includes(endSnapshot?.state)) {
         await page.keyboard.press('Enter');
         await page.mouse.click(640, 400);
         await sleep(450);
-        postRestartSnapshot = await record('post_restart', seconds * 1000 + 450);
+        postRestartSnapshot = await record('post_restart', Math.min(total, Date.now() - sessionStarted) + 450);
       }
     }
   } catch (e) {
@@ -291,6 +308,7 @@ export async function runSession(options) {
       inputMode: scenario.inputMode,
       screenshotDir: null,
       captureScreenshots: false,
+      stopStates: Array.isArray(scenario.stopStates) ? scenario.stopStates : [],
       restartAtEnd: scenario.restartAtEnd === true
     });
     proofScenarios.push({
