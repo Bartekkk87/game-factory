@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "learning-candidate-v1",
+  "id": "candidate-harbor-courier-repair-regression-20260827",
+  "status": "candidate",
+  "role": "engineer",
+  "scope": "engineering",
+  "targetLayer": "skill",
+  "text": "Hypothesis only: the repair loop needs a regression-aware repair-base policy. In production run 20260827-203110, verification improved from 9 failed checks to 5 and then 2, but subsequent repairs regressed to 8 and 9 failed checks. The final repair also introduced a new deterministic Canvas runtime error by calling CanvasRenderingContext2D.ellipse with 6 instead of the required 7 arguments. Validate whether later repairs should be based on the best evidenced prior attempt rather than unconditionally on the latest failed design, and whether newly introduced runtime errors should force rollback to the best prior candidate before another repair. Do not activate or change Production until this hypothesis is validated with deterministic regression tests.",
+  "sourceRunIds": [
+    "20260827-203110"
+  ],
+  "sourceKind": "post-failure-evidence-analysis",
+  "ownerFeedbackIds": [],
+  "candidateSha": null,
+  "confidence": 0.7,
+  "evidenceCount": 5,
+  "createdAt": "2026-08-27T20:45:00.000Z",
+  "validatedAt": null,
+  "expiresAfter": null,
+  "supersedes": null,
+  "validationEvidence": [
+    "runs/20260827-203110/FAILURE.json",
+    "runs/20260827-203110/attempt-03/evidence-tech.json",
+    "runs/20260827-203110/attempt-04/evidence-tech.json",
+    "runs/20260827-203110/attempt-05/evidence-tech.json",
+    "runs/20260827-203110/attempt-05/index.html"
+  ],
+  "regressionResults": [],
+  "active": false,
+  "activatedAt": null,
+  "promotionRef": null,
+  "deactivatedAt": null,
+  "deactivatedBy": null,
+  "rollbackOf": null,
+  "reversalReason": null
+}
