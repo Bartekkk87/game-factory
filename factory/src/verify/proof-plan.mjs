@@ -16,6 +16,9 @@ function routeProbe(probe, scenarioIds) {
   const state = String(probe?.state || '');
   if (kind === 'state_reached' && state === 'success') return ['success-proof'];
   if (kind === 'state_reached' && state === 'failure') return ['failure-proof'];
+  if (kind === 'restart_after_terminal') {
+    return scenarioIds.filter((id) => id === 'success-proof' || id === 'failure-proof');
+  }
   if (kind === 'event_absent') return [...scenarioIds];
   if (kind === 'layout_no_overlap' || kind === 'started_by_early' || kind === 'score_change') return ['base'];
   if (kind === 'event' || kind === 'event_value_change') {
@@ -58,6 +61,16 @@ export function validateProofPlan({ gdd, plan } = {}) {
     const failure = scenarios.find((s) => s.id === 'failure-proof');
     if (success && failure && success.id === failure.id) {
       errors.push('mutually exclusive success and failure must use independent scenarios');
+    }
+  }
+
+  const restartProbe = probes.find((p) => p?.kind === 'restart_after_terminal');
+  if (restartProbe) {
+    const terminalIds = ['success-proof', 'failure-proof'].filter((id) => ids.has(id));
+    if (!terminalIds.length) errors.push('restart_after_terminal requires at least one terminal proof scenario');
+    for (const id of terminalIds) {
+      const scenario = scenarios.find((s) => s.id === id);
+      if (scenario?.restartAtEnd !== true) errors.push(`${id} must attempt restart for restart_after_terminal proof`);
     }
   }
 
