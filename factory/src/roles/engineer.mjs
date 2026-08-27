@@ -4,6 +4,7 @@ import { extractJson } from '../llm/json.mjs';
 import { loadPrompt, loadSkill } from '../util/skills.mjs';
 import { lessonsFor } from '../memory/store.mjs';
 import { PATHS } from '../config.mjs';
+import { ownerRequirementIds } from '../contract/owner.mjs';
 
 function systemPrompt() {
   return (
@@ -22,19 +23,57 @@ function engineSource() {
 function acceptanceRules() {
   return [
     '=== NON-NEGOTIABLE PRODUCT + VERIFICATION CONTRACT ===',
-    '- The ORIGINAL OWNER IDEA is a hard product contract. Explicit Must-Haves/Muss-Haves and No-Gos override simplifications in the GDD.',
+    '- The IMMUTABLE OWNER CONTRACT is authoritative. Stable MH/NG IDs and their mapped acceptance/probe IDs must survive Build, Repair, Fresh Rebuild and Polish.',
     '- Implement every explicit Must-Have and every GDD mechanic as a visible, playable behavior; do not replace requested mechanics with decorative stand-ins.',
     '- If the brief asks for a boss/Titan, it must be visually distinct and mechanically meaningful, not just a normal enemy rectangle.',
     '- If the brief asks for salvage/upgrades, collecting/choosing an upgrade must change a real gameplay value or ability and show clear feedback.',
     '- If the brief asks for a risk/reward choice, implement an actual player choice with distinct outcomes.',
     '- Preserve readable HUD layout with no overlapping labels.',
-    '- Score must increase deterministically within 4 seconds of ordinary simulated keyboard/mouse gameplay. Never make this depend on a lucky random collision, rare spawn, or precise aim.',
+    '- Score must increase deterministically by the early verifier evidence point under the fixed keyboard/pointer input sequence. Never make this depend on a lucky random collision, rare spawn, or precise aim.',
+    '- Every product-specific requirement must emit the exact bounded runtime event required by its supplied probe when that probe kind requires an event.',
     '- The game must remain playable under WASD/arrows/Space/Enter and pointer clicks as applicable.',
     '- Use ONLY APIs and properties that actually exist in the supplied MICRO-ENGINE SOURCE. Do not invent engine methods or state containers.',
     '- Prefer simple scene-owned arrays/state over unnecessary abstractions. game.currentScene is a safe getter for the active registered scene after play has started.',
     '- No external URLs or assets. Keep runtime free of console/page/probe errors and maintain >=30 FPS.',
     '- Keep JavaScript multiline and reasonably readable.'
   ].join('\n');
+}
+
+function productionContract(ownerContract, gdd) {
+  if (!ownerContract?.contractSha256 || ownerContract.immutable !== true) {
+    throw new Error('Engineer requires immutable Owner Contract');
+  }
+  const requirementIds = ownerRequirementIds(ownerContract);
+  if (!requirementIds.length) throw new Error('Engineer Owner Contract has no requirements');
+
+  const acceptanceCriteria = Array.isArray(gdd?.acceptanceCriteria) ? gdd.acceptanceCriteria : [];
+  const requirementProbes = Array.isArray(gdd?.probePlan?.requirementProbes) ? gdd.probePlan.requirementProbes : [];
+  for (const requirementId of requirementIds) {
+    const acceptance = acceptanceCriteria.filter((item) => item?.ownerRequirementId === requirementId);
+    const probes = requirementProbes.filter((item) => item?.ownerRequirementId === requirementId);
+    if (acceptance.length !== 1 || acceptance[0]?.id !== `AC-${requirementId}`) {
+      throw new Error(`Engineer missing stable acceptance mapping for ${requirementId}`);
+    }
+    if (probes.length !== 1 || probes[0]?.id !== `PR-${requirementId}` || probes[0]?.acceptanceId !== `AC-${requirementId}`) {
+      throw new Error(`Engineer missing stable probe mapping for ${requirementId}`);
+    }
+  }
+
+  return {
+    ownerContract,
+    acceptanceProbeMapping: {
+      acceptanceCriteria,
+      requirementProbes
+    }
+  };
+}
+
+function contractSections(ownerContract, gdd) {
+  const context = productionContract(ownerContract, gdd);
+  return [
+    '=== IMMUTABLE OWNER CONTRACT ===', JSON.stringify(context.ownerContract, null, 2), '',
+    '=== ACCEPTANCE + PROBE TRACEABILITY ===', JSON.stringify(context.acceptanceProbeMapping, null, 2)
+  ];
 }
 
 function validateDesign(design) {
@@ -58,12 +97,13 @@ function validateDesign(design) {
   return design;
 }
 
-export async function buildGame({ gdd, ownerIdea = '' }) {
+export async function buildGame({ gdd, ownerIdea = '', ownerContract }) {
   const user = [
     '=== TASK ===',
     'Implement this game now (fresh build). Output ONLY strict JSON with slots title/css/html/js.',
     '', acceptanceRules(), '',
-    '=== ORIGINAL OWNER IDEA ===', ownerIdea || '(no additional owner brief)', '',
+    ...contractSections(ownerContract, gdd), '',
+    '=== ORIGINAL OWNER IDEA (context only; immutable contract above is authoritative) ===', ownerIdea || '(no additional owner brief)', '',
     '=== GAME DESIGN BRIEFING ===', JSON.stringify(gdd, null, 2), '',
     '=== MICRO-ENGINE SOURCE (injected automatically before your js - do NOT repeat it) ===', engineSource()
   ].join('\n');
@@ -71,16 +111,17 @@ export async function buildGame({ gdd, ownerIdea = '' }) {
   return validateDesign(extractJson(text));
 }
 
-export async function rebuildGame({ gdd, ownerIdea = '', failureHistory = [] }) {
+export async function rebuildGame({ gdd, ownerIdea = '', ownerContract, failureHistory = [] }) {
   const user = [
     '=== TASK ===',
     'ESCALATION MODE: targeted repairs have stalled. DISCARD the previous implementation architecture and build a genuinely fresh implementation from scratch.',
-    'Do not copy the prior code structure. Solve the owner brief with the simplest robust state model that can pass verification.',
+    'Do not copy the prior code structure. Solve the immutable Owner Contract with the simplest robust state model that can pass verification.',
     'Output ONLY strict JSON with slots title/css/html/js.',
     '', acceptanceRules(), '',
+    ...contractSections(ownerContract, gdd), '',
     '=== FAILURES THE NEW ARCHITECTURE MUST AVOID ===',
     ...(failureHistory.length ? failureHistory.map((f) => `- ${f}`) : ['- Previous repair attempts made no progress.']),
-    '', '=== ORIGINAL OWNER IDEA ===', ownerIdea || '(no additional owner brief)', '',
+    '', '=== ORIGINAL OWNER IDEA (context only) ===', ownerIdea || '(no additional owner brief)', '',
     '=== GAME DESIGN BRIEFING ===', JSON.stringify(gdd, null, 2), '',
     '=== MICRO-ENGINE SOURCE ===', engineSource()
   ].join('\n');
@@ -88,15 +129,16 @@ export async function rebuildGame({ gdd, ownerIdea = '', failureHistory = [] }) 
   return validateDesign(extractJson(text));
 }
 
-export async function repairGame({ gdd, design, failureSummary, ownerIdea = '' }) {
+export async function repairGame({ gdd, design, failureSummary, ownerIdea = '', ownerContract }) {
   const user = [
     '=== TASK ===',
-    'REPAIR MODE: previous attempt failed verification. Fix exactly the listed failures while preserving every behavior that already works.',
+    'REPAIR MODE: previous attempt failed verification. Fix exactly the listed failures while preserving every behavior and every Owner requirement that already has evidence.',
     'IMPORTANT: do NOT return previous code unchanged or near-unchanged.',
     'You MUST actually modify js/css/html so output passes verification.',
     '', acceptanceRules(), '',
+    ...contractSections(ownerContract, gdd), '',
     '=== FAILURE EVIDENCE ===', failureSummary, '',
-    '=== ORIGINAL OWNER IDEA ===', ownerIdea || '(no additional owner brief)', '',
+    '=== ORIGINAL OWNER IDEA (context only) ===', ownerIdea || '(no additional owner brief)', '',
     '=== GAME DESIGN BRIEFING ===', JSON.stringify(gdd, null, 2), '',
     '=== PREVIOUS ATTEMPT (json with title/css/html/js) ===', JSON.stringify(design, null, 2), '',
     '=== MICRO-ENGINE SOURCE ===', engineSource()
@@ -105,17 +147,18 @@ export async function repairGame({ gdd, design, failureSummary, ownerIdea = '' }
   return validateDesign(extractJson(text));
 }
 
-export async function polishGame({ gdd, design, playtest, ownerIdea = '', regressionNotes = [] }) {
+export async function polishGame({ gdd, design, playtest, ownerIdea = '', ownerContract, regressionNotes = [] }) {
   const user = [
     '=== TASK ===',
-    'POLISH MODE: game is technically verified but product review demands improvements.',
-    'Improve presentation and player experience WITHOUT regressing any verified mechanic, input behavior, score progression, or runtime property.',
+    'POLISH MODE: game is technically and product-fidelity verified but product review demands improvements.',
+    'Improve presentation and player experience WITHOUT regressing any verified mechanic, input behavior, score progression, runtime property or Owner-contract evidence.',
     'Apply priorityFixes and address critique while keeping all mechanics working.',
     'Return the FULL corrected JSON (title/css/html/js).',
-    '', acceptanceRules(),
+    '', acceptanceRules(), '',
+    ...contractSections(ownerContract, gdd),
     ...(regressionNotes.length ? ['', '=== PREVIOUS POLISH REGRESSIONS - DO NOT REPEAT ===', ...regressionNotes.map((n) => `- ${n}`)] : []),
     '', '=== PLAYTEST REVIEW ===', JSON.stringify(playtest, null, 2), '',
-    '=== ORIGINAL OWNER IDEA ===', ownerIdea || '(no additional owner brief)', '',
+    '=== ORIGINAL OWNER IDEA (context only) ===', ownerIdea || '(no additional owner brief)', '',
     '=== GAME DESIGN BRIEFING ===', JSON.stringify(gdd, null, 2), '',
     '=== CURRENT VERIFIED IMPLEMENTATION (json with title/css/html/js) ===', JSON.stringify(design, null, 2), '',
     '=== MICRO-ENGINE SOURCE ===', engineSource()

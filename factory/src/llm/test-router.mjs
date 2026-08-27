@@ -11,10 +11,23 @@ const saved = Object.fromEntries(managed.map((k) => [k, process.env[k]]));
 for (const key of managed) delete process.env[key];
 
 try {
-  assert.equal(resolveRoleRoute({ role: 'director' }).model.id, 'gpt-5.6-terra');
-  assert.equal(resolveRoleRoute({ role: 'engineer', operation: 'repair' }).model.id, 'gpt-5.6-terra');
-  assert.equal(resolveRoleRoute({ role: 'playtester', requirements: { vision: true } }).model.id, 'gpt-5.6-terra');
-  assert.equal(resolveRoleRoute({ role: 'auditor' }).model.id, 'gpt-5.6-luna');
+  const director = resolveRoleRoute({ role: 'director', operation: 'direct' });
+  assert.equal(director.provider.id, 'openai');
+  assert.equal(director.model.id, 'gpt-5.6-terra');
+
+  for (const operation of ['build', 'repair', 'rebuild', 'polish']) {
+    const engineer = resolveRoleRoute({ role: 'engineer', operation });
+    assert.equal(engineer.provider.id, 'openai');
+    assert.equal(engineer.model.id, 'gpt-5.6-terra');
+  }
+
+  const playtester = resolveRoleRoute({ role: 'playtester', operation: 'playtest', requirements: { vision: true } });
+  assert.equal(playtester.provider.id, 'openai');
+  assert.equal(playtester.model.id, 'gpt-5.6-terra');
+
+  const auditor = resolveRoleRoute({ role: 'auditor', operation: 'audit' });
+  assert.equal(auditor.provider.id, 'openai');
+  assert.equal(auditor.model.id, 'gpt-5.6-luna');
 
   assert.deepEqual(getModelPricing('openai', 'gpt-5.6-terra'), {
     inputUsdPerM: 2, cachedInputUsdPerM: 0.2, outputUsdPerM: 12,
