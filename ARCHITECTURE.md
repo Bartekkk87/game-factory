@@ -2,17 +2,17 @@
 
 Autonome, evidence-first Game-Development-Plattform auf GitHub. Ziel ist nicht nur, Spiele zu generieren, sondern reproduzierbar nachzuweisen, dass ein Owner-Brief technisch und produktseitig erfüllt wurde.
 
-Der aktuelle Produktionskern läuft auf GitHub Actions. GitHub bleibt durable Source of Truth für Code, Evidence, Drafts, Entscheidungen und Lernartefakte.
+GitHub Actions ist die Execution Runtime. GitHub bleibt durable Source of Truth für Code, Evidence, Drafts, Entscheidungen und Lernartefakte.
 
 ## 1. Architekturprinzipien
 
 1. **LLM-Output ist ein Claim, keine Wahrheit.** Fortschritt entsteht erst durch Evidence.
-2. **Fail closed.** Ein fehlender oder widersprüchlicher Nachweis führt nicht zu Publish.
-3. **Owner-Intent ist ein Vertrag.** Explizite Must-Haves und No-Gos dürfen in späteren Rollen nicht verloren gehen.
+2. **Fail closed.** Ein fehlender oder widersprüchlicher Nachweis führt nicht zu Release.
+3. **Owner-Intent ist ein Vertrag.** Must-Haves und No-Gos dürfen in späteren Rollen nicht verloren gehen.
 4. **Determinismus dort, wo getestet wird.** Gleicher Kandidat + gleicher Seed + gleiche Eingaben sollen dieselbe Verifier-Evidence erzeugen.
 5. **Modelle sind Worker, keine Control Plane.** Budget, Gates, SHA-Binding und Release-Entscheidungen sind Maschinenlogik.
-6. **Provider bleiben austauschbar.** Provider-/Modellfähigkeit wird über Adapter und Capability Registry beschrieben; kein stiller Cross-Provider-Fallback.
-7. **Lernen braucht Evidence.** Selbstverbesserung darf keine unvalidierte Prompt-Selbstmutation sein.
+6. **Provider bleiben austauschbar.** Kein stiller Cross-Provider-Fallback.
+7. **Lernen braucht Evidence.** Keine unvalidierte Prompt-Selbstmutation.
 
 ## 2. Schichten
 
@@ -38,15 +38,28 @@ Verifizierter Schichtstatus 27.08.2026:
 - **L1 Control Kernel — DONE**
 - **L2 Model / Provider Layer — DONE**
 - **L3 Verification & Evidence — DONE**
-- **L4 Production Agents — NEXT / P0**
+- **L4 Production Agents / P0 — DONE**
 
-## 3. Ist-Prozess — verifizierter Post-L3-Stand
+Finaler L4-Code-Head vor Dokumentationscommits:
+
+`ce0d061cbad98e8f2f5948e0910fd300dbd0b573`
+
+Vollständiger L4-Verifier-Selftest:
+
+GitHub Actions Run `33050867522` — **SUCCESS**.
+
+Top-down-Integritätscheck — **PASS**.
+
+No paid Titan Canary #3 has been started.
+
+## 3. Verifizierter Post-L4-Prozess
 
 ```text
 Owner idea
-  -> immutable Owner Contract (MH/NG IDs)
+  -> immutable Owner Contract (MH/NG IDs + hash)
   -> Director: GDD + Acceptance/Probe traceability
-  -> Engineer: full game design slots (css/html/js)
+  -> Engineer Build / Repair / Fresh Rebuild / Polish
+       receives Owner Contract + traceability
   -> Assemble single index.html + bounded probe extension
   -> Headless Chromium verifier
        -> deterministic seed + input sequence
@@ -54,236 +67,134 @@ Owner idea
        -> bounded runtime/mechanic events
        -> Technical PASS/FAIL
        -> deterministic Product Fidelity PASS/FAIL
-  -> targeted repair
-  -> fresh rebuild when repairs stagnate
-  -> Playtester from screenshots + metrics (L4 context expansion still open)
-  -> polish + reverify, rollback on technical/fidelity regression
-  -> LLM Auditor (advisory)
+  -> targeted repair or fresh rebuild on stagnation
+  -> Playtester
+       receives Owner Contract + GDD + traceability
+       + telemetry + runtime events + screenshots + metrics
+       -> independent fidelity review
+       -> Experience score + critique
+  -> polish only from verified baseline
+       -> full reverify
+       -> rollback on technical/fidelity regression
+  -> LLM Auditor (strictly advisory)
   -> deterministic Release Gate
+       Technical PASS
+       + Product Fidelity PASS
+       + Experience >= 6.5
+       + Budget PASS
   -> draft + Review Issue
+  -> Pages preview
   -> Owner /approve or /reject
   -> product or archive
 ```
 
-Bereits implementiert und verifiziert:
+No Owner requirement may disappear between intake and review.
 
-- L1 echtes Kosten-/Budget-Control mit Pre-Call Enforcement;
-- L1 deterministisches Release Gate;
-- L2 fail-closed Role Router + Provider/Capability/Price Registry;
-- immutable Owner Contract mit stabilen `MH-xx` / `NG-xx` IDs;
-- deterministischer Contract-Hash;
-- Owner-ID -> Director Acceptance-/Probe-ID Traceability;
-- deterministischer Verifier-Seed und persistierte Input-Sequenz;
-- `start -> early -> mid -> end` Telemetrie;
-- frühe Gameplay-Progression als Interaktivitätsnachweis;
-- bounded Runtime-/Mechanic-Events;
-- deterministisches Product Fidelity PASS/FAIL;
-- Green/Broken-Fixtures für neue Hard Checks;
-- echter assemblierten Runtime-End-to-End-Test für Gameplay-Wertwechsel vs. Fake-Upgrade;
-- Fidelity Enforcement in Build/Repair/Polish;
-- Repair-Stagnationserkennung mit Fresh-Rebuild-Eskalation;
-- Rückfall auf den letzten technisch und produktseitig verifizierten Stand nach fehlgeschlagenem Polish;
-- Draft-/Publish-SHA-Binding;
-- Owner-only Review-Kommandos über GitHub Issues.
+## 4. Production roles — L4 verified
 
-Verifizierter Runtime-Commit:
+### Director
 
-`52e843bba72bd3fe83ea2b34475a32e2076dcdee`
+- receives immutable Owner Contract;
+- maps Owner Requirement IDs to stable Acceptance/Probe IDs;
+- invalid, missing or duplicate traceability fails closed.
 
-Vollständiger Verifier-Selftest auf diesem Runtime-Stand:
+### Engineer
 
-GitHub Actions Run `33046180562` — **SUCCESS**.
+- Build / Repair / Rebuild / Polish receive immutable Owner Contract and traceability;
+- prompt matches deterministic verifier behavior;
+- product-specific mechanics use bounded `game.event(type, data)` evidence;
+- targeted repair, Fresh Rebuild escalation and verified-polish rollback remain intact.
 
-Spätere reine Dokumentationscommits ändern diesen technischen Nachweis nicht.
+### Playtester
 
-## 4. Ziel-Prozess nach L4 P0
+Receives:
 
-```text
-A  INTAKE / CONTRACT
-   Owner idea
-     -> immutable Owner Contract
-        - mustHave IDs
-        - noGo IDs
-        - deterministic contract hash
-     -> Director GDD
-     -> machine-readable Acceptance/Probe IDs
+- Owner Contract;
+- compact GDD;
+- Acceptance/Probe mapping;
+- telemetry;
+- bounded runtime events;
+- screenshots;
+- objective metrics;
+- deterministic Product Fidelity result.
 
-B  BUILD / REPAIR
-   Engineer receives Owner Contract + Acceptance/Probe mapping
-     -> build
-     -> static output validation
-     -> assemble
-     -> technical + fidelity verifier
-        -> PASS
-        -> or targeted repair
-        -> or fresh rebuild on stagnation
-
-C  PRODUCT QUALITY
-   Owner Contract + GDD + Acceptance/Probe mapping
-   + telemetry + runtime events + screenshots
-     -> deterministic Product Fidelity gate
-     -> independent Playtester fidelity review
-     -> Experience score
-     -> polish only from a verified baseline
-     -> reverify after every change
-
-D  RELEASE
-   deterministic Release Gate:
-     technical PASS
-     + deterministic owner fidelity PASS
-     + experience >= threshold
-     + real budget within limit
-     + evidence consistency
-     -> optional LLM audit narrative
-     -> draft + Review Issue
-
-E  OWNER
-   /approve -> immutable published product
-   /reject -> archive + owner feedback evidence
-
-F  LEARNING
-   run evidence
-     -> lesson candidate
-     -> validate against repeated evidence/regression tests
-     -> accepted role/platform lesson
-```
-
-## 5. Rollen und Modellstrategie
-
-Vorbereitete OpenAI-Referenzmatrix:
-
-| Rolle | Zielmodell | Rolle im System |
-|---|---|---|
-| Director | `gpt-5.6-terra` | Produktdefinition + Constraint Decomposition |
-| Engineer Build/Repair/Rebuild/Polish | `gpt-5.6-terra` | Haupt-Coding-Worker |
-| Playtester | `gpt-5.6-terra` zunächst | unabhängige Fidelity-/Experience-Kritik |
-| Auditor-Zusammenfassung | `gpt-5.6-luna` | begrenzte Evidence-Zusammenfassung |
-| Release PASS/FAIL | kein LLM | deterministische Control-Plane-Entscheidung |
-
-L4 bestätigt vor Canary #3, dass diese Matrix tatsächlich die Referenzroute ist und mit Router-/Capability-Tests abgedeckt bleibt.
-
-Später werden Luna/Terra je Rolle auf gespeicherten Eval-Cases verglichen. Ein Sol-Rescue darf nur explizit, budgetbewusst und nach nachgewiesener Terra-Stagnation eingesetzt werden. Open-Weight-/DeepSeek-Modelle werden als Vergleichslane ergänzt, nicht als ungeprüfter automatischer Fallback.
-
-## 6. LLM / Provider Layer — L2 verifiziert
-
-Die Factory besitzt jetzt eine Capability-basierte Provider-/Model-Schicht:
+Returns separate concerns:
 
 ```text
-Role Request
-  -> fail-closed Role Router
-  -> Provider Registry
-  -> Capability / Price Registry
-  -> Provider Adapter
-  -> Structured Result + Usage
-  -> Cost Accounting
+Independent Product Fidelity Review
+Experience Score + Critique
 ```
 
-Metadaten umfassen:
+Playtester fidelity is an independent advisory signal. It cannot override deterministic Product Fidelity.
 
-- Modell-ID;
-- Text-/Vision-Fähigkeit;
-- Structured/JSON Capability;
-- Reasoning Capability;
-- Kontext-/Output-Limits;
-- Input/Cached-Input/Output-Preise.
+### Auditor
 
-Kein Provider darf stillschweigend gewechselt werden.
+- strictly advisory;
+- output is consistency assessment/findings/summary;
+- no release authority;
+- any stray `verdict` field is sanitized;
+- sees Technical, deterministic Fidelity, Playtester fidelity, Experience, Budget and deterministic Release state.
 
-## 7. Code- und Kontextstrategie
+## 5. Reference model route — verified
 
-Das veröffentlichte Spiel bleibt eine einzelne `index.html`. Das bedeutet aber nicht, dass jeder LLM-Schritt den kompletten Quelltext neu erzeugen muss.
+| Role | Model |
+|---|---|
+| Director | `gpt-5.6-terra` |
+| Engineer Build/Repair/Rebuild/Polish | `gpt-5.6-terra` |
+| Playtester | `gpt-5.6-terra` |
+| Auditor | `gpt-5.6-luna` |
+| Release PASS/FAIL | no LLM |
 
-Aktuelles Risiko:
+DeepSeek remains a later benchmark lane, not an unverified automatic fallback.
 
-```text
-full engine source
-+ owner contract
-+ full GDD
-+ full previous game
-+ failure evidence
--> Engineer
--> full game JSON again
-```
+## 6. Verification & Product Fidelity
 
-Bei mehreren Repairs entsteht Token-Amplifikation.
+Technical verifier requires:
 
-P1-Ziel:
+- `__GF__` present;
+- no runtime/probe errors;
+- no failed assets/requests;
+- game starts;
+- deterministic gameplay progress;
+- FPS gate;
+- visible gameplay activity.
 
-- Codegröße je Attempt messen und als Evidence speichern;
-- zunächst Soft-Warnungen statt willkürlicher Hard Caps;
-- Engine API als versioniertes, gegen die Engine getestetes Manifest;
-- gezielte Repairs als bounded edits/patches;
-- Full Rebuild bleibt für echte Architekturfehler erhalten;
-- Output-Token-Limit und Code-Komplexitätslimit bleiben getrennte Konzepte.
+Deterministic Product Fidelity additionally binds runtime evidence to:
 
-## 8. Verification — L3 verifiziert
+- immutable Owner Contract IDs;
+- Director Acceptance/Probe traceability;
+- bounded gameplay/mechanic events;
+- persisted seed/input sequence;
+- `start / early / mid / end` telemetry.
 
-### Generischer technischer Contract
+A technically green but product-wrong game cannot release.
 
-Verpflichtend:
+## 7. Release authority
 
-- `__GF__` vorhanden;
-- keine Runtime-/Probe-Fehler;
-- keine fehlgeschlagenen Requests/Assets;
-- Spiel verlässt Titelzustand;
-- Gameplay reagiert deterministisch auf Testeingaben;
-- FPS-Gate;
-- sichtbarer Gameplay-Content.
+Binding rule:
 
-### Verifizierte L3-Erweiterungen
+`Technical PASS + Product Fidelity PASS + Experience >= 6.5 + Budget PASS`
 
-- fixer Test-Seed;
-- persistierte deterministische Input-Sequenz;
-- `start / early / mid / end` Telemetrie;
-- Owner-Contract-IDs in der Evidence;
-- Director Acceptance-/Probe-Traceability;
-- Engine-generierte State-/Score-Events;
-- bounded mechanic events für produktspezifische Anforderungen;
-- deterministisches Product Fidelity PASS/FAIL;
-- Green/Broken-Fixtures für neue Hard Checks;
-- echter Runtime-End-to-End-Fidelity-Test.
+Implemented by deterministic control-plane code, not an LLM.
 
-### P1 verbleibend
+Auditor disagreement and Playtester fidelity disagreement may be surfaced to the Owner but cannot alter the deterministic release result.
 
-- Engine-Version + API-Manifest-SHA in Evidence;
-- robusterer Visual-Activity-Test statt nur Vergleich mit einer Hintergrundfarbe.
+## 8. Owner Preview path
 
-## 9. Product Fidelity vs Experience
+Only after the deterministic release gate passes:
 
-Die Qualitätsarten sind getrennt:
+1. verified candidate is written to `drafts/<slug>/index.html`;
+2. candidate SHA, Product Fidelity, Experience, audit and cost evidence are persisted;
+3. Production workflow commits draft/evidence;
+4. GitHub Review Issue is opened;
+5. on `main`, Pages deploys draft/product changes;
+6. Owner reviews Preview and responds with `/approve` or `/reject`.
 
-**Deterministic Product Fidelity** beantwortet:
-> Gibt es maschinenlesbare Evidence dafür, dass der Owner Contract erfüllt wurde?
+Published/Draft metadata remains bound to the verified candidate SHA.
 
-Beispiele:
-- Titan/Boss-Evidence;
-- Salvage gesammelt;
-- Upgrade verändert einen echten Gameplay-Wert;
-- Risk/Reward erzeugt eine echte Wahl mit unterscheidbaren Outcomes;
-- No-Go wird nicht verletzt.
+## 9. Durable Evidence
 
-**Independent Playtester Fidelity Review** beantwortet künftig in L4:
-> Ist das bestellte Produkt in Screenshots, Telemetrie und Events als Produkt plausibel und vollständig erkennbar?
-
-**Experience** beantwortet:
-> Ist das umgesetzte Spiel lesbar, attraktiv und wahrscheinlich spaßig?
-
-Ein hübsches Spiel kann fehlende Must-Haves nicht kompensieren. Der Playtester kann die deterministische Fidelity-Authority nicht überschreiben.
-
-## 10. Budget Control — L1 verifiziert
-
-`GF_BUDGET_USD` ist ein echtes Control-Plane-Gate:
-
-- Preisregister je Modell;
-- Tokenkategorien aus Usage werden in Kosten übersetzt;
-- Kosten je Rolle/Modell/Operation/Attempt werden persistiert;
-- vor bezahltem Transport wird Budget reserviert/geprüft;
-- bei Unsicherheit oder Überschreitung fail closed;
-- externes Provider-Projektlimit bleibt zusätzliche Sicherung.
-
-## 11. Durable Evidence
-
-Pro Run sollen mindestens erhalten bleiben:
+Per run the platform preserves the relevant set of:
 
 ```text
 brief.json
@@ -297,61 +208,60 @@ attempt-XX/
   shots/
 experience-XX.json
 audit.json
-cost.json
 RUN-EVIDENCE.json
 RESULT.json | FAILURE.json
 ```
 
-Published/Draft-Metadaten bleiben an den SHA des geprüften `index.html` gebunden.
+## 10. Code/context strategy — P1
 
-## 12. Learning
+Current risk remains LLM amplification from repeated full-engine/full-game context.
 
-Lernen bleibt eine spätere Evidence-basierte Pipeline:
+Next optimization layer:
+
+- generated code-size/context metrics per attempt;
+- versioned Engine API Contract/Manifest;
+- bounded incremental repair protocol;
+- stronger visual smoke/activity detection;
+- preserve Fresh Rebuild for architecture failure.
+
+Output-token limits and code-complexity limits remain separate concepts.
+
+## 11. Learning — P2
+
+Safe learning target:
+
+`Evidence -> Candidate Lesson -> Validation -> Accepted Lesson -> Regression Test`
+
+A single LLM statement may not autonomously rewrite core rules.
+
+## 12. Repo layout
 
 ```text
-Evidence -> Candidate Lesson -> Validation -> Accepted Lesson -> Regression Test
-```
-
-Owner-Rejections, wiederholte technische Fehlermuster, Verifier-Fehler und erfolgreiche Reparaturen können Kandidaten erzeugen. Eine einzelne LLM-Aussage darf keine Kernregel autonom überschreiben.
-
-## 13. Repo-Layout
-
-```text
-engine/                    Micro-Engine + künftig API Contract/Manifest
+engine/                    Micro-Engine + future API Contract/Manifest
 factory/src/contract/      Owner Contract + Traceability
 factory/src/control/       Budget / Release Authority / Unified Evidence
 factory/src/llm/           Role Router / Provider / Capability / Price Registry
 factory/src/roles/         Director / Engineer / Playtester / Auditor
 factory/src/verify/        Harness / Technical Contract / Product Fidelity
-factory/prompts/           Rollen-Prompts
-skills/                    versionierte Rollen-Lektionen
-ideas/                     Owner-Inputs
-drafts/                    geprüfte Kandidaten vor Owner-Gate
-products/                  veröffentlichte Spiele
-runs/                      vollständige Run-/Attempt-Evidence
-memory/                    Registry, Lessons, Stats
-docs/strategy/             Architektur-/Hardening-/Produktstrategie
-examples/fixtures/         Verifier Green/Broken Regression Cases
+factory/prompts/           role prompts
+skills/                    versioned role lessons
+ideas/                     Owner inputs
+drafts/                    verified candidates before Owner gate
+products/                  published games
+runs/                      run/attempt evidence
+memory/                    registry, lessons, stats
+docs/strategy/             architecture/hardening/product strategy
+examples/fixtures/         verifier Green/Broken regression cases
 .github/workflows/         Produce, Verify, Review, Pages
 ```
 
-## 14. Aktuelle Prioritäten
+## 13. Current priority
 
-Die ausführliche Arbeitsliste steht in `docs/strategy/PRODUCTION-HARDENING-PLAN.md`.
-
-Reihenfolge ab dem aktuellen Stand:
-
-1. **L1 Control Kernel — DONE**
-2. **L2 Model / Provider Layer — DONE**
-3. **L3 Verification & Evidence — DONE**
-4. **L4 Production Agents — JETZT / P0**
-   - Engineer Owner Contract / deterministic prompt alignment;
-   - Playtester Owner Contract + GDD + telemetry/events + independent fidelity review;
-   - Auditor advisory alignment;
-   - GPT-5.6 reference route confirm + test.
-5. vollständiger Selftest nach L4;
-6. Top-down-Integritätscheck;
-7. genau ein `Titan Core: Reforged` Canary #3;
-8. erst nach Referenz-PASS zweites Genre und P1/P2 Optimierungen.
-
-Bis L4 P0, Full Selftest und Top-down-Gegencheck grün sind, wird **kein weiterer bezahlter Titan-Canary gestartet**.
+1. L1 — **DONE**
+2. L2 — **DONE**
+3. L3 — **DONE**
+4. L4 / P0 — **DONE**
+5. Merge verified L4 branch to `main` and confirm the full `main` selftest remains green
+6. Only then is exactly one controlled `Titan Core: Reforged` Canary #3 technically eligible
+7. **Do not start that paid canary as part of this L4 closure task**
+8. After reference evidence: second genre, then P1/P2 optimization
