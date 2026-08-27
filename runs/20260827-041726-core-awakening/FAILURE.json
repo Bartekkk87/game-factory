@@ -1,0 +1,9 @@
+{
+  "reason": "regression_after_polish",
+  "closedAt": "2026-08-27T04:19:21.651Z",
+  "cost": {
+    "costUsd": 0,
+    "tokens": 118975
+  },
+  "attempts": 5
+}

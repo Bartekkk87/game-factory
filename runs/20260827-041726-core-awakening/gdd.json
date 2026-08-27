@@ -1,0 +1,69 @@
+{
+  "title": "Core Awakening",
+  "tagline": "Rebuild your identity from the remains of fallen Titans.",
+  "genre": "action",
+  "pitch": "Engage in tactical arena combat as a modular mech, dismantling enemies to recover valuable components while navigating their attacks. Your choices shape your power and identity as you evolve through strategic decision-making.",
+  "coreLoop": "The player reads enemy attack intents, evades, targets specific subsystems, and decides how to salvage the defeated foe's components, with each choice impacting their mech's capabilities.",
+  "mechanics": [
+    {
+      "name": "Read and Evade",
+      "description": "Players must interpret enemy attack telegraphs to evade incoming attacks effectively."
+    },
+    {
+      "name": "Target Subsystems",
+      "description": "Each enemy has multiple subsystems that can be targeted, influencing the outcome of the fight based on which is destroyed or preserved."
+    },
+    {
+      "name": "Three-Way Decision Making",
+      "description": "After defeating an enemy, players choose to install, secure, or dismantle salvaged components, affecting their mech's abilities."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD for movement, mouse for aiming and targeting",
+    "mouse": "click to target specific subsystems and make decisions"
+  },
+  "artDirection": {
+    "mood": "cold steel with warm salvage highlights",
+    "palette": [
+      "#00BFFF",
+      "#FFD700",
+      "#C0C0C0",
+      "#FF4500"
+    ],
+    "shapes": "clean vector shapes",
+    "backgroundFx": "slow-moving silhouettes of large machinery"
+  },
+  "audioDirection": {
+    "musicMood": "sci-fi ambient with a mechanical undertone",
+    "sfx": [
+      "attack evasion",
+      "subsystem damage",
+      "salvage decision"
+    ]
+  },
+  "difficulty": {
+    "start": "easy to read telegraphs and simple enemy patterns",
+    "progression": "introducing more complex patterns and tougher decisions",
+    "peak": "max difficulty with multiple attack types and crucial strategic choices"
+  },
+  "winLose": {
+    "win": "defeat the enemy and secure components for your mech",
+    "lose": "fail to evade or manage enemy attacks, resulting in the destruction of your mech"
+  },
+  "juice": {
+    "screenShake": "upon successful subsystem destruction",
+    "particles": "when components are salvaged or installed",
+    "hitStop": "when an enemy attack is successfully evaded",
+    "flash": "when a player makes the three-way decision"
+  },
+  "scopeNotes": "Do not build procedural dungeons, multiple enemy types, bosses, inventory systems, narrative scenes, or between-run upgrades.",
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing"
+    ],
+    "scoreEvents": [
+      "score increases when an enemy is defeated and components are salvaged"
+    ]
+  }
+}
