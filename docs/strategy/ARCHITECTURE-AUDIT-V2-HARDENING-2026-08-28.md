@@ -14,20 +14,41 @@ The change set is intentionally split into:
 
 ## Implemented in this change set
 
-### C-3 / C-5 — workflow write boundary
+### C-3 / C-5 — workflow write boundary + runtime-state isolation
 
-- Production and Review workflows no longer stage the whole repository.
-- Commit paths are allow-listed.
-- A deterministic runtime guard rejects modifications to:
-  - `.github/**`
-  - `factory/prompts/**`
-  - `skills/**`
-  - `factory/src/control/**`
-  - `factory/src/verify/**`
-- Staged evidence is checked for common secret-key formats before commit.
-- `.github/CODEOWNERS` assigns the protected paths to the repository owner.
+`main` is now designed as the authoritative code / policy branch. Automated Production and Review state is routed to the separate `runtime-state` branch.
 
-**Boundary:** GitHub reports `main` as unprotected. The repository-level part of C-3 remains open until branch protection/rulesets are enabled with required review and without an Actions bypass. The code-side guard is defense in depth, not a substitute for that admin control.
+Production and Review workflows now:
+
+- explicitly check out authoritative code from `main`;
+- fetch `runtime-state` only as durable Runtime/Evidence input;
+- reject any changes unique to `runtime-state` that are outside the allowed state paths;
+- merge the permitted Runtime/Evidence state locally into the current `main` tree;
+- verify that the resulting tree differs from `main` only under allowed Runtime/Evidence paths;
+- use explicit commit allow-lists instead of repository-wide staging;
+- scan staged evidence for common secret-key formats;
+- push only `HEAD:runtime-state`, never to `main`.
+
+Allowed Runtime/Evidence paths are bounded to:
+
+- `runs/**`
+- `drafts/**`
+- `products/**`
+- `archive/**`
+- `memory/**`
+- `learning/**`
+- `evaluation/results/**`
+
+Production and Review also share the repository-wide concurrency group `game-factory-runtime-state`, preventing those two workflows from racing each other while writing the same state branch.
+
+GitHub Pages likewise executes the current code from `main`, validates `runtime-state`, merges only permitted state locally, and builds the gallery from that combined read-only tree. Pages redeploys on relevant `main` or `runtime-state` changes.
+
+Additional defense in depth:
+
+- a deterministic runtime guard rejects protected-path modifications during Production/Review;
+- `.github/CODEOWNERS` assigns protected code/policy paths to the repository owner.
+
+**Remaining boundary:** GitHub still reports `main` as unprotected. The repository-level part of C-3 remains open until branch protection/rulesets are enabled with required human review and without an Actions bypass. The runtime-state split removes the previous technical need for Actions to push Runtime/Evidence commits to `main`; repository protection can therefore be enabled without disabling Production/Review persistence.
 
 ### C-1 — SHA/PR/merge-bound prompt promotion
 
@@ -143,6 +164,7 @@ The verifier now explicitly covers:
 
 - zero-valued limit semantics;
 - workflow path allow-list / protected-path policy;
+- runtime-state path isolation and workflow routing to `runtime-state`;
 - deterministic authoritative release gate;
 - every model request contract;
 - transport retry / billing-uncertainty boundary;
@@ -153,11 +175,13 @@ The verifier now explicitly covers:
 
 ## Still open before the next paid Product Canary
 
-### Repository-level C-3
+### Repository-level C-3 admin enforcement
 
-GitHub branch protection/rulesets must be enabled for `main` with required human review and without an Actions bypass for protected changes.
+The code-side architecture is now compatible with a protected `main`: Runtime/Evidence persistence no longer requires bot pushes to the authoritative branch.
 
-This setting cannot be truthfully replaced by repository code. Until it is enabled, no further paid Product Canary should be authorized.
+GitHub branch protection/rulesets must still be enabled for `main` with required human review and without an Actions bypass for protected changes.
+
+This setting cannot be truthfully replaced by repository code. Until it is enabled and the protected-layer PR is human-reviewed/merged, no further paid Product Canary should be authorized.
 
 ## Deliberately separate medium-term tracks
 
@@ -167,7 +191,7 @@ These findings are accepted but are not mixed into this pre-Canary safety PR bec
 - **A-2:** reclassify real failures as `historical-regression` in the frozen Corpus inventory;
 - **D-1:** durable binary Evidence migration to LFS/object storage and retention policy;
 - **C-2:** structural read/privileged lifecycle module split;
-- **D-2:** instance-scoped budget ledger and concurrent/append-only memory persistence;
+- **D-2:** instance-scoped budget ledger and concurrent/append-only memory persistence; the shared Production/Review concurrency group is only a bounded race-prevention measure, not a replacement for this refactor;
 - **B-4:** S5 sampling parameters and variance/confidence reporting;
 - **E-3:** separate origin for generated code;
 - **E-4:** explicit proof-duration field instead of prose fallback;
@@ -183,6 +207,7 @@ These tracks should be implemented as separately reviewable PRs after the safety
 This change set does not claim:
 
 - that C-3 is fully closed before GitHub admin protection is enabled;
+- that `runtime-state` is an authority branch — it is explicitly non-authoritative durable state only;
 - that 29 Corpus cases are 29 independent observations;
 - that unverified provider request contracts are production-compatible;
 - that CSP is equivalent to a separate untrusted-code origin;
