@@ -1,0 +1,8 @@
+{
+  "schemaVersion":"game-factory.s5-benchmark-dataset/v1",
+  "datasetId":"s5-holdout-generalization",
+  "version":"1.0.0",
+  "split":"holdout-generalization",
+  "cases":[{"id":"holdout-generalization-case-v1","familyIdentity":"s5-holdout-generalization-family","provenanceIdentity":"s5-holdout-generalization-provenance","sourceFingerprintSha256":"cf899a7494428dabb4575dd7077c4dd3f8b7c52777886f862287dbd28025c86f","workerPayload":{"task":"Classify the supplied synthetic benchmark envelope.","fixture":"holdout-generalization-v1","input":{"value":2,"mode":"holdout"}},"oracleRef":"evaluation/benchmark/oracles/holdout-generalization-v1.json#holdout-generalization-case-v1"}],
+  "datasetSha256":"a5c9f3da6f3036928e87286faa37152b232b828591c0c35ec79866a3da7fc2ec"
+}

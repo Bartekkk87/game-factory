@@ -1,0 +1,8 @@
+{
+  "schemaVersion":"game-factory.s5-benchmark-oracle-bundle/v1",
+  "datasetId":"s5-development-regression",
+  "datasetVersion":"1.0.0",
+  "datasetSha256":"2be1a4e230fddbca0bf481a69512634e2640b94df2f658c4fa6f8ac81a6a0fc7",
+  "oracles":[{"caseId":"dev-contract-case-v1","expectedOutcome":"PASS","criticalIntegrity":false}],
+  "oracleSha256":"74836911f4fd6c49107e31814c1a3994c7e65d589b041cf13519add35b129bca"
+}

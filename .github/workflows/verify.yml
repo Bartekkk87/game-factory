@@ -45,6 +45,8 @@ jobs:
         run: node factory/src/evaluation/test-evaluation-failure-intake.mjs
       - name: Prove Golden Corpus S4 durable application receipt and fail-closed boundaries
         run: node factory/src/learning/test-application-receipt.mjs
+      - name: Prove S5 zero-paid system configuration benchmark contracts
+        run: node factory/src/evaluation/test-system-config-benchmark.mjs
       - name: Prove control kernel budgets and release gate
         run: node factory/src/control/test-control.mjs
       - name: Prove model/provider router and capability gates
