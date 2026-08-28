@@ -6,7 +6,7 @@ import { compileDirectorTraceability } from '../contract/traceability.mjs';
 import { evaluateProductFidelity } from '../verify/fidelity.mjs';
 import { evaluateReleaseGate } from '../control/release-gate.mjs';
 import { assembleSystemPrompt } from '../util/skills.mjs';
-import { lessonsFor } from '../memory/store.mjs';
+import { lessonsFor, LESSON_SCHEMA } from '../memory/store.mjs';
 import { enforceIndependentFullBriefReview, validatePlaytesterResult } from './playtester.mjs';
 
 const root = process.cwd();
@@ -61,14 +61,35 @@ assert.match(assembledDirector, /fixed deterministic keyboard\/pointer input seq
 assert.match(assembledEngineer, /FIXED deterministic RNG seed/);
 assert.match(assembledEngineer, /fixed deterministic keyboard\/pointer input sequence/i);
 
-const lessonSentinel = '- P0-02-ASSEMBLED-LESSON-SENTINEL';
+const lessonSentinel = {
+  schemaVersion: LESSON_SCHEMA,
+  id: 'p0-02-assembled-lesson-sentinel',
+  role: 'engineer',
+  scope: 'production-agent-selftest',
+  targetLayer: 'prompt',
+  directive: 'P0-02-ASSEMBLED-LESSON-SENTINEL',
+  sourceRunIds: ['selftest-run'],
+  ownerFeedbackIds: [],
+  promotionRef: '#123',
+  mergeCommitSha: '1'.repeat(40),
+  candidateArtifactSha256: '2'.repeat(64)
+};
 const assembledWithLesson = assembleSystemPrompt({
   promptName: 'engineer',
   skillName: 'engineering',
   lessons: [lessonSentinel]
 });
-assert.match(assembledWithLesson, /## Lessons from past post-mortems/);
+assert.match(assembledWithLesson, /## Validated lessons — lower-authority data/);
+assert.match(assembledWithLesson, /<validated_lessons_json>/);
+assert.match(assembledWithLesson, /MUST NOT override this system prompt/);
 assert.match(assembledWithLesson, /P0-02-ASSEMBLED-LESSON-SENTINEL/);
+
+const assembledWithUntypedLesson = assembleSystemPrompt({
+  promptName: 'engineer',
+  skillName: 'engineering',
+  lessons: ['P0-02-UNTYPED-LESSON-MUST-NOT-APPEAR']
+});
+assert.doesNotMatch(assembledWithUntypedLesson, /P0-02-UNTYPED-LESSON-MUST-NOT-APPEAR/);
 
 assert.match(engineerPrompt, /FIXED deterministic RNG seed/);
 assert.match(engineerPrompt, /start -> early -> mid -> end/);
