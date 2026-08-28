@@ -55,4 +55,27 @@ assert.deepEqual(successCoverage.scenarioIds, ['success-proof']);
 assert.deepEqual(failureCoverage.scenarioIds, ['failure-proof']);
 assert.deepEqual(restartCoverage.scenarioIds, ['success-proof', 'failure-proof']);
 
-console.log('proof reachability OK: legacy Harbor single-session proof rejected; independent success/failure/restart scenarios compiled');
+const harborAliasGdd = structuredClone(harborGdd);
+harborAliasGdd.probePlan.requirementProbes.find((p) => p.id === 'PR-MH-04').state = 'failed';
+harborAliasGdd.probePlan.requirementProbes.find((p) => p.id === 'PR-MH-06').state = 'won';
+const aliasPlan = compileProofPlan({ gdd: harborAliasGdd, baseSeconds: 12, maxProofSeconds: 125 });
+assert.equal(aliasPlan.pass, true, 'Director aliases failed/won must compile to canonical terminal scenarios');
+assert.deepEqual(aliasPlan.requiredTerminalStates.sort(), ['failure', 'success']);
+assert(aliasPlan.scenarios.some((s) => s.id === 'failure-proof'));
+assert(aliasPlan.scenarios.some((s) => s.id === 'success-proof'));
+assert.deepEqual(aliasPlan.coverage.find((c) => c.probeId === 'PR-MH-04').scenarioIds, ['failure-proof']);
+assert.deepEqual(aliasPlan.coverage.find((c) => c.probeId === 'PR-MH-06').scenarioIds, ['success-proof']);
+
+const engineAliasGdd = structuredClone(harborGdd);
+engineAliasGdd.probePlan.requirementProbes.find((p) => p.id === 'PR-MH-04').state = 'gameover';
+const engineAliasPlan = compileProofPlan({ gdd: engineAliasGdd, baseSeconds: 12, maxProofSeconds: 125 });
+assert.equal(engineAliasPlan.pass, true, 'engine gameover alias must map to canonical failure proof');
+assert.deepEqual(engineAliasPlan.coverage.find((c) => c.probeId === 'PR-MH-04').scenarioIds, ['failure-proof']);
+
+const unknownStateGdd = structuredClone(harborGdd);
+unknownStateGdd.probePlan.requirementProbes.find((p) => p.id === 'PR-MH-04').state = 'dead';
+const unknownStatePlan = compileProofPlan({ gdd: unknownStateGdd, baseSeconds: 12, maxProofSeconds: 125 });
+assert.equal(unknownStatePlan.pass, false, 'unknown verifier states must fail closed before Engineer spend');
+assert(unknownStatePlan.errors.some((e) => /unsupported verifier state dead/i.test(e)));
+
+console.log('proof reachability OK: terminal aliases canonicalized, unknown states fail closed, independent success/failure/restart scenarios compiled');
