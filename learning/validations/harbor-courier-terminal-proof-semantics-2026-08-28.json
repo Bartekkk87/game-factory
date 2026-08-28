@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "learning-validation-v1",
+  "candidateId": "candidate-harbor-courier-terminal-proof-semantics-20260828",
+  "validatedAt": "2026-08-28T05:07:09.000Z",
+  "sourceRunId": "20260828-043617",
+  "sourceWorkflowRunId": "33142265396",
+  "failureMode": {
+    "directorFailureState": "failed",
+    "directorSuccessState": "success",
+    "priorPlannerTerminalStates": ["success", "failure"],
+    "engineRuntimeTerminalStates": ["won", "gameover"],
+    "activeInputRace": "periodic active verifier input could restart the engine from won/gameover before terminal polling captured the state",
+    "summary": "Canary #3 proved that raw Director and engine terminal-state vocabularies were not aligned and that active proof input could erase terminal evidence before observation. The old planner could silently omit a required failure scenario while still reporting proof reachability PASS."
+  },
+  "implementation": {
+    "pullRequest": 20,
+    "mergeSha": "80afd8420cdfd748f7e88c7e874d3be1c016ff9f",
+    "policy": "canonicalize only proven terminal aliases in verifier-owned state semantics; fail closed on unsupported verifier states before Engineer spend; preserve raw runtime state evidence; stop periodic active input after a known terminal is reached; keep explicit restart harness-owned"
+  },
+  "validationEvidence": [
+    "runs/20260828-043617/FAILURE.json",
+    "runs/20260828-043617/gdd.json",
+    "runs/20260828-043617/attempt-03/telemetry.json",
+    "engine/gf-engine.js",
+    "factory/src/verify/test-proof-reachability.mjs",
+    "factory/src/verify/test-proof-scenarios.mjs",
+    "factory/src/verify/test-fidelity-hardening.mjs",
+    "GitHub Actions Verifier Selftest 33143515998",
+    "GitHub Actions post-merge Verifier Selftest 33143662831"
+  ],
+  "regressionResults": [
+    {
+      "name": "branch-full-verifier",
+      "runId": "33143515998",
+      "commitSha": "53efcd254c3ab0fe528d828554765556ceaf79b1",
+      "passed": true
+    },
+    {
+      "name": "post-merge-full-verifier",
+      "runId": "33143662831",
+      "commitSha": "80afd8420cdfd748f7e88c7e874d3be1c016ff9f",
+      "passed": true
+    }
+  ],
+  "outcome": "validated-inactive",
+  "active": false,
+  "promotionAuthorized": false,
+  "paidCanaryRunStarted": false
+}
