@@ -1,15 +1,13 @@
 import { canonicalTerminalState, canonicalVerifierState } from './state-semantics.mjs';
 import { verifierActionContract } from './action-policy.mjs';
 
-function inferDeclaredSeconds(gdd) {
-  const text = JSON.stringify(gdd || {});
-  const values = [];
-  const re = /\b(\d{1,3})\s*(?:-\s*)?(?:seconds?|secs?|s)\b/gi;
-  for (const match of text.matchAll(re)) {
-    const n = Number(match[1]);
-    if (Number.isFinite(n) && n >= 5 && n <= 120) values.push(n);
+function declaredRoundSeconds(gdd) {
+  const raw = gdd?.probePlan?.roundSeconds;
+  if (raw === undefined || raw === null) return { value: null, error: null };
+  if (!Number.isInteger(raw) || raw < 5 || raw > 120) {
+    return { value: null, error: 'probePlan.roundSeconds must be an integer from 5 to 120' };
   }
-  return values.length ? Math.max(...values) : null;
+  return { value: raw, error: null };
 }
 
 function routeProbe(probe, scenarioIds) {
@@ -17,42 +15,34 @@ function routeProbe(probe, scenarioIds) {
   const terminalState = canonicalTerminalState(probe?.state);
   if (kind === 'state_reached' && terminalState === 'success') return ['success-proof'];
   if (kind === 'state_reached' && terminalState === 'failure') return ['failure-proof'];
-  if (kind === 'restart_after_terminal') {
-    return scenarioIds.filter((id) => id === 'success-proof' || id === 'failure-proof');
-  }
+  if (kind === 'restart_after_terminal') return scenarioIds.filter((id) => id === 'success-proof' || id === 'failure-proof');
   if (kind === 'event_absent') return [...scenarioIds];
   if (kind === 'layout_no_overlap' || kind === 'started_by_early' || kind === 'score_change') return ['base'];
-  if (kind === 'event' || kind === 'event_value_change') {
-    return scenarioIds.includes('success-proof') ? ['base', 'success-proof'] : ['base'];
-  }
+  if (kind === 'event' || kind === 'event_value_change') return scenarioIds.includes('success-proof') ? ['base', 'success-proof'] : ['base'];
   return ['base'];
 }
 
 export function validateProofPlan({ gdd, plan } = {}) {
   const probes = Array.isArray(gdd?.probePlan?.requirementProbes) ? gdd.probePlan.requirementProbes : [];
   const scenarios = Array.isArray(plan?.scenarios) ? plan.scenarios : [];
-  const ids = new Set(scenarios.map((s) => s.id));
+  const ids = new Set(scenarios.map((scenario) => scenario.id));
   const errors = [];
 
   if (!ids.has('base')) errors.push('base scenario missing');
+  const timing = declaredRoundSeconds(gdd);
+  if (timing.error) errors.push(timing.error);
+  if (plan?.declaredRoundSeconds !== timing.value) errors.push('proof plan declaredRoundSeconds does not match typed probePlan.roundSeconds');
 
-  const stateProbes = probes.filter((p) => p?.kind === 'state_reached');
+  const stateProbes = probes.filter((probe) => probe?.kind === 'state_reached');
   for (const probe of stateProbes) {
     const declared = String(probe?.state ?? '').trim();
-    if (!canonicalVerifierState(declared)) {
-      errors.push(`probe ${probe?.id || 'missing'} uses unsupported verifier state ${declared || 'missing'}`);
-    }
+    if (!canonicalVerifierState(declared)) errors.push(`probe ${probe?.id || 'missing'} uses unsupported verifier state ${declared || 'missing'}`);
   }
 
-  const requiredTerminalStates = [...new Set(
-    stateProbes
-      .map((p) => canonicalTerminalState(p?.state))
-      .filter(Boolean)
-  )];
-
+  const requiredTerminalStates = [...new Set(stateProbes.map((probe) => canonicalTerminalState(probe?.state)).filter(Boolean))];
   for (const state of requiredTerminalStates) {
     const expectedId = `${state}-proof`;
-    const scenario = scenarios.find((s) => s.id === expectedId);
+    const scenario = scenarios.find((item) => item.id === expectedId);
     if (!scenario) {
       errors.push(`${expectedId} scenario missing for required terminal state ${state}`);
       continue;
@@ -60,42 +50,34 @@ export function validateProofPlan({ gdd, plan } = {}) {
     const stopStates = Array.isArray(scenario.stopStates)
       ? scenario.stopStates.map((value) => canonicalVerifierState(value)).filter(Boolean)
       : [];
-    if (!stopStates.includes(state)) {
-      errors.push(`${expectedId} does not observe terminal state ${state}`);
-    }
-    if (!Number.isFinite(Number(scenario.seconds)) || Number(scenario.seconds) <= 0) {
-      errors.push(`${expectedId} has invalid observation window`);
-    }
+    if (!stopStates.includes(state)) errors.push(`${expectedId} does not observe terminal state ${state}`);
+    if (!Number.isFinite(Number(scenario.seconds)) || Number(scenario.seconds) <= 0) errors.push(`${expectedId} has invalid observation window`);
   }
 
   if (requiredTerminalStates.includes('success') && requiredTerminalStates.includes('failure')) {
-    const success = scenarios.find((s) => s.id === 'success-proof');
-    const failure = scenarios.find((s) => s.id === 'failure-proof');
-    if (success && failure && success.id === failure.id) {
-      errors.push('mutually exclusive success and failure must use independent scenarios');
-    }
+    const success = scenarios.find((scenario) => scenario.id === 'success-proof');
+    const failure = scenarios.find((scenario) => scenario.id === 'failure-proof');
+    if (success && failure && success.id === failure.id) errors.push('mutually exclusive success and failure must use independent scenarios');
   }
 
-  const restartProbe = probes.find((p) => p?.kind === 'restart_after_terminal');
+  const restartProbe = probes.find((probe) => probe?.kind === 'restart_after_terminal');
   if (restartProbe) {
     const terminalIds = ['success-proof', 'failure-proof'].filter((id) => ids.has(id));
     if (!terminalIds.length) errors.push('restart_after_terminal requires at least one terminal proof scenario');
     for (const id of terminalIds) {
-      const scenario = scenarios.find((s) => s.id === id);
+      const scenario = scenarios.find((item) => item.id === id);
       if (scenario?.restartAtEnd !== true) errors.push(`${id} must attempt restart for restart_after_terminal proof`);
     }
   }
 
   const coverage = Array.isArray(plan?.coverage) ? plan.coverage : [];
   for (const probe of probes) {
-    const entry = coverage.find((c) => c.probeId === probe.id);
+    const entry = coverage.find((item) => item.probeId === probe.id);
     if (!entry || !Array.isArray(entry.scenarioIds) || entry.scenarioIds.length === 0) {
       errors.push(`probe ${probe?.id || 'missing'} has no reachable scenario`);
       continue;
     }
-    for (const scenarioId of entry.scenarioIds) {
-      if (!ids.has(scenarioId)) errors.push(`probe ${probe.id} references missing scenario ${scenarioId}`);
-    }
+    for (const scenarioId of entry.scenarioIds) if (!ids.has(scenarioId)) errors.push(`probe ${probe.id} references missing scenario ${scenarioId}`);
   }
 
   return { pass: errors.length === 0, errors, requiredTerminalStates };
@@ -104,27 +86,22 @@ export function validateProofPlan({ gdd, plan } = {}) {
 export function compileProofPlan({ gdd, baseSeconds = 12, maxProofSeconds = 125 } = {}) {
   const probes = Array.isArray(gdd?.probePlan?.requirementProbes) ? gdd.probePlan.requirementProbes : [];
   const states = new Set(
-    probes
-      .filter((p) => p?.kind === 'state_reached')
-      .map((p) => canonicalTerminalState(p?.state))
-      .filter(Boolean)
+    probes.filter((probe) => probe?.kind === 'state_reached').map((probe) => canonicalTerminalState(probe?.state)).filter(Boolean)
   );
-  const declaredSeconds = inferDeclaredSeconds(gdd);
+  const timing = declaredRoundSeconds(gdd);
   const terminalSeconds = Math.min(
     maxProofSeconds,
-    Math.max(baseSeconds, declaredSeconds ? declaredSeconds + 5 : maxProofSeconds)
+    Math.max(baseSeconds, timing.value === null ? maxProofSeconds : timing.value + 5)
   );
 
-  const scenarios = [
-    {
-      id: 'base',
-      purpose: 'technical-causality-and-active-layout',
-      inputMode: 'active+idle-control',
-      seconds: baseSeconds,
-      stopStates: [],
-      restartAtEnd: false
-    }
-  ];
+  const scenarios = [{
+    id: 'base',
+    purpose: 'technical-causality-and-active-layout',
+    inputMode: 'active+idle-control',
+    seconds: baseSeconds,
+    stopStates: [],
+    restartAtEnd: false
+  }];
   if (states.has('success')) {
     scenarios.push({
       id: 'success-proof',
@@ -146,7 +123,7 @@ export function compileProofPlan({ gdd, baseSeconds = 12, maxProofSeconds = 125 
     });
   }
 
-  const scenarioIds = scenarios.map((s) => s.id);
+  const scenarioIds = scenarios.map((scenario) => scenario.id);
   const coverage = probes.map((probe) => ({
     probeId: probe.id,
     ownerRequirementId: probe.ownerRequirementId,
@@ -154,14 +131,20 @@ export function compileProofPlan({ gdd, baseSeconds = 12, maxProofSeconds = 125 
   }));
 
   const plan = {
-    schemaVersion: 'proof-plan-v1',
+    schemaVersion: 'proof-plan-v2',
     baseSeconds,
     maxProofSeconds,
-    declaredRoundSeconds: declaredSeconds,
+    declaredRoundSeconds: timing.value,
+    timingSource: timing.value === null ? 'safe-max-fallback' : 'typed-probePlan.roundSeconds',
     actionPolicy: verifierActionContract(),
     scenarios,
     coverage
   };
   const validation = validateProofPlan({ gdd, plan });
-  return { ...plan, pass: validation.pass, errors: validation.errors, requiredTerminalStates: validation.requiredTerminalStates };
+  return {
+    ...plan,
+    pass: validation.pass,
+    errors: validation.errors,
+    requiredTerminalStates: validation.requiredTerminalStates
+  };
 }
