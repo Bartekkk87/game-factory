@@ -3,6 +3,7 @@ import path from 'node:path';
 import { chromium } from 'playwright';
 import { serveDir } from './server.mjs';
 import { installCanvasLayoutProbe } from './layout-probe.mjs';
+import { canonicalTerminalState, canonicalVerifierState } from './state-semantics.mjs';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -144,6 +145,15 @@ async function runSingleSession({
     shots.push({ name, dataUrl: `data:image/png;base64,${buf.toString('base64')}` });
   };
 
+  const activeInputAllowed = async () => {
+    try {
+      const state = await page.evaluate(() => window.__GF__ && typeof window.__GF__.getState === 'function' ? window.__GF__.getState() : null);
+      return canonicalTerminalState(state) === null;
+    } catch {
+      return false;
+    }
+  };
+
   try {
     await page.goto(url + entry, { waitUntil: 'load', timeout: 20000 });
     pageTitle = await page.title();
@@ -172,18 +182,21 @@ async function runSingleSession({
         let keyIndex = 0;
         let pointerIndex = 0;
         let clickIndex = 0;
-        timers.push(setInterval(() => {
+        timers.push(setInterval(async () => {
+          if (!(await activeInputAllowed())) return;
           const key = PLAY_KEYS[keyIndex % PLAY_KEYS.length];
           keyIndex++;
           page.keyboard.down(key).catch(() => {});
           setTimeout(() => page.keyboard.up(key).catch(() => {}), INPUT_PLAN.keyHoldMs);
         }, INPUT_PLAN.keyEveryMs));
-        timers.push(setInterval(() => {
+        timers.push(setInterval(async () => {
+          if (!(await activeInputAllowed())) return;
           const [x, y] = POINTER_PATH[pointerIndex % POINTER_PATH.length];
           pointerIndex++;
           page.mouse.move(x, y).catch(() => {});
         }, INPUT_PLAN.pointerEveryMs));
-        timers.push(setInterval(() => {
+        timers.push(setInterval(async () => {
+          if (!(await activeInputAllowed())) return;
           const [x, y] = POINTER_PATH[clickIndex % POINTER_PATH.length];
           clickIndex++;
           page.mouse.click(x, y).catch(() => {});
@@ -193,17 +206,23 @@ async function runSingleSession({
       const total = seconds * 1000;
       const sessionStarted = Date.now();
       try {
-        const targetStates = new Set((stopStates || []).map(String));
+        const targetStates = new Set();
+        for (const state of stopStates || []) {
+          const canonical = canonicalVerifierState(state);
+          if (!canonical) throw new Error(`unsupported verifier stop state: ${String(state ?? 'missing')}`);
+          targetStates.add(canonical);
+        }
         if (targetStates.size) {
           while (Date.now() - sessionStarted < total) {
             const current = await snap();
-            if (targetStates.has(String(current?.state || ''))) {
+            const currentState = canonicalVerifierState(current?.state);
+            if (currentState && targetStates.has(currentState)) {
               const atMs = Date.now() - sessionStarted;
               timeline.push({ phase: 'terminal', atMs, snapshot: current });
               endSnapshot = current;
               break;
             }
-            await sleep(100);
+            await sleep(50);
           }
           if (!endSnapshot) endSnapshot = await record('end', Math.min(total, Date.now() - sessionStarted));
         } else {
@@ -243,7 +262,7 @@ async function runSingleSession({
         for (const timer of timers) clearInterval(timer);
       }
 
-      if (restartAtEnd && ['success', 'failure', 'won', 'gameover'].includes(endSnapshot?.state)) {
+      if (restartAtEnd && canonicalTerminalState(endSnapshot?.state)) {
         await page.keyboard.press('Enter');
         await page.mouse.click(640, 400);
         await sleep(450);
@@ -269,7 +288,8 @@ async function runSingleSession({
       keyEveryMs: inputMode === 'active' ? INPUT_PLAN.keyEveryMs : null,
       keyHoldMs: inputMode === 'active' ? INPUT_PLAN.keyHoldMs : null,
       pointerEveryMs: inputMode === 'active' ? INPUT_PLAN.pointerEveryMs : null,
-      clickEveryMs: inputMode === 'active' ? INPUT_PLAN.clickEveryMs : null
+      clickEveryMs: inputMode === 'active' ? INPUT_PLAN.clickEveryMs : null,
+      terminalSafe: inputMode === 'active'
     },
     timeline,
     probeOk,
@@ -318,6 +338,7 @@ export async function runSession(options) {
       seconds: Number(scenario.seconds),
       stopStates: Array.isArray(scenario.stopStates) ? [...scenario.stopStates] : [],
       endState: report.endSnapshot?.state ?? null,
+      canonicalEndState: canonicalVerifierState(report.endSnapshot?.state),
       postRestartState: report.postRestartSnapshot?.state ?? null
     });
     for (const entry of report.timeline || []) {

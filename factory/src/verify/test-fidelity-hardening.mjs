@@ -102,6 +102,40 @@ assert.equal(harnessVerdict.criteria[0].evidenceSource, 'harness-observed');
 assert.deepEqual(harnessVerdict.coverage.harnessObservedRequirementIds, ['MH-01']);
 assert.deepEqual(harnessVerdict.coverage.generatedGameEventDependentRequirementIds, []);
 
+const terminalContract = createOwnerContract({
+  source: 'terminal-state-alias-fixture',
+  idea: [
+    '## Must-Have',
+    '- A failed run must reach a clear failure state.',
+    '- A completed run must reach a clear success state.'
+  ].join('\n')
+});
+const terminalGdd = compileDirectorTraceability({
+  title: 'Terminal Alias Fixture',
+  genre: 'test',
+  acceptanceCriteria: [
+    { ownerRequirementId: 'MH-01', statement: 'A failed run reaches failure.' },
+    { ownerRequirementId: 'MH-02', statement: 'A completed run reaches success.' }
+  ],
+  probePlan: {
+    scoreEvents: ['Space'],
+    requirementProbes: [
+      { ownerRequirementId: 'MH-01', kind: 'state_reached', state: 'failed' },
+      { ownerRequirementId: 'MH-02', kind: 'state_reached', state: 'success' }
+    ]
+  }
+}, terminalContract);
+const terminalReport = {
+  timeline: [
+    { phase: 'failure-proof:terminal', scenarioId: 'failure-proof', snapshot: { state: 'gameover', score: 0, time: 5, events: [] } },
+    { phase: 'success-proof:terminal', scenarioId: 'success-proof', snapshot: { state: 'won', score: 10, time: 4, events: [] } }
+  ]
+};
+const terminalVerdict = evaluateProductFidelity({ ownerContract: terminalContract, gdd: terminalGdd, report: terminalReport });
+assert.equal(terminalVerdict.pass, true, 'Director failed/success semantics must match engine gameover/won observations');
+assert.match(terminalVerdict.criteria.find((c) => c.requirementId === 'MH-01').detail, /state failure reached.*gameover/i);
+assert.match(terminalVerdict.criteria.find((c) => c.requirementId === 'MH-02').detail, /state success reached.*won/i);
+
 // The coverage boundary must survive the pipeline into durable result/review metadata.
 const pipelineSource = fs.readFileSync(new URL('../pipeline/run.mjs', import.meta.url), 'utf8');
 assert.match(pipelineSource, /coverage:\s*verified\.fidelity\.coverage/);

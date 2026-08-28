@@ -14,8 +14,8 @@ fs.writeFileSync(path.join(runDir, 'gdd.json'), JSON.stringify({
     pass: true,
     scenarios: [
       { id: 'base', inputMode: 'active+idle-control', seconds: 1.5, stopStates: [], restartAtEnd: false },
-      { id: 'success-proof', inputMode: 'active', seconds: 2, stopStates: ['success'], restartAtEnd: true },
-      { id: 'failure-proof', inputMode: 'idle', seconds: 2, stopStates: ['failure'], restartAtEnd: true }
+      { id: 'success-proof', inputMode: 'active', seconds: 0.8, stopStates: ['success'], restartAtEnd: true },
+      { id: 'failure-proof', inputMode: 'idle', seconds: 0.8, stopStates: ['failure'], restartAtEnd: true }
     ]
   }
 }, null, 2));
@@ -28,14 +28,17 @@ let state = 'title';
 let score = 0;
 let startedAt = performance.now();
 let hadGameplayInput = false;
-function startFresh(){ state = 'playing'; score = 0; hadGameplayInput = false; startedAt = performance.now(); }
+let runNo = 0;
+function startFresh(){ runNo++; state = 'playing'; score = 0; hadGameplayInput = false; startedAt = performance.now(); }
 addEventListener('keydown', (e) => {
-  if (e.code === 'Enter' && (state === 'title' || state === 'success' || state === 'failure')) { startFresh(); return; }
-  if (state === 'playing' && e.code !== 'Enter') { hadGameplayInput = true; score = 10; }
+  if (state === 'title') { startFresh(); return; }
+  if (state === 'won' || state === 'gameover') { startFresh(); return; }
+  if (state === 'playing') { hadGameplayInput = true; score = 10; }
 });
 setInterval(() => {
-  if (state === 'playing' && performance.now() - startedAt > 700) state = hadGameplayInput ? 'success' : 'failure';
-}, 25);
+  const terminalAfterMs = runNo <= 1 ? 350 : 900;
+  if (state === 'playing' && performance.now() - startedAt > terminalAfterMs) state = hadGameplayInput ? 'won' : 'gameover';
+}, 10);
 function draw(){
   ctx.fillStyle = '#123456'; ctx.fillRect(0,0,960,540);
   ctx.fillStyle = '#fff'; ctx.font = '24px sans-serif'; ctx.fillText(state, 30, 40);
@@ -58,15 +61,18 @@ try {
   const success = report.proofScenarios.find((s) => s.id === 'success-proof');
   const failure = report.proofScenarios.find((s) => s.id === 'failure-proof');
   assert(success && failure, 'both terminal proof scenarios must execute');
-  assert.equal(success.endState, 'success');
+  assert.equal(success.endState, 'won', 'raw engine success state must be preserved as evidence');
+  assert.equal(success.canonicalEndState, 'success');
   assert.equal(success.postRestartState, 'playing');
-  assert.equal(failure.endState, 'failure');
+  assert.equal(failure.endState, 'gameover', 'raw engine failure state must be preserved as evidence');
+  assert.equal(failure.canonicalEndState, 'failure');
   assert.equal(failure.postRestartState, 'playing');
-  assert(report.timeline.some((e) => e.scenarioId === 'success-proof' && e.snapshot?.state === 'success'));
-  assert(report.timeline.some((e) => e.scenarioId === 'failure-proof' && e.snapshot?.state === 'failure'));
+  assert(report.timeline.some((e) => e.scenarioId === 'success-proof' && e.snapshot?.state === 'won'));
+  assert(report.timeline.some((e) => e.scenarioId === 'failure-proof' && e.snapshot?.state === 'gameover'));
   assert.equal(report.pageErrors.length, 0);
   assert.equal(report.consoleErrors.length, 0);
-  console.log('proof scenario harness OK: independent active success + idle failure + terminal restart observed');
+  assert.equal(success.inputMode, 'active');
+  console.log('proof scenario harness OK: terminal-safe active input preserves engine won/gameover states and explicit restart is harness-observed');
 } finally {
   fs.rmSync(root, { recursive: true, force: true });
 }
