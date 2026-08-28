@@ -7,6 +7,7 @@ import { evaluateProductFidelity } from '../verify/fidelity.mjs';
 import { evaluateReleaseGate } from '../control/release-gate.mjs';
 import { assembleSystemPrompt } from '../util/skills.mjs';
 import { lessonsFor } from '../memory/store.mjs';
+import { validatePlaytesterResult } from './playtester.mjs';
 
 const root = process.cwd();
 const read = (relative) => fs.readFileSync(path.join(root, relative), 'utf8');
@@ -165,5 +166,27 @@ assert.throws(
   () => evaluateReleaseGate({ ...releaseInput, playtesterFidelity: { verdict: 'FAIL' } }),
   /non-authoritative input: playtesterFidelity/
 );
+
+// Package 5 / D-7 baseline: the Playtester is a separate stage, but the result
+// validator can currently accept a mandatory descriptive UN claim as PASS without
+// any claim-level statement of independently observed evidence. That leaves the
+// load-bearing review boundary implicit rather than mechanically auditable.
+const reviewBoundaryContract = createOwnerContract({
+  source: 'package-5-d7-baseline',
+  idea: 'Create a compact arena game. Dark industrial atmosphere.'
+});
+assert.equal(reviewBoundaryContract.unknowns[0].id, 'UN-01');
+const implicitReviewPass = validatePlaytesterResult({
+  fidelityVerdict: 'PASS',
+  missingRequirements: [],
+  fidelityCritique: ['The requested atmosphere is present.'],
+  scores: { visuals: 8, uiClarity: 8, funProxy: 8, performance: 10 },
+  overall: 8.2,
+  critique: [],
+  priorityFixes: []
+}, reviewBoundaryContract);
+assert.equal(implicitReviewPass.fullBriefCoverage.pass, true);
+assert.deepEqual(implicitReviewPass.fullBriefCoverage.independentReviewClaimIds, ['UN-01']);
+console.log('PACKAGE 5 BASELINE REPRODUCED: D-7 mandatory UN-01 can be certified PASS without claim-level independent evidence provenance.');
 
 console.log('L4 production-agent integrity selftest: PASS');
