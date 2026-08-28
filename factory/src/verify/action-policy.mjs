@@ -21,7 +21,7 @@ export const VERIFIER_ACTION_POLICY = Object.freeze({
   movementSegmentMs: 3200,
   movementGapMs: 160,
   actionKeys: Object.freeze(['Space', 'Enter']),
-  actionEveryMs: 1200,
+  actionEveryMs: 750,
   pointerPath: Object.freeze([
     Object.freeze([420, 300]),
     Object.freeze([640, 280]),
