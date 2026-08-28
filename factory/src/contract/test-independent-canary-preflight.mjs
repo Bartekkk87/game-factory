@@ -6,10 +6,13 @@ import { createOwnerContract, ownerFidelityClaimIds, ownerRequirementIds } from 
 import { compileDirectorTraceability } from './traceability.mjs';
 import { lessonsFor, loadMemory } from '../memory/store.mjs';
 import { roleDefaultsSnapshot } from '../llm/router.mjs';
+import { isSupportedVerifierState, verifierStateContract } from '../verify/state-semantics.mjs';
 
 const root = process.cwd();
 const briefPath = path.join(root, 'evaluation/preflight/independent-canary-owner-brief-2026-08-28.md');
+const productionBriefPath = path.join(root, 'ideas/lumen-current-independent-canary-2026-08-28.md');
 const directorPath = path.join(root, 'factory/src/roles/director.mjs');
+const indexPath = path.join(root, 'factory/src/index.mjs');
 const workflowPath = path.join(root, '.github/workflows/produce.yml');
 
 assert.equal(fs.existsSync(briefPath), true, 'independent Canary brief must exist');
@@ -17,6 +20,7 @@ assert.equal(briefPath.includes(`${path.sep}ideas${path.sep}`), false, 'prefligh
 
 const brief = fs.readFileSync(briefPath, 'utf8');
 const directorSource = fs.readFileSync(directorPath, 'utf8');
+const indexSource = fs.readFileSync(indexPath, 'utf8');
 const workflowSource = fs.readFileSync(workflowPath, 'utf8');
 
 let providerCalls = 0;
@@ -90,10 +94,27 @@ try {
   assert.equal(compiled.probePlan.requirementProbes.find((p) => p.ownerRequirementId === 'MH-06').kind, 'layout_no_overlap', 'HUD requirement must map to independent layout geometry authority');
   assert.equal(compiled.probePlan.requirementProbes.find((p) => p.ownerRequirementId === 'MH-05').kind, 'restart_after_terminal', 'fresh-run requirement must map to independent restart observation');
 
-  // Director runtime truth: complete raw idea + Owner Contract are separately supplied.
+  // Director runtime truth: complete raw idea + Owner Contract + finite verifier state contract are separately supplied.
   assert.match(directorSource, /ownerIdea:\s*idea\s*\|\|/);
   assert.match(directorSource, /\n\s*ownerContract,\n/);
+  assert.match(directorSource, /verifierStateContract:\s*verifierStateContract\(\)/);
   assert.match(directorSource, /skillNames:\s*\['directing',\s*'art-direction'\]/);
+  const states = verifierStateContract();
+  assert(states.stateReachedAllowed.includes('success'));
+  assert(states.stateReachedAllowed.includes('failure'));
+  assert.equal(isSupportedVerifierState('restored'), false);
+  assert.equal(isSupportedVerifierState('glass_breach'), false);
+
+  // Exact preflight -> Production brief binding: idea-file ingestion must preserve bytes verbatim.
+  assert.match(indexSource, /idea\s*=\s*fs\.readFileSync\(ideaFile,\s*'utf8'\);/);
+  assert.doesNotMatch(indexSource, /readFileSync\(ideaFile,\s*'utf8'\)\.trim\(\)/);
+  if (fs.existsSync(productionBriefPath)) {
+    const productionBrief = fs.readFileSync(productionBriefPath, 'utf8');
+    assert.equal(productionBrief, brief, 'approved Production idea file must remain byte-identical to the preflight Owner brief');
+    const productionContract = createOwnerContract({ idea: productionBrief, source: 'ideas-folder' });
+    assert.equal(productionContract.ownerBriefSha256, contract.ownerBriefSha256, 'preflight and Production must bind the same exact Owner brief bytes');
+    assert.notEqual(productionContract.contractSha256, contract.contractSha256, 'full Contract SHA intentionally includes source provenance and therefore may differ by lane');
+  }
 
   // Learning isolation: no validated+active lesson currently changes this Production run.
   const memory = loadMemory();
@@ -121,6 +142,7 @@ try {
     fidelityClaims: ownerFidelityClaimIds(contract).length,
     activeProductionLessons: 0,
     providerCalls,
+    verifierStateProtocol: states.protocol,
     productionReference: defaults
   }, null, 2));
   console.log('Independent Canary zero-paid preflight: PASS');

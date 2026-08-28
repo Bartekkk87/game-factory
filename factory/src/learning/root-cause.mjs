@@ -138,6 +138,18 @@ function finding(id, confidence, targetLayer, role, summary, evidence, validatio
   return { id, confidence, targetLayer, role, summary, evidence: [...new Set(evidence)].sort(), validationPlan };
 }
 
+function unsupportedVerifierStatesFromFailure(failure) {
+  const error = String(failure?.error || '');
+  const matches = [];
+  const regex = /probe\s+([^\s;]+)\s+uses unsupported verifier state\s+([^;\n]+)/gi;
+  for (const match of error.matchAll(regex)) {
+    const probeId = String(match[1] || '').trim();
+    const state = String(match[2] || '').trim();
+    if (probeId && state) matches.push({ probeId, state });
+  }
+  return matches;
+}
+
 export function analyzeFailedProductionRun({ runId, runsRoot = PATHS.runs } = {}) {
   const id = String(runId || '').trim();
   if (!id) throw new Error('root cause analysis requires runId');
@@ -146,6 +158,7 @@ export function analyzeFailedProductionRun({ runId, runsRoot = PATHS.runs } = {}
   if (!runEvidence?.run?.id) throw new Error(`run evidence not found: ${id}`);
   if (String(runEvidence.run.status || '').toLowerCase() !== 'failed') throw new Error(`root cause analysis only accepts failed production runs: ${id}`);
 
+  const failure = readJson(path.join(runDir, 'FAILURE.json'), null);
   const gdd = readJson(path.join(runDir, 'gdd.json'), null);
   const attempts = listAttemptDirs(runDir).map(attemptSummary);
   const best = attempts.length ? [...attempts].sort((a, b) => a.failedChecks - b.failedChecks || Number(a.id.split('-')[1]) - Number(b.id.split('-')[1]))[0] : null;
@@ -153,6 +166,17 @@ export function analyzeFailedProductionRun({ runId, runsRoot = PATHS.runs } = {}
   const stateProbes = collectStateProbes(gdd);
   const proofScenarios = collectProofScenarios(gdd);
   const findings = [];
+
+  const unsupportedStates = unsupportedVerifierStatesFromFailure(failure);
+  if (String(runEvidence.run.reason || failure?.reason || '').toLowerCase() === 'director_failed' && unsupportedStates.length) {
+    const pairs = unsupportedStates.map((item) => `${item.probeId}=${item.state}`);
+    findings.push(finding(
+      'director-verifier-state-contract-mismatch', 1, 'skill', 'director',
+      `Director emitted unsupported state_reached verifier state(s): ${pairs.join(', ')}. The finite verifier state protocol was not preserved before proof-plan compilation.`,
+      ['FAILURE.json', ...pairs],
+      'Reproduce an early director_failed fixture with unsupported state_reached values and prove deterministic diagnosis produces an inactive Director skill candidate. Then expose the finite verifier state contract to the Director, constrain the Directing skill/prompt, and run the full zero-paid verifier plus Golden Corpus without weakening unknown-state fail-closed behavior.'
+    ));
+  }
 
   if (best && final && final.id !== best.id && final.failedChecks > best.failedChecks) {
     findings.push(finding(
