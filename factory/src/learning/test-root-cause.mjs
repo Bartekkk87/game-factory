@@ -115,18 +115,30 @@ try {
     assert.match(lumen.findings[0].summary, /glass_breach/);
 
     const candidatePath = path.join(repoRoot, 'learning', 'candidates', 'candidate-production-run-b37ac8d268e8549c.json');
+    const validationPath = path.join(repoRoot, 'learning', 'validations', 'candidate-production-run-b37ac8d268e8549c.json');
     if (fs.existsSync(candidatePath)) {
       const candidate = JSON.parse(fs.readFileSync(candidatePath, 'utf8'));
       assert.equal(candidate.schemaVersion, 'learning-candidate-v1');
-      assert.equal(candidate.status, 'candidate');
+      assert.equal(candidate.status, 'validated');
       assert.equal(candidate.active, false);
+      assert.ok(candidate.validatedAt);
       assert.equal(candidate.role, 'director');
       assert.equal(candidate.scope, 'case-root-cause');
       assert.equal(candidate.targetLayer, 'skill');
       assert.deepEqual(candidate.sourceRunIds, ['20260828-201007']);
       assert.equal(candidate.confidence, 1);
+      assert(candidate.validationEvidence.length >= 2);
+      assert(candidate.regressionResults.length >= 3);
+      assert(candidate.regressionResults.every((item) => item.passed === true));
       assert.match(candidate.text, /restored/);
       assert.match(candidate.text, /glass_breach/);
+      assert.equal(fs.existsSync(validationPath), true, 'validated Lumen candidate requires canonical validation artifact');
+      const validation = JSON.parse(fs.readFileSync(validationPath, 'utf8'));
+      assert.equal(validation.schemaVersion, 'learning-validation-v1');
+      assert.equal(validation.candidateId, candidate.id);
+      assert.equal(validation.outcome, 'validated-inactive');
+      assert.equal(validation.validatedAt, candidate.validatedAt);
+      assert(validation.regressionResults.every((item) => item.passed === true));
     }
   }
 
