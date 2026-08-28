@@ -55,6 +55,8 @@ jobs:
         run: node factory/src/llm/test-openrouter.mjs
       - name: Prove Owner Contract decomposition and provenance
         run: node factory/src/contract/test-owner-contract.mjs
+      - name: Prove independent Canary zero-paid preflight
+        run: node factory/src/contract/test-independent-canary-preflight.mjs
       - name: Prove Titan Step 3 candidate validation
         run: node factory/src/contract/test-titan-candidate-validation.mjs
       - name: Prove controlled learning safety and lifecycle
