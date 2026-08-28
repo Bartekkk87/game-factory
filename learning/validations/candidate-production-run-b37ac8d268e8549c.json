@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "learning-validation-v1",
+  "candidateId": "candidate-production-run-b37ac8d268e8549c",
+  "validatedAt": "2026-08-28T20:44:20.000Z",
+  "validationEvidence": [
+    {
+      "kind": "production-failure-root-cause",
+      "sourceRef": "runs/20260828-201007/FAILURE.json",
+      "findingId": "director-verifier-state-contract-mismatch",
+      "passed": true
+    },
+    {
+      "kind": "full-verifier",
+      "workflowRunId": "33208519229",
+      "commitSha": "b826bf67bd1cf98517ed315fac8bdb0ee5cac6b3",
+      "passed": true
+    },
+    {
+      "kind": "candidate-binding-full-verifier",
+      "workflowRunId": "33209130248",
+      "commitSha": "1fb9c1c32eb52c25610c8da7b00db2e3eb2f82c4",
+      "passed": true
+    }
+  ],
+  "regressionResults": [
+    {
+      "suite": "lumen-director-state-root-cause",
+      "passed": true
+    },
+    {
+      "suite": "controlled-learning-orchestration",
+      "passed": true
+    },
+    {
+      "suite": "golden-corpus-s2-frozen-29",
+      "passed": true,
+      "expectedMismatchCount": 0,
+      "criticalFalsePassCount": 0
+    },
+    {
+      "suite": "full-verifier-37-steps",
+      "passed": true
+    }
+  ],
+  "outcome": "validated-inactive"
+}
