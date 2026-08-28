@@ -12,21 +12,10 @@ import {
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../../..');
+const caseRunner = path.join(root, 'factory/src/evaluation/run-corpus-case.mjs');
 
 function readJson(relPath) {
   return JSON.parse(fs.readFileSync(path.join(root, relPath), 'utf8'));
-}
-
-function safeScriptPath(script) {
-  const value = String(script || '');
-  if (!/^[A-Za-z0-9._/-]+\.mjs$/.test(value) || path.isAbsolute(value) || value.split('/').includes('..')) {
-    throw new Error(`unsafe evaluation script: ${value}`);
-  }
-  const absolute = path.resolve(root, value);
-  if (!absolute.startsWith(`${root}${path.sep}`) || !fs.existsSync(absolute)) {
-    throw new Error(`evaluation script unavailable: ${value}`);
-  }
-  return absolute;
 }
 
 function normalizedDiagnostic(text) {
@@ -86,20 +75,35 @@ function writeReport(relPath, report) {
   fs.writeFileSync(absolute, `${JSON.stringify(report, null, 2)}\n`);
 }
 
-function runScript(script) {
-  const absolute = safeScriptPath(script);
+function parseCaseResult(stdout) {
+  const lines = String(stdout || '').trim().split('\n').map((line) => line.trim()).filter(Boolean);
+  for (let index = lines.length - 1; index >= 0; index -= 1) {
+    try {
+      const parsed = JSON.parse(lines[index]);
+      if (parsed?.schemaVersion === 'game-factory.case-execution-result/v2') return parsed;
+    } catch {
+      // Continue searching earlier output lines; oracle dependencies may log diagnostics.
+    }
+  }
+  return null;
+}
+
+function runCase(caseId) {
   const started = Date.now();
-  const child = spawnSync(process.execPath, [absolute], {
+  const child = spawnSync(process.execPath, [caseRunner, '--case', caseId], {
     cwd: root,
     encoding: 'utf8',
     env: process.env,
     maxBuffer: 32 * 1024 * 1024
   });
+  const parsed = parseCaseResult(child.stdout);
   const childExitCode = child.status ?? 1;
   return {
-    script,
+    caseId,
     childExitCode,
-    caseResult: childExitCode === 0 ? 'PASS' : 'FAIL',
+    parsed,
+    caseResult: parsed?.caseResult || 'FAIL',
+    independentObservation: parsed?.independentObservation === true && parsed?.caseId === caseId,
     durationMs: Date.now() - started,
     failureSignature: childExitCode === 0 ? null : failureSignature(child.stdout, child.stderr),
     diagnostic: childExitCode === 0 ? null : (normalizedDiagnostic(child.stderr) || normalizedDiagnostic(child.stdout))
@@ -110,42 +114,44 @@ try {
   const { out } = parseArgs(process.argv);
   const registryPath = 'evaluation/corpus/registry.json';
   const manifestPath = 'evaluation/corpus/s1-cases.json';
-  const baselinePath = 'evaluation/baselines/S2-S1-CLOSURE-REFERENCE-2026-08-28.json';
+  const historicalPath = 'evaluation/corpus/historical-regressions.json';
+  const oraclePath = 'evaluation/corpus/case-oracles.json';
+  const baselinePath = 'evaluation/baselines/S2-AUDIT-V2-A1-A2-REFERENCE-2026-08-29.json';
+
   const registryText = fs.readFileSync(path.join(root, registryPath), 'utf8');
   const manifestText = fs.readFileSync(path.join(root, manifestPath), 'utf8');
+  const historicalText = fs.readFileSync(path.join(root, historicalPath), 'utf8');
+  const oracleText = fs.readFileSync(path.join(root, oraclePath), 'utf8');
   const registry = JSON.parse(registryText);
   const manifest = JSON.parse(manifestText);
+  const historical = JSON.parse(historicalText);
+  const oracles = JSON.parse(oracleText);
   const baseline = readJson(baselinePath);
 
-  const registryBlobSha = gitBlobSha(registryText);
-  const manifestBlobSha = gitBlobSha(manifestText);
   const baselineCompatibility = {
-    registryBlobMatch: registryBlobSha === baseline.corpusContract?.registryGitBlobSha,
-    s1ManifestBlobMatch: manifestBlobSha === baseline.corpusContract?.s1ManifestGitBlobSha
+    registryBlobMatch: gitBlobSha(registryText) === baseline.corpusContract?.registryGitBlobSha,
+    s1ManifestBlobMatch: gitBlobSha(manifestText) === baseline.corpusContract?.s1ManifestGitBlobSha,
+    historicalRegistryBlobMatch: gitBlobSha(historicalText) === baseline.corpusContract?.historicalRegistryGitBlobSha,
+    caseOracleManifestBlobMatch: gitBlobSha(oracleText) === baseline.corpusContract?.caseOracleManifestGitBlobSha
   };
-  baselineCompatibility.compatible = baselineCompatibility.registryBlobMatch && baselineCompatibility.s1ManifestBlobMatch;
+  baselineCompatibility.compatible = Object.values(baselineCompatibility).every(Boolean);
   if (!baselineCompatibility.compatible) {
-    throw new Error(
-      `corpus drift detected; baseline ${baseline.baselineId} is not comparable to the current registry/manifest`
-    );
+    throw new Error(`corpus drift detected; baseline ${baseline.baselineId} is not comparable to the current corpus contract`);
   }
 
-  const catalog = buildCorpusCatalog(registry, manifest);
+  const catalog = buildCorpusCatalog(registry, manifest, historical, oracles);
   if (catalog.length !== baseline.corpusContract?.totalCases) {
     throw new Error(`baseline case-count mismatch: expected ${baseline.corpusContract?.totalCases}, found ${catalog.length}`);
   }
 
-  const scripts = [...new Set(catalog.map((entry) => entry.script))].sort();
-  const executions = new Map(scripts.map((script) => [script, runScript(script)]));
+  const executions = catalog.map((entry) => runCase(entry.id));
+  const executionByCase = new Map(executions.map((execution) => [execution.caseId, execution]));
   const results = catalog.map((entry) => {
-    const execution = executions.get(entry.script);
+    const execution = executionByCase.get(entry.id);
     const expectedCaseResult = entry.expectedOutcome.caseResult;
     const actualCaseResult = execution.caseResult;
     const matchedExpected = actualCaseResult === expectedCaseResult;
     const falsePass = actualCaseResult === 'PASS' && expectedCaseResult === 'FAIL';
-    const mismatchDiagnostic = matchedExpected
-      ? null
-      : execution.diagnostic || `expected ${expectedCaseResult}, observed ${actualCaseResult}`;
     return {
       caseId: entry.id,
       population: entry.population,
@@ -158,23 +164,27 @@ try {
       tier: entry.tier,
       severity: entry.severity,
       sourceKind: entry.sourceKind,
-      script: entry.script,
+      historicalProvenance: entry.historicalProvenance,
+      supportingScript: entry.script,
+      oracleScript: entry.oracleScript,
       expectedCaseResult,
       actualCaseResult,
       matchedExpected,
       falsePass,
       criticalFalsePass: falsePass && entry.severity === 'critical-integrity',
+      independentObservation: execution.independentObservation,
       failureSignature: matchedExpected
         ? null
         : caseMismatchSignature(entry, expectedCaseResult, actualCaseResult, execution),
-      diagnostic: mismatchDiagnostic
+      diagnostic: matchedExpected ? null : execution.diagnostic || `expected ${expectedCaseResult}, observed ${actualCaseResult}`
     };
   });
 
   const summary = summarizeCaseResults(results);
   const delta = compareToBaseline(summary, baseline);
+  const uniqueOracleScripts = new Set(catalog.map((entry) => entry.oracleScript)).size;
   const report = {
-    schemaVersion: 'game-factory.golden-corpus-evaluation-report/v1',
+    schemaVersion: 'game-factory.golden-corpus-evaluation-report/v2',
     evaluatedCommitSha: currentCommitSha(),
     generatedAt: new Date().toISOString(),
     baseline: {
@@ -184,33 +194,41 @@ try {
       compatibility: baselineCompatibility
     },
     execution: {
-      runner: 'deduplicated-node-selftests',
-      oracle: 'expected-vs-actual-case-result',
+      runner: 'independent-node-case-oracles',
+      oracle: 'case-specific-assertion',
       casesEvaluated: results.length,
-      uniqueScriptsExecuted: scripts.length,
+      independentObservationCount: summary.independentObservationCount,
+      uniqueOracleScripts,
       apiCalls: 0,
       modelBackedCases: 0,
       usdCost: 0,
-      scripts: [...executions.values()]
+      cases: executions.map((execution) => ({
+        caseId: execution.caseId,
+        childExitCode: execution.childExitCode,
+        durationMs: execution.durationMs,
+        independentObservation: execution.independentObservation,
+        failureSignature: execution.failureSignature,
+        diagnostic: execution.diagnostic
+      }))
     },
     metrics: summary,
     delta,
     policy: {
       baselineCorpusDriftAllowed: false,
       criticalFalsePassTolerance: 0,
+      requiredIndependentObservationCount: results.length,
+      observationCoverageComplete: summary.observationDeficit === 0,
       expectedMismatchCount: summary.expectedMismatchCount,
       criticalFalsePassRegression: summary.criticalFalsePassCount > Number(baseline.metrics?.criticalFalsePassCount || 0),
       corpusRegression: summary.expectedMismatchCount > Number(baseline.metrics?.expectedMismatchCount || 0)
+        || summary.observationDeficit > 0
     },
     cases: results
   };
 
   writeReport(out, report);
   console.log(JSON.stringify(report));
-
-  if (report.policy.criticalFalsePassRegression || report.policy.corpusRegression) {
-    process.exit(1);
-  }
+  if (report.policy.criticalFalsePassRegression || report.policy.corpusRegression) process.exit(1);
 } catch (error) {
   console.error(`S2 EVALUATION ERROR: ${error?.message || error}`);
   process.exit(2);
