@@ -7,6 +7,7 @@ import { loadMemory, saveMemory } from '../memory/store.mjs';
 
 export const LEARNING_SCHEMA = 'learning-candidate-v1';
 export const APPLICATION_RECEIPT_SCHEMA = 'learning-application-receipt-v1';
+export const APPLICATION_REGRESSION_EVIDENCE_SCHEMA = 'learning-application-regression-evidence-v1';
 export const APPLICATION_TERMINAL_STATE = 'APPLIED-CLOSED';
 export const PROTECTED_LAYERS = Object.freeze(new Set(['skill','prompt','owner-contract','verifier','product-fidelity','release-gate','engine-contract','control-plane','evaluation']));
 export const LESSON_PROMOTION_TARGET_LAYER = 'prompt';
@@ -64,7 +65,7 @@ export function promoteCandidate(id,{approvedBy,approvalKind,promotionRef,activa
 export function deactivateCandidate(id,{by,reason,rollbackOf=null,at=null}) {
   const c=assertCandidate(readJson(candidatePath(id),null)); const when=at||new Date().toISOString();
   const next={...c,active:false,deactivatedAt:when,deactivatedBy:by||null,rollbackOf:rollbackOf||c.rollbackOf||null,reversalReason:reason||null}; writeJson(candidatePath(id),next);
-  const m=loadMemory(); m.lessons=m.lessons.map(l=>l.id===id?{...l,active:false,deactivatedAt:when,reversalReason:reason||null}:l); saveMemory(m); return next;
+  const m=loadMemory(); m.lessons=m.lessons.map(l=>l.id===id?{...l,active:false,deactivatedAt:when,deactivatedBy:by||null,rollbackOf:rollbackOf||c.rollbackOf||null,reversalReason:reason||null}:l); saveMemory(m); return next;
 }
 
 function fileSha256(file) {
@@ -94,7 +95,7 @@ function bindEvidence(input, label) {
 
 function assertMergedImplementationCommit(commitSha) {
   const value = String(commitSha || '').trim().toLowerCase();
-  if (!/^[0-9a-f]{40,64}$/.test(value)) throw new Error('application mergeCommitSha must be a full Git commit SHA');
+  if (!/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/.test(value)) throw new Error('application mergeCommitSha must be a full Git commit SHA');
   const exists = spawnSync('git',['cat-file','-e',`${value}^{commit}`],{cwd:ROOT,encoding:'utf8'});
   if (exists.status !== 0) throw new Error(`application merge commit is unknown: ${value}`);
   const ancestor = spawnSync('git',['merge-base','--is-ancestor',value,'HEAD'],{cwd:ROOT,encoding:'utf8'});
@@ -125,6 +126,23 @@ function findApplicationReceipt(receiptId) {
     if (receipt?.receiptId === receiptId) return { receipt, file };
   }
   return null;
+}
+
+function assertApplicationRegressionEvidence(binding, mergeCommitSha, candidateId) {
+  const evidence = readJson(path.resolve(ROOT,binding.ref),null);
+  if(evidence?.schemaVersion!==APPLICATION_REGRESSION_EVIDENCE_SCHEMA) throw new Error('application regression evidence schema is invalid');
+  if(evidence?.candidateId!==candidateId) throw new Error('application regression evidence candidate mismatch');
+  if(String(evidence?.evaluatedCommitSha||'').toLowerCase()!==mergeCommitSha) throw new Error('application regression evidence evaluated a different commit');
+  if(evidence?.outcome!=='PASS') throw new Error('application regression evidence outcome must be PASS');
+  if(!String(evidence?.kind||'').trim()) throw new Error('application regression evidence kind is required');
+  if(!String(evidence?.sourceRef||'').trim()) throw new Error('application regression evidence sourceRef is required');
+  return {
+    ...binding,
+    kind:evidence.kind,
+    sourceRef:evidence.sourceRef,
+    evaluatedCommitSha:evidence.evaluatedCommitSha,
+    outcome:'PASS'
+  };
 }
 
 function assertCorpusReport(binding, mergeCommitSha) {
@@ -178,7 +196,10 @@ export function recordApplicationReceipt(id,{
   const validationBinding={ref:path.relative(ROOT,validationFile).split(path.sep).join('/'),sha256:fileSha256(validationFile)};
 
   if(!Array.isArray(regressionEvidence)||!regressionEvidence.length) throw new Error('application regressionEvidence is required');
-  const regressionBindings=regressionEvidence.map((item,index)=>bindEvidence(item,`application regressionEvidence[${index}]`));
+  const regressionBindings=regressionEvidence.map((item,index)=>{
+    const binding=bindEvidence(item,`application regressionEvidence[${index}]`);
+    return assertApplicationRegressionEvidence(binding,implementationCommitSha,id);
+  });
   const corpusBinding=bindEvidence(corpusEvidence,'application corpusEvidence');
   const corpus=assertCorpusReport(corpusBinding,implementationCommitSha);
 
