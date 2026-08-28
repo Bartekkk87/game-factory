@@ -9,11 +9,11 @@ Evidence-driven Game Factory für Web-Games auf GitHub. Die Factory führt Owner
 
 ## Aktueller Status — 28.08.2026
 
-**Factory Foundation + Controlled Improvement + Golden Corpus S0–S5 CLOSED. Lumen Learning Repair: `APPLIED-CLOSED`.**
+**Factory Foundation + Controlled Improvement + Golden Corpus S0–S5 CLOSED. Lumen Learning Repair: `APPLIED-CLOSED`. Audit-v2 Hardening ist als separat verifizierter Change-Track umgesetzt.**
 
 Der erste unabhängige Product Canary `Lumen Current` scheiterte vor Build fail-closed. Der daraus abgeleitete Director-State-Contract-/Learning-Fix wurde über einen realen, evidenzgebundenen `skill` Candidate zero-paid validiert und mit PR `#36` human-reviewed nach `main` gemerged (`7af126e3300b23c19bd088ca32c08c7e81947d8b`). Exact-main Full Verifier `33211092911` = **SUCCESS in all 37 steps**. Der S4 Application Receipt ist `APPLIED-CLOSED`; der Candidate bleibt `validated`, `active=false`. Kein zweiter Paid Lumen Run wurde gestartet.
 
-Damit ist erstmals praktisch belegt:
+Damit ist praktisch belegt:
 
 `real Production failure -> durable evidence -> deterministic root cause -> protected-layer Candidate -> validation/regression -> validated inactive -> human merge -> post-merge regression -> APPLIED-CLOSED`
 
@@ -36,9 +36,9 @@ Owner Idea
 
 Binding Release:
 
-`Technical PASS + Product Fidelity PASS + Experience >= Threshold + Budget PASS`
+`Technical PASS + Product Fidelity PASS + Budget PASS`
 
-Auditor und qualitative Fidelity-Urteile bleiben advisory. Kein LLM besitzt Release Authority.
+Der LLM-basierte Experience-Score bleibt sichtbar und kann Polish steuern, ist aber **advisory und nicht release-authoritative**. Auditor und qualitative Fidelity-Urteile bleiben ebenfalls advisory. Damit besitzt kein LLM allein Release Authority.
 
 ## Controlled Improvement
 
@@ -60,6 +60,8 @@ Automatic Learning darf nicht validieren, aktivieren, promoten, Production editi
 
 S4 ergänzt für Non-Prompt-/Code-/Policy-Verbesserungen einen SHA-gebundenen `APPLIED-CLOSED` Application Receipt. Dieser Receipt aktiviert keinen Candidate.
 
+Prompt-Lesson-Promotion verlangt zusätzlich einen GitHub-PR-Ref, einen in `HEAD` enthaltenen Merge-Commit sowie eine SHA-256-Bindung an exakt das validierte Candidate-Artefakt. Ein bloßer `human-merge`-String reicht nicht aus.
+
 ### Lumen-Beispiel
 
 Der reale Lumen-Fehler war:
@@ -69,7 +71,9 @@ PR-MH-03 -> state_reached: restored
 PR-MH-04 -> state_reached: glass_breach
 ```
 
-Beide Werte lagen außerhalb des endlichen Verifier-State-Protokolls. Die Factory blockierte vor Engineer-Spend. Das Learning erkennt diesen Failure-Typ nun deterministisch als `director-verifier-state-contract-mismatch`, mappt ihn auf den Director/`skill` Layer und kann dafür einen inaktiven Candidate erzeugen.
+Beide Werte lagen außerhalb des endlichen Verifier-State-Protokolls. Die Factory blockierte vor Engineer-Spend. Das Learning erkennt diesen Failure-Typ deterministisch als `director-verifier-state-contract-mismatch`, mappt ihn auf den Director/`skill` Layer und kann dafür einen inaktiven Candidate erzeugen.
+
+Die reale Regression ist zusätzlich als unveränderliche Historical-Regression-Fixture mit Origin-Run, Evidence-Commit und Git-Blob-SHAs gebunden. Der Test wird nicht mehr still übersprungen, wenn ein Laufzeitverzeichnis unter `runs/` fehlt.
 
 Der generalisierte Skill-Grundsatz lautet: technische `state_reached`-Probes verwenden nur das gelieferte Verifier-Protokoll; thematische Zustände gehören in Gameplay-Events, UI oder World State.
 
@@ -85,7 +89,13 @@ Implementiert und Full-Verifier-covered:
 - **S4** durable Non-Prompt Application Receipt
 - **S5** zero-paid System Configuration Benchmark Governance
 
-Aktueller bewiesener Corpus-Stand: **29/29 Expected Outcomes, 0 Mismatches, 0 Critical False PASS**.
+Aktueller Messstand wird bewusst mit beiden Granularitäten berichtet:
+
+- **29 registrierte Fälle**;
+- **8 unabhängige ausführbare Selftest-Skripte** im aktuellen S2-Runner;
+- die aktuelle Qualitätsaussage gilt damit primär auf Ebene dieser unabhängigen Ausführungen, nicht als 29 voneinander unabhängige Beobachtungen.
+
+Die frühere Kurzform `29/29` wird nicht mehr isoliert als Qualitätsbeweis verwendet. Fallspezifische Oracles für alle 29 Fälle bleiben ein separater Corpus-Hardening-Track.
 
 S5 vergleicht vollständige Systemkonfigurationen:
 
@@ -116,6 +126,8 @@ Kanonischer Stack:
 - `factory/src/llm/model-registry.mjs`
 - `factory/src/llm/client.mjs`
 
+Die Request-Form ist pro Modell deklarativ über `requestShape` gebunden. Der Adapter entscheidet Token-Parameter, Temperature-Support und JSON-Mode nicht mehr aus einem Providernamen. Ein zero-paid Contract-Test prüft jeden registrierten Modelleinstieg.
+
 Für den nächsten unabhängigen Product Proof bleiben die aktuellen OpenAI-Referenzdefaults bewusst unverändert:
 
 | Rolle | Default |
@@ -125,44 +137,62 @@ Für den nächsten unabhängigen Product Proof bleiben die aktuellen OpenAI-Refe
 | Playtester | `gpt-5.6-terra` |
 | Auditor | `gpt-5.6-luna` |
 
-OpenRouter ist als explizite Provider-Lane implementiert, aber kein Challenger ersetzt automatisch die Production Defaults.
+OpenRouter ist als explizite Provider-Lane implementiert, aber kein Challenger ersetzt automatisch die Production Defaults. Nicht durch reale Provider-Evidence verifizierte Request-Contracts bleiben als solche markiert und werden nicht als bestätigte Kompatibilität ausgegeben.
 
 ## Budget / Cost Gate
 
 Das Run-Budget ist fail-closed. Kosten werden vor Paid Calls reserviert und anhand Provider-Usage oder expliziter Registry-Pricing-Daten abgerechnet. Unbekannte Preise oder unsichere Usage können weitere Paid Calls blockieren.
 
+Nur eindeutig **vor Zustellung** liegende DNS-/Connect-/TLS-Fehler dürfen eine Reservation freigeben und erneut versucht werden. Unklare Zustellung, Timeouts/Abort und vergleichbare Billing-Unsicherheit bleiben fail-closed.
+
 Der Production-Workflow verwendet standardmäßig ein maximales Run-Budget von `$10`, sofern der Owner keinen anderen Wert setzt.
+
+## Git / Protected-Layer Boundary
+
+Production- und Review-Workflows verwenden keine pauschalen `git add -A`-Commits mehr. Commit-Pfade sind allow-listed; Änderungen unter geschützten Pfaden (`factory/prompts/`, `skills/`, `factory/src/control/`, `factory/src/verify/`, `.github/`) brechen den Workflow vor dem Commit. Zusätzlich existiert `CODEOWNERS` für diese Pfade.
+
+**Repository-Level Branch Protection bleibt eine separate GitHub-Admin-Einstellung.** Solange `main` in GitHub nicht als protected branch/ruleset mit Pflichtreview und ohne Actions-Bypass konfiguriert ist, ist C-3 auf Repository-Ebene nicht vollständig geschlossen. Die Code-seitige Schutzschicht ersetzt diese GitHub-Einstellung nicht.
+
+## Generated-Code Isolation
+
+Generierter JS-/CSS-Code kann die umschließenden `<script>`-/`<style>`-Tags nicht mehr über Terminator-Strings vorzeitig schließen. Die generierte Produktseite enthält zusätzlich eine restriktive CSP, die externe Verbindungen und Fremdressourcen standardmäßig blockiert.
+
+Eine **getrennte Origin** für untrusted generated code bleibt das langfristige Zielbild; CSP ist die unmittelbar wirksame Schutzschicht auch bei direkter Navigation zur Produkt-URL.
 
 ## Full Verifier
 
 `.github/workflows/verify.yml` prüft unter anderem:
 
 - Workflow YAML + Node Syntax
+- Workflow Protected-Path / Commit-Allowlist Policy
 - Golden Corpus S0–S5
-- Budget / Release Gate
-- Provider-/Model-Routing und Credential Isolation
+- Budget / deterministisches Release Gate
+- Provider-/Model-Routing, Request Contracts und Credential Isolation
+- Transport-Retry/Billing-Uncertainty Policy
 - Owner Contract
-- Controlled Learning + Cross-Run Trigger + Orchestration
-- Failed-Run Root Cause
+- Controlled Learning + SHA-bound Promotion + Cross-Run Trigger + Orchestration
+- Failed-Run Root Cause + verpflichtende Lumen Historical Regression
 - Production-Agent-/Art-Direction-Integrity
 - Product Fidelity
 - Proof-/Action-Reachability
 - Terminal Proof
 - HUD Geometry
-- Causality / Visual Activity
+- Causality / Visual Activity / Flat-Frame Rejection
 - Good/Bad Product Controls
+- Generated-Page CSP/Tag Isolation
 - Publishing / XSS
 
 ## Independent Product Proof — Issue #17
 
-Lumen Canary #1 wurde nach Owner-GO ausgeführt, erzeugte aber keinen Draft. Daher wurde hands-on Owner ACCEPT/REJECT nicht erreicht. Der daraus folgende zero-paid Learning-/Contract-Fix ist jetzt vollständig `APPLIED-CLOSED`.
+Lumen Canary #1 wurde nach Owner-GO ausgeführt, erzeugte aber keinen Draft. Daher wurde hands-on Owner ACCEPT/REJECT nicht erreicht. Der daraus folgende zero-paid Learning-/Contract-Fix ist vollständig `APPLIED-CLOSED`.
 
 Vor einem **zweiten** Paid Lumen/Independent Production Run gilt zwingend:
 
 1. exakten Owner Brief + Verifier Coverage + Risiken + Kostenrahmen erneut vorlegen;
 2. **STOP für neue explizite Owner-Freigabe**;
-3. danach höchstens einen weiteren Paid Production Canary;
-4. Owner hands-on ACCEPT/REJECT.
+3. zusätzlich C-3 auf GitHub-Repository-Ebene schließen: `main` muss tatsächlich protected sein;
+4. danach höchstens einen weiteren Paid Production Canary;
+5. Owner hands-on ACCEPT/REJECT.
 
 ## Portability hypothesis
 
@@ -170,7 +200,7 @@ Die aktuelle Architektur enthält einen möglicherweise domänenübergreifend wi
 
 `Intent/Contract -> Worker -> Observable Evidence -> Deterministic/Governed Gate -> Failure Taxonomy -> Candidate Improvement -> Validation Corpus -> Human Application -> Audit Trail`
 
-Das ist aktuell eine **zu prüfende Hypothese**, keine außerhalb Gaming bewiesene Produktbehauptung. Die Cross-Domain-Analyse ist bewusst als nächster separater Diskussions-/Research-Track vorgesehen.
+Das ist aktuell eine **zu prüfende Hypothese**, keine außerhalb Gaming bewiesene Produktbehauptung.
 
 ## Proof Boundary
 
@@ -180,6 +210,8 @@ Zusätzlich praktisch demonstriert: ein realer Production Failure wurde in einen
 
 Noch nicht bewiesen:
 
+- vollständige GitHub-Repository-Level Protected-Branch-Enforcement, solange die Admin-Einstellung nicht aktiviert ist;
+- 29 voneinander unabhängige Corpus-Beobachtungen;
 - realer model-backed S5 Benchmark-Gewinner;
 - automatische Modellpromotion;
 - dass der Lumen-Fix ein späteres Owner-accepted Game verbessert;
