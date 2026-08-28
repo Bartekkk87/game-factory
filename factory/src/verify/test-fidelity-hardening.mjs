@@ -28,8 +28,6 @@ const gdd = compileDirectorTraceability({
 
 assert.equal(gdd.probePlan.requirementProbes[0].strength, 'correlated_gameplay');
 
-// Adversarial fixture: the expected event name is emitted at init, but no gameplay
-// value has changed and the event predates the early evidence point.
 const fakeEventReport = {
   timeline: [
     { phase: 'start', snapshot: { state: 'title', score: 0, time: 0, events: [] } },
@@ -54,10 +52,6 @@ assert.deepEqual(fakeVerdict.coverage.harnessObservedRequirementIds, []);
 assert.equal(fakeVerdict.coverage.unstructuredBriefContentEvaluated, false);
 assert.match(fakeVerdict.coverage.scope, /generated-game event instrumentation/i);
 
-// Control fixture: the same event is emitted only after active deterministic play has
-// progressed. Event time/state/score are captured by the engine probe extension, not
-// supplied by the LLM event payload. The event identity itself remains generated-game
-// instrumentation, which the coverage metadata must disclose.
 const realMechanicReport = {
   timeline: [
     { phase: 'start', snapshot: { state: 'title', score: 0, time: 0, events: [] } },
@@ -84,17 +78,9 @@ const harnessContract = createOwnerContract({
   idea: '## Must-Have\n- Score must increase during play.'
 });
 const harnessGdd = compileDirectorTraceability({
-  title: 'Harness Evidence Fixture',
-  genre: 'test',
-  acceptanceCriteria: [
-    { ownerRequirementId: 'MH-01', statement: 'Score increases during active play.' }
-  ],
-  probePlan: {
-    scoreEvents: ['Space'],
-    requirementProbes: [
-      { ownerRequirementId: 'MH-01', kind: 'score_change' }
-    ]
-  }
+  title: 'Harness Evidence Fixture', genre: 'test',
+  acceptanceCriteria: [{ ownerRequirementId: 'MH-01', statement: 'Score increases during active play.' }],
+  probePlan: { scoreEvents: ['Space'], requirementProbes: [{ ownerRequirementId: 'MH-01', kind: 'score_change' }] }
 }, harnessContract);
 const harnessVerdict = evaluateProductFidelity({ ownerContract: harnessContract, gdd: harnessGdd, report: realMechanicReport });
 assert.equal(harnessVerdict.pass, true);
@@ -104,42 +90,54 @@ assert.deepEqual(harnessVerdict.coverage.generatedGameEventDependentRequirementI
 
 const terminalContract = createOwnerContract({
   source: 'terminal-state-alias-fixture',
-  idea: [
-    '## Must-Have',
-    '- A failed run must reach a clear failure state.',
-    '- A completed run must reach a clear success state.'
-  ].join('\n')
+  idea: ['## Must-Have','- A failed run must reach a clear failure state.','- A completed run must reach a clear success state.'].join('\n')
 });
 const terminalGdd = compileDirectorTraceability({
-  title: 'Terminal Alias Fixture',
-  genre: 'test',
+  title: 'Terminal Alias Fixture', genre: 'test',
   acceptanceCriteria: [
     { ownerRequirementId: 'MH-01', statement: 'A failed run reaches failure.' },
     { ownerRequirementId: 'MH-02', statement: 'A completed run reaches success.' }
   ],
-  probePlan: {
-    scoreEvents: ['Space'],
-    requirementProbes: [
-      { ownerRequirementId: 'MH-01', kind: 'state_reached', state: 'failed' },
-      { ownerRequirementId: 'MH-02', kind: 'state_reached', state: 'success' }
-    ]
-  }
+  probePlan: { scoreEvents: ['Space'], requirementProbes: [
+    { ownerRequirementId: 'MH-01', kind: 'state_reached', state: 'failed' },
+    { ownerRequirementId: 'MH-02', kind: 'state_reached', state: 'success' }
+  ] }
 }, terminalContract);
-const terminalReport = {
-  timeline: [
-    { phase: 'failure-proof:terminal', scenarioId: 'failure-proof', snapshot: { state: 'gameover', score: 0, time: 5, events: [] } },
-    { phase: 'success-proof:terminal', scenarioId: 'success-proof', snapshot: { state: 'won', score: 10, time: 4, events: [] } }
-  ]
-};
+const terminalReport = { timeline: [
+  { phase: 'failure-proof:terminal', scenarioId: 'failure-proof', snapshot: { state: 'gameover', score: 0, time: 5, events: [] } },
+  { phase: 'success-proof:terminal', scenarioId: 'success-proof', snapshot: { state: 'won', score: 10, time: 4, events: [] } }
+] };
 const terminalVerdict = evaluateProductFidelity({ ownerContract: terminalContract, gdd: terminalGdd, report: terminalReport });
-assert.equal(terminalVerdict.pass, true, 'Director failed/success semantics must match engine gameover/won observations');
+assert.equal(terminalVerdict.pass, true);
 assert.match(terminalVerdict.criteria.find((c) => c.requirementId === 'MH-01').detail, /state failure reached.*gameover/i);
 assert.match(terminalVerdict.criteria.find((c) => c.requirementId === 'MH-02').detail, /state success reached.*won/i);
 
-// The coverage boundary must survive the pipeline into durable result/review metadata.
 const pipelineSource = fs.readFileSync(new URL('../pipeline/run.mjs', import.meta.url), 'utf8');
 assert.match(pipelineSource, /coverage:\s*verified\.fidelity\.coverage/);
 assert.match(pipelineSource, /Product fidelity scope/);
 assert.match(pipelineSource, /coverage:\s*tech\.fidelity\.coverage/);
 
+// Package 4 / D-3 baseline: a concrete descriptive owner claim is preserved as
+// UN-01 but has no deterministic or independent authoritative coverage path.
+const fullBriefContract = createOwnerContract({
+  source: 'package-4-d3-baseline',
+  idea: 'Create a compact arena game. Dark industrial atmosphere. The score must increase during play.'
+});
+const fullBriefGdd = compileDirectorTraceability({
+  title: 'Full Brief Gap Fixture', genre: 'test',
+  acceptanceCriteria: [
+    { ownerRequirementId: 'MH-01', statement: 'The game is created.' },
+    { ownerRequirementId: 'MH-02', statement: 'Score increases during play.' }
+  ],
+  probePlan: { scoreEvents: ['Space'], requirementProbes: [
+    { ownerRequirementId: 'MH-01', kind: 'started_by_early' },
+    { ownerRequirementId: 'MH-02', kind: 'score_change' }
+  ] }
+}, fullBriefContract);
+const fullBriefVerdict = evaluateProductFidelity({ ownerContract: fullBriefContract, gdd: fullBriefGdd, report: realMechanicReport });
+assert.equal(fullBriefContract.unknowns[0].text, 'Dark industrial atmosphere.');
+assert.equal(fullBriefVerdict.coverage.unstructuredBriefContentEvaluated, false);
+assert.equal(fullBriefVerdict.coverage.evaluatedRequirementIds.includes('UN-01'), false);
+assert.match(pipelineSource, /Playtester fidelity \(advisory\)/);
+console.log('PACKAGE 4 BASELINE REPRODUCED: D-3 descriptive Owner claim UN-01 is preserved but excluded from Product Fidelity, while Playtester fidelity remains advisory.');
 console.log('P0-03 fidelity hardening selftest: PASS');
