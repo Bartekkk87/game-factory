@@ -82,6 +82,29 @@ const report = await runSession({
 const technical = await evaluateContract(report, { bgColor });
 const fidelity = evaluateProductFidelity({ ownerContract, gdd: replayGdd, report });
 
+// Diagnostic evidence is intentionally emitted before any assertion so a failed replay remains
+// explainable without weakening or bypassing the load-bearing verifier gate.
+console.log(JSON.stringify({
+  diagnostic: 'Harbor zero-paid replay',
+  retainedAttempt: retainedAttemptName,
+  candidateSha: historicalRunEvidence.run.candidateSha,
+  baseSeconds: currentProofPlan.baseSeconds,
+  technicalChecks: technical.checks,
+  baseTimeline: (report.timeline || []).map((entry) => ({
+    phase: entry.phase,
+    atMs: entry.atMs,
+    state: entry.snapshot?.state ?? null,
+    score: entry.snapshot?.score ?? null,
+    time: entry.snapshot?.time ?? null,
+    events: Array.isArray(entry.snapshot?.events) ? entry.snapshot.events.length : null
+  })),
+  proofScenarios: report.proofScenarios,
+  productFidelityFailures: (fidelity.failures || []).map((failure) => ({
+    requirementId: failure.requirementId,
+    detail: failure.detail
+  }))
+}, null, 2));
+
 assert.equal(technical.passed, true, `Harbor replay technical verifier failed: ${(technical.checks || []).filter((check) => !check.pass).map((check) => check.id).join(', ')}`);
 assert.equal(report.pageErrors.length, 0, `Harbor replay page errors: ${report.pageErrors.join(' | ')}`);
 assert.equal(report.consoleErrors.length, 0, `Harbor replay console errors: ${report.consoleErrors.join(' | ')}`);
