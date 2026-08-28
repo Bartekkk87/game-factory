@@ -2,7 +2,7 @@
 
 Autonome, evidence-first Game-Development-Plattform auf GitHub. GitHub ist die executable/durable Source of Truth für Code, Runs, Evidence, Learning-Artefakte, Evaluation und Promotionen. Notion spiegelt Entscheidungen und Status.
 
-Stand: **28.08.2026 — Factory Foundation + Controlled Improvement + Golden Corpus S0–S5 CLOSED; realer Failure→Validated Candidate→Human Merge Pfad demonstriert.**
+Stand: **28.08.2026 — Factory Foundation + Controlled Improvement + Golden Corpus S0–S5 CLOSED; realer Failure→Validated Candidate→Human Application Pfad `APPLIED-CLOSED` demonstriert.**
 
 Aktueller Fortschritt:
 - `docs/strategy/PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md`
@@ -167,14 +167,15 @@ Zero-paid validation:
 - Full Verifier `33209616277` SUCCESS;
 - Golden Corpus 29/29, 0 mismatches, 0 Critical False PASS.
 
-Human application:
+Human application and closure:
 - PR `#36`;
 - merge `7af126e3300b23c19bd088ca32c08c7e81947d8b`;
-- exact-main post-merge verifier `33211092911`.
+- exact-main post-merge verifier `33211092911` — **SUCCESS in all 37 steps**;
+- immutable receipt `learning/applications/candidate-production-run-b37ac8d268e8549c.json` — **`APPLIED-CLOSED`**.
 
 This is the first real demonstrated chain through:
 
-`Production failure -> durable evidence -> deterministic root cause -> protected-layer Candidate -> validation -> validated inactive -> human merge`
+`Production failure -> durable evidence -> deterministic root cause -> protected-layer Candidate -> validation -> validated inactive -> human merge -> post-merge regression -> APPLIED-CLOSED`
 
 The Candidate is not self-promoted to active Memory.
 
@@ -195,7 +196,7 @@ Deterministic whole-Corpus execution. Proven baseline: **29/29 expected outcomes
 Compatible Corpus mismatches can enter Controlled Improvement as analysis-only durable evidence. Repeated deterministic observations are required before the intended Evaluation candidate threshold; candidates remain inactive.
 
 ### S4 — Non-Prompt Application Receipt
-`learning-application-receipt-v1` can bind Candidate SHA, protected target layer/scope, human-reviewed PR/merge, approval, validation, post-merge regression and Golden-Corpus PASS. Receipt state `APPLIED-CLOSED` does not activate the Candidate or convert code changes into prompt lessons.
+`learning-application-receipt-v1` can bind Candidate SHA, protected target layer/scope, human-reviewed PR/merge, approval, validation, post-merge regression and Golden-Corpus PASS. Receipt state `APPLIED-CLOSED` does not activate the Candidate or convert code changes into prompt lessons. Lumen now provides the first real application-level example of this mechanism.
 
 ### S5 — System Configuration Benchmark
 Comparison unit:
@@ -235,13 +236,12 @@ No model/provider switch is inferred from the Lumen failure because the evidence
 
 Issue `#17` remains open. Lumen Canary #1 did not reach a playable Draft, so hands-on Owner ACCEPT/REJECT remains unproven.
 
-Before a second paid Production Canary:
-1. complete post-merge zero-paid regression/application closure;
-2. present exact brief, coverage, risks and cost boundary again;
-3. **STOP for fresh explicit Owner approval**;
-4. run at most one paid Canary;
-5. Owner hands-on ACCEPT/REJECT;
-6. classify evidence before further architecture change.
+The architecture/Learning repair is now `APPLIED-CLOSED`. Before a second paid Production Canary:
+1. present exact brief, coverage, risks and cost boundary again;
+2. **STOP for fresh explicit Owner approval**;
+3. run at most one paid Canary;
+4. Owner hands-on ACCEPT/REJECT;
+5. classify evidence before further architecture change.
 
 ## 11. Cross-domain portability hypothesis
 
@@ -260,7 +260,9 @@ Current justified claim: **EVIDENCE-DRIVEN CONTROLLED IMPROVEMENT**.
 Demonstrated beyond the earlier baseline:
 - real Production failure to deterministic protected-layer Candidate;
 - zero-paid validated-inactive state;
-- human-reviewed application of the learned Director rule.
+- human-reviewed application of the learned Director rule;
+- exact-main post-merge regression;
+- SHA-bound `APPLIED-CLOSED` application audit trail.
 
 Not justified yet:
 - fully self-modifying/self-authorizing Factory;
