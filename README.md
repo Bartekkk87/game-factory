@@ -1,87 +1,97 @@
 # Game Factory
 
-Eine evidence-driven Game Factory für Web-Games auf GitHub. Die Factory führt Idee, Build, deterministische Verifikation, Repair/Polish, Release Gate und Owner Review über durable Git-Evidence zusammen.
+Evidence-driven Game Factory für Web-Games auf GitHub. Die Factory führt Owner-Idee, Build, deterministische Verifikation, Repair/Polish, Release Gate, Evaluation, Controlled Improvement und Owner Review über durable Git-Evidence zusammen.
 
-> Architektur & Entscheidungen: [ARCHITECTURE.md](ARCHITECTURE.md)  
-> Audit-/Umsetzungsstatus: [docs/strategy/IMPLEMENTATION-CATALOG-2026-08-27.md](docs/strategy/IMPLEMENTATION-CATALOG-2026-08-27.md)
+> Architektur: [ARCHITECTURE.md](ARCHITECTURE.md)  
+> Aktueller Gesamtstand: [docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md](docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md)
 
----
+## Aktueller Status — 28.08.2026
+
+**Factory Foundation + Controlled Improvement + Golden Corpus S0–S5 IMPLEMENTATION CLOSED.**
+
+Der nächste PoC-Meilenstein ist kein weiterer Architektur-Layer, sondern der unabhängige Product Proof aus GitHub Issue `#17`.
 
 ## Production Flow
 
 ```text
 Owner Idea
-  -> Owner Contract (stabile Must-Haves / No-Gos / Unknowns)
+  -> Owner Contract
   -> Director
   -> Engineer
   -> deterministic Verifier + Product Fidelity
-  -> Repair / Rebuild wenn erforderlich
+  -> Repair / Rebuild falls nötig
   -> Playtester / Experience
-  -> Polish wenn erforderlich
+  -> Polish falls nötig
   -> deterministic Release Gate
   -> Owner Preview / Review
 ```
 
-Der bindende Release Gate verwendet ausschließlich:
+Binding Release:
 
-```text
-Technical PASS
-+ Product Fidelity PASS
-+ Experience >= Threshold
-+ Budget PASS
-```
+`Technical PASS + Product Fidelity PASS + Experience >= Threshold + Budget PASS`
 
-Auditor- und qualitative Playtester-Fidelity-Urteile bleiben advisory und besitzen keine Release Authority.
+Auditor und qualitative Fidelity-Urteile bleiben advisory. Kein LLM besitzt Release Authority.
 
 ## Controlled Improvement
 
-Factory-Learning ist bewusst von der Production Authority getrennt:
-
 ```text
-Durable Run / Owner / Evaluation-Failure Evidence
+Durable Run / Owner / Evaluation Evidence
   -> deterministic Aggregate
   -> deterministic Trigger
-  -> wenn erlaubt: bounded Improvement Analysis
+  -> bounded Analysis
   -> maximal ein inaktiver Candidate
   -> separate Validation / Regression
-  -> human-gated Promotion bei geschützten Layern
+  -> human-gated Application/Promotion
 ```
 
-Wichtig:
+Nur `validated && active` Learning darf in Production-Prompts sichtbar werden. Automatic Learning darf nicht validieren, aktivieren, promoten, Production editieren oder Gates schwächen.
 
-- `/reject` oder `/feedback` erzeugt **keine sofort aktive Production-Lesson**.
-- Nur `validated && active` Learning darf in Production-Prompts sichtbar werden.
-- Automatische Orchestrierung darf Candidates erzeugen, aber nicht selbst validieren oder aktivieren.
-- Wiederkehrende Engineering-Learnings benötigen dieselbe Failure-Signatur über mindestens zwei unabhängige Runs.
-- Ein Golden-Corpus-Fehler erhält zunächst nur analysis-only Evidence. Erst dieselbe Signatur in mindestens zwei getrennten Evaluation-Beobachtungen darf genau einen stabilen, inaktiven Candidate erzeugen.
-- Die Factory wird deshalb als **evidence-driven controlled improvement** beschrieben, nicht als bereits vollständig self-improving.
+S4 ergänzt für Non-Prompt-/Code-/Policy-Verbesserungen einen SHA-gebundenen `APPLIED-CLOSED` Application Receipt. Dieser Receipt aktiviert keinen Candidate.
+
+## Golden Factory Evaluation Corpus
+
+Implementiert und Full-Verifier-covered:
+
+- **S0** Registry + Coverage Baseline
+- **S1a** executable Case / Oracle Contract
+- **S1b** bounded typed sibling variants
+- **S2** Evaluation Runner + Quality/Delta
+- **S3** analysis-only Evaluation Failure Intake
+- **S4** durable Non-Prompt Application Receipt
+- **S5** zero-paid System Configuration Benchmark Governance
+
+Aktueller bewiesener Corpus-Stand: **29/29 Expected Outcomes, 0 Mismatches, 0 Critical False PASS**.
+
+S5 vergleicht vollständige Systemkonfigurationen:
+
+`Model + Prompt/Skill + Context Contract + Verifier + Retry + Escalation`
+
+Ein echter model-backed S5 Vergleich wurde noch nicht ausgeführt und kann Production nicht automatisch verändern.
 
 ## Production Credentials
-
-Der freigegebene GitHub-Actions-Production-Workflow bietet aktuell zwei Provider-Lanes:
 
 | Provider | Production Secret |
 |---|---|
 | `openai` | `OPENAI_PRODUCTION` |
 | `openrouter` | `OPENROUTER_PRODUCTION` |
 
-Für spätere getrennte OpenRouter-Arbeit existieren zusätzlich die isolierten Trust-Lanes:
+Separate OpenRouter Trust-Lanes:
 
 - `OPENROUTER_BENCHMARK`
 - `OPENROUTER_IMPROVEMENT`
 
-Benchmark/Improvement fallen nicht still auf Production Credentials zurück. Secret-Werte gehören ausschließlich in GitHub Actions Secrets und niemals in Code, Issues oder Evidence.
+Kein stiller Credential- oder Cross-Provider-Fallback.
 
 ## Model Routing
 
-Der kanonische Routing-Stack liegt unter `factory/src/llm/`:
+Kanonischer Stack:
 
-- `router.mjs`
-- `provider-registry.mjs`
-- `model-registry.mjs`
-- `client.mjs`
+- `factory/src/llm/router.mjs`
+- `factory/src/llm/provider-registry.mjs`
+- `factory/src/llm/model-registry.mjs`
+- `factory/src/llm/client.mjs`
 
-Aktuelle OpenAI-Production-Defaults:
+Für den nächsten unabhängigen Product Proof bleiben die aktuellen OpenAI-Referenzdefaults bewusst unverändert:
 
 | Rolle | Default |
 |---|---|
@@ -90,77 +100,54 @@ Aktuelle OpenAI-Production-Defaults:
 | Playtester | `gpt-5.6-terra` |
 | Auditor | `gpt-5.6-luna` |
 
-Ein registrierter OpenRouter-Challenger ist `deepseek/deepseek-chat-v3.1`; er ist **kein automatischer Production Default**. Unknown Provider/Model, fehlende Credentials und Capability Mismatches fail closed. Es gibt keinen automatischen Cross-Provider-Fallback.
-
-## Ein Spiel produzieren lassen
-
-1. Repo -> **Actions** -> **Produce Game** -> **Run workflow**.
-2. Optional eine Idee eingeben oder die vorhandene Idea-Quelle verwenden.
-3. Freigegebenen Production Provider wählen: `openai` oder `openrouter`.
-4. Run-Budget festlegen.
-5. Nach erfolgreicher Pipeline entsteht ein Review-Issue mit Preview und Evidence.
-
-### Owner Review
-
-| Kommentar | Wirkung |
-|---|---|
-| `/approve` | verifizierten Kandidaten veröffentlichen |
-| `/reject Grund...` | Produkt ablehnen und immutable Owner-Evidence erfassen |
-| `/feedback Text...` | Evidence erfassen, ohne Produktentscheidung zu erzwingen |
+OpenRouter ist als explizite Provider-Lane implementiert, aber kein Challenger ersetzt automatisch die Production Defaults.
 
 ## Budget / Cost Gate
 
-`GF_BUDGET_USD` ist ein fail-closed Run-Budget und nicht nur eine nachträgliche Anzeige.
+Das Run-Budget ist fail-closed. Kosten werden vor Paid Calls reserviert und anhand Provider-Usage oder expliziter Registry-Pricing-Daten abgerechnet. Unbekannte Preise oder unsichere Usage können weitere Paid Calls blockieren.
 
-Der Cost-Kernel:
+Der Production-Workflow verwendet standardmäßig ein maximales Run-Budget von `$10`, sofern der Owner keinen anderen Wert setzt.
 
-- erfasst Input-, Cached-Input- und Output-Tokens getrennt;
-- nutzt provider-reported Cost, wenn belastbar vorhanden;
-- berechnet andernfalls Kosten aus expliziten versionierten Model-Rates;
-- unterstützt explizite Pricing-Overrides für konfigurierte OpenAI-kompatible/self-hosted Modelle;
-- reserviert die maximal erwartbaren Kosten **vor** einem Paid Call;
-- blockiert einen Call, wenn er nicht mehr ins verbleibende Budget passt;
-- blockiert bei unbekannter Model-Pricing-Information vor Transport;
-- behandelt fehlende/unsichere Usage niemals als `$0`: die konservative Reservation wird angesetzt, Accounting wird unvollständig markiert und weitere Paid Calls werden blockiert.
+## Full Verifier
 
-Provider-seitige Spend-/Credit-Limits bleiben trotzdem die **letzte externe Sicherheitsgrenze**, weil lokale Budget-Logik einen Provider- oder Billing-Fehler nicht kontrollieren kann.
+`.github/workflows/verify.yml` prüft unter anderem:
 
-Relevante optionale Limits umfassen außerdem getrennte Repair-, Polish- und Fresh-Rebuild-Budgets/Call-Caps.
-
-## Ideen einreichen
-
-- Datei: `ideas/meine-idee.md` (Vorlage: `ideas/_TEMPLATE.md`)
-- oder als Input im `Produce Game` Workflow
-
-## Zentrale Konfiguration
-
-| Variable | Default / Bedeutung |
-|---|---|
-| `GF_LLM_PROVIDER` | Production Provider; Workflow erlaubt `openai` / `openrouter` |
-| `GF_MODEL` | optionaler globaler Model Override |
-| `GF_MODEL_<ROLE>` | optionaler Role Override |
-| `GF_MODEL_ENGINEER_<OPERATION>` | optionaler Engineer-Operation Override |
-| `GF_MIN_SCORE` | Experience Threshold, default `6.5` |
-| `GF_BUDGET_USD` | Run-Budget, default `$10` |
-| `GF_MAX_POLISH_ROUNDS` | maximale Polish-Runden |
-
-Model-/Provider-/Pricing-Konfiguration bleibt fail closed und wird über die Registry-/Router-Tests abgesichert.
-
-## Verifikation
-
-`.github/workflows/verify.yml` führt den vollständigen Selftest aus, darunter:
-
-- Control Kernel / Budget / Release Gate
-- Provider-/Model-Routing und Credential-Isolation
-- Owner Contract Decomposition
-- Controlled-Learning Lifecycle + Cross-Run Trigger + Orchestration
-- Golden Corpus S0–S3: Registry, Case Contract, Quality/Delta und analysis-only Evaluation-Failure Intake
-- Production-Agent-/Prompt-Integrity
+- Workflow YAML + Node Syntax
+- Golden Corpus S0–S5
+- Budget / Release Gate
+- Provider-/Model-Routing und Credential Isolation
+- Owner Contract
+- Controlled Learning + Cross-Run Trigger + Orchestration
+- Failed-Run Root Cause
+- Production-Agent-/Art-Direction-Integrity
 - Product Fidelity
-- deterministische Idle-Control, Input-Kausalität und Visual Activity
-- Good/Bad Verifier Fixtures
-- Publishing Safety
+- Proof-/Action-Reachability
+- Terminal Proof
+- HUD Geometry
+- Causality / Visual Activity
+- Good/Bad Product Controls
+- Publishing / XSS
+
+## Independent Product Proof — Issue #17
+
+Vor dem nächsten Paid Production Run gilt zwingend:
+
+1. unabhängigen Owner Brief vorbereiten;
+2. zero-paid deterministic Preflight durchführen;
+3. Brief + normalisierte Interpretation + Verifier Coverage + Risiken + Kostenrahmen dem Owner vorlegen;
+4. **STOP für explizite Owner-Freigabe**;
+5. danach genau einen Paid Production Canary;
+6. Owner hands-on ACCEPT/REJECT.
+
+Ein Brief für diesen Preflight darf nicht unter `ideas/**` committed werden, bevor der Paid Run autorisiert ist, weil der Production-Workflow auf Änderungen in `ideas/**` reagieren kann.
 
 ## Proof Boundary
 
-Technisch implementiert und regressionsgeprüft ist **evidence-driven controlled improvement**. Noch nicht nachgewiesen ist die stärkere Aussage, dass ein realer Candidate nach unabhängiger Validation und Human Promotion ein späteres Owner-accepted Game messbar verbessert. Diese Behauptung darf erst nach einem entsprechenden Real-World-Proof erhoben werden.
+Aktuell gerechtfertigt: **evidence-driven controlled improvement**.
+
+Noch nicht bewiesen:
+
+- realer model-backed S5 Benchmark-Gewinner;
+- automatische Modellpromotion;
+- ein validierter + human-applied Learning Candidate, der nachweislich ein späteres Owner-accepted Game verbessert;
+- fully self-modifying / self-authorizing Factory.
