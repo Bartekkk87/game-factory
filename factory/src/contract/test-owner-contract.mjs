@@ -15,12 +15,14 @@ const b = createOwnerContract({ idea: freeform, source: 'freeform-selftest' });
 assert.equal(a.originalBrief, freeform);
 assert.equal(a.ownerBriefSha256, crypto.createHash('sha256').update(freeform).digest('hex'));
 assert.equal(a.contractSha256, b.contractSha256);
+assert.equal(a.contractSha256, 'f0dda473ba0ca7be650633453887d18f83fb6c14a55c85c48508aab4376dfd75', 'legacy freeform contract hash must remain stable outside the D-4 heading case');
 assert.deepEqual(a.mustHaves.map((r) => r.id), ['MH-01', 'MH-02']);
 assert.deepEqual(a.noGos.map((r) => r.id), ['NG-01']);
 assert.deepEqual(a.unknowns.map((r) => r.id), ['UN-01']);
 assert.deepEqual(ownerRequirementIds(a), ['MH-01', 'MH-02', 'NG-01']);
 assert.equal(a.unknowns[0].text, 'Maybe add co-op later.');
 assert.equal(a.decomposition.version, 'deterministic-freeform-v2');
+assert.equal(a.decomposition.semanticHeadingContextPreserved, undefined);
 assert.equal(Object.isFrozen(a.mustHaves[0].provenance), true);
 
 const inflatedMood = createOwnerContract({
@@ -71,4 +73,47 @@ assert.deepEqual(sectioned.mustHaves.map((r) => r.id), ['MH-01', 'MH-02']);
 assert.deepEqual(sectioned.noGos.map((r) => r.id), ['NG-01']);
 assert.equal(sectioned.unknowns.length, 0);
 
+// Package 3 / D-4: generic semantic headings must survive decomposition without
+// changing the conservative requirement classification or inventing obligations.
+const headingBrief = [
+  '## Anchor Moves',
+  'Dash through marked lanes to build momentum.',
+  '## Signature Risk',
+  'Overcharging the dash can leave the player exposed.',
+  '## Must Survive The Cut',
+  'The upgrade choice must visibly change the next encounter.'
+].join('\n');
+const headingDriven = createOwnerContract({
+  idea: headingBrief,
+  source: 'package-3-d4-repair'
+});
+const headingDrivenAgain = createOwnerContract({
+  idea: headingBrief,
+  source: 'package-3-d4-repair'
+});
+assert.equal(headingDriven.contractSha256, headingDrivenAgain.contractSha256);
+assert.equal(headingDriven.decomposition.version, 'deterministic-freeform-v3-heading-context');
+assert.equal(headingDriven.decomposition.semanticHeadingContextPreserved, true);
+assert.deepEqual(headingDriven.mustHaves.map((r) => r.id), ['MH-01']);
+assert.deepEqual(headingDriven.unknowns.map((r) => r.id), ['UN-01', 'UN-02']);
+assert.equal(headingDriven.mustHaves[0].text, 'The upgrade choice must visibly change the next encounter.');
+assert.equal(headingDriven.mustHaves[0].contextHeading, 'Must Survive The Cut');
+assert.equal(headingDriven.mustHaves[0].provenance.contextHeading, 'Must Survive The Cut');
+assert.equal(headingDriven.unknowns[0].contextHeading, 'Anchor Moves');
+assert.equal(headingDriven.unknowns[1].contextHeading, 'Signature Risk');
+assert.equal(Object.isFrozen(headingDriven.mustHaves[0]), true);
+assert.equal(Object.isFrozen(headingDriven.unknowns[0].provenance), true);
+
+// A forceful-looking heading must not inflate a neutral body sentence into a
+// Must-Have. Classification still uses the owner's fragment wording itself.
+const noHeadingInflation = createOwnerContract({
+  idea: '## Must Survive The Cut\nDistinct silhouettes during combat.',
+  source: 'package-3-heading-no-inflation'
+});
+assert.equal(noHeadingInflation.mustHaves.length, 0);
+assert.equal(noHeadingInflation.unknowns.length, 1);
+assert.equal(noHeadingInflation.unknowns[0].text, 'Distinct silhouettes during combat.');
+assert.equal(noHeadingInflation.unknowns[0].contextHeading, 'Must Survive The Cut');
+
+console.log('PACKAGE 3 D-4 PASS: semantic headings survive as immutable requirement context with stable IDs, legacy hashes remain stable outside D-4, and headings do not inflate obligations.');
 console.log('Owner Contract decomposition selftest: PASS');
