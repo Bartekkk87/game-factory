@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "learning-candidate-v1",
+  "id": "candidate-harbor-courier-terminal-proof-semantics-20260828",
+  "status": "candidate",
+  "role": "director",
+  "scope": "verification-design",
+  "targetLayer": "verifier",
+  "text": "Hypothesis only: terminal Product Proof semantics need canonical state mapping and explicit action reachability validation before Engineer spend. Harbor Courier canary #3 generated PR-MH-04 with state_reached state=failed, while proof-plan.mjs recognizes only success and failure. The compiled plan therefore omitted a failure-proof scenario, routed PR-MH-04 to base, reported requiredTerminalStates=[success], and still passed reachability validation. The best evidenced attempt then passed Technical and all Owner requirements except MH-04, MH-06 and MH-07. Its 75-second success-proof still ended playing rather than success. Validate first that terminal aliases such as failed/gameover are normalized to one canonical failure state and that unknown terminal-like state probes fail closed instead of silently routing to base. Separately validate whether a generic active verifier input is sufficient to prove success or whether scenario action reachability needs a harness-owned deterministic action policy. Do not change Production, activate this candidate, weaken Product Fidelity, or start another paid canary until deterministic regression fixtures establish the minimal remedy.",
+  "sourceRunIds": [
+    "20260828-043617"
+  ],
+  "sourceKind": "post-failure-evidence-analysis",
+  "sourceEvidenceRefs": [
+    "runs/20260828-043617/FAILURE.json",
+    "runs/20260828-043617/RUN-EVIDENCE.json",
+    "runs/20260828-043617/gdd.json",
+    "runs/20260828-043617/attempt-03/evidence-fidelity.json",
+    "runs/20260828-043617/attempt-03/telemetry.json",
+    "runs/20260828-043617/attempt-03/index.html",
+    "factory/src/verify/proof-plan.mjs"
+  ],
+  "ownerFeedbackIds": [],
+  "candidateSha": null,
+  "confidence": null,
+  "evidenceCount": 7,
+  "createdAt": "2026-08-28T04:50:00.000Z",
+  "validatedAt": null,
+  "expiresAfter": null,
+  "supersedes": null,
+  "validationEvidence": [],
+  "regressionResults": [],
+  "active": false,
+  "activatedAt": null,
+  "promotionRef": null,
+  "deactivatedAt": null,
+  "deactivatedBy": null,
+  "rollbackOf": null,
+  "reversalReason": null
+}
