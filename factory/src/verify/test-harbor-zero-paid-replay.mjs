@@ -11,7 +11,6 @@ import { canonicalVerifierState } from './state-semantics.mjs';
 
 const root = process.cwd();
 const frozenRun = path.join(root, 'runs', '20260828-043617');
-const frozenAttempt = path.join(frozenRun, 'attempt-05');
 const frozenBriefPath = path.join(root, 'ideas', 'harbor-courier-owner-brief-canary-3-2026-08-28.md');
 
 const readJson = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -20,18 +19,33 @@ const digest = (buffer) => crypto.createHash('sha256').update(buffer).digest('he
 const ownerContract = readJson(path.join(frozenRun, 'owner-contract.json'));
 const historicalGdd = readJson(path.join(frozenRun, 'gdd.json'));
 const historicalRunEvidence = readJson(path.join(frozenRun, 'RUN-EVIDENCE.json'));
-const historicalFidelity = readJson(path.join(frozenAttempt, 'evidence-fidelity.json'));
 const frozenBrief = fs.readFileSync(frozenBriefPath, 'utf8');
+
+// Resolve the exact candidate retained by durable run evidence. Do not assume the last attempt
+// is authoritative: Best-So-Far can intentionally preserve an earlier evidenced candidate.
+const attemptDirs = fs.readdirSync(frozenRun)
+  .filter((name) => /^attempt-\d+$/.test(name))
+  .sort();
+const retainedAttemptName = attemptDirs.find((name) => {
+  const evidencePath = path.join(frozenRun, name, 'evidence-tech.json');
+  if (!fs.existsSync(evidencePath)) return false;
+  return readJson(evidencePath).candidateSha === historicalRunEvidence.run.candidateSha;
+});
+assert.ok(retainedAttemptName, `no frozen Harbor attempt matches durable candidate ${historicalRunEvidence.run.candidateSha}`);
+const frozenAttempt = path.join(frozenRun, retainedAttemptName);
+const historicalFidelity = readJson(path.join(frozenAttempt, 'evidence-fidelity.json'));
 const frozenHtml = fs.readFileSync(path.join(frozenAttempt, 'index.html'));
 const frozenDesign = readJson(path.join(frozenAttempt, 'design.json'));
 
-// Freeze proof: replay the exact Canary #3 brief and exact final candidate bytes.
+// Freeze proof: replay the exact Canary #3 brief and exact durable retained candidate bytes.
 assert.equal(frozenBrief.trimEnd(), ownerContract.originalBrief.trimEnd(), 'frozen Harbor brief drifted from Canary #3 Owner Contract');
-assert.equal(digest(frozenHtml), historicalRunEvidence.run.candidateSha, 'frozen Harbor candidate bytes drifted from Canary #3 durable evidence');
+assert.equal(digest(frozenHtml), historicalRunEvidence.run.candidateSha, 'durably selected Harbor candidate bytes drifted from Canary #3 evidence');
 assert.equal(historicalRunEvidence.run.id, '20260828-043617');
 assert.equal(historicalRunEvidence.run.status, 'failed');
+assert.equal(retainedAttemptName, 'attempt-03', 'Canary #3 durable evidence no longer resolves to the historically retained Best-So-Far attempt');
 
-// Historical baseline: terminal success/failure/restart were the only load-bearing gaps; HUD already passed.
+// Historical baseline for the retained candidate: terminal success/failure/restart were the
+// load-bearing gaps; HUD geometry already passed.
 const historicalById = new Map((historicalFidelity.criteria || []).map((criterion) => [criterion.requirementId, criterion]));
 assert.equal(historicalById.get('MH-04')?.pass, false);
 assert.equal(historicalById.get('MH-06')?.pass, false);
@@ -93,8 +107,9 @@ assert.equal(canonicalVerifierState(success.postRestartState), 'playing', `succe
 assert.equal(canonicalVerifierState(failure.postRestartState), 'playing', `failure restart was not observable (raw=${failure.postRestartState})`);
 
 const summary = {
-  replay: 'Harbor Courier Canary #3 frozen candidate',
+  replay: 'Harbor Courier Canary #3 frozen retained candidate',
   sourceRun: historicalRunEvidence.run.id,
+  retainedAttempt: retainedAttemptName,
   candidateSha: historicalRunEvidence.run.candidateSha,
   costUsd: 0,
   apiCalls: 0,
@@ -106,4 +121,4 @@ const summary = {
 };
 
 console.log(JSON.stringify(summary, null, 2));
-console.log('HARBOR ZERO-PAID REPLAY PASS: frozen Canary #3 candidate reaches independent failure + success paths, restart is observable after both terminal states, HUD geometry passes, and no API/LLM call is used.');
+console.log('HARBOR ZERO-PAID REPLAY PASS: frozen Canary #3 retained candidate reaches independent failure + success paths, restart is observable after both terminal states, HUD geometry passes, and no API/LLM call is used.');
