@@ -204,16 +204,17 @@ export async function evaluateContract(report, { minFps = LIMITS.minFps, bgColor
   }
   add('visual_content', 'Spielinhalt auf Screenshots sichtbar (nicht schwarz)', visibleCount >= Math.max(1, gameplayShots.length - 1), details.join(' | '));
 
-  const firstGameplay = gameplayShots.find((shot) => shot.name.startsWith('shot-2'));
-  const secondGameplay = gameplayShots.find((shot) => shot.name.startsWith('shot-3'));
-  const frameDelta = firstGameplay && secondGameplay
-    ? await analyzeFrameDelta(firstGameplay.dataUrl, secondGameplay.dataUrl)
-    : { active: false, ratio: 0, error: 'two gameplay frames required' };
+  const activityShots = (report._images || []).filter((shot) => shot.name.startsWith('activity-'));
+  const firstActivity = activityShots.find((shot) => shot.name.startsWith('activity-1'));
+  const secondActivity = activityShots.find((shot) => shot.name.startsWith('activity-2'));
+  const frameDelta = firstActivity && secondActivity
+    ? await analyzeFrameDelta(firstActivity.dataUrl, secondActivity.dataUrl)
+    : { active: false, ratio: 0, error: 'two live gameplay activity frames required' };
   add(
     'visual_activity',
     'Gameplay zeigt deterministische Inter-Frame-Aktivität',
     frameDelta.active,
-    `${frameDelta.ratio}% pixels changed${frameDelta.error ? ` [${frameDelta.error}]` : ''}`
+    `${frameDelta.ratio}% pixels changed from live gameplay frames${frameDelta.error ? ` [${frameDelta.error}]` : ''}`
   );
 
   const failures = checks.filter((c) => !c.pass);

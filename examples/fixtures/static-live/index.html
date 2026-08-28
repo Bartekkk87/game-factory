@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Fixture Static Live</title>
+<style>html,body{margin:0;height:100%;background:#101426;display:grid;place-items:center}canvas{background:#1a2140}</style>
+</head>
+<body>
+<script>
+(function () {
+  const W = 640;
+  const H = 360;
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  let state = 'title';
+  let score = 0;
+
+  function start() {
+    if (state === 'title') state = 'playing';
+  }
+
+  window.addEventListener('keydown', (event) => {
+    start();
+    if (state === 'playing' && event.code !== 'Enter') score += 10;
+  });
+  canvas.addEventListener('pointerdown', () => {
+    start();
+    if (state === 'playing') score += 5;
+  });
+
+  window.__GF__ = {
+    version: 'fixture-static-live-1.0',
+    info: { title: 'Fixture Static Live' },
+    errors: [],
+    flags: {},
+    getState: () => state,
+    getScore: () => score,
+    getBest: () => score,
+    getFps: () => 60,
+    getTime: () => performance.now() / 1000,
+    restart: () => {
+      state = 'playing';
+      score = 0;
+    }
+  };
+
+  function frame() {
+    requestAnimationFrame(frame);
+    ctx.fillStyle = '#1a2140';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#7c5cff';
+    ctx.fillRect(260, 140, 120, 80);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '700 22px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText(state === 'title' ? 'PRESS ENTER' : 'STATIC LIVE GAME', W / 2, 80);
+  }
+
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

@@ -118,14 +118,23 @@ async function runSingleSession({
     return snapshot;
   };
 
-  const takeShot = async (name) => {
-    if (!captureScreenshots) return;
+  const takeShot = async (name, { requirePlaying = false, persist = true } = {}) => {
+    if (!captureScreenshots) return false;
+    if (requirePlaying) {
+      const before = await snap();
+      if (canonicalVerifierState(before?.state) !== 'playing') return false;
+    }
     const buf = await page.screenshot({ type: 'png' });
-    if (screenshotDir) {
+    if (requirePlaying) {
+      const after = await snap();
+      if (canonicalVerifierState(after?.state) !== 'playing') return false;
+    }
+    if (persist && screenshotDir) {
       fs.mkdirSync(screenshotDir, { recursive: true });
       fs.writeFileSync(path.join(screenshotDir, `${name}.png`), buf);
     }
     shots.push({ name, dataUrl: `data:image/png;base64,${buf.toString('base64')}` });
+    return true;
   };
 
   const activeInputAllowed = async () => {
@@ -223,6 +232,21 @@ async function runSingleSession({
 
       const total = seconds * 1000;
       const sessionStarted = Date.now();
+      let activityFramesCaptured = 0;
+      const captureLiveActivityPair = async () => {
+        if (!captureScreenshots || activityFramesCaptured >= 2) return;
+        if (activityFramesCaptured === 0) {
+          const firstCaptured = await takeShot('activity-1-gameplay', { requirePlaying: true, persist: false });
+          if (!firstCaptured) return;
+          activityFramesCaptured = 1;
+        }
+        if (activityFramesCaptured === 1) {
+          await sleep(1000);
+          const secondCaptured = await takeShot('activity-2-gameplay', { requirePlaying: true, persist: false });
+          if (secondCaptured) activityFramesCaptured = 2;
+        }
+      };
+
       try {
         const targetStates = new Set();
         for (const state of stopStates || []) {
@@ -253,8 +277,10 @@ async function runSingleSession({
 
           await waitUntil(earlyAt);
           earlySnapshot = await record('early', Math.round(earlyAt));
+          await captureLiveActivityPair();
           await waitUntil(midAt);
           midSnapshot = await record('mid', Math.round(midAt));
+          await captureLiveActivityPair();
 
           fps = await page.evaluate(
             () =>
