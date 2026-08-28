@@ -6,7 +6,11 @@ import { fileURLToPath } from 'node:url';
 import { analyzeFailedProductionRun, proposalFromRootCause } from './root-cause.mjs';
 
 const source = fs.readFileSync(new URL('./root-cause.mjs', import.meta.url), 'utf8');
-assert.doesNotMatch(source, /^import\s+.*state-semantics\.mjs.*$/m, 'root-cause falsifier must not import the verifier state vocabulary it is supposed to challenge');
+assert.doesNotMatch(
+  source,
+  /^import\s+.*state-semantics\.mjs.*$/m,
+  'root-cause falsifier must not import the verifier state vocabulary it is supposed to challenge'
+);
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'gf-root-cause-'));
@@ -39,19 +43,22 @@ function writeAttempt(number, failedChecks, { runtimeErrors = [], observedStates
   fs.writeFileSync(path.join(dir, 'evidence-tech.json'), JSON.stringify({
     contract: {
       pass: failedChecks === 0,
-      checks: Array.from({ length: failedChecks }, (_, i) => ({ id: `TECH-${i + 1}`, pass: false })),
+      checks: Array.from({ length: failedChecks }, (_, index) => ({ id: `TECH-${index + 1}`, pass: false })),
       runtimeErrors
     },
-    telemetry: observedStates.map((state, i) => ({ phase: `p${i}`, snapshot: { state, errors: runtimeErrors } }))
+    telemetry: observedStates.map((state, index) => ({ phase: `p${index}`, snapshot: { state, errors: runtimeErrors } }))
   }, null, 2));
   fs.writeFileSync(path.join(dir, 'evidence-fidelity.json'), JSON.stringify({ pass: fidelity.length === 0, criteria: fidelity }, null, 2));
   fs.writeFileSync(path.join(dir, 'telemetry.json'), JSON.stringify({
-    proofScenarios: observedStates.map((state, i) => ({ id: `s${i}`, endState: state }))
+    proofScenarios: observedStates.map((state, index) => ({ id: `s${index}`, endState: state }))
   }, null, 2));
 }
 
 const failedCriterion = {
-  requirementId: 'MH-04', probeId: 'PR-FAIL', kind: 'state_reached', pass: false,
+  requirementId: 'MH-04',
+  probeId: 'PR-FAIL',
+  kind: 'state_reached',
+  pass: false,
   detail: 'state failed not reached in verifier scenarios'
 };
 writeAttempt(1, 9, { observedStates: ['title', 'playing'], fidelity: [failedCriterion] });
@@ -71,7 +78,7 @@ try {
   assert(ids.includes('new-runtime-error-after-repair'));
   assert(ids.includes('terminal-proof-scenario-gap'));
   assert(ids.includes('terminal-state-vocabulary-mismatch'));
-  assert.equal(report.findings.find((x) => x.id === 'terminal-proof-scenario-gap').confidence, 1);
+  assert.equal(report.findings.find((item) => item.id === 'terminal-proof-scenario-gap').confidence, 1);
   const proposal = proposalFromRootCause(report, 'candidate-fixture');
   assert.equal(proposal.scope, 'case-root-cause');
   assert.equal(proposal.active, undefined);
@@ -106,40 +113,29 @@ try {
   assert.match(directorProposal.text, /finite verifier state protocol/);
   assert.match(directorProposal.text, /Do not activate/);
 
-  const lumenRunDir = path.join(repoRoot, 'runs', '20260828-201007');
-  if (fs.existsSync(path.join(lumenRunDir, 'RUN-EVIDENCE.json'))) {
-    const lumen = analyzeFailedProductionRun({ runId: '20260828-201007', runsRoot: path.join(repoRoot, 'runs') });
-    assert.equal(lumen.primaryFindingId, 'director-verifier-state-contract-mismatch');
-    assert.equal(lumen.findings[0].targetLayer, 'skill');
-    assert.match(lumen.findings[0].summary, /restored/);
-    assert.match(lumen.findings[0].summary, /glass_breach/);
+  // Historical regressions must be immutable fixtures, never optional runtime
+  // directories. Missing fixture evidence is therefore a hard test failure.
+  const fixturePath = path.join(repoRoot, 'examples', 'fixtures', 'regressions', 'lumen-director-state-contract.json');
+  assert.equal(fs.existsSync(fixturePath), true, 'Lumen historical regression fixture is required');
+  const fixture = JSON.parse(fs.readFileSync(fixturePath, 'utf8'));
+  assert.equal(fixture.schemaVersion, 'game-factory.historical-regression-fixture/v1');
+  assert.equal(fixture.origin.runId, '20260828-201007');
+  assert.match(fixture.origin.evidenceCommitSha, /^[0-9a-f]{40}$/);
+  assert.equal(fixture.origin.sourceRefs.length, 2);
+  assert(fixture.origin.sourceRefs.every((ref) => /^[0-9a-f]{40}$/.test(ref.gitBlobSha)));
 
-    const candidatePath = path.join(repoRoot, 'learning', 'candidates', 'candidate-production-run-b37ac8d268e8549c.json');
-    const validationPath = path.join(repoRoot, 'learning', 'validations', 'candidate-production-run-b37ac8d268e8549c.json');
-    if (fs.existsSync(candidatePath)) {
-      const candidate = JSON.parse(fs.readFileSync(candidatePath, 'utf8'));
-      assert.equal(candidate.schemaVersion, 'learning-candidate-v1');
-      assert.equal(candidate.status, 'validated');
-      assert.equal(candidate.active, false);
-      assert.ok(candidate.validatedAt);
-      assert.equal(candidate.role, 'director');
-      assert.equal(candidate.scope, 'case-root-cause');
-      assert.equal(candidate.targetLayer, 'skill');
-      assert.deepEqual(candidate.sourceRunIds, ['20260828-201007']);
-      assert.equal(candidate.confidence, 1);
-      assert(candidate.validationEvidence.length >= 2);
-      assert(candidate.regressionResults.length >= 3);
-      assert(candidate.regressionResults.every((item) => item.passed === true));
-      assert.match(candidate.text, /restored/);
-      assert.match(candidate.text, /glass_breach/);
-      assert.equal(fs.existsSync(validationPath), true, 'validated Lumen candidate requires canonical validation artifact');
-      const validation = JSON.parse(fs.readFileSync(validationPath, 'utf8'));
-      assert.equal(validation.schemaVersion, 'learning-validation-v1');
-      assert.equal(validation.candidateId, candidate.id);
-      assert.equal(validation.outcome, 'validated-inactive');
-      assert.equal(validation.validatedAt, candidate.validatedAt);
-      assert(validation.regressionResults.every((item) => item.passed === true));
-    }
+  const historicalRoot = path.join(root, 'historical');
+  const historicalRunId = fixture.id;
+  const historicalRunDir = path.join(historicalRoot, historicalRunId);
+  fs.mkdirSync(historicalRunDir, { recursive: true });
+  fs.writeFileSync(path.join(historicalRunDir, 'RUN-EVIDENCE.json'), JSON.stringify(fixture.runEvidence, null, 2));
+  fs.writeFileSync(path.join(historicalRunDir, 'FAILURE.json'), JSON.stringify(fixture.failure, null, 2));
+
+  const historical = analyzeFailedProductionRun({ runId: historicalRunId, runsRoot: historicalRoot });
+  assert.equal(historical.primaryFindingId, fixture.expected.primaryFindingId);
+  assert.equal(historical.findings[0].targetLayer, fixture.expected.targetLayer);
+  for (const term of fixture.expected.requiredEvidenceTerms) {
+    assert.match(historical.findings[0].summary, new RegExp(term));
   }
 
   fs.writeFileSync(path.join(runDir, 'RUN-EVIDENCE.json'), JSON.stringify({ run: { id: runId, status: 'success' } }, null, 2));
