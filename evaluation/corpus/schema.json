@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "game-factory.golden-corpus-case/v1",
+  "title": "Game Factory Golden Corpus Registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "corpusId", "status", "cases"],
+  "properties": {
+    "schemaVersion": { "const": "game-factory.golden-corpus/v1" },
+    "corpusId": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["baseline", "active", "deprecated"] },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "schemaVersion",
+          "domain",
+          "failureClass",
+          "varianceFamily",
+          "tier",
+          "severity",
+          "sourceKind",
+          "sourceRefs",
+          "expectedOutcome",
+          "evidenceRefs",
+          "seed",
+          "active",
+          "notes"
+        ],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+          "schemaVersion": { "const": "game-factory.golden-corpus-case/v1" },
+          "domain": { "enum": ["game-production", "factory-reliability"] },
+          "failureClass": { "type": "string", "minLength": 1 },
+          "varianceFamily": { "type": "string", "minLength": 1 },
+          "tier": { "enum": [0, 1, 2] },
+          "severity": { "enum": ["standard", "critical-integrity"] },
+          "sourceKind": { "enum": ["fixture", "selftest", "historical-regression"] },
+          "sourceRefs": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          },
+          "expectedOutcome": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["caseResult", "systemBehavior"],
+            "properties": {
+              "caseResult": { "const": "PASS" },
+              "systemBehavior": { "type": "string", "minLength": 1 }
+            }
+          },
+          "evidenceRefs": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          },
+          "seed": { "type": "boolean" },
+          "active": { "type": "boolean" },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}
