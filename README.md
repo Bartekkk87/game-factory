@@ -7,9 +7,9 @@ Evidence-driven Game Factory für Web-Games auf GitHub. Die Factory führt Owner
 > Historischer S0–S5 Closure Checkpoint: [docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md](docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md)  
 > Kanonische Learning-Architektur mit realem Lumen-Beispiel: [docs/strategy/LEARNING-ARCHITECTURE-EVIDENCE-TO-APPLIED-CHANGE-2026-08-28.md](docs/strategy/LEARNING-ARCHITECTURE-EVIDENCE-TO-APPLIED-CHANGE-2026-08-28.md)
 
-## Aktueller Status — 28.08.2026
+## Aktueller Status — 29.08.2026
 
-**Factory Foundation + Controlled Improvement + Golden Corpus S0–S5 CLOSED. Lumen Learning Repair: `APPLIED-CLOSED`. Audit-v2 Hardening ist als separat verifizierter Change-Track umgesetzt.**
+**Factory Foundation + Controlled Improvement + Golden Corpus S0–S5 CLOSED. Lumen Learning Repair: `APPLIED-CLOSED`. Audit-v2 Pre-Canary-Hardening ist gemerged; A-1/A-2 Corpus-Hardening ist zero-paid implementiert und branch-verifiziert.**
 
 Der erste unabhängige Product Canary `Lumen Current` scheiterte vor Build fail-closed. Der daraus abgeleitete Director-State-Contract-/Learning-Fix wurde über einen realen, evidenzgebundenen `skill` Candidate zero-paid validiert und mit PR `#36` human-reviewed nach `main` gemerged (`7af126e3300b23c19bd088ca32c08c7e81947d8b`). Exact-main Full Verifier `33211092911` = **SUCCESS in all 37 steps**. Der S4 Application Receipt ist `APPLIED-CLOSED`; der Candidate bleibt `validated`, `active=false`. Kein zweiter Paid Lumen Run wurde gestartet.
 
@@ -17,7 +17,7 @@ Damit ist praktisch belegt:
 
 `real Production failure -> durable evidence -> deterministic root cause -> protected-layer Candidate -> validation/regression -> validated inactive -> human merge -> post-merge regression -> APPLIED-CLOSED`
 
-Der noch ausstehende Product-Meilenstein bleibt Issue `#17`: ein späterer spielbarer unabhängiger Canary mit hands-on Owner ACCEPT/REJECT.
+Der noch ausstehende Product-Meilenstein bleibt Issue `#17`: ein späterer spielbarer unabhängiger Canary mit hands-on Owner ACCEPT/REJECT. **Ein weiterer Canary wird jedoch erst nach Abschluss der verbleibenden Architecture-Audit-Tracks in Auftrag gegeben.**
 
 ## Production Flow
 
@@ -89,13 +89,16 @@ Implementiert und Full-Verifier-covered:
 - **S4** durable Non-Prompt Application Receipt
 - **S5** zero-paid System Configuration Benchmark Governance
 
-Aktueller Messstand wird bewusst mit beiden Granularitäten berichtet:
+Audit-v2 A-1/A-2 härtet die bisherige Messgranularität zusätzlich:
 
-- **29 registrierte Fälle**;
-- **8 unabhängige ausführbare Selftest-Skripte** im aktuellen S2-Runner;
-- die aktuelle Qualitätsaussage gilt damit primär auf Ebene dieser unabhängigen Ausführungen, nicht als 29 voneinander unabhängige Beobachtungen.
+- **34 aktive Corpus-Fälle** insgesamt;
+- davon **29 bestehende Seed-/Variant-Fälle** plus **5 explizite Production-derived `historical-regression` Fälle**;
+- **34 unabhängige Case-Ausführungen** im S2-v2-Runner;
+- **9 gemeinsam genutzte Oracle-Implementierungsdateien**, aber jede Fall-ID startet einen eigenen Node-Prozess mit genau ihrer `--case`-Assertion;
+- `independentObservationCount` muss exakt der Zahl der aktiven Fälle entsprechen; jede fehlende Einzelbeobachtung erzeugt einen `observationDeficit` und lässt S2 fail-closed scheitern;
+- weiterhin **0 tolerierte Critical False PASS**.
 
-Die frühere Kurzform `29/29` wird nicht mehr isoliert als Qualitätsbeweis verwendet. Fallspezifische Oracles für alle 29 Fälle bleiben ein separater Corpus-Hardening-Track.
+Die fünf expliziten historischen Regressionen decken Harbor Repair Regression, Harbor Proof-Plan Unreachability, Lumen Director State Contract sowie die zwei real beobachteten Provider-Request-Contract-Fehler ab. Sie tragen Origin-Run- und Fix-Commit-Provenance. Der frühere Stand `29 Fälle / 8 Sammel-Selftests` bleibt nur noch historischer Audit-Ausgangspunkt und ist nicht mehr die aktuelle S2-Messarchitektur.
 
 S5 vergleicht vollständige Systemkonfigurationen:
 
@@ -176,7 +179,7 @@ Eine **getrennte Origin** für untrusted generated code bleibt das langfristige 
 
 - Workflow YAML + Node Syntax
 - Workflow Protected-Path / Commit-Allowlist / Runtime-State Policy
-- Golden Corpus S0–S5
+- Golden Corpus S0–S5 inklusive 34 unabhängiger Case-Oracles und Historical-Regression-Provenance
 - Budget / deterministisches Release Gate
 - Provider-/Model-Routing, Request Contracts und Credential Isolation
 - Transport-Retry/Billing-Uncertainty Policy
@@ -197,13 +200,7 @@ Eine **getrennte Origin** für untrusted generated code bleibt das langfristige 
 
 Lumen Canary #1 wurde nach Owner-GO ausgeführt, erzeugte aber keinen Draft. Daher wurde hands-on Owner ACCEPT/REJECT nicht erreicht. Der daraus folgende zero-paid Learning-/Contract-Fix ist vollständig `APPLIED-CLOSED`.
 
-Vor einem **zweiten** Paid Lumen/Independent Production Run gilt zwingend:
-
-1. exakten Owner Brief + Verifier Coverage + Risiken + Kostenrahmen erneut vorlegen;
-2. **STOP für neue explizite Owner-Freigabe**;
-3. zusätzlich C-3 auf GitHub-Repository-Ebene schließen: `main` muss tatsächlich protected sein;
-4. danach höchstens einen weiteren Paid Production Canary;
-5. Owner hands-on ACCEPT/REJECT.
+**Vor einem zweiten Paid Lumen/Independent Production Run wird zuerst die Architektur finalisiert.** Insbesondere werden die verbleibenden akzeptierten Architecture-Audit-Tracks separat geschlossen und regressionsgeprüft. Erst danach wird der letzte repository-seitige Schutzschalter C-3 als Final-Gate hergestellt und eine neue explizite Owner-Freigabe für maximal einen Canary eingeholt.
 
 ## Portability hypothesis
 
@@ -217,12 +214,15 @@ Das ist aktuell eine **zu prüfende Hypothese**, keine außerhalb Gaming bewiese
 
 Aktuell gerechtfertigt: **evidence-driven controlled improvement**.
 
-Zusätzlich praktisch demonstriert: ein realer Production Failure wurde in einen deterministisch klassifizierten, zero-paid validierten, weiterhin inaktiven Protected-Layer Candidate und anschließend in eine human-reviewed, post-merge regressionsgeprüfte `APPLIED-CLOSED` Skill/Contract-Anwendung überführt.
+Zusätzlich praktisch demonstriert:
 
-Noch nicht bewiesen:
+- ein realer Production Failure wurde in einen deterministisch klassifizierten, zero-paid validierten, weiterhin inaktiven Protected-Layer Candidate und anschließend in eine human-reviewed, post-merge regressionsgeprüfte `APPLIED-CLOSED` Skill/Contract-Anwendung überführt;
+- 34 aktive Corpus-Fälle besitzen 34 fallbezogene, zero-paid Einzelbeobachtungen; 5 davon sind explizite historische Production-Regressionen.
+
+Noch nicht abgeschlossen:
 
 - vollständige GitHub-Repository-Level Protected-Branch-Enforcement, solange die Admin-Einstellung nicht aktiviert ist;
-- 29 voneinander unabhängige Corpus-Beobachtungen;
+- die verbleibenden akzeptierten Architecture-Audit-Tracks, insbesondere strukturelle Lifecycle-Privilege-Separation, run-scoped Budget/Concurrency-safe Memory, durable Binary Evidence, Benchmark-Statistik, separate Generated-Code-Origin, typed Proof/Lesson Contracts und Maintainability/Governance-Aufräumarbeiten;
 - realer model-backed S5 Benchmark-Gewinner;
 - automatische Modellpromotion;
 - dass der Lumen-Fix ein späteres Owner-accepted Game verbessert;
