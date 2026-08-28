@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "learning-candidate-v1",
+  "id": "candidate-production-run-b37ac8d268e8549c",
+  "status": "candidate",
+  "role": "director",
+  "scope": "case-root-cause",
+  "targetLayer": "skill",
+  "text": "Hypothesis only from deterministic reanalysis of failed Production run 20260828-201007: the Director emitted unsupported state_reached verifier states (PR-MH-03=restored, PR-MH-04=glass_breach), so the finite verifier state protocol was not preserved before proof-plan compilation. Validation required: expose the finite verifier state contract to the Director, constrain the Directing skill/prompt to protocol states, preserve unknown-state fail-closed behavior, and pass the complete zero-paid verifier/Golden Corpus. Do not activate, promote, weaken gates, or start a paid retry from this candidate alone.",
+  "sourceRunIds": [
+    "20260828-201007"
+  ],
+  "sourceEvaluationFailureIds": [],
+  "sourceKind": "owner-authorized-deterministic-reanalysis",
+  "ownerFeedbackIds": [],
+  "candidateSha": null,
+  "confidence": 1,
+  "evidenceCount": 2,
+  "createdAt": "2026-08-28T20:30:37.000Z",
+  "validatedAt": null,
+  "expiresAfter": null,
+  "supersedes": null,
+  "validationEvidence": [],
+  "regressionResults": [],
+  "active": false,
+  "activatedAt": null,
+  "promotionRef": null,
+  "deactivatedAt": null,
+  "deactivatedBy": null,
+  "rollbackOf": null,
+  "reversalReason": null
+}
