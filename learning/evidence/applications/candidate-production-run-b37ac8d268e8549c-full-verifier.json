@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "learning-application-regression-evidence-v1",
+  "candidateId": "candidate-production-run-b37ac8d268e8549c",
+  "evaluatedCommitSha": "7af126e3300b23c19bd088ca32c08c7e81947d8b",
+  "kind": "full-verifier",
+  "sourceRef": "github-actions:33211092911",
+  "outcome": "PASS"
+}
