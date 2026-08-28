@@ -2,6 +2,7 @@ import { chat } from '../llm/client.mjs';
 import { extractJson } from '../llm/json.mjs';
 import { compileDirectorTraceability } from '../contract/traceability.mjs';
 import { compileProofPlan } from '../verify/proof-plan.mjs';
+import { verifierActionContract } from '../verify/action-policy.mjs';
 import { LIMITS } from '../config.mjs';
 import { assembleSystemPrompt } from '../util/skills.mjs';
 import { lessonsFor, knownConcepts } from '../memory/store.mjs';
@@ -15,9 +16,10 @@ export async function runDirector({ idea, source, ownerContract }) {
 
   const user = JSON.stringify(
     {
-      instruction: 'Create the Game Design Briefing JSON now. Preserve every Owner Contract requirement and map each one to exactly one observable acceptance criterion and verifier probe.',
+      instruction: 'Create the Game Design Briefing JSON now. Preserve every Owner Contract requirement and map each one to exactly one observable acceptance criterion and verifier probe. Design all deterministic proof-critical gameplay so it is reachable under the supplied generic verifier action contract without verifier-specific routes or hidden hooks.',
       ownerIdea: idea || '(no specific idea - propose something original and highly playable)',
       ownerContract,
+      verifierActionContract: verifierActionContract(),
       ideaSource: source,
       alreadyBuiltConcepts_avoidDuplicates: knownConcepts()
     },

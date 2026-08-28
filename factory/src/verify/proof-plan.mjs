@@ -1,4 +1,5 @@
 import { canonicalTerminalState, canonicalVerifierState } from './state-semantics.mjs';
+import { verifierActionContract } from './action-policy.mjs';
 
 function inferDeclaredSeconds(gdd) {
   const text = JSON.stringify(gdd || {});
@@ -157,6 +158,7 @@ export function compileProofPlan({ gdd, baseSeconds = 12, maxProofSeconds = 125 
     baseSeconds,
     maxProofSeconds,
     declaredRoundSeconds: declaredSeconds,
+    actionPolicy: verifierActionContract(),
     scenarios,
     coverage
   };
