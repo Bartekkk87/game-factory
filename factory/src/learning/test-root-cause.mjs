@@ -2,11 +2,13 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { analyzeFailedProductionRun, proposalFromRootCause } from './root-cause.mjs';
 
 const source = fs.readFileSync(new URL('./root-cause.mjs', import.meta.url), 'utf8');
 assert.doesNotMatch(source, /^import\s+.*state-semantics\.mjs.*$/m, 'root-cause falsifier must not import the verifier state vocabulary it is supposed to challenge');
 
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'gf-root-cause-'));
 const runId = 'failed-fixture-1';
 const runDir = path.join(root, runId);
@@ -76,6 +78,42 @@ try {
   assert.deepEqual(proposal.sourceRunIds, [runId]);
   assert.match(proposal.text, /Hypothesis only/);
   assert.match(proposal.text, /Do not activate/);
+
+  const directorRunId = 'director-contract-fixture';
+  const directorRunDir = path.join(root, directorRunId);
+  fs.mkdirSync(directorRunDir, { recursive: true });
+  fs.writeFileSync(path.join(directorRunDir, 'RUN-EVIDENCE.json'), JSON.stringify({
+    run: { id: directorRunId, status: 'failed', reason: 'director_failed' },
+    gates: { technical: { pass: false }, productFidelity: { pass: false } }
+  }, null, 2));
+  fs.writeFileSync(path.join(directorRunDir, 'FAILURE.json'), JSON.stringify({
+    reason: 'director_failed',
+    error: 'Director proof plan unreachable: probe PR-MH-03 uses unsupported verifier state restored; probe PR-MH-04 uses unsupported verifier state glass_breach'
+  }, null, 2));
+
+  const directorReport = analyzeFailedProductionRun({ runId: directorRunId, runsRoot: root });
+  assert.equal(directorReport.primaryFindingId, 'director-verifier-state-contract-mismatch');
+  assert.deepEqual(directorReport.trajectory, []);
+  assert.equal(directorReport.findings[0].confidence, 1);
+  assert.equal(directorReport.findings[0].targetLayer, 'skill');
+  assert.equal(directorReport.findings[0].role, 'director');
+  assert.match(directorReport.findings[0].summary, /PR-MH-03=restored/);
+  assert.match(directorReport.findings[0].summary, /PR-MH-04=glass_breach/);
+  const directorProposal = proposalFromRootCause(directorReport, 'candidate-lumen-state-protocol');
+  assert.equal(directorProposal.targetLayer, 'skill');
+  assert.equal(directorProposal.role, 'director');
+  assert.deepEqual(directorProposal.sourceRunIds, [directorRunId]);
+  assert.match(directorProposal.text, /finite verifier state protocol/);
+  assert.match(directorProposal.text, /Do not activate/);
+
+  const lumenRunDir = path.join(repoRoot, 'runs', '20260828-201007');
+  if (fs.existsSync(path.join(lumenRunDir, 'RUN-EVIDENCE.json'))) {
+    const lumen = analyzeFailedProductionRun({ runId: '20260828-201007', runsRoot: path.join(repoRoot, 'runs') });
+    assert.equal(lumen.primaryFindingId, 'director-verifier-state-contract-mismatch');
+    assert.equal(lumen.findings[0].targetLayer, 'skill');
+    assert.match(lumen.findings[0].summary, /restored/);
+    assert.match(lumen.findings[0].summary, /glass_breach/);
+  }
 
   fs.writeFileSync(path.join(runDir, 'RUN-EVIDENCE.json'), JSON.stringify({ run: { id: runId, status: 'success' } }, null, 2));
   assert.throws(() => analyzeFailedProductionRun({ runId, runsRoot: root }), /only accepts failed production runs/);
