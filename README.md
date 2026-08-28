@@ -149,9 +149,20 @@ Der Production-Workflow verwendet standardmäßig ein maximales Run-Budget von `
 
 ## Git / Protected-Layer Boundary
 
-Production- und Review-Workflows verwenden keine pauschalen `git add -A`-Commits mehr. Commit-Pfade sind allow-listed; Änderungen unter geschützten Pfaden (`factory/prompts/`, `skills/`, `factory/src/control/`, `factory/src/verify/`, `.github/`) brechen den Workflow vor dem Commit. Zusätzlich existiert `CODEOWNERS` für diese Pfade.
+Die Git-Authority ist jetzt explizit getrennt:
 
-**Repository-Level Branch Protection bleibt eine separate GitHub-Admin-Einstellung.** Solange `main` in GitHub nicht als protected branch/ruleset mit Pflichtreview und ohne Actions-Bypass konfiguriert ist, ist C-3 auf Repository-Ebene nicht vollständig geschlossen. Die Code-seitige Schutzschicht ersetzt diese GitHub-Einstellung nicht.
+- **`main` = autoritativer Code-/Policy-Branch**;
+- **`runtime-state` = nicht-autoritativer durable Runtime-/Evidence-Branch**.
+
+Production und Review checken immer `main` als Codebasis aus. `runtime-state` wird nur nach einer deterministischen Branch-Policy als Zustand zugeladen. Eigene Änderungen dieses Branches außerhalb von `runs/`, `drafts/`, `products/`, `archive/`, `memory/`, `learning/` und `evaluation/results/` führen fail-closed zum Abbruch.
+
+Nach dem Lauf werden nur allow-listed Runtime-/Evidence-Pfade committed. Production und Review pushen ausschließlich `HEAD:runtime-state`; ein Bot-Push auf `main` ist im Workflow nicht mehr vorgesehen. Beide Workflows teilen die Concurrency-Gruppe `game-factory-runtime-state`, damit sie denselben State-Branch nicht parallel fortschreiben.
+
+GitHub Pages führt ebenfalls Code aus `main` aus, validiert den `runtime-state`-Branch und baut die Gallery aus dem lokal kombinierten, read-only Tree.
+
+Zusätzliche Defense-in-Depth bleibt aktiv: Runtime-Protected-Path-Check, staged Secret Scan und `CODEOWNERS` für geschützte Pfade.
+
+**Repository-Level Branch Protection bleibt trotzdem eine separate GitHub-Admin-Einstellung.** Solange `main` nicht tatsächlich als protected branch/ruleset mit Pflichtreview und ohne Actions-Bypass konfiguriert ist, ist C-3 administrativ noch nicht vollständig geschlossen. Der neue State-Split beseitigt aber die frühere technische Abhängigkeit, dass Production/Review direkt nach `main` schreiben mussten.
 
 ## Generated-Code Isolation
 
@@ -164,7 +175,7 @@ Eine **getrennte Origin** für untrusted generated code bleibt das langfristige 
 `.github/workflows/verify.yml` prüft unter anderem:
 
 - Workflow YAML + Node Syntax
-- Workflow Protected-Path / Commit-Allowlist Policy
+- Workflow Protected-Path / Commit-Allowlist / Runtime-State Policy
 - Golden Corpus S0–S5
 - Budget / deterministisches Release Gate
 - Provider-/Model-Routing, Request Contracts und Credential Isolation
