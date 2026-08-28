@@ -3,24 +3,33 @@ import { fileURLToPath } from 'node:url';
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
-const num = (k, d) => {
-  const v = Number(process.env[k]);
-  return Number.isFinite(v) && v > 0 ? v : d;
-};
+function configuredNumber(key, fallback, { min, integer = false }) {
+  const raw = process.env[key];
+  if (raw === undefined || raw === '') return fallback;
+  const value = Number(raw);
+  const valid = Number.isFinite(value) && value >= min && (!integer || Number.isInteger(value));
+  if (valid) return value;
+  console.warn(`[config] ignoring invalid ${key}=${JSON.stringify(raw)}; using ${fallback}`);
+  return fallback;
+}
+
+const count = (key, fallback) => configuredNumber(key, fallback, { min: 0, integer: true });
+const nonNegative = (key, fallback) => configuredNumber(key, fallback, { min: 0 });
+const positive = (key, fallback) => configuredNumber(key, fallback, { min: Number.EPSILON });
 
 export const LIMITS = {
-  maxDebugRounds: num('GF_MAX_DEBUG_ROUNDS', 4),
-  maxRepairCalls: num('GF_MAX_REPAIR_CALLS', 6),
-  maxPolishRounds: num('GF_MAX_POLISH_ROUNDS', 3),
-  maxFreshRebuilds: num('GF_MAX_FRESH_REBUILDS', 1),
-  minOverallScore: num('GF_MIN_SCORE', 6.5),
-  budgetUsd: num('GF_BUDGET_USD', 10),
-  repairBudgetUsd: num('GF_REPAIR_BUDGET_USD', 4),
-  polishBudgetUsd: num('GF_POLISH_BUDGET_USD', 3),
-  freshRebuildBudgetUsd: num('GF_FRESH_REBUILD_BUDGET_USD', 4),
-  playSeconds: num('GF_PLAY_SECONDS', 12),
-  maxProofSeconds: num('GF_MAX_PROOF_SECONDS', 125),
-  minFps: num('GF_MIN_FPS', 30)
+  maxDebugRounds: count('GF_MAX_DEBUG_ROUNDS', 4),
+  maxRepairCalls: count('GF_MAX_REPAIR_CALLS', 6),
+  maxPolishRounds: count('GF_MAX_POLISH_ROUNDS', 3),
+  maxFreshRebuilds: count('GF_MAX_FRESH_REBUILDS', 1),
+  minOverallScore: nonNegative('GF_MIN_SCORE', 6.5),
+  budgetUsd: positive('GF_BUDGET_USD', 10),
+  repairBudgetUsd: nonNegative('GF_REPAIR_BUDGET_USD', 4),
+  polishBudgetUsd: nonNegative('GF_POLISH_BUDGET_USD', 3),
+  freshRebuildBudgetUsd: nonNegative('GF_FRESH_REBUILD_BUDGET_USD', 4),
+  playSeconds: positive('GF_PLAY_SECONDS', 12),
+  maxProofSeconds: positive('GF_MAX_PROOF_SECONDS', 125),
+  minFps: positive('GF_MIN_FPS', 30)
 };
 
 export const PATHS = {
