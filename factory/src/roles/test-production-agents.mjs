@@ -7,7 +7,7 @@ import { evaluateProductFidelity } from '../verify/fidelity.mjs';
 import { evaluateReleaseGate } from '../control/release-gate.mjs';
 import { assembleSystemPrompt } from '../util/skills.mjs';
 import { lessonsFor } from '../memory/store.mjs';
-import { validatePlaytesterResult } from './playtester.mjs';
+import { enforceIndependentFullBriefReview, validatePlaytesterResult } from './playtester.mjs';
 
 const root = process.cwd();
 const read = (relative) => fs.readFileSync(path.join(root, relative), 'utf8');
@@ -167,16 +167,16 @@ assert.throws(
   /non-authoritative input: playtesterFidelity/
 );
 
-// Package 5 / D-7 baseline: the Playtester is a separate stage, but the result
-// validator can currently accept a mandatory descriptive UN claim as PASS without
-// any claim-level statement of independently observed evidence. That leaves the
-// load-bearing review boundary implicit rather than mechanically auditable.
+// Package 5 / D-7: mandatory descriptive claims may only be certified from an
+// explicit claim-level independent evidence record. Game-generated events may
+// corroborate but cannot become their own acceptance authority.
 const reviewBoundaryContract = createOwnerContract({
-  source: 'package-5-d7-baseline',
+  source: 'package-5-d7-repair',
   idea: 'Create a compact arena game. Dark industrial atmosphere.'
 });
 assert.equal(reviewBoundaryContract.unknowns[0].id, 'UN-01');
-const implicitReviewPass = validatePlaytesterResult({
+
+const baseReview = {
   fidelityVerdict: 'PASS',
   missingRequirements: [],
   fidelityCritique: ['The requested atmosphere is present.'],
@@ -184,9 +184,82 @@ const implicitReviewPass = validatePlaytesterResult({
   overall: 8.2,
   critique: [],
   priorityFixes: []
-}, reviewBoundaryContract);
-assert.equal(implicitReviewPass.fullBriefCoverage.pass, true);
-assert.deepEqual(implicitReviewPass.fullBriefCoverage.independentReviewClaimIds, ['UN-01']);
-console.log('PACKAGE 5 BASELINE REPRODUCED: D-7 mandatory UN-01 can be certified PASS without claim-level independent evidence provenance.');
+};
 
+assert.throws(
+  () => validatePlaytesterResult({ ...baseReview }, reviewBoundaryContract),
+  /requires exactly one independent claim review/i
+);
+
+assert.throws(
+  () => validatePlaytesterResult({
+    ...baseReview,
+    independentClaimReviews: [{
+      claimId: 'UN-01',
+      verdict: 'PASS',
+      evidenceSources: ['runtime_event_corroboration'],
+      evidenceNote: 'The generated game emitted atmosphere_present.'
+    }]
+  }, reviewBoundaryContract),
+  /PASS lacks independent evidence/i
+);
+
+const explicitIndependentPass = validatePlaytesterResult({
+  ...baseReview,
+  independentClaimReviews: [{
+    claimId: 'UN-01',
+    verdict: 'PASS',
+    evidenceSources: ['screenshot', 'runtime_event_corroboration'],
+    evidenceNote: 'The captured gameplay frame independently shows a dark industrial palette and machinery-like geometry; the runtime event only corroborates.'
+  }]
+}, reviewBoundaryContract);
+assert.equal(explicitIndependentPass.fullBriefCoverage.pass, true);
+assert.equal(explicitIndependentPass.fullBriefCoverage.evidencePolicy, 'independent-observation-required');
+
+assert.throws(() => enforceIndependentFullBriefReview({
+  fidelityVerdict: 'FAIL',
+  missingRequirements: ['UN-01'],
+  fidelityCritique: ['The requested atmosphere is not visible.'],
+  independentClaimReviews: [{
+    claimId: 'UN-01',
+    verdict: 'FAIL',
+    evidenceSources: ['screenshot'],
+    evidenceNote: 'The captured gameplay frame is bright/default and does not show the requested dark industrial atmosphere.'
+  }],
+  scores: { visuals: 6, uiClarity: 8, funProxy: 8, performance: 10 },
+  overall: 7.3,
+  critique: [],
+  priorityFixes: []
+}, reviewBoundaryContract), (error) => error?.code === 'FULL_BRIEF_FIDELITY_FAILED' && error?.failedClaimIds?.[0] === 'UN-01');
+
+// The human-like reviewer may disagree with deterministic MH/NG, but that
+// opinion does not override the machine authority. Only mandatory UN failures
+// are load-bearing in this independent-review lane.
+const advisoryMachineDisagreement = enforceIndependentFullBriefReview({
+  fidelityVerdict: 'FAIL',
+  missingRequirements: ['MH-01'],
+  fidelityCritique: ['Reviewer doubts the machine-proven build obligation.'],
+  independentClaimReviews: [{
+    claimId: 'UN-01',
+    verdict: 'PASS',
+    evidenceSources: ['screenshot'],
+    evidenceNote: 'The independent gameplay screenshot clearly supports the dark industrial atmosphere.'
+  }],
+  scores: { visuals: 8, uiClarity: 8, funProxy: 8, performance: 10 },
+  overall: 8.2,
+  critique: [],
+  priorityFixes: []
+}, reviewBoundaryContract);
+assert.equal(advisoryMachineDisagreement.fullBriefCoverage.pass, true);
+
+assert.match(playtesterPrompt, /independentClaimReviews/);
+assert.match(playtesterPrompt, /runtime_event_corroboration/);
+assert.match(playtesterPrompt, /NEVER solely certify|NEVER sole|never.*sole/i);
+assert.match(playtesterPrompt, /GDD.*Director.*Engineer|GDD\/Director.*Engineer/i);
+assert.match(playtesterSource, /INDEPENDENT_EVIDENCE_SOURCES/);
+assert.match(playtesterSource, /reviewProvenance/);
+assert.match(playtesterSource, /role:\s*'playtester'/);
+assert.match(playtesterSource, /model diversity is not required/);
+
+console.log('PACKAGE 5 D-7 PASS: mandatory UN claims require claim-level independent evidence; generated-game events cannot sole-certify; reviewer MH/NG disagreement remains advisory.');
 console.log('L4 production-agent integrity selftest: PASS');
