@@ -149,7 +149,7 @@ Der Production-Workflow verwendet standardmäßig ein maximales Run-Budget von `
 
 ## Git / Protected-Layer Boundary
 
-Die Git-Authority ist jetzt explizit getrennt:
+Die Git-Authority ist explizit getrennt:
 
 - **`main` = autoritativer Code-/Policy-Branch**;
 - **`runtime-state` = nicht-autoritativer durable Runtime-/Evidence-Branch**.
