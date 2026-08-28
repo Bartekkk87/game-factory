@@ -21,6 +21,7 @@ assert.deepEqual(a.unknowns.map((r) => r.id), ['UN-01']);
 assert.deepEqual(ownerRequirementIds(a), ['MH-01', 'MH-02', 'NG-01']);
 assert.equal(a.unknowns[0].text, 'Maybe add co-op later.');
 assert.equal(a.decomposition.version, 'deterministic-freeform-v2');
+assert.equal(a.decomposition.semanticHeadingContextPreserved, false);
 assert.equal(Object.isFrozen(a.mustHaves[0].provenance), true);
 
 const inflatedMood = createOwnerContract({
@@ -71,32 +72,47 @@ assert.deepEqual(sectioned.mustHaves.map((r) => r.id), ['MH-01', 'MH-02']);
 assert.deepEqual(sectioned.noGos.map((r) => r.id), ['NG-01']);
 assert.equal(sectioned.unknowns.length, 0);
 
-// Package 3 / D-4 baseline reproduction: generic semantic headings are dropped
-// by freeformFragments(). Their body text survives, but the heading labels do not
-// survive in any decomposed immutable requirement.
+// Package 3 / D-4: generic semantic headings must survive decomposition without
+// changing the conservative requirement classification or inventing obligations.
+const headingBrief = [
+  '## Anchor Moves',
+  'Dash through marked lanes to build momentum.',
+  '## Signature Risk',
+  'Overcharging the dash can leave the player exposed.',
+  '## Must Survive The Cut',
+  'The upgrade choice must visibly change the next encounter.'
+].join('\n');
 const headingDriven = createOwnerContract({
-  idea: [
-    '## Anchor Moves',
-    'Dash through marked lanes to build momentum.',
-    '## Signature Risk',
-    'Overcharging the dash can leave the player exposed.',
-    '## Must Survive The Cut',
-    'The upgrade choice must visibly change the next encounter.'
-  ].join('\n'),
-  source: 'package-3-d4-baseline'
+  idea: headingBrief,
+  source: 'package-3-d4-repair'
 });
-const headingDrivenRequirements = [
-  ...headingDriven.mustHaves,
-  ...headingDriven.noGos,
-  ...headingDriven.unknowns
-];
-assert.equal(headingDriven.originalBrief.includes('## Anchor Moves'), true);
-assert.equal(headingDrivenRequirements.some((r) => /Anchor Moves/i.test(r.text)), false);
-assert.equal(headingDrivenRequirements.some((r) => /Signature Risk/i.test(r.text)), false);
-assert.equal(headingDrivenRequirements.some((r) => /Must Survive The Cut/i.test(r.text)), false);
-assert.equal(headingDriven.mustHaves.some((r) => /upgrade choice must visibly change/i.test(r.text)), true);
+const headingDrivenAgain = createOwnerContract({
+  idea: headingBrief,
+  source: 'package-3-d4-repair'
+});
+assert.equal(headingDriven.contractSha256, headingDrivenAgain.contractSha256);
+assert.equal(headingDriven.decomposition.version, 'deterministic-freeform-v3-heading-context');
+assert.equal(headingDriven.decomposition.semanticHeadingContextPreserved, true);
 assert.deepEqual(headingDriven.mustHaves.map((r) => r.id), ['MH-01']);
 assert.deepEqual(headingDriven.unknowns.map((r) => r.id), ['UN-01', 'UN-02']);
+assert.equal(headingDriven.mustHaves[0].text, 'The upgrade choice must visibly change the next encounter.');
+assert.equal(headingDriven.mustHaves[0].contextHeading, 'Must Survive The Cut');
+assert.equal(headingDriven.mustHaves[0].provenance.contextHeading, 'Must Survive The Cut');
+assert.equal(headingDriven.unknowns[0].contextHeading, 'Anchor Moves');
+assert.equal(headingDriven.unknowns[1].contextHeading, 'Signature Risk');
+assert.equal(Object.isFrozen(headingDriven.mustHaves[0]), true);
+assert.equal(Object.isFrozen(headingDriven.unknowns[0].provenance), true);
 
-console.log('PACKAGE 3 BASELINE REPRODUCED: D-4 generic semantic headings exist in originalBrief but are absent from all decomposed immutable requirement text.');
+// A forceful-looking heading must not inflate a neutral body sentence into a
+// Must-Have. Classification still uses the owner's fragment wording itself.
+const noHeadingInflation = createOwnerContract({
+  idea: '## Must Survive The Cut\nDistinct silhouettes during combat.',
+  source: 'package-3-heading-no-inflation'
+});
+assert.equal(noHeadingInflation.mustHaves.length, 0);
+assert.equal(noHeadingInflation.unknowns.length, 1);
+assert.equal(noHeadingInflation.unknowns[0].text, 'Distinct silhouettes during combat.');
+assert.equal(noHeadingInflation.unknowns[0].contextHeading, 'Must Survive The Cut');
+
+console.log('PACKAGE 3 D-4 PASS: semantic headings survive as immutable requirement context with stable IDs and no heading-driven obligation inflation.');
 console.log('Owner Contract decomposition selftest: PASS');
