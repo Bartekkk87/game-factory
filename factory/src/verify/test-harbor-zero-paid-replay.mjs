@@ -21,8 +21,6 @@ const historicalGdd = readJson(path.join(frozenRun, 'gdd.json'));
 const historicalRunEvidence = readJson(path.join(frozenRun, 'RUN-EVIDENCE.json'));
 const frozenBrief = fs.readFileSync(frozenBriefPath, 'utf8');
 
-// Resolve the exact candidate retained by durable run evidence. Do not assume the last attempt
-// is authoritative: Best-So-Far can intentionally preserve an earlier evidenced candidate.
 const attemptDirs = fs.readdirSync(frozenRun)
   .filter((name) => /^attempt-\d+$/.test(name))
   .sort();
@@ -37,22 +35,18 @@ const historicalFidelity = readJson(path.join(frozenAttempt, 'evidence-fidelity.
 const frozenHtml = fs.readFileSync(path.join(frozenAttempt, 'index.html'));
 const frozenDesign = readJson(path.join(frozenAttempt, 'design.json'));
 
-// Freeze proof: replay the exact Canary #3 brief and exact durable retained candidate bytes.
 assert.equal(frozenBrief.trimEnd(), ownerContract.originalBrief.trimEnd(), 'frozen Harbor brief drifted from Canary #3 Owner Contract');
 assert.equal(digest(frozenHtml), historicalRunEvidence.run.candidateSha, 'durably selected Harbor candidate bytes drifted from Canary #3 evidence');
 assert.equal(historicalRunEvidence.run.id, '20260828-043617');
 assert.equal(historicalRunEvidence.run.status, 'failed');
 assert.equal(retainedAttemptName, 'attempt-03', 'Canary #3 durable evidence no longer resolves to the historically retained Best-So-Far attempt');
 
-// Historical baseline for the retained candidate: terminal success/failure/restart were the
-// load-bearing gaps; HUD geometry already passed.
 const historicalById = new Map((historicalFidelity.criteria || []).map((criterion) => [criterion.requirementId, criterion]));
 assert.equal(historicalById.get('MH-04')?.pass, false);
 assert.equal(historicalById.get('MH-06')?.pass, false);
 assert.equal(historicalById.get('MH-07')?.pass, false);
 assert.equal(historicalById.get('MH-08')?.pass, true);
 
-// Recompile the frozen GDD through the CURRENT proof planner. Do not mutate the frozen source files.
 const currentProofPlan = compileProofPlan({ gdd: historicalGdd });
 assert.equal(currentProofPlan.pass, true, `current proof plan is unreachable: ${(currentProofPlan.errors || []).join('; ')}`);
 assert.deepEqual(new Set(currentProofPlan.requiredTerminalStates), new Set(['success', 'failure']));
@@ -82,8 +76,20 @@ const report = await runSession({
 const technical = await evaluateContract(report, { bgColor });
 const fidelity = evaluateProductFidelity({ ownerContract, gdd: replayGdd, report });
 
-// Diagnostic evidence is intentionally emitted before any assertion so a failed replay remains
-// explainable without weakening or bypassing the load-bearing verifier gate.
+// Diagnostic control: run the exact same frozen candidate and current action policy in a shorter
+// 5-second observation window with no proof-plan extras. This isolates live gameplay frames before
+// Harbor reaches its terminal success screen; it does not alter any production verifier threshold.
+const liveParent = fs.mkdtempSync(path.join(os.tmpdir(), 'gf-harbor-live-activity-'));
+const liveRoot = path.join(liveParent, 'candidate');
+fs.cpSync(frozenAttempt, liveRoot, { recursive: true });
+const liveReport = await runSession({
+  root: liveRoot,
+  seconds: 5,
+  screenshotDir: path.join(liveParent, 'shots')
+});
+const liveTechnical = await evaluateContract(liveReport, { bgColor });
+const liveVisualActivity = liveTechnical.checks.find((check) => check.id === 'visual_activity');
+
 console.log(JSON.stringify({
   diagnostic: 'Harbor zero-paid replay',
   retainedAttempt: retainedAttemptName,
@@ -102,9 +108,18 @@ console.log(JSON.stringify({
   productFidelityFailures: (fidelity.failures || []).map((failure) => ({
     requirementId: failure.requirementId,
     detail: failure.detail
-  }))
+  })),
+  liveGameplayControl: {
+    seconds: 5,
+    endState: liveReport.endSnapshot?.state ?? null,
+    score: liveReport.endSnapshot?.score ?? null,
+    visualActivity: liveVisualActivity ?? null,
+    technicalPass: liveTechnical.passed
+  }
 }, null, 2));
 
+assert.equal(liveReport.endSnapshot?.state, 'playing', '5-second diagnostic did not remain inside live gameplay');
+assert.equal(liveVisualActivity?.pass, true, `live Harbor gameplay did not demonstrate visual activity: ${liveVisualActivity?.detail || 'missing'}`);
 assert.equal(technical.passed, true, `Harbor replay technical verifier failed: ${(technical.checks || []).filter((check) => !check.pass).map((check) => check.id).join(', ')}`);
 assert.equal(report.pageErrors.length, 0, `Harbor replay page errors: ${report.pageErrors.join(' | ')}`);
 assert.equal(report.consoleErrors.length, 0, `Harbor replay console errors: ${report.consoleErrors.join(' | ')}`);
