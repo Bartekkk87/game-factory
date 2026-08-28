@@ -2,6 +2,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { PATHS } from '../config.mjs';
 
+export const LESSON_SCHEMA = 'learning-lesson/v2';
+export const MAX_LESSON_DIRECTIVE_CHARS = 800;
+export const MAX_PRODUCTION_LESSONS = 12;
+
 const DEFAULT_FILE = path.join(PATHS.memoryDir, 'memory.json');
 const LOCK_WAIT_MS = 10;
 const LOCK_TIMEOUT_MS = 15000;
@@ -19,6 +23,30 @@ function normalizeLesson(lesson) {
   return { ...(lesson || {}), status: 'legacy-unvalidated', active: false };
 }
 
+export function assertProductionLesson(lesson) {
+  if (!lesson || lesson.schemaVersion !== LESSON_SCHEMA) throw new Error('production lesson schema invalid');
+  for (const key of ['id', 'role', 'scope', 'targetLayer', 'directive', 'status']) {
+    if (typeof lesson[key] !== 'string' || !lesson[key].trim()) throw new Error(`production lesson missing ${key}`);
+  }
+  if (lesson.status !== 'validated' || lesson.active !== true) throw new Error('production lesson must be validated and active');
+  if (lesson.targetLayer !== 'prompt') throw new Error('production lesson must target prompt layer');
+  if (lesson.directive.length > MAX_LESSON_DIRECTIVE_CHARS) throw new Error('production lesson directive exceeds bound');
+  if (!Array.isArray(lesson.sourceRunIds) || !Array.isArray(lesson.ownerFeedbackIds)) throw new Error('production lesson provenance arrays required');
+  if (!lesson.promotionRef || !lesson.mergeCommitSha || !/^[0-9a-f]{64}$/.test(String(lesson.candidateArtifactSha256 || ''))) {
+    throw new Error('production lesson promotion provenance incomplete');
+  }
+  return { ...lesson };
+}
+
+function isSafeProductionLesson(lesson, role) {
+  try {
+    const validated = assertProductionLesson(lesson);
+    return validated.role === role;
+  } catch {
+    return false;
+  }
+}
+
 function normalizeMemory(stored = {}) {
   const merged = structuredClone(EMPTY);
   merged.products = stored.products ?? [];
@@ -32,9 +60,7 @@ function readFile(file) {
   catch { return normalizeMemory(); }
 }
 
-function syncSleep(ms) {
-  Atomics.wait(sleepCell, 0, 0, ms);
-}
+function syncSleep(ms) { Atomics.wait(sleepCell, 0, 0, ms); }
 
 function acquireLock(file) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -104,9 +130,6 @@ export function createMemoryStore(file = DEFAULT_FILE) {
 
   const loadMemory = () => readFile(file);
 
-  // Compatibility write for governance code: merge only entity collections and
-  // preserve the latest transactional stats so a stale snapshot cannot erase a
-  // concurrent bumpStats update.
   const saveMemory = (incoming) => updateMemory((current) => ({
     ...current,
     products: mergeByKey(current.products, incoming?.products ?? [], (item) => item?.slug || null),
@@ -114,10 +137,23 @@ export function createMemoryStore(file = DEFAULT_FILE) {
     stats: current.stats
   }));
 
-  const lessonsFor = (role, limit = 12) => loadMemory()
-    .lessons.filter((lesson) => lesson.role === role && lesson.status === 'validated' && lesson.active === true)
-    .slice(-limit)
-    .map((lesson) => `- ${lesson.text}`);
+  const lessonsFor = (role, limit = MAX_PRODUCTION_LESSONS) => loadMemory()
+    .lessons
+    .filter((lesson) => isSafeProductionLesson(lesson, role))
+    .slice(-Math.min(Math.max(0, Number(limit) || 0), MAX_PRODUCTION_LESSONS))
+    .map((lesson) => ({
+      schemaVersion: lesson.schemaVersion,
+      id: lesson.id,
+      role: lesson.role,
+      scope: lesson.scope,
+      targetLayer: lesson.targetLayer,
+      directive: lesson.directive,
+      sourceRunIds: [...lesson.sourceRunIds],
+      ownerFeedbackIds: [...lesson.ownerFeedbackIds],
+      promotionRef: lesson.promotionRef,
+      mergeCommitSha: lesson.mergeCommitSha,
+      candidateArtifactSha256: lesson.candidateArtifactSha256
+    }));
 
   const knownConcepts = (limit = 30) => loadMemory()
     .products.slice(-limit)
@@ -149,6 +185,5 @@ export const knownConcepts = defaultStore.knownConcepts;
 export const registerProduct = defaultStore.registerProduct;
 export const bumpStats = defaultStore.bumpStats;
 
-// There is intentionally no direct lesson-write helper. Active Production
-// lessons can only be materialized by the SHA/PR/merge-bound privileged
-// governance path.
+// No direct lesson-write helper exists. Active Production lessons are accepted
+// only when they carry the typed schema and merge-bound promotion provenance.
