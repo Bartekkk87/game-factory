@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "game-factory.golden-corpus-baseline/v1",
+  "baselineId": "s0-coverage-baseline-2026-08-28",
+  "baselineType": "coverage-inventory",
+  "sourceMainSha": "ed1587cd4370871d0e5ac26d7c6312b5deed5445",
+  "supportingFullVerifierAtInventory": "33168166465",
+  "corpusId": "golden-factory-evaluation-corpus-s0-2026-08-28",
+  "counts": {
+    "cases": 15,
+    "activeCases": 15,
+    "seedCases": 15,
+    "failureClasses": 14,
+    "varianceFamilies": 12,
+    "domains": {
+      "game-production": 10,
+      "factory-reliability": 5
+    },
+    "tiers": {
+      "0": 11,
+      "1": 4,
+      "2": 0
+    },
+    "severity": {
+      "standard": 3,
+      "critical-integrity": 12
+    },
+    "sourceKinds": {
+      "fixture": 3,
+      "selftest": 12,
+      "historical-regression": 0
+    }
+  },
+  "expectedOutcomeQualityScore": "not-computed-until-S2",
+  "criticalFalsePassCount": "not-computed-until-S2",
+  "notes": [
+    "S0 records coverage and provenance only; it does not execute the corpus as an evaluation suite.",
+    "No synthetic sibling variants are generated in S0.",
+    "No Production LLM/API call is required for this baseline."
+  ]
+}
