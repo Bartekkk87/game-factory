@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "game-factory.s5-system-configuration/v1",
+  "id": "reference-luna-v1",
+  "version": "1.0.0",
+  "evaluatedCommitSha": "856e82c5bdda0ecddadeb3d1bec949d9abd75585",
+  "executionClass": "model-backed",
+  "model": {"provider":"openai","id":"gpt-5.6-luna","versionLabel":"gpt-5.6-luna","registryRef":{"path":"factory/src/llm/model-registry.mjs","gitBlobSha":"190e82186d965bfa469807683e0f2cc044085cc5"}},
+  "promptSkill": {"prompts":[{"path":"factory/prompts/engineer.md","gitBlobSha":"095273efa658419c42ac6dffc77d9161e4c54537"}],"skills":[{"path":"skills/engineering.md","gitBlobSha":"44ec2658785a190369ea572a468d6deb82db7161"}]},
+  "contextContract": {"refs":[{"path":"factory/src/contract/owner.mjs","gitBlobSha":"454c3d231d1cfad42ca9a9f93054b4788e909dc9"}],"visibilityPolicy":"worker-visible-context-only; evaluator oracle excluded"},
+  "verifier": {"refs":[{"path":"factory/src/verify/contract.mjs","gitBlobSha":"7e2a59896628da969d944bc4f1d3f0d01c51bd67"}]},
+  "retry": {"refs":[{"path":"factory/src/control/repair-policy.mjs","gitBlobSha":"ba8550564204f99c552d7c457d7ca70fd7325a33"}],"maxAttempts":4},
+  "escalation": {"refs":[{"path":"factory/src/control/release-gate.mjs","gitBlobSha":"1da74e5fd8d3b6eca8900d24c9833462c827eeae"}],"maxEscalations":1,"authority":"human-owner"},
+  "trialPlan": {"trialsPerCase":3,"identityPolicy":"explicit runId + caseId + trial index"},
+  "configurationSha256": "63a7180a409c3edf8f204e6220ad920961c887eda7a67f2e02bbd6c9a7dff1ca"
+}

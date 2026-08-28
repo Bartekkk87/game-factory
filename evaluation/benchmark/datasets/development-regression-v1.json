@@ -1,0 +1,8 @@
+{
+  "schemaVersion":"game-factory.s5-benchmark-dataset/v1",
+  "datasetId":"s5-development-regression",
+  "version":"1.0.0",
+  "split":"development-regression",
+  "cases":[{"id":"dev-contract-case-v1","familyIdentity":"s5-development-contract-family","provenanceIdentity":"s5-development-contract-provenance","sourceFingerprintSha256":"8ebbfb554652f0d69438ee7cfb9daa96e5d826385b94c7c0e12dea2c29e678f8","workerPayload":{"task":"Classify the supplied synthetic benchmark envelope.","fixture":"development-contract-v1","input":{"value":1,"mode":"development"}},"oracleRef":"evaluation/benchmark/oracles/development-regression-v1.json#dev-contract-case-v1"}],
+  "datasetSha256":"2be1a4e230fddbca0bf481a69512634e2640b94df2f658c4fa6f8ac81a6a0fc7"
+}
