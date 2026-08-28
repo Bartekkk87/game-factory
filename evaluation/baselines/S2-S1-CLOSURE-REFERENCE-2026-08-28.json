@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "game-factory.golden-corpus-s2-baseline/v1",
+  "baselineId": "s2-s1-closure-reference-2026-08-28",
+  "baselineType": "s1-closure-reference",
+  "evaluatedCommitSha": "351a329ee60ea8e5437dcb3788923db3ce814894",
+  "supportingFullVerifier": "33178746073",
+  "executionEvidenceKind": "supporting-full-verifier-over-shared-selftests",
+  "corpusContract": {
+    "registryGitBlobSha": "aff99fda16edccc45b8f2ae5ca8a28718c813b3c",
+    "s1ManifestGitBlobSha": "908b28981a67d1ab5af19b7ad1e8d7b81f28d00b",
+    "seedCases": 15,
+    "variants": 14,
+    "totalCases": 29,
+    "uniqueExecutionScripts": 8
+  },
+  "metrics": {
+    "totalCases": 29,
+    "matchedExpectedCount": 29,
+    "expectedMismatchCount": 0,
+    "expectedOutcomePassRate": 1,
+    "criticalFalsePassCount": 0,
+    "criticalMismatchCount": 0
+  },
+  "policy": {
+    "criticalFalsePassTolerance": 0,
+    "baselineCorpusDriftAllowed": false
+  },
+  "notes": [
+    "This reference baseline is anchored to the S1 closure commit before S2 runner code existed.",
+    "The supporting S1 post-merge Full Verifier executed the same eight deterministic selftest scripts used by the S2 corpus execution contract and completed successfully.",
+    "Registry and S1 manifest Git blob SHAs are pinned so expected answers, severity, domains, clusters, or variant definitions cannot drift silently during baseline comparison.",
+    "S2 remains zero-paid: no Production LLM/API execution is part of this baseline."
+  ]
+}
