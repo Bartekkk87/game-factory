@@ -13,6 +13,9 @@ on:
       - 'package-lock.json'
       - '.github/workflows/**'
       - '.github/CODEOWNERS'
+      - 'README.md'
+      - 'ARCHITECTURE.md'
+      - 'docs/strategy/ARCHITECTURE-AUDIT-V2-HARDENING-2026-08-28.md'
   workflow_dispatch:
 
 permissions:
