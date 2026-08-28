@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "game-factory.strategy-status-chain/v1",
+  "defaultUnlistedStatus": "historical-non-authoritative",
+  "authorityOrder": [
+    "ARCHITECTURE.md",
+    "docs/strategy/ARCHITECTURE-FINALIZATION-TRACK-2026-08-29.md",
+    "docs/strategy/ARCHITECTURE-AUDIT-V2-HARDENING-2026-08-28.md",
+    "docs/strategy/PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md"
+  ],
+  "documents": [
+    {
+      "path": "ARCHITECTURE.md",
+      "role": "architecture",
+      "status": "canonical",
+      "supersedes": []
+    },
+    {
+      "path": "docs/strategy/ARCHITECTURE-FINALIZATION-TRACK-2026-08-29.md",
+      "role": "architecture-finalization",
+      "status": "active-track",
+      "supersedes": []
+    },
+    {
+      "path": "docs/strategy/ARCHITECTURE-AUDIT-V2-HARDENING-2026-08-28.md",
+      "role": "audit-hardening-evidence",
+      "status": "active-evidence",
+      "supersedes": []
+    },
+    {
+      "path": "docs/strategy/PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md",
+      "role": "project-progress",
+      "status": "canonical",
+      "supersedes": [
+        "docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md"
+      ]
+    },
+    {
+      "path": "docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md",
+      "role": "project-progress",
+      "status": "superseded",
+      "supersededBy": "docs/strategy/PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md",
+      "supersedes": []
+    }
+  ]
+}
