@@ -2,16 +2,14 @@ name: Deploy Site
 
 on:
   push:
-    branches: [main]
+    branches: [main, runtime-state]
     paths:
       - 'drafts/**'
       - 'products/**'
       - 'archive/**'
       - 'factory/src/publish/site.mjs'
+      - 'factory/src/control/staged-commit-policy.mjs'
       - '.github/workflows/pages.yml'
-  workflow_run:
-    workflows: ['Produce Game']
-    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -25,17 +23,36 @@ concurrency:
 
 jobs:
   deploy:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+
+      - name: Load isolated runtime state
+        run: |
+          git config user.name "game-factory-pages"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main runtime-state
+          node factory/src/control/staged-commit-policy.mjs \
+            --mode review \
+            --check-state-history \
+            --base-ref origin/main \
+            --state-ref origin/runtime-state
+          git merge --no-edit origin/runtime-state
+          node factory/src/control/staged-commit-policy.mjs \
+            --mode review \
+            --check-state-tree \
+            --base-ref origin/main \
+            --state-ref HEAD
 
       - name: Build gallery site
         run: node factory/src/publish/site.mjs --out _site
