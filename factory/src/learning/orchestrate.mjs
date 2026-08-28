@@ -7,12 +7,14 @@ import { aggregateEvidence } from './aggregate.mjs';
 import { evaluateImprovementTrigger } from './trigger.mjs';
 import { IMPROVEMENT_AUTHORITY, persistImprovementClaim } from './analysis.mjs';
 import { OWNER_FEEDBACK_DIR } from './owner-feedback.mjs';
+import { analyzeFailedProductionRun, proposalFromRootCause } from './root-cause.mjs';
 
 const LEARNING_ROOT = path.join(ROOT, 'learning');
 const DIRS = Object.freeze({
   aggregates: path.join(LEARNING_ROOT, 'aggregates'),
   triggers: path.join(LEARNING_ROOT, 'triggers'),
   analysis: path.join(LEARNING_ROOT, 'analysis'),
+  rootCauses: path.join(LEARNING_ROOT, 'root-causes'),
   candidates: path.join(LEARNING_ROOT, 'candidates'),
   orchestration: path.join(LEARNING_ROOT, 'orchestration')
 });
@@ -107,7 +109,7 @@ function feedbackFact(feedback) {
     : `Owner ${feedback?.parsedCommand || 'feedback'} evidence ${feedback?.id || 'unknown'} was captured without an interpreted reason.`;
 }
 
-function buildProposal({ eventKind, eventId, trigger, aggregate, durable, candidateId }) {
+function buildProposal({ eventKind, eventId, trigger, aggregate, durable, candidateId, rootCause }) {
   if (eventKind === 'owner-feedback' && trigger.allowedScopes?.includes('product-feedback')) {
     const feedback = durable.ownerFeedback.find((item) => item.id === eventId);
     if (!feedback) throw new Error(`owner-feedback event not found: ${eventId}`);
@@ -140,6 +142,21 @@ function buildProposal({ eventKind, eventId, trigger, aggregate, durable, candid
         evidenceCount: 1,
         createdAt: feedback.createdAt || undefined
       }
+    };
+  }
+
+  if (eventKind === 'production-run' && trigger.allowedScopes?.includes('case-root-cause') && rootCause) {
+    const proposal = proposalFromRootCause(rootCause, candidateId);
+    return {
+      scope: 'case-root-cause',
+      facts: [
+        `Failed production run ${eventId} was analyzed from durable run/attempt evidence without an additional LLM call.`,
+        `Attempt failure trajectory: ${rootCause.trajectory.join(' -> ') || 'no attempt evidence'}.`,
+        `Best attempt: ${rootCause.bestAttempt || 'unknown'}; final attempt: ${rootCause.finalAttempt || 'unknown'}.`,
+        `Evidence-backed findings: ${rootCause.findings.map((item) => `${item.id}@${item.confidence}`).join(', ') || 'none above deterministic threshold'}.`
+      ],
+      proposal,
+      blocked: proposal ? null : 'no bounded root-cause hypothesis crossed the deterministic evidence threshold'
     };
   }
 
@@ -205,6 +222,7 @@ export function orchestrateControlledLearning({ eventKind, eventId } = {}) {
   const aggregateFile = path.join(DIRS.aggregates, `${artifactId}.json`);
   const triggerFile = path.join(DIRS.triggers, `${artifactId}.json`);
   const analysisFile = path.join(DIRS.analysis, `${artifactId}.json`);
+  const rootCauseFile = path.join(DIRS.rootCauses, `${artifactId}.json`);
   const receiptFile = path.join(DIRS.orchestration, `${artifactId}.json`);
 
   const existingReceipt = readJson(receiptFile, null);
@@ -218,9 +236,10 @@ export function orchestrateControlledLearning({ eventKind, eventId } = {}) {
   }
 
   const durable = loadDurableEvidence();
-  if (kind === 'production-run' && !durable.runEvidence.some((run) => String(run?.run?.id || '') === id)) {
-    throw new Error(`production-run evidence not found: ${id}`);
-  }
+  const eventRun = kind === 'production-run'
+    ? durable.runEvidence.find((run) => String(run?.run?.id || '') === id)
+    : null;
+  if (kind === 'production-run' && !eventRun) throw new Error(`production-run evidence not found: ${id}`);
   if (kind === 'owner-feedback' && !durable.ownerFeedback.some((feedback) => feedback.id === id)) {
     throw new Error(`owner-feedback evidence not found: ${id}`);
   }
@@ -228,11 +247,16 @@ export function orchestrateControlledLearning({ eventKind, eventId } = {}) {
   const eventFeedback = kind === 'owner-feedback'
     ? durable.ownerFeedback.find((feedback) => feedback.id === id)
     : null;
+  const eventFailed = kind === 'production-run' && String(eventRun?.run?.status || '').toLowerCase() === 'failed';
+  const rootCause = eventFailed ? analyzeFailedProductionRun({ runId: id }) : null;
+  if (rootCause) writeJson(rootCauseFile, rootCause);
+
   const aggregate = aggregateEvidence(durable);
   const trigger = evaluateImprovementTrigger(aggregate, {
     eventKind: kind,
     eventId: id,
-    eventVerdict: eventFeedback?.parsedCommand || eventFeedback?.verdict || ''
+    eventVerdict: eventFeedback?.parsedCommand || eventFeedback?.verdict || '',
+    eventFailed
   });
   writeJson(aggregateFile, {
     ...aggregate,
@@ -242,12 +266,14 @@ export function orchestrateControlledLearning({ eventKind, eventId } = {}) {
     ...trigger,
     eventKind: kind,
     eventId: id,
-    aggregateRef: relative(aggregateFile)
+    eventFailed,
+    aggregateRef: relative(aggregateFile),
+    rootCauseRef: rootCause ? relative(rootCauseFile) : null
   });
 
   const candidateId = `candidate-${kind}-${key}`;
   const bounded = trigger.allowed
-    ? buildProposal({ eventKind: kind, eventId: id, trigger, aggregate, durable, candidateId })
+    ? buildProposal({ eventKind: kind, eventId: id, trigger, aggregate, durable, candidateId, rootCause })
     : { scope: null, facts: [], proposal: null };
   const candidate = ensureInactiveCandidate(trigger, bounded.proposal || null);
 
@@ -257,10 +283,12 @@ export function orchestrateControlledLearning({ eventKind, eventId } = {}) {
       id: artifactId,
       triggerRef: relative(triggerFile),
       aggregateRef: relative(aggregateFile),
+      rootCauseRef: rootCause ? relative(rootCauseFile) : null,
       event: { kind, id },
       scope: bounded.scope,
       authority: IMPROVEMENT_AUTHORITY,
       facts: bounded.facts,
+      findingIds: rootCause?.findings?.map((item) => item.id) || [],
       conclusion: bounded.blocked
         ? `Analysis stopped safely: ${bounded.blocked}.`
         : candidate
@@ -279,6 +307,7 @@ export function orchestrateControlledLearning({ eventKind, eventId } = {}) {
     eventId: id,
     aggregateRef: relative(aggregateFile),
     triggerRef: relative(triggerFile),
+    rootCauseRef: rootCause ? relative(rootCauseFile) : null,
     analysisRef: trigger.allowed && bounded.scope ? relative(analysisFile) : null,
     triggerAllowed: trigger.allowed,
     triggerReasons: trigger.reasons,

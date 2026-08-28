@@ -132,6 +132,7 @@ jobs:
             learning/aggregates/
             learning/triggers/
             learning/analysis/
+            learning/root-causes/
             learning/candidates/
             learning/orchestration/
           if-no-files-found: ignore
