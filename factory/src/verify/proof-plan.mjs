@@ -1,4 +1,4 @@
-const TERMINAL_STATES = new Set(['success', 'failure']);
+import { canonicalTerminalState, canonicalVerifierState } from './state-semantics.mjs';
 
 function inferDeclaredSeconds(gdd) {
   const text = JSON.stringify(gdd || {});
@@ -13,9 +13,9 @@ function inferDeclaredSeconds(gdd) {
 
 function routeProbe(probe, scenarioIds) {
   const kind = String(probe?.kind || '');
-  const state = String(probe?.state || '');
-  if (kind === 'state_reached' && state === 'success') return ['success-proof'];
-  if (kind === 'state_reached' && state === 'failure') return ['failure-proof'];
+  const terminalState = canonicalTerminalState(probe?.state);
+  if (kind === 'state_reached' && terminalState === 'success') return ['success-proof'];
+  if (kind === 'state_reached' && terminalState === 'failure') return ['failure-proof'];
   if (kind === 'restart_after_terminal') {
     return scenarioIds.filter((id) => id === 'success-proof' || id === 'failure-proof');
   }
@@ -35,10 +35,18 @@ export function validateProofPlan({ gdd, plan } = {}) {
 
   if (!ids.has('base')) errors.push('base scenario missing');
 
+  const stateProbes = probes.filter((p) => p?.kind === 'state_reached');
+  for (const probe of stateProbes) {
+    const declared = String(probe?.state ?? '').trim();
+    if (!canonicalVerifierState(declared)) {
+      errors.push(`probe ${probe?.id || 'missing'} uses unsupported verifier state ${declared || 'missing'}`);
+    }
+  }
+
   const requiredTerminalStates = [...new Set(
-    probes
-      .filter((p) => p?.kind === 'state_reached' && TERMINAL_STATES.has(String(p?.state || '')))
-      .map((p) => String(p.state))
+    stateProbes
+      .map((p) => canonicalTerminalState(p?.state))
+      .filter(Boolean)
   )];
 
   for (const state of requiredTerminalStates) {
@@ -48,7 +56,10 @@ export function validateProofPlan({ gdd, plan } = {}) {
       errors.push(`${expectedId} scenario missing for required terminal state ${state}`);
       continue;
     }
-    if (!Array.isArray(scenario.stopStates) || !scenario.stopStates.includes(state)) {
+    const stopStates = Array.isArray(scenario.stopStates)
+      ? scenario.stopStates.map((value) => canonicalVerifierState(value)).filter(Boolean)
+      : [];
+    if (!stopStates.includes(state)) {
       errors.push(`${expectedId} does not observe terminal state ${state}`);
     }
     if (!Number.isFinite(Number(scenario.seconds)) || Number(scenario.seconds) <= 0) {
@@ -94,7 +105,8 @@ export function compileProofPlan({ gdd, baseSeconds = 12, maxProofSeconds = 125 
   const states = new Set(
     probes
       .filter((p) => p?.kind === 'state_reached')
-      .map((p) => String(p?.state || ''))
+      .map((p) => canonicalTerminalState(p?.state))
+      .filter(Boolean)
   );
   const declaredSeconds = inferDeclaredSeconds(gdd);
   const terminalSeconds = Math.min(
