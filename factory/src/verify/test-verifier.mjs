@@ -171,10 +171,10 @@ const productiveKeys = new Set(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown
 window.addEventListener('keydown', (event) => {
   if (!productiveKeys.has(event.code)) return;
   game.addScore(1);
-  visualOffset = (visualOffset + 17) % 120;
 });
 game.add('play', {
   update() {
+    visualOffset = Math.floor(game.time * 24) % 120;
     if (!evidenceSent && game.time >= 2.6) {
       evidenceSent = true;
       game.event('boss_entered', { boss: 'fixture' });
