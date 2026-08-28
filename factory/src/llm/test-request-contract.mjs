@@ -1,0 +1,64 @@
+import assert from 'node:assert/strict';
+import { buildOpenAiCompatibleChatRequest } from './adapters/openai-compatible-chat.mjs';
+import { modelRegistrySnapshot } from './model-registry.mjs';
+
+const registry = modelRegistrySnapshot();
+const entries = Object.entries(registry);
+assert.ok(entries.length > 0, 'model registry must not be empty');
+
+for (const [key, model] of entries) {
+  const route = {
+    provider: {
+      id: model.provider,
+      apiKey: 'test-key',
+      baseUrl: 'https://example.invalid',
+      chatPath: '/chat/completions',
+      openRouterHeaders: model.provider === 'openrouter'
+    },
+    model
+  };
+
+  assert.ok(model.requestShape, `${key} requestShape missing`);
+  assert.ok(['max_tokens', 'max_completion_tokens'].includes(model.requestShape.tokenParam), `${key} tokenParam invalid`);
+  assert.ok(['free', 'unsupported'].includes(model.requestShape.temperature), `${key} temperature contract invalid`);
+  assert.ok(['response_format', 'none'].includes(model.requestShape.jsonMode), `${key} jsonMode invalid`);
+  assert.ok(String(model.requestShape.contractSource || '').trim(), `${key} request contract source missing`);
+
+  const request = buildOpenAiCompatibleChatRequest({
+    route,
+    system: 'system',
+    user: 'user',
+    json: true,
+    temperature: 0.9,
+    maxTokens: 321
+  });
+  const body = JSON.parse(request.body);
+
+  assert.equal(body.model, model.id, `${key} model id mismatch`);
+  assert.equal(body[model.requestShape.tokenParam], 321, `${key} token field mismatch`);
+  const alternateToken = model.requestShape.tokenParam === 'max_tokens' ? 'max_completion_tokens' : 'max_tokens';
+  assert.equal(Object.hasOwn(body, alternateToken), false, `${key} emitted forbidden alternate token field`);
+
+  if (model.requestShape.temperature === 'unsupported') {
+    assert.equal(Object.hasOwn(body, 'temperature'), false, `${key} emitted unsupported temperature`);
+  } else {
+    assert.equal(body.temperature, 0.9, `${key} temperature missing`);
+  }
+
+  if (model.requestShape.jsonMode === 'response_format') {
+    assert.deepEqual(body.response_format, { type: 'json_object' }, `${key} JSON response contract mismatch`);
+  } else {
+    assert.equal(Object.hasOwn(body, 'response_format'), false, `${key} emitted unsupported response_format`);
+  }
+}
+
+const fixtureModel = structuredClone(entries[0][1]);
+delete fixtureModel.requestShape;
+assert.throws(() => buildOpenAiCompatibleChatRequest({
+  route: { provider: { id: fixtureModel.provider, apiKey: 'x', baseUrl: 'https://example.invalid' }, model: fixtureModel },
+  system: 's',
+  user: 'u',
+  maxTokens: 10
+}), /no valid request tokenParam contract/);
+
+console.log(`model request contract selftest: PASS (${entries.length} registry entries)`);
