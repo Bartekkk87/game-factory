@@ -30,6 +30,8 @@ export const COMMIT_ALLOWLISTS = Object.freeze({
   ])
 });
 
+export const RUNTIME_STATE_ALLOWLIST = COMMIT_ALLOWLISTS.review;
+
 const SECRET_PATTERNS = Object.freeze([
   { id: 'private-key', re: /-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----/ },
   { id: 'github-token', re: /\bgh[pousr]_[A-Za-z0-9_]{20,}\b/ },
@@ -46,6 +48,12 @@ function matchesPrefix(file, prefix) {
   return normalized === prefix.replace(/\/$/, '') || normalized.startsWith(prefix);
 }
 
+function outsideAllowlist(paths, allowlist) {
+  return [...new Set((paths || []).map(normalizeRepoPath).filter(Boolean))]
+    .filter((file) => !allowlist.some((prefix) => matchesPrefix(file, prefix)))
+    .sort();
+}
+
 export function forbiddenProtectedChanges(paths) {
   return [...new Set((paths || []).map(normalizeRepoPath).filter(Boolean))]
     .filter((file) => PROTECTED_PATH_PREFIXES.some((prefix) => matchesPrefix(file, prefix)))
@@ -55,9 +63,11 @@ export function forbiddenProtectedChanges(paths) {
 export function disallowedStagedPaths(paths, mode) {
   const allow = COMMIT_ALLOWLISTS[mode];
   if (!allow) throw new Error(`unknown commit policy mode: ${mode}`);
-  return [...new Set((paths || []).map(normalizeRepoPath).filter(Boolean))]
-    .filter((file) => !allow.some((prefix) => matchesPrefix(file, prefix)))
-    .sort();
+  return outsideAllowlist(paths, allow);
+}
+
+export function disallowedRuntimeStatePaths(paths) {
+  return outsideAllowlist(paths, RUNTIME_STATE_ALLOWLIST);
 }
 
 export function detectSecrets(text) {
@@ -65,12 +75,20 @@ export function detectSecrets(text) {
   return SECRET_PATTERNS.filter(({ re }) => re.test(value)).map(({ id }) => id);
 }
 
-function gitLines(args) {
+function gitResult(args) {
   const result = spawnSync('git', args, { cwd: ROOT, encoding: 'utf8' });
   if (result.status !== 0) {
     throw new Error(`git ${args.join(' ')} failed: ${String(result.stderr || result.stdout || '').trim()}`);
   }
-  return String(result.stdout || '').split(/\r?\n/).map(normalizeRepoPath).filter(Boolean);
+  return result;
+}
+
+function gitLines(args) {
+  return String(gitResult(args).stdout || '').split(/\r?\n/).map(normalizeRepoPath).filter(Boolean);
+}
+
+function gitValue(args) {
+  return String(gitResult(args).stdout || '').trim();
 }
 
 function readStagedText(file) {
@@ -111,6 +129,27 @@ export function assertStagedCommitPolicy(mode) {
   return { pass: true, staged };
 }
 
+export function assertRuntimeStateHistoryPolicy(baseRef, stateRef) {
+  if (!baseRef || !stateRef) throw new Error('runtime-state history policy requires baseRef and stateRef');
+  const mergeBase = gitValue(['merge-base', baseRef, stateRef]);
+  const uniqueStateChanges = gitLines(['diff', '--name-only', mergeBase, stateRef, '--']);
+  const disallowed = disallowedRuntimeStatePaths(uniqueStateChanges);
+  if (disallowed.length) {
+    throw new Error(`runtime-state contains non-state changes since merge-base: ${disallowed.join(', ')}`);
+  }
+  return { pass: true, mergeBase, uniqueStateChanges };
+}
+
+export function assertRuntimeStateTreePolicy(baseRef, stateRef) {
+  if (!baseRef || !stateRef) throw new Error('runtime-state tree policy requires baseRef and stateRef');
+  const treeChanges = gitLines(['diff', '--name-only', baseRef, stateRef, '--']);
+  const disallowed = disallowedRuntimeStatePaths(treeChanges);
+  if (disallowed.length) {
+    throw new Error(`runtime-state tree differs from authoritative code outside state paths: ${disallowed.join(', ')}`);
+  }
+  return { pass: true, treeChanges };
+}
+
 function argValue(name) {
   const index = process.argv.indexOf(name);
   return index >= 0 ? process.argv[index + 1] : null;
@@ -118,11 +157,26 @@ function argValue(name) {
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname)) {
   const mode = argValue('--mode');
-  if (!COMMIT_ALLOWLISTS[mode]) throw new Error('usage: staged-commit-policy.mjs --mode <produce|review> [--check-runtime] [--check-staged]');
-  if (process.argv.includes('--check-runtime')) assertRuntimeProtectedPathsClean();
-  if (process.argv.includes('--check-staged')) assertStagedCommitPolicy(mode);
-  if (!process.argv.includes('--check-runtime') && !process.argv.includes('--check-staged')) {
-    throw new Error('commit policy requires --check-runtime and/or --check-staged');
+  if (!COMMIT_ALLOWLISTS[mode]) {
+    throw new Error('usage: staged-commit-policy.mjs --mode <produce|review> [--check-runtime] [--check-staged] [--check-state-history|--check-state-tree --base-ref <ref> --state-ref <ref>]');
   }
+  let checked = false;
+  if (process.argv.includes('--check-runtime')) {
+    assertRuntimeProtectedPathsClean();
+    checked = true;
+  }
+  if (process.argv.includes('--check-staged')) {
+    assertStagedCommitPolicy(mode);
+    checked = true;
+  }
+  if (process.argv.includes('--check-state-history')) {
+    assertRuntimeStateHistoryPolicy(argValue('--base-ref'), argValue('--state-ref'));
+    checked = true;
+  }
+  if (process.argv.includes('--check-state-tree')) {
+    assertRuntimeStateTreePolicy(argValue('--base-ref'), argValue('--state-ref'));
+    checked = true;
+  }
+  if (!checked) throw new Error('commit policy requires at least one check');
   console.log(`workflow commit policy ${mode}: PASS`);
 }
