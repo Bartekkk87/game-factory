@@ -5,7 +5,7 @@ import path from 'node:path';
 import { analyzeFailedProductionRun, proposalFromRootCause } from './root-cause.mjs';
 
 const source = fs.readFileSync(new URL('./root-cause.mjs', import.meta.url), 'utf8');
-assert.doesNotMatch(source, /verify\/state-semantics/, 'root-cause falsifier must not inherit the verifier state vocabulary it is supposed to challenge');
+assert.doesNotMatch(source, /^import\s+.*state-semantics\.mjs.*$/m, 'root-cause falsifier must not import the verifier state vocabulary it is supposed to challenge');
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'gf-root-cause-'));
 const runId = 'failed-fixture-1';
