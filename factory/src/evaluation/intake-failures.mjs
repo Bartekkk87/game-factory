@@ -7,7 +7,10 @@ import { readJson, writeJson } from '../util/fsx.mjs';
 import { orchestrateControlledLearning } from '../learning/orchestrate.mjs';
 
 export const EVALUATION_FAILURE_EVIDENCE_SCHEMA = 'evaluation-failure-evidence-v1';
-const REPORT_SCHEMA = 'game-factory.golden-corpus-evaluation-report/v1';
+const REPORT_SCHEMAS = new Set([
+  'game-factory.golden-corpus-evaluation-report/v1',
+  'game-factory.golden-corpus-evaluation-report/v2'
+]);
 const EVIDENCE_DIR = path.join(ROOT, 'learning', 'evidence', 'evaluation-failures');
 
 function stableKey(value, length = 24) {
@@ -37,7 +40,7 @@ function assertObservationId(value) {
 }
 
 function validateReport(report) {
-  if (report?.schemaVersion !== REPORT_SCHEMA) throw new Error('unsupported evaluation report schema');
+  if (!REPORT_SCHEMAS.has(report?.schemaVersion)) throw new Error('unsupported evaluation report schema');
   if (report?.baseline?.compatibility?.compatible !== true) throw new Error('incompatible corpus report cannot enter Learning Intake');
   if (!/^[0-9a-f]{7,64}$/i.test(String(report?.evaluatedCommitSha || ''))) throw new Error('evaluated commit provenance is missing');
   if (!report?.generatedAt || Number.isNaN(Date.parse(report.generatedAt))) throw new Error('evaluation report timestamp provenance is missing');
@@ -96,7 +99,8 @@ function buildEvidence({ report, reportFile, observationId, caseResult }) {
       varianceFamily: caseResult.varianceFamily || null,
       severity: caseResult.severity || null,
       sourceKind: caseResult.sourceKind || null,
-      script: caseResult.script || null,
+      supportingScript: caseResult.supportingScript || caseResult.script || null,
+      oracleScript: caseResult.oracleScript || null,
       expectedCaseResult: caseResult.expectedCaseResult,
       actualCaseResult: caseResult.actualCaseResult
     },
