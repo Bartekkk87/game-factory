@@ -2,7 +2,7 @@
 
 Date: 28.08.2026  
 Repository: `Bartekkk87/game-factory`  
-Status: **FACTORY FOUNDATION + GOLDEN CORPUS S0–S5 CLOSED / REAL FAILURE→VALIDATED-LEARNING→HUMAN-MERGE PATH DEMONSTRATED**
+Status: **FACTORY FOUNDATION + GOLDEN CORPUS S0–S5 CLOSED / REAL FAILURE→VALIDATED-LEARNING→HUMAN-APPLICATION PATH APPLIED-CLOSED**
 
 This document supersedes older project-status snapshots for the current checkpoint while preserving them as historical audit evidence.
 
@@ -19,13 +19,14 @@ Implemented and demonstrated:
 - inactive Learning Candidates;
 - explicit zero-paid validation/regression;
 - human-reviewed protected-layer application;
+- SHA-bound post-merge application closure;
 - Golden Factory Evaluation Corpus S0–S5;
-- S4 Application Receipt mechanism;
+- S4 Application Receipt / `APPLIED-CLOSED` mechanism;
 - S5 zero-paid full-system configuration benchmark governance.
 
 Newly demonstrated with the real Lumen failure:
 
-`real paid Production failure -> durable evidence -> deterministic failure class -> protected-layer Director skill Candidate -> validated inactive -> human-reviewed merge`
+`real paid Production failure -> durable evidence -> deterministic failure class -> protected-layer Director skill Candidate -> validated inactive -> human-reviewed merge -> exact-main regression -> APPLIED-CLOSED receipt`
 
 Still not demonstrated:
 - a later playable Lumen retry or other game proving this learning improves Owner product acceptance;
@@ -35,11 +36,16 @@ Still not demonstrated:
 
 ## 2. Current executable application checkpoint
 
-Lumen learning repair PR:
+Lumen learning repair:
 - PR `#36` — `fix(learning): close Lumen director-state contract gap`
 - validated-inactive pre-merge Full Verifier `33209616277` — **SUCCESS**
 - human-reviewed merge commit `7af126e3300b23c19bd088ca32c08c7e81947d8b`
-- exact-main post-merge Full Verifier `33211092911` — final completion tracked before `APPLIED-CLOSED` application-closure claim.
+- exact-main post-merge Full Verifier `33211092911` — **SUCCESS in all 37 steps**
+- Golden Corpus on the executable merge — **29/29, 0 mismatches, 0 Critical False PASS**
+- application receipt `learning/applications/candidate-production-run-b37ac8d268e8549c.json`
+- application state **`APPLIED-CLOSED`**.
+
+The Candidate itself remains `status=validated`, `active=false`. Application closure is not autonomous Memory activation.
 
 No second paid Lumen run has been started.
 
@@ -104,9 +110,9 @@ Canonical state:
 Validation:
 `learning/validations/candidate-production-run-b37ac8d268e8549c.json`
 
-The Candidate remains inactive because protected-layer application and active prompt-memory promotion are separate concepts. The reviewed code/skill repair can be merged without giving the Candidate autonomous Production authority.
+The Candidate remains inactive because protected-layer application and active prompt-memory promotion are separate concepts. The reviewed code/skill repair is effective through the merged Production files without granting autonomous Candidate authority.
 
-## 6. Validation evidence
+## 6. Validation and application evidence
 
 Before merge:
 - Full Verifier `33208519229` — 37/37 SUCCESS;
@@ -117,7 +123,13 @@ Before merge:
 - Critical False PASS `0`;
 - API/model-backed Learning/Corpus cost `$0`.
 
-Post-merge executable evidence is SHA-bound to `7af126e3300b23c19bd088ca32c08c7e81947d8b` via run `33211092911`.
+After merge:
+- exact-main Full Verifier `33211092911` — **37/37 SUCCESS** on `7af126e3300b23c19bd088ca32c08c7e81947d8b`;
+- compatible Golden Corpus: 29/29, 0 mismatches, 0 Critical False PASS;
+- durable regression evidence: `learning/evidence/applications/candidate-production-run-b37ac8d268e8549c-full-verifier.json`;
+- durable Corpus evidence: `evaluation/results/LUMEN-LEARNING-APPLICATION-CORPUS-7af126e.json`;
+- immutable S4 receipt: `learning/applications/candidate-production-run-b37ac8d268e8549c.json`;
+- terminal receipt state: **`APPLIED-CLOSED`**.
 
 ## 7. Golden Corpus status
 
@@ -146,7 +158,7 @@ REAL EVENT
   -> VALIDATED / ACTIVE=false
   -> HUMAN REVIEW / MERGE
   -> POST-MERGE REGRESSION
-  -> APPLICATION RECEIPT / APPLIED-CLOSED where applicable
+  -> APPLICATION RECEIPT / APPLIED-CLOSED
 ```
 
 Automatic Learning may diagnose and propose. It may not self-validate, self-promote, weaken gates, mutate authority or start paid work.
@@ -169,19 +181,18 @@ No OpenRouter switch was inferred from the Lumen failure because the evidence id
 
 Issue `#17` remains open because no playable Lumen draft reached Owner hands-on review.
 
-Before any second paid Product Canary:
-1. finish exact-main post-merge zero-paid evidence/application closure;
-2. re-present exact brief, coverage, risks and budget;
-3. obtain a **fresh explicit Owner GO**;
-4. run at most one paid Canary;
-5. require hands-on Owner ACCEPT/REJECT;
-6. classify new evidence before further architecture changes.
+The zero-paid architecture/Learning repair is now **APPLICATION CLOSED**. Before any second paid Product Canary:
+1. re-present exact brief, coverage, risks and budget;
+2. obtain a **fresh explicit Owner GO**;
+3. run at most one paid Canary;
+4. require hands-on Owner ACCEPT/REJECT;
+5. classify new evidence before further architecture changes.
 
 ## 11. Domain-portability hypothesis
 
 The Factory now exposes a deeper pattern that may be useful outside Gaming:
 
-`Intent/Contract -> Worker -> Observable Evidence -> Deterministic Gate -> Failure Taxonomy -> Candidate Improvement -> Validation Corpus -> Human Application -> Audit Trail`
+`Intent/Contract -> Worker -> Observable Evidence -> Deterministic/Governed Gate -> Failure Taxonomy -> Candidate Improvement -> Validation Corpus -> Human Application -> Audit Trail`
 
 This is a **hypothesis to analyze next**, not a proven cross-domain claim.
 
@@ -203,7 +214,7 @@ A valid transfer to another domain would need domain-specific definitions for:
 - `docs/strategy/LEARNING-ARCHITECTURE-EVIDENCE-TO-APPLIED-CHANGE-2026-08-28.md`
 - `docs/strategy/LUMEN-CURRENT-LEARNING-REPAIR-2026-08-28.md`
 - `docs/strategy/LUMEN-CURRENT-CANARY-1-FAILURE-ANALYSIS-2026-08-28.md`
-- `docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md` — historical S0–S5 closure checkpoint
+- `docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md` — historical S0–S5 closure checkpoint.
 
 ## 13. Current decision boundary
 
