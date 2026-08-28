@@ -16,7 +16,9 @@ log.step('GAME FACTORY - autonomous production run');
 let idea = arg('--idea') || '';
 const ideaFile = arg('--idea-file');
 if (ideaFile) {
-  idea = fs.readFileSync(ideaFile, 'utf8').trim();
+  // Preserve the exact Owner brief bytes used for preflight/Production binding.
+  // Parsing may trim internally, but ownerBriefSha256 must bind the original file verbatim.
+  idea = fs.readFileSync(ideaFile, 'utf8');
 }
 const source = arg('--source') || (ideaFile ? 'ideas-folder' : 'chat');
 const budgetUsd = Number(arg('--budget')) || LIMITS.budgetUsd;
