@@ -89,7 +89,6 @@ fs.unlinkSync(path.join(tmp,'learning/validations/candidate-missing-validation.j
 
 const validatedCandidateCommit=commit('fixture validated candidates');
 const tree=git(['rev-parse','HEAD^{tree}']).stdout.trim();
-const side=git(['commit-tree',tree,'-p',validatedCandidateCommit],{allowFailure:false});
 const nonAncestorCommit=spawnSync('git',['commit-tree',tree,'-p',validatedCandidateCommit,'-m','fixture side commit'],{cwd:tmp,encoding:'utf8'});
 assert.equal(nonAncestorCommit.status,0,nonAncestorCommit.stderr);
 const sideCommit=nonAncestorCommit.stdout.trim();
@@ -97,12 +96,32 @@ const sideCommit=nonAncestorCommit.stdout.trim();
 writeJson('evaluation/s4-protected-fixture.json',{schemaVersion:'s4-protected-fixture-v1',rule:'human-reviewed protected-layer fixture'});
 const mergeCommitSha=commit('fixture human-reviewed protected-layer implementation');
 
-writeJson('learning/evidence/applications/s4-full-verifier.json',{
-  schemaVersion:'s4-regression-evidence-fixture-v1',
-  implementationCommitSha:mergeCommitSha,
-  conclusion:'SUCCESS',
-  source:'deterministic-fixture'
-});
+const evidenceCandidateIds=[
+  'candidate-s4',
+  'candidate-s4-supersede',
+  'candidate-s4-reversal',
+  'candidate-unvalidated',
+  'candidate-prompt',
+  'candidate-nonprotected',
+  'candidate-active',
+  'candidate-failed-validation',
+  'candidate-missing-validation',
+  'candidate-does-not-exist'
+];
+function regressionRef(id) {
+  return `learning/evidence/applications/${id}-full-verifier.json`;
+}
+for (const id of evidenceCandidateIds) {
+  writeJson(regressionRef(id),{
+    schemaVersion:lifecycle.APPLICATION_REGRESSION_EVIDENCE_SCHEMA,
+    candidateId:id,
+    evaluatedCommitSha:mergeCommitSha,
+    kind:'full-verifier',
+    sourceRef:'fixture-full-verifier',
+    outcome:'PASS'
+  });
+}
+
 function corpusReport(overrides={}) {
   const report={
     schemaVersion:'game-factory.golden-corpus-evaluation-report/v1',
@@ -135,7 +154,7 @@ function argsFor(id='candidate-s4',overrides={}) {
     prRef:'#999',
     mergeCommitSha,
     humanApprovalRef:'fixture-human-approval',
-    regressionEvidence:[binding('learning/evidence/applications/s4-full-verifier.json')],
+    regressionEvidence:[binding(regressionRef(id))],
     corpusEvidence:binding('evaluation/results/S4-fixture-corpus.json'),
     appliedAt:'2026-08-28T18:15:00Z',
     ...overrides
@@ -159,10 +178,30 @@ assert.throws(()=>lifecycle.recordApplicationReceipt('candidate-s4',argsFor('can
 assert.throws(()=>lifecycle.recordApplicationReceipt('candidate-s4',argsFor('candidate-s4',{mergeCommitSha:'1'.repeat(40)})),/merge commit is unknown/);
 assert.throws(()=>lifecycle.recordApplicationReceipt('candidate-s4',argsFor('candidate-s4',{mergeCommitSha:sideCommit})),/not merged into current HEAD/);
 
-// Evidence completeness and byte binding.
+// Evidence completeness, byte binding and semantic post-merge binding.
 assert.throws(()=>lifecycle.recordApplicationReceipt('candidate-s4',argsFor('candidate-s4',{regressionEvidence:[]})),/regressionEvidence is required/);
 assert.throws(()=>lifecycle.recordApplicationReceipt('candidate-s4',argsFor('candidate-s4',{regressionEvidence:[{ref:'learning/evidence/applications/missing.json',sha256:'0'.repeat(64)}]})),/not found/);
-assert.throws(()=>lifecycle.recordApplicationReceipt('candidate-s4',argsFor('candidate-s4',{regressionEvidence:[{ref:'learning/evidence/applications/s4-full-verifier.json',sha256:'0'.repeat(64)}]})),/sha256 mismatch/);
+assert.throws(()=>lifecycle.recordApplicationReceipt('candidate-s4',argsFor('candidate-s4',{regressionEvidence:[{ref:regressionRef('candidate-s4'),sha256:'0'.repeat(64)}]})),/sha256 mismatch/);
+writeJson('learning/evidence/applications/S4-wrong-schema.json',{
+  schemaVersion:'wrong-schema',candidateId:'candidate-s4',evaluatedCommitSha:mergeCommitSha,kind:'full-verifier',sourceRef:'fixture',outcome:'PASS'
+});
+assert.throws(()=>lifecycle.recordApplicationReceipt('candidate-s4',argsFor('candidate-s4',{regressionEvidence:[binding('learning/evidence/applications/S4-wrong-schema.json')]})),/regression evidence schema is invalid/);
+writeJson('learning/evidence/applications/S4-wrong-candidate.json',{
+  schemaVersion:lifecycle.APPLICATION_REGRESSION_EVIDENCE_SCHEMA,candidateId:'candidate-other',evaluatedCommitSha:mergeCommitSha,kind:'full-verifier',sourceRef:'fixture',outcome:'PASS'
+});
+assert.throws(()=>lifecycle.recordApplicationReceipt('candidate-s4',argsFor('candidate-s4',{regressionEvidence:[binding('learning/evidence/applications/S4-wrong-candidate.json')]})),/regression evidence candidate mismatch/);
+writeJson('learning/evidence/applications/S4-wrong-regression-commit.json',{
+  schemaVersion:lifecycle.APPLICATION_REGRESSION_EVIDENCE_SCHEMA,candidateId:'candidate-s4',evaluatedCommitSha:validatedCandidateCommit,kind:'full-verifier',sourceRef:'fixture',outcome:'PASS'
+});
+assert.throws(()=>lifecycle.recordApplicationReceipt('candidate-s4',argsFor('candidate-s4',{regressionEvidence:[binding('learning/evidence/applications/S4-wrong-regression-commit.json')]})),/regression evidence evaluated a different commit/);
+writeJson('learning/evidence/applications/S4-failed-regression.json',{
+  schemaVersion:lifecycle.APPLICATION_REGRESSION_EVIDENCE_SCHEMA,candidateId:'candidate-s4',evaluatedCommitSha:mergeCommitSha,kind:'full-verifier',sourceRef:'fixture',outcome:'FAIL'
+});
+assert.throws(()=>lifecycle.recordApplicationReceipt('candidate-s4',argsFor('candidate-s4',{regressionEvidence:[binding('learning/evidence/applications/S4-failed-regression.json')]})),/regression evidence outcome must be PASS/);
+writeJson('learning/evidence/applications/S4-missing-regression-source.json',{
+  schemaVersion:lifecycle.APPLICATION_REGRESSION_EVIDENCE_SCHEMA,candidateId:'candidate-s4',evaluatedCommitSha:mergeCommitSha,kind:'full-verifier',outcome:'PASS'
+});
+assert.throws(()=>lifecycle.recordApplicationReceipt('candidate-s4',argsFor('candidate-s4',{regressionEvidence:[binding('learning/evidence/applications/S4-missing-regression-source.json')]})),/regression evidence sourceRef is required/);
 
 writeJson('evaluation/results/S4-wrong-commit.json',corpusReport({evaluatedCommitSha:validatedCandidateCommit}));
 assert.throws(()=>lifecycle.recordApplicationReceipt('candidate-s4',argsFor('candidate-s4',{corpusEvidence:binding('evaluation/results/S4-wrong-commit.json')})),/evaluated a different commit/);
@@ -191,6 +230,8 @@ assert.equal(created.candidateId,'candidate-s4');
 assert.equal(created.targetLayer,'evaluation');
 assert.equal(created.candidateArtifactSha256,shaFile(candidateRef));
 assert.equal(created.implementation.mergeCommitSha,mergeCommitSha);
+assert.equal(created.regressionEvidence[0].evaluatedCommitSha,mergeCommitSha);
+assert.equal(created.regressionEvidence[0].outcome,'PASS');
 assert.equal(created.corpusEvidence.evaluatedCommitSha,mergeCommitSha);
 assert.equal(created.corpusEvidence.outcome,'PASS');
 assert.equal(fs.readFileSync(path.join(tmp,candidateRef),'utf8'),candidateBefore);
