@@ -2,7 +2,8 @@
   "schemaVersion": "game-factory.golden-corpus-baseline/v1",
   "baselineId": "s0-coverage-baseline-2026-08-28",
   "baselineType": "coverage-inventory",
-  "sourceMainSha": "ed1587cd4370871d0e5ac26d7c6312b5deed5445",
+  "executableBaselineSha": "ed1587cd4370871d0e5ac26d7c6312b5deed5445",
+  "s0IntegrationBaseSha": "292e03bbf61b15ab87bec720ef7723fc2222d3bd",
   "supportingFullVerifierAtInventory": "33168166465",
   "corpusId": "golden-factory-evaluation-corpus-s0-2026-08-28",
   "counts": {
@@ -33,6 +34,7 @@
   "expectedOutcomeQualityScore": "not-computed-until-S2",
   "criticalFalsePassCount": "not-computed-until-S2",
   "notes": [
+    "The executable baseline SHA is the last code-bearing main revision before S0; the S0 integration-base SHA adds only the approved architecture concept document.",
     "S0 records coverage and provenance only; it does not execute the corpus as an evaluation suite.",
     "No synthetic sibling variants are generated in S0.",
     "No Production LLM/API call is required for this baseline."
