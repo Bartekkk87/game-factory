@@ -5,6 +5,7 @@ import { assembleSystemPrompt } from '../util/skills.mjs';
 import { lessonsFor } from '../memory/store.mjs';
 import { PATHS } from '../config.mjs';
 import { ownerRequirementIds } from '../contract/owner.mjs';
+import { verifierActionContract } from '../verify/action-policy.mjs';
 
 function systemPrompt() {
   return assembleSystemPrompt({
@@ -27,7 +28,7 @@ function acceptanceRules() {
     '- If the brief asks for salvage/upgrades, collecting/choosing an upgrade must change a real gameplay value or ability and show clear feedback.',
     '- If the brief asks for a risk/reward choice, implement an actual player choice with distinct outcomes.',
     '- Preserve readable HUD layout with no overlapping labels.',
-    '- Score must increase deterministically by the early verifier evidence point under the fixed keyboard/pointer input sequence. Never make this depend on a lucky random collision, rare spawn, or precise aim.',
+    '- Score and proof-critical active gameplay must advance deterministically under the supplied generic VERIFIER ACTION CONTRACT. Do not require a lucky random collision, hidden route knowledge, rare spawn, or precision-only aim.',
     '- Every product-specific requirement must emit the exact bounded runtime event required by its supplied probe when that probe kind requires an event.',
     '- The game must remain playable under WASD/arrows/Space/Enter and pointer clicks as applicable.',
     '- Use ONLY APIs and properties that actually exist in the supplied MICRO-ENGINE SOURCE. Do not invent engine methods or state containers.',
@@ -62,7 +63,8 @@ function productionContract(ownerContract, gdd) {
     acceptanceProbeMapping: {
       acceptanceCriteria,
       requirementProbes
-    }
+    },
+    verifierActionContract: gdd?.proofPlan?.actionPolicy || verifierActionContract()
   };
 }
 
@@ -70,7 +72,8 @@ function contractSections(ownerContract, gdd) {
   const context = productionContract(ownerContract, gdd);
   return [
     '=== IMMUTABLE OWNER CONTRACT ===', JSON.stringify(context.ownerContract, null, 2), '',
-    '=== ACCEPTANCE + PROBE TRACEABILITY ===', JSON.stringify(context.acceptanceProbeMapping, null, 2)
+    '=== ACCEPTANCE + PROBE TRACEABILITY ===', JSON.stringify(context.acceptanceProbeMapping, null, 2), '',
+    '=== VERIFIER ACTION CONTRACT ===', JSON.stringify(context.verifierActionContract, null, 2)
   ];
 }
 

@@ -4,28 +4,11 @@ import { chromium } from 'playwright';
 import { serveDir } from './server.mjs';
 import { installCanvasLayoutProbe } from './layout-probe.mjs';
 import { canonicalTerminalState, canonicalVerifierState } from './state-semantics.mjs';
+import { VERIFIER_ACTION_POLICY, directionSweepsForSeed, verifierActionContract } from './action-policy.mjs';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 export const DEFAULT_VERIFIER_SEED = 0x47facade;
-
-const PLAY_KEYS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Enter'];
-const POINTER_PATH = [
-  [420, 300],
-  [640, 280],
-  [820, 360],
-  [700, 480],
-  [480, 460],
-  [560, 350]
-];
-const INPUT_PLAN = Object.freeze({
-  keys: PLAY_KEYS,
-  pointerPath: POINTER_PATH,
-  keyEveryMs: 190,
-  keyHoldMs: 110,
-  pointerEveryMs: 450,
-  clickEveryMs: 1300
-});
 
 function normalizeSeed(seed) {
   const n = Number(seed);
@@ -178,29 +161,64 @@ async function runSingleSession({
       await page.mouse.click(640, 400);
 
       const timers = [];
+      let movementStopped = false;
+      let movementTask = null;
+      const heldMovementKeys = new Set();
+      const releaseMovementKeys = async () => {
+        const keys = [...heldMovementKeys];
+        heldMovementKeys.clear();
+        await Promise.all(keys.map((key) => page.keyboard.up(key).catch(() => {})));
+      };
+
       if (inputMode === 'active') {
-        let keyIndex = 0;
+        const directionalSweeps = directionSweepsForSeed(verifierSeed);
+        movementTask = (async () => {
+          let sweepIndex = 0;
+          while (!movementStopped) {
+            if (!(await activeInputAllowed())) {
+              await releaseMovementKeys();
+              await sleep(50);
+              continue;
+            }
+            const sweep = directionalSweeps[sweepIndex % directionalSweeps.length];
+            sweepIndex++;
+            for (const key of sweep.keys) {
+              await page.keyboard.down(key).catch(() => {});
+              heldMovementKeys.add(key);
+            }
+            const segmentStarted = Date.now();
+            while (!movementStopped && Date.now() - segmentStarted < VERIFIER_ACTION_POLICY.movementSegmentMs) {
+              if (!(await activeInputAllowed())) break;
+              await sleep(50);
+            }
+            await releaseMovementKeys();
+            if (!movementStopped && (await activeInputAllowed())) {
+              await sleep(VERIFIER_ACTION_POLICY.movementGapMs);
+            }
+          }
+        })().catch((e) => pageErrors.push(`directional sweeps: ${String(e?.message || e)}`));
+
         let pointerIndex = 0;
         let clickIndex = 0;
+        let actionIndex = 0;
         timers.push(setInterval(async () => {
           if (!(await activeInputAllowed())) return;
-          const key = PLAY_KEYS[keyIndex % PLAY_KEYS.length];
-          keyIndex++;
-          page.keyboard.down(key).catch(() => {});
-          setTimeout(() => page.keyboard.up(key).catch(() => {}), INPUT_PLAN.keyHoldMs);
-        }, INPUT_PLAN.keyEveryMs));
+          const key = VERIFIER_ACTION_POLICY.actionKeys[actionIndex % VERIFIER_ACTION_POLICY.actionKeys.length];
+          actionIndex++;
+          page.keyboard.press(key).catch(() => {});
+        }, VERIFIER_ACTION_POLICY.actionEveryMs));
         timers.push(setInterval(async () => {
           if (!(await activeInputAllowed())) return;
-          const [x, y] = POINTER_PATH[pointerIndex % POINTER_PATH.length];
+          const [x, y] = VERIFIER_ACTION_POLICY.pointerPath[pointerIndex % VERIFIER_ACTION_POLICY.pointerPath.length];
           pointerIndex++;
           page.mouse.move(x, y).catch(() => {});
-        }, INPUT_PLAN.pointerEveryMs));
+        }, VERIFIER_ACTION_POLICY.pointerEveryMs));
         timers.push(setInterval(async () => {
           if (!(await activeInputAllowed())) return;
-          const [x, y] = POINTER_PATH[clickIndex % POINTER_PATH.length];
+          const [x, y] = VERIFIER_ACTION_POLICY.pointerPath[clickIndex % VERIFIER_ACTION_POLICY.pointerPath.length];
           clickIndex++;
           page.mouse.click(x, y).catch(() => {});
-        }, INPUT_PLAN.clickEveryMs));
+        }, VERIFIER_ACTION_POLICY.clickEveryMs));
       }
 
       const total = seconds * 1000;
@@ -259,7 +277,10 @@ async function runSingleSession({
           endSnapshot = await record('end', seconds * 1000);
         }
       } finally {
+        movementStopped = true;
         for (const timer of timers) clearInterval(timer);
+        await releaseMovementKeys();
+        if (movementTask) await movementTask;
       }
 
       if (restartAtEnd && canonicalTerminalState(endSnapshot?.state)) {
@@ -276,19 +297,35 @@ async function runSingleSession({
   await browser.close();
   close();
 
+  const resolvedSweeps = inputMode === 'active'
+    ? directionSweepsForSeed(verifierSeed).map((sweep) => ({ direction: sweep.id, keys: [...sweep.keys] }))
+    : [];
+  const allActiveKeys = inputMode === 'active'
+    ? [...new Set([
+        ...resolvedSweeps.flatMap((sweep) => sweep.keys),
+        ...VERIFIER_ACTION_POLICY.actionKeys
+      ])]
+    : [];
+
   return {
     seed: verifierSeed,
     inputMode,
+    actionPolicy: verifierActionContract(),
     inputSequence: {
       mode: inputMode,
       seed: verifierSeed,
-      startImpulse: ['Enter', 'pointer@640,400'],
-      keys: inputMode === 'active' ? [...INPUT_PLAN.keys] : [],
-      pointerPath: inputMode === 'active' ? INPUT_PLAN.pointerPath.map((p) => [...p]) : [],
-      keyEveryMs: inputMode === 'active' ? INPUT_PLAN.keyEveryMs : null,
-      keyHoldMs: inputMode === 'active' ? INPUT_PLAN.keyHoldMs : null,
-      pointerEveryMs: inputMode === 'active' ? INPUT_PLAN.pointerEveryMs : null,
-      clickEveryMs: inputMode === 'active' ? INPUT_PLAN.clickEveryMs : null,
+      startImpulse: [...VERIFIER_ACTION_POLICY.startImpulse],
+      actionPolicyMode: VERIFIER_ACTION_POLICY.mode,
+      resolvedDirectionalSweeps: resolvedSweeps,
+      keys: allActiveKeys,
+      pointerPath: inputMode === 'active' ? VERIFIER_ACTION_POLICY.pointerPath.map((p) => [...p]) : [],
+      keyEveryMs: null,
+      keyHoldMs: inputMode === 'active' ? VERIFIER_ACTION_POLICY.movementSegmentMs : null,
+      movementSegmentMs: inputMode === 'active' ? VERIFIER_ACTION_POLICY.movementSegmentMs : null,
+      movementGapMs: inputMode === 'active' ? VERIFIER_ACTION_POLICY.movementGapMs : null,
+      actionEveryMs: inputMode === 'active' ? VERIFIER_ACTION_POLICY.actionEveryMs : null,
+      pointerEveryMs: inputMode === 'active' ? VERIFIER_ACTION_POLICY.pointerEveryMs : null,
+      clickEveryMs: inputMode === 'active' ? VERIFIER_ACTION_POLICY.clickEveryMs : null,
       terminalSafe: inputMode === 'active'
     },
     timeline,
@@ -360,6 +397,7 @@ export async function runSession(options) {
     idleBaseline: {
       seed: idle.seed,
       inputMode: idle.inputMode,
+      actionPolicy: idle.actionPolicy,
       inputSequence: idle.inputSequence,
       timeline: idle.timeline,
       probeOk: idle.probeOk,
