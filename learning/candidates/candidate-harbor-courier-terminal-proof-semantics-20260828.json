@@ -1,11 +1,11 @@
 {
   "schemaVersion": "learning-candidate-v1",
   "id": "candidate-harbor-courier-terminal-proof-semantics-20260828",
-  "status": "candidate",
+  "status": "validated",
   "role": "director",
   "scope": "verification-design",
   "targetLayer": "verifier",
-  "text": "Hypothesis only: terminal Product Proof semantics need canonical state mapping and explicit action reachability validation before Engineer spend. Harbor Courier canary #3 generated PR-MH-04 with state_reached state=failed, while proof-plan.mjs recognizes only success and failure. The compiled plan therefore omitted a failure-proof scenario, routed PR-MH-04 to base, reported requiredTerminalStates=[success], and still passed reachability validation. The best evidenced attempt then passed Technical and all Owner requirements except MH-04, MH-06 and MH-07. Its 75-second success-proof still ended playing rather than success. Validate first that terminal aliases such as failed/gameover are normalized to one canonical failure state and that unknown terminal-like state probes fail closed instead of silently routing to base. Separately validate whether a generic active verifier input is sufficient to prove success or whether scenario action reachability needs a harness-owned deterministic action policy. Do not change Production, activate this candidate, weaken Product Fidelity, or start another paid canary until deterministic regression fixtures establish the minimal remedy.",
+  "text": "Hypothesis validated: terminal Product Proof semantics require verifier-owned canonical state mapping and terminal-safe action observation. Harbor Courier canary #3 exposed a real vocabulary mismatch: Director state_reached used failed/success, the proof planner recognized only success/failure, and the engine emits gameover/won. The prior planner could therefore omit a required failure-proof while still reporting reachability PASS. The active verifier could also erase a real won/gameover state by injecting another input that triggered the engine restart before polling observed the terminal. The validated repair canonically maps only the proven aliases won->success and failed/gameover->failure, preserves raw runtime states as evidence, fails closed on unsupported verifier states before Engineer spend, routes canonical terminal probes to independent success/failure scenarios, and stops periodic active input once a known terminal state is reached before performing the explicit harness-owned restart. Full branch and post-merge verifier regressions passed. This candidate remains inactive and is not promoted as an active Production lesson.",
   "sourceRunIds": [
     "20260828-043617"
   ],
@@ -20,15 +20,35 @@
     "factory/src/verify/proof-plan.mjs"
   ],
   "ownerFeedbackIds": [],
-  "candidateSha": null,
-  "confidence": null,
+  "candidateSha": "80afd8420cdfd748f7e88c7e874d3be1c016ff9f",
+  "confidence": 1,
   "evidenceCount": 7,
   "createdAt": "2026-08-28T04:50:00.000Z",
-  "validatedAt": null,
+  "validatedAt": "2026-08-28T05:07:09.000Z",
   "expiresAfter": null,
   "supersedes": null,
-  "validationEvidence": [],
-  "regressionResults": [],
+  "validationEvidence": [
+    "factory/src/verify/test-proof-reachability.mjs",
+    "factory/src/verify/test-proof-scenarios.mjs",
+    "factory/src/verify/test-fidelity-hardening.mjs",
+    "PR #20",
+    "GitHub Actions Verifier Selftest 33143515998 on 53efcd254c3ab0fe528d828554765556ceaf79b1",
+    "GitHub Actions post-merge Verifier Selftest 33143662831 on 80afd8420cdfd748f7e88c7e874d3be1c016ff9f"
+  ],
+  "regressionResults": [
+    {
+      "name": "branch-full-verifier",
+      "runId": "33143515998",
+      "commitSha": "53efcd254c3ab0fe528d828554765556ceaf79b1",
+      "passed": true
+    },
+    {
+      "name": "post-merge-full-verifier",
+      "runId": "33143662831",
+      "commitSha": "80afd8420cdfd748f7e88c7e874d3be1c016ff9f",
+      "passed": true
+    }
+  ],
   "active": false,
   "activatedAt": null,
   "promotionRef": null,
