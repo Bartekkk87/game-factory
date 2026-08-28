@@ -2,13 +2,16 @@ import assert from 'node:assert/strict';
 import {
   COMMIT_ALLOWLISTS,
   PROTECTED_PATH_PREFIXES,
+  RUNTIME_STATE_ALLOWLIST,
   detectSecrets,
+  disallowedRuntimeStatePaths,
   disallowedStagedPaths,
   forbiddenProtectedChanges
 } from './staged-commit-policy.mjs';
 
 assert.equal(Array.isArray(COMMIT_ALLOWLISTS.produce), true);
 assert.equal(Array.isArray(COMMIT_ALLOWLISTS.review), true);
+assert.equal(RUNTIME_STATE_ALLOWLIST, COMMIT_ALLOWLISTS.review);
 assert.equal(PROTECTED_PATH_PREFIXES.includes('factory/prompts/'), true);
 assert.equal(PROTECTED_PATH_PREFIXES.includes('skills/'), true);
 assert.equal(PROTECTED_PATH_PREFIXES.includes('factory/src/control/'), true);
@@ -27,6 +30,26 @@ assert.deepEqual(disallowedStagedPaths([
   'archive/example/meta.json',
   'memory/memory.json'
 ], 'review'), []);
+
+assert.deepEqual(disallowedRuntimeStatePaths([
+  'runs/20260828/RUN-EVIDENCE.json',
+  'products/example/index.html',
+  'archive/example/meta.json',
+  'memory/memory.json',
+  'learning/evidence/owner-feedback/x.json',
+  'evaluation/results/S2-latest.json'
+]), []);
+
+assert.deepEqual(disallowedRuntimeStatePaths([
+  'runs/ok.json',
+  'ideas/unauthorized.md',
+  'factory/src/pipeline/run.mjs',
+  '.github/workflows/produce.yml'
+]), [
+  '.github/workflows/produce.yml',
+  'factory/src/pipeline/run.mjs',
+  'ideas/unauthorized.md'
+]);
 
 assert.deepEqual(forbiddenProtectedChanges([
   'runs/ok.json',
