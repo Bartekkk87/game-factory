@@ -241,7 +241,7 @@ async function runSingleSession({
           activityFramesCaptured = 1;
         }
         if (activityFramesCaptured === 1) {
-          await sleep(300);
+          await sleep(1000);
           const secondCaptured = await takeShot('activity-2-gameplay', { requirePlaying: true, persist: false });
           if (secondCaptured) activityFramesCaptured = 2;
         }
