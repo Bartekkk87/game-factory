@@ -3,13 +3,20 @@
 Evidence-driven Game Factory für Web-Games auf GitHub. Die Factory führt Owner-Idee, Build, deterministische Verifikation, Repair/Polish, Release Gate, Evaluation, Controlled Improvement und Owner Review über durable Git-Evidence zusammen.
 
 > Architektur: [ARCHITECTURE.md](ARCHITECTURE.md)  
-> Aktueller Gesamtstand: [docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md](docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md)
+> Aktueller Gesamtstand: [docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md](docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md)  
+> Kanonische Learning-Architektur mit realem Lumen-Beispiel: [docs/strategy/LEARNING-ARCHITECTURE-EVIDENCE-TO-APPLIED-CHANGE-2026-08-28.md](docs/strategy/LEARNING-ARCHITECTURE-EVIDENCE-TO-APPLIED-CHANGE-2026-08-28.md)
 
 ## Aktueller Status — 28.08.2026
 
 **Factory Foundation + Controlled Improvement + Golden Corpus S0–S5 IMPLEMENTATION CLOSED.**
 
-Der nächste PoC-Meilenstein ist kein weiterer Architektur-Layer, sondern der unabhängige Product Proof aus GitHub Issue `#17`.
+Der erste unabhängige Product Canary `Lumen Current` scheiterte vor Build fail-closed. Der daraus abgeleitete Director-State-Contract-/Learning-Fix wurde über einen realen, evidenzgebundenen `skill` Candidate zero-paid validiert und mit PR `#36` human-reviewed nach `main` gemerged (`7af126e3300b23c19bd088ca32c08c7e81947d8b`). Kein zweiter Paid Lumen Run wurde gestartet.
+
+Damit ist erstmals praktisch belegt:
+
+`real Production failure -> durable evidence -> deterministic root cause -> protected-layer Candidate -> validation/regression -> validated inactive -> human merge`
+
+Der noch ausstehende Product-Meilenstein bleibt Issue `#17`: ein späterer spielbarer unabhängiger Canary mit hands-on Owner ACCEPT/REJECT.
 
 ## Production Flow
 
@@ -38,15 +45,32 @@ Auditor und qualitative Fidelity-Urteile bleiben advisory. Kein LLM besitzt Rele
 Durable Run / Owner / Evaluation Evidence
   -> deterministic Aggregate
   -> deterministic Trigger
-  -> bounded Analysis
+  -> bounded Analysis / Root Cause
   -> maximal ein inaktiver Candidate
   -> separate Validation / Regression
+  -> validated inactive
   -> human-gated Application/Promotion
+  -> Post-Merge Regression / Application Closure
 ```
 
-Nur `validated && active` Learning darf in Production-Prompts sichtbar werden. Automatic Learning darf nicht validieren, aktivieren, promoten, Production editieren oder Gates schwächen.
+Nur `validated && active` Learning darf als Memory Lesson in Production-Prompts sichtbar werden. Protected-Layer-Fixes wie Skills/Verifier/Control-Plane können dagegen als human-reviewed Code-/Policy-Anwendung wirksam werden, ohne den Candidate selbst zu aktivieren.
+
+Automatic Learning darf nicht validieren, aktivieren, promoten, Production editieren, Gates schwächen oder einen Paid Retry starten.
 
 S4 ergänzt für Non-Prompt-/Code-/Policy-Verbesserungen einen SHA-gebundenen `APPLIED-CLOSED` Application Receipt. Dieser Receipt aktiviert keinen Candidate.
+
+### Lumen-Beispiel
+
+Der reale Lumen-Fehler war:
+
+```text
+PR-MH-03 -> state_reached: restored
+PR-MH-04 -> state_reached: glass_breach
+```
+
+Beide Werte lagen außerhalb des endlichen Verifier-State-Protokolls. Die Factory blockierte vor Engineer-Spend. Das Learning erkennt diesen Failure-Typ nun deterministisch als `director-verifier-state-contract-mismatch`, mappt ihn auf den Director/`skill` Layer und kann dafür einen inaktiven Candidate erzeugen.
+
+Der generalisierte Skill-Grundsatz lautet: technische `state_reached`-Probes verwenden nur das gelieferte Verifier-Protokoll; thematische Zustände gehören in Gameplay-Events, UI oder World State.
 
 ## Golden Factory Evaluation Corpus
 
@@ -130,24 +154,34 @@ Der Production-Workflow verwendet standardmäßig ein maximales Run-Budget von `
 
 ## Independent Product Proof — Issue #17
 
-Vor dem nächsten Paid Production Run gilt zwingend:
+Lumen Canary #1 wurde nach Owner-GO ausgeführt, erzeugte aber keinen Draft. Daher wurde hands-on Owner ACCEPT/REJECT nicht erreicht.
 
-1. unabhängigen Owner Brief vorbereiten;
-2. zero-paid deterministic Preflight durchführen;
-3. Brief + normalisierte Interpretation + Verifier Coverage + Risiken + Kostenrahmen dem Owner vorlegen;
-4. **STOP für explizite Owner-Freigabe**;
-5. danach genau einen Paid Production Canary;
-6. Owner hands-on ACCEPT/REJECT.
+Vor einem **zweiten** Paid Lumen/Independent Production Run gilt zwingend:
 
-Ein Brief für diesen Preflight darf nicht unter `ideas/**` committed werden, bevor der Paid Run autorisiert ist, weil der Production-Workflow auf Änderungen in `ideas/**` reagieren kann.
+1. den nun gemergten zero-paid Learning-/Contract-Fix regressionsgrün bestätigen;
+2. exakten Owner Brief + Verifier Coverage + Risiken + Kostenrahmen erneut vorlegen;
+3. **STOP für neue explizite Owner-Freigabe**;
+4. danach höchstens einen weiteren Paid Production Canary;
+5. Owner hands-on ACCEPT/REJECT.
+
+## Portability hypothesis
+
+Die aktuelle Architektur enthält einen möglicherweise domänenübergreifend wiederverwendbaren Control Pattern:
+
+`Intent/Contract -> Worker -> Observable Evidence -> Deterministic Gate -> Failure Taxonomy -> Candidate Improvement -> Validation Corpus -> Human Application -> Audit Trail`
+
+Das ist aktuell eine **zu prüfende Hypothese**, keine außerhalb Gaming bewiesene Produktbehauptung. Die Cross-Domain-Analyse ist bewusst als nächster separater Diskussions-/Research-Track vorgesehen.
 
 ## Proof Boundary
 
 Aktuell gerechtfertigt: **evidence-driven controlled improvement**.
 
+Zusätzlich praktisch demonstriert: ein realer Production Failure wurde in einen deterministisch klassifizierten, zero-paid validierten, weiterhin inaktiven Protected-Layer Candidate und anschließend in eine human-reviewed Skill/Contract-Anwendung überführt.
+
 Noch nicht bewiesen:
 
 - realer model-backed S5 Benchmark-Gewinner;
 - automatische Modellpromotion;
-- ein validierter + human-applied Learning Candidate, der nachweislich ein späteres Owner-accepted Game verbessert;
+- dass der Lumen-Fix ein späteres Owner-accepted Game verbessert;
+- Cross-Domain-Portabilität außerhalb Gaming;
 - fully self-modifying / self-authorizing Factory.
