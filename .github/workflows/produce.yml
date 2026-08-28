@@ -112,12 +112,17 @@ jobs:
           echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
           echo "title=$(jq -r .title "drafts/$SLUG/meta.json")" >> "$GITHUB_OUTPUT"
 
+      - name: Verify protected paths were not changed at runtime
+        if: always()
+        run: node factory/src/control/staged-commit-policy.mjs --mode produce --check-runtime
+
       - name: Commit results and evidence
         if: always()
         run: |
           git config user.name "game-factory-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
+          git add -A -- runs drafts memory learning evaluation/results
+          node factory/src/control/staged-commit-policy.mjs --mode produce --check-staged
           git diff --cached --quiet || git commit -m "factory: run ${{ github.run_id }} (${{ job.status }})"
           git push
 
