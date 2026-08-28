@@ -47,16 +47,10 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin main runtime-state
           node factory/src/control/staged-commit-policy.mjs \
-            --mode produce \
-            --check-state-history \
-            --base-ref origin/main \
-            --state-ref origin/runtime-state
+            --mode produce --check-state-history --base-ref origin/main --state-ref origin/runtime-state
           git merge --no-edit origin/runtime-state
           node factory/src/control/staged-commit-policy.mjs \
-            --mode produce \
-            --check-state-tree \
-            --base-ref origin/main \
-            --state-ref HEAD
+            --mode produce --check-state-tree --base-ref origin/main --state-ref HEAD
 
       - name: Check API configuration
         env:
@@ -65,16 +59,9 @@ jobs:
           GF_LLM_PROVIDER: ${{ github.event.inputs.provider || 'openai' }}
         run: |
           case "$GF_LLM_PROVIDER" in
-            openai)
-              test -n "$OPENAI_PRODUCTION" || { echo "OPENAI_PRODUCTION is missing in repository secrets" >&2; exit 1; }
-              ;;
-            openrouter)
-              test -n "$OPENROUTER_PRODUCTION" || { echo "OPENROUTER_PRODUCTION is missing in repository secrets" >&2; exit 1; }
-              ;;
-            *)
-              echo "Provider $GF_LLM_PROVIDER has no approved Production credential lane in this workflow" >&2
-              exit 1
-              ;;
+            openai) test -n "$OPENAI_PRODUCTION" || { echo "OPENAI_PRODUCTION is missing in repository secrets" >&2; exit 1; } ;;
+            openrouter) test -n "$OPENROUTER_PRODUCTION" || { echo "OPENROUTER_PRODUCTION is missing in repository secrets" >&2; exit 1; } ;;
+            *) echo "Provider $GF_LLM_PROVIDER has no approved Production credential lane" >&2; exit 1 ;;
           esac
           echo "Using provider: $GF_LLM_PROVIDER (isolated production credential lane)"
 
@@ -90,17 +77,14 @@ jobs:
         run: |
           if [ -n "$MANUAL_IDEA" ]; then
             printf '%s\n' "$MANUAL_IDEA" > /tmp/idea.txt
-            echo "Using manual trigger idea"
           elif [ "$GITHUB_EVENT_NAME" = "push" ]; then
             IDEA_FILE=$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" -- 'ideas/*.md' | head -n1)
-            if [ -z "$IDEA_FILE" ]; then echo "Push trigger did not contain an idea file" >&2; exit 1; fi
+            test -n "$IDEA_FILE" || { echo "Push trigger did not contain an idea file" >&2; exit 1; }
             cp "$IDEA_FILE" /tmp/idea.txt
-            echo "Using pushed idea: $IDEA_FILE"
           else
             LATEST=$(git log origin/main -1 --format= --name-only -- 'ideas/*.md' | head -n1)
-            if [ -z "$LATEST" ]; then echo "No idea file found in ideas/" >&2; exit 1; fi
+            test -n "$LATEST" || { echo "No idea file found in ideas/" >&2; exit 1; }
             cp "$LATEST" /tmp/idea.txt
-            echo "Using most recently committed idea: $LATEST"
           fi
           B64=$(base64 -w0 /tmp/idea.txt)
           { echo 'IDEA_B64<<GF_EOF'; echo "$B64"; echo 'GF_EOF'; } >> "$GITHUB_OUTPUT"
@@ -136,6 +120,40 @@ jobs:
         if: always()
         run: node factory/src/control/staged-commit-policy.mjs --mode produce --check-runtime
 
+      - name: Prepare bounded binary-evidence manifest
+        if: always()
+        run: |
+          node factory/src/control/binary-evidence.mjs \
+            --mode prepare --roots runs,drafts \
+            --out "evaluation/results/BINARY-EVIDENCE-${{ github.run_id }}.json" \
+            --artifact-name "run-binary-evidence-${{ github.run_id }}" \
+            --workflow-run-id "${{ github.run_id }}" \
+            --retention-days 30
+
+      - name: Upload binary evidence outside Git history
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: run-binary-evidence-${{ github.run_id }}
+          path: |
+            runs/**/*.png
+            runs/**/*.jpg
+            runs/**/*.jpeg
+            runs/**/*.webp
+            runs/**/*.gif
+            runs/**/*.mp4
+            runs/**/*.webm
+            drafts/**/*.png
+            drafts/**/*.jpg
+            drafts/**/*.jpeg
+            drafts/**/*.webp
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Remove binary evidence before durable Git state
+        if: always()
+        run: node factory/src/control/binary-evidence.mjs --mode purge --roots runs,drafts
+
       - name: Commit results and evidence to runtime-state
         if: always()
         run: |
@@ -143,13 +161,10 @@ jobs:
           node factory/src/control/staged-commit-policy.mjs --mode produce --check-staged
           git diff --cached --quiet || git commit -m "factory: run ${{ github.run_id }} (${{ job.status }})"
           node factory/src/control/staged-commit-policy.mjs \
-            --mode produce \
-            --check-state-tree \
-            --base-ref origin/main \
-            --state-ref HEAD
+            --mode produce --check-state-tree --base-ref origin/main --state-ref HEAD
           git push origin HEAD:runtime-state
 
-      - name: Upload evidence artifacts
+      - name: Upload structured evidence artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -164,6 +179,7 @@ jobs:
             learning/candidates/
             learning/orchestration/
           if-no-files-found: ignore
+          retention-days: 30
 
       - name: Open review issue
         if: success()
