@@ -4,9 +4,11 @@
 
 The Factory learning architecture is an **evidence-driven controlled-improvement system**. It is not model-weight training and it is not a self-authorizing self-modification loop.
 
+The real Lumen Current case has now demonstrated the architecture/application lifecycle through **`APPLIED-CLOSED`** while the Learning Candidate remains `validated`, `active=false`.
+
 Canonical lifecycle:
 
-`real event -> durable evidence -> deterministic classification/root cause -> bounded inactive candidate -> explicit validation/regression -> validated inactive -> human-reviewed protected-layer application -> post-merge regression -> durable application closure`
+`real event -> durable evidence -> deterministic classification/root cause -> bounded inactive candidate -> explicit validation/regression -> validated inactive -> human-reviewed protected-layer application -> post-merge regression -> durable APPLIED-CLOSED application receipt`
 
 The purpose is to convert demonstrated failures into reusable Factory-level improvements while keeping release, protected-layer mutation and paid execution outside autonomous model authority.
 
@@ -104,7 +106,7 @@ Lifecycle state after validation:
 
 `status=validated`, `active=false`
 
-The Candidate is therefore proven enough for reviewed application but cannot autonomously enter Production as an active lesson.
+The Candidate is proven enough for reviewed application but cannot autonomously enter Production as an active Memory lesson.
 
 ## 4. Bounded repair derived from the evidence
 
@@ -139,7 +141,7 @@ Evidence completed before human merge:
 - frozen Golden Corpus remains `29/29`, `0` mismatches, `0` Critical False PASS;
 - Learning/Corpus validation API/model cost `$0`.
 
-## 6. Human application boundary
+## 6. Human application and S4 closure
 
 PR `#36` — `fix(learning): close Lumen director-state contract gap` — was merged after the validated-inactive evidence gate.
 
@@ -147,9 +149,29 @@ Merge commit:
 
 `7af126e3300b23c19bd088ca32c08c7e81947d8b`
 
-This merge is the human-reviewed application authority for the protected skill/contract repair. It does not convert the Candidate into a self-promoted active prompt lesson.
+Exact-main post-merge Full Verifier:
+- run `33211092911`
+- result **SUCCESS in all 37 steps**
+- evaluated executable merge `7af126e3300b23c19bd088ca32c08c7e81947d8b`.
 
-Post-merge exact-main regression is tracked by Full Verifier run `33211092911`.
+Golden Corpus on that executable merge:
+- 29/29 Expected Outcomes
+- 0 mismatches
+- 0 Critical False PASS
+- 0 model/API cost for Corpus execution.
+
+Durable application evidence:
+- `learning/evidence/applications/candidate-production-run-b37ac8d268e8549c-full-verifier.json`
+- `evaluation/results/LUMEN-LEARNING-APPLICATION-CORPUS-7af126e.json`
+- `learning/applications/candidate-production-run-b37ac8d268e8549c.json`.
+
+Application terminal state:
+
+**`APPLIED-CLOSED`**
+
+The receipt binds the exact validated Candidate, validation artifact, protected `skill` target, PR `#36`, merge SHA, human approval reference, exact-main verifier and compatible Golden Corpus PASS.
+
+Crucial invariant: this application closure does **not** set the Candidate to `active=true`. The Candidate remains `validated`, `active=false`. The merged skill/runtime/contract files are Production truth through the human-reviewed Git path; this is distinct from active Memory-lesson promotion.
 
 ## 7. Golden Corpus role
 
@@ -163,7 +185,7 @@ Golden Corpus is therefore **regression evidence**, not mutation authority.
 
 The domain-specific pieces in this example are the game brief, game verifier probes and game skills. The deeper control pattern is more general:
 
-`Intent/Contract -> Worker -> Observable Evidence -> Deterministic Gate -> Failure Taxonomy -> Candidate Improvement -> Validation Corpus -> Human Application -> Audit Receipt`
+`Intent/Contract -> Worker -> Observable Evidence -> Deterministic/Governed Gate -> Failure Taxonomy -> Candidate Improvement -> Validation Corpus -> Human Application -> Audit Trail`
 
 This suggests a potentially reusable architecture beyond Gaming, but that portability is a **hypothesis for the next analysis**, not a claim proven by this repository. Any transfer must separately define domain truth, deterministic/independent evidence, protected layers, release/decision authority, validation corpus and human approval boundaries.
 
@@ -175,6 +197,8 @@ Now demonstrated:
 - the failure maps to a bounded protected-layer Learning Candidate;
 - the Candidate can be validated zero-paid while remaining inactive;
 - the validated repair can pass the human-reviewed merge boundary;
+- exact-main post-merge regression proves the merged implementation;
+- an immutable SHA-bound S4 application receipt closes the application as `APPLIED-CLOSED`;
 - the learned Director rule is persistent in the verified skill/runtime contract.
 
 Still not demonstrated:
