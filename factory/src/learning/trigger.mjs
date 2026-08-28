@@ -1,4 +1,4 @@
-export const TRIGGER_POLICY_VERSION = 'controlled-improvement-trigger-v1';
+export const TRIGGER_POLICY_VERSION = 'controlled-improvement-trigger-v2';
 
 function recurringFailureForEvent(recurringFailures, eventId) {
   return recurringFailures.some((x) => {
@@ -15,6 +15,7 @@ export function evaluateImprovementTrigger(aggregate, context = {}) {
   const eventKind = String(context?.eventKind || '').trim();
   const eventId = String(context?.eventId || '').trim();
   const eventVerdict = String(context?.eventVerdict || '').trim().toLowerCase();
+  const eventFailed = context?.eventFailed === true;
 
   const aggregateFeedbackNegative = Number(verdicts.reject || 0) > 0 || Number(verdicts.feedback || 0) > 0;
   const feedbackNegative = eventKind === 'owner-feedback'
@@ -29,6 +30,10 @@ export function evaluateImprovementTrigger(aggregate, context = {}) {
   if ((!eventKind || eventKind === 'owner-feedback') && feedbackNegative) {
     reasons.push('owner-negative-or-feedback-evidence');
     allowedScopes.push('product-feedback');
+  }
+  if (eventKind === 'production-run' && eventFailed) {
+    reasons.push('failed-production-run-requires-case-root-cause');
+    allowedScopes.push('case-root-cause');
   }
   if ((!eventKind || eventKind === 'production-run') && recurringEngineeringFailure) {
     reasons.push('recurring-engineering-failure-across-runs');
