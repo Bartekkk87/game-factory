@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "game-factory.golden-corpus-evaluation-report/v1",
+  "evaluatedCommitSha": "7af126e3300b23c19bd088ca32c08c7e81947d8b",
+  "generatedAt": "2026-08-28T21:08:30.630Z",
+  "baseline": {
+    "baselineId": "s2-s1-closure-reference-2026-08-28",
+    "compatibility": {
+      "registryBlobMatch": true,
+      "s1ManifestBlobMatch": true,
+      "compatible": true
+    }
+  },
+  "execution": {
+    "sourceWorkflowRunId": "33211092911",
+    "sourceArtifactId": "9701662469",
+    "casesEvaluated": 29,
+    "uniqueScriptsExecuted": 8,
+    "apiCalls": 0,
+    "modelBackedCases": 0,
+    "usdCost": 0
+  },
+  "metrics": {
+    "totalCases": 29,
+    "matchedExpectedCount": 29,
+    "expectedMismatchCount": 0,
+    "expectedOutcomePassRate": 1,
+    "criticalFalsePassCount": 0,
+    "criticalMismatchCount": 0
+  },
+  "policy": {
+    "corpusRegression": false,
+    "criticalFalsePassRegression": false,
+    "criticalFalsePassTolerance": 0
+  }
+}
