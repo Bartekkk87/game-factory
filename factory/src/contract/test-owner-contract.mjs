@@ -15,13 +15,14 @@ const b = createOwnerContract({ idea: freeform, source: 'freeform-selftest' });
 assert.equal(a.originalBrief, freeform);
 assert.equal(a.ownerBriefSha256, crypto.createHash('sha256').update(freeform).digest('hex'));
 assert.equal(a.contractSha256, b.contractSha256);
+assert.equal(a.contractSha256, 'f0dda473ba0ca7be650633453887d18f83fb6c14a55c85c48508aab4376dfd75', 'legacy freeform contract hash must remain stable outside the D-4 heading case');
 assert.deepEqual(a.mustHaves.map((r) => r.id), ['MH-01', 'MH-02']);
 assert.deepEqual(a.noGos.map((r) => r.id), ['NG-01']);
 assert.deepEqual(a.unknowns.map((r) => r.id), ['UN-01']);
 assert.deepEqual(ownerRequirementIds(a), ['MH-01', 'MH-02', 'NG-01']);
 assert.equal(a.unknowns[0].text, 'Maybe add co-op later.');
 assert.equal(a.decomposition.version, 'deterministic-freeform-v2');
-assert.equal(a.decomposition.semanticHeadingContextPreserved, false);
+assert.equal(a.decomposition.semanticHeadingContextPreserved, undefined);
 assert.equal(Object.isFrozen(a.mustHaves[0].provenance), true);
 
 const inflatedMood = createOwnerContract({
@@ -114,5 +115,5 @@ assert.equal(noHeadingInflation.unknowns.length, 1);
 assert.equal(noHeadingInflation.unknowns[0].text, 'Distinct silhouettes during combat.');
 assert.equal(noHeadingInflation.unknowns[0].contextHeading, 'Must Survive The Cut');
 
-console.log('PACKAGE 3 D-4 PASS: semantic headings survive as immutable requirement context with stable IDs and no heading-driven obligation inflation.');
+console.log('PACKAGE 3 D-4 PASS: semantic headings survive as immutable requirement context with stable IDs, legacy hashes remain stable outside D-4, and headings do not inflate obligations.');
 console.log('Owner Contract decomposition selftest: PASS');
