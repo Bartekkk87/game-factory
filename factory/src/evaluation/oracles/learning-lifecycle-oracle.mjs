@@ -23,12 +23,33 @@ try {
 
   if (caseId === 'fr-learning-validated-inactive-not-consumed') {
     fs.writeFileSync(path.join(tmp, 'memory', 'memory.json'), JSON.stringify({ products: [], lessons: [
-      { role: 'director', text: 'legacy' },
-      { role: 'director', text: 'candidate', status: 'candidate', active: false },
-      { role: 'director', text: 'validated inactive', status: 'validated', active: false },
-      { role: 'director', text: 'validated active', status: 'validated', active: true }
+      { id: 'legacy', role: 'director', text: 'legacy' },
+      { id: 'candidate', role: 'director', text: 'candidate', status: 'candidate', active: false },
+      { id: 'inactive', role: 'director', text: 'validated inactive', status: 'validated', active: false },
+      { id: 'untyped-active', role: 'director', text: 'untyped active must stay blocked', status: 'validated', active: true },
+      {
+        schemaVersion: store.LESSON_SCHEMA,
+        id: 'governed-active',
+        role: 'director',
+        scope: 'corpus-fixture',
+        targetLayer: 'prompt',
+        directive: 'governed active directive',
+        status: 'validated',
+        active: true,
+        sourceRunIds: ['corpus-run'],
+        ownerFeedbackIds: [],
+        promotionRef: '#999',
+        mergeCommitSha: '1'.repeat(40),
+        candidateArtifactSha256: '2'.repeat(64)
+      }
     ], stats: {} }, null, 2));
-    assert.deepEqual(store.lessonsFor('director'), ['- validated active']);
+    const productionLessons = store.lessonsFor('director');
+    assert.equal(productionLessons.length, 1);
+    assert.equal(productionLessons[0].schemaVersion, store.LESSON_SCHEMA);
+    assert.equal(productionLessons[0].id, 'governed-active');
+    assert.equal(productionLessons[0].directive, 'governed active directive');
+    assert.equal(productionLessons.some((lesson) => lesson.id === 'inactive'), false);
+    assert.equal(productionLessons.some((lesson) => lesson.id === 'untyped-active'), false);
   } else if (caseId === 'fr-learning-lifecycle-human-gated') {
     const candidate = lifecycle.createCandidate({
       id: 'corpus-human-gate', role: 'director', scope: 'product-feedback', targetLayer: 'prompt',
@@ -44,7 +65,7 @@ try {
     });
     assert.equal(validated.status, 'validated');
     assert.equal(validated.active, false);
-    assert.equal(store.lessonsFor('director').includes('- Corpus candidate must remain inactive until human merge.'), false);
+    assert.equal(store.lessonsFor('director').some((lesson) => lesson.directive === 'Corpus candidate must remain inactive until human merge.'), false);
     assert.throws(() => lifecycle.promoteCandidate('corpus-human-gate', {
       approvedBy: 'model', approvalKind: 'model', promotionRef: '#999', mergeCommitSha: '0'.repeat(40), candidateArtifactSha256: '0'.repeat(64)
     }), /human-merge/);
