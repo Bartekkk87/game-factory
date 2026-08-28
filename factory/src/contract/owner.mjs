@@ -32,9 +32,7 @@ function parseSections(markdown) {
 }
 
 function bullets(lines = []) {
-  return lines
-    .map((line) => line.match(/^\s*[-*+]\s+(.+?)\s*$/)?.[1]?.trim())
-    .filter(Boolean);
+  return lines.map((line) => line.match(/^\s*[-*+]\s+(.+?)\s*$/)?.[1]?.trim()).filter(Boolean);
 }
 
 function findSection(sections, patterns) {
@@ -50,11 +48,7 @@ function requirementList(prefix, items, mode) {
     const contextHeading = typeof item === 'string' ? null : (item.contextHeading || null);
     const provenance = typeof item === 'string'
       ? { mode, itemIndex: index }
-      : {
-          mode,
-          itemIndex: item.fragmentIndex ?? index,
-          ...(contextHeading ? { contextHeading } : {})
-        };
+      : { mode, itemIndex: item.fragmentIndex ?? index, ...(contextHeading ? { contextHeading } : {}) };
     return {
       id: `${prefix}-${String(index + 1).padStart(2, '0')}`,
       text,
@@ -80,10 +74,7 @@ function freeformFragments(rawIdea) {
   let contextHeading = null;
   for (const rawLine of String(rawIdea || '').split(/\r?\n/)) {
     const heading = rawLine.match(/^\s*#{1,6}\s+(.+?)\s*$/);
-    if (heading) {
-      contextHeading = heading[1].trim();
-      continue;
-    }
+    if (heading) { contextHeading = heading[1].trim(); continue; }
     const line = rawLine.replace(/^\s*[-*+]\s+/, '').trim();
     if (!line) continue;
     for (const part of line.split(/(?<=[.!?])\s+|;\s*/)) {
@@ -114,30 +105,23 @@ export function createOwnerContract({ idea = '', source = 'unknown' } = {}) {
   const originalBrief = String(idea ?? '');
   const rawIdea = originalBrief.trim();
   const sections = parseSections(rawIdea);
-
   const explicitMustHaves = findSection(sections, [/^muss have$/, /^must have/, /^must haves/]);
   const explicitNoGos = findSection(sections, [/^no gos?$/, /^no go/, /^nicht erlaubt/, /^dont/, /^do not/]);
-
   let mustHaveItems = explicitMustHaves;
   let noGoItems = explicitNoGos;
   let unknownItems = [];
   let decompositionMode = 'explicit-sections';
-
   if (!explicitMustHaves.length && !explicitNoGos.length && rawIdea) {
     const decomposed = decomposeFreeform(rawIdea);
     mustHaveItems = decomposed.mustHaves;
     noGoItems = decomposed.noGos;
     unknownItems = decomposed.unknowns;
-    decompositionMode = decomposed.headingContextPreserved
-      ? 'deterministic-freeform-v3-heading-context'
-      : 'deterministic-freeform-v2';
+    decompositionMode = decomposed.headingContextPreserved ? 'deterministic-freeform-v3-heading-context' : 'deterministic-freeform-v2';
   }
-
   if (!rawIdea) {
     mustHaveItems = ['Produce one original, complete and highly playable browser game.'];
     decompositionMode = 'system-default';
   }
-
   const base = {
     schema: 'game-factory.owner-contract/1.0',
     source,
@@ -145,9 +129,7 @@ export function createOwnerContract({ idea = '', source = 'unknown' } = {}) {
     decomposition: {
       version: decompositionMode,
       ambiguitiesPreservedAsUnknown: true,
-      ...(decompositionMode === 'deterministic-freeform-v3-heading-context'
-        ? { semanticHeadingContextPreserved: true }
-        : {})
+      ...(decompositionMode === 'deterministic-freeform-v3-heading-context' ? { semanticHeadingContextPreserved: true } : {})
     },
     mustHaves: requirementList('MH', mustHaveItems, decompositionMode),
     noGos: requirementList('NG', noGoItems, decompositionMode),
@@ -163,5 +145,18 @@ export function ownerRequirementIds(ownerContract) {
   return [
     ...(ownerContract?.mustHaves || []).map((r) => r.id),
     ...(ownerContract?.noGos || []).map((r) => r.id)
+  ];
+}
+
+export function ownerIndependentReviewClaims(ownerContract) {
+  return (ownerContract?.unknowns || [])
+    .filter((claim) => !AMBIGUITY.test(String(claim?.text || '')))
+    .map((claim) => ({ id: claim.id, text: claim.text, contextHeading: claim.contextHeading || null }));
+}
+
+export function ownerFidelityClaimIds(ownerContract) {
+  return [
+    ...ownerRequirementIds(ownerContract),
+    ...ownerIndependentReviewClaims(ownerContract).map((claim) => claim.id)
   ];
 }
