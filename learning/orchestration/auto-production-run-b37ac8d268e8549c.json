@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "controlled-learning-orchestration-v1",
+  "eventKind": "production-run",
+  "eventId": "20260828-201007",
+  "aggregateRef": "learning/aggregates/auto-production-run-b37ac8d268e8549c.json",
+  "triggerRef": "learning/triggers/auto-production-run-b37ac8d268e8549c.json",
+  "rootCauseRef": "learning/root-causes/auto-production-run-b37ac8d268e8549c.json",
+  "evaluationFailureRef": null,
+  "evaluationFailureClass": null,
+  "reproducibilityStatus": null,
+  "analysisRef": "learning/analysis/auto-production-run-b37ac8d268e8549c.json",
+  "triggerAllowed": true,
+  "triggerReasons": [
+    "failed-production-run-requires-case-root-cause"
+  ],
+  "focusScope": "case-root-cause",
+  "candidateId": null,
+  "candidateActive": null,
+  "canValidate": false,
+  "canActivate": false
+}
