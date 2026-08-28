@@ -16,7 +16,7 @@ The change set is intentionally split into:
 
 ### C-3 / C-5 — workflow write boundary + runtime-state isolation
 
-`main` is now designed as the authoritative code / policy branch. Automated Production and Review state is routed to the separate `runtime-state` branch.
+`main` is now designed as the authoritative code / policy branch. Automated Production and Review state is routed to the separate `runtime-state` branch. The branch was initialized from current `main` and currently has no independent changes.
 
 Production and Review workflows now:
 
