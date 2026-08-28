@@ -1,8 +1,8 @@
-# Game Factory — Architektur v2.8 (Studio OS)
+# Game Factory — Architektur v2.9 (Studio OS)
 
 Evidence-first Game-Development-Plattform auf GitHub. GitHub ist die executable/durable Source of Truth für Code, Runs, Evidence, Learning-Artefakte, Evaluation und Promotionen. Notion spiegelt Entscheidungen und Status.
 
-Stand: **28.08.2026 — Factory Foundation + Controlled Improvement + Golden Corpus S0–S5 CLOSED; realer Failure → Validated Candidate → Human Application Pfad `APPLIED-CLOSED` demonstriert; Audit-v2 Hardening als separater Change-Track umgesetzt.**
+Stand: **29.08.2026 — Factory Foundation + Controlled Improvement + Golden Corpus S0–S5 CLOSED; realer Failure → Validated Candidate → Human Application Pfad `APPLIED-CLOSED` demonstriert; Audit-v2 A-1/A-2 zero-paid implementiert und branch-verifiziert.**
 
 ## 1. Architekturprinzipien
 
@@ -18,6 +18,7 @@ Stand: **28.08.2026 — Factory Foundation + Controlled Improvement + Golden Cor
 10. **Kein Paid Game- oder model-backed Benchmark-Run ohne separate Owner-Freigabe.**
 11. **Learning generalisiert Regeln, nicht Einzelfallnamen.**
 12. **Code Authority und Runtime State sind getrennt.** `main` ist autoritativ; `runtime-state` ist durable, aber nicht autoritativ.
+13. **Corpus-Fälle sind nur dann unabhängige Beobachtungen, wenn jeder Fall einen eigenen adressierbaren Oracle-Lauf besitzt.**
 
 Authority Order:
 
@@ -204,13 +205,25 @@ Typed Case Schema, durable Seed Registry, Provenance-Prüfung und Coverage Basel
 Fallakten besitzen executable Expected-Outcome-Semantik und dokumentierte Nachbarvarianten.
 
 ### S2 — Evaluation Runner + Quality Delta
-Der aktuelle Runner führt **29 registrierte Fälle über 8 eindeutige Selftest-Skripte** aus. Deshalb gilt:
+Audit-v2 A-1/A-2 ersetzt die bisherige Sammeltest-Messung durch einen fallbezogenen Execution Contract:
 
-- `29 Fälle` beschreibt die Fall-/Buchhaltungsgranularität;
-- `8 unabhängige Skriptausführungen` beschreibt die aktuelle unabhängige Messgranularität;
-- `29/29` darf nicht isoliert als 29 unabhängige Beobachtungen kommuniziert werden.
+- **34 aktive Corpus-Fälle** insgesamt;
+- **34 unabhängige Case-Ausführungen**;
+- **9 Oracle-Implementierungsdateien**, die per `--case <case-id>` ausschließlich die Assertion des adressierten Falls ausführen;
+- `independentObservationCount` ist eine bindende S2-Metrik;
+- `observationDeficit > 0` ist eine Corpus Regression und scheitert fail-closed;
+- die ursprünglichen 29 Seed-/Variant-Fälle bleiben erhalten;
+- zusätzlich sind **5 reale Production-derived Fehler als `historical-regression`** registriert, jeweils mit Origin Run und Fix Commit.
 
-Fallspezifische Oracles für alle Fälle bleiben ein separater Corpus-Hardening-Track.
+Die fünf Historical Regressions sind:
+
+1. Harbor Repair Regression;
+2. Harbor Proof-Plan Unreachability;
+3. Lumen Director State Contract;
+4. Provider Request Contract — `max_completion_tokens` statt `max_tokens`;
+5. Provider Request Contract — unsupported `temperature`.
+
+Der frühere Stand `29 registrierte Fälle / 8 eindeutige Sammel-Selftests` ist damit nur noch historischer Audit-Ausgangspunkt und **nicht mehr die aktuelle unabhängige Messgranularität**.
 
 ### S3 — Evaluation Failure Intake
 Kompatible Corpus-Mismatches können analysis-only in Controlled Improvement eingehen; Candidates bleiben inaktiv.
@@ -259,14 +272,15 @@ Langfristiges Zielbild bleibt eine **separate Origin für untrusted generated co
 
 Issue `#17` bleibt offen. Lumen Canary #1 erreichte keinen spielbaren Draft; hands-on Owner ACCEPT/REJECT bleibt für einen unabhängigen Post-Repair-Canary offen.
 
-Vor einem zweiten Paid Production Canary:
+**Vor einem zweiten Paid Production Canary wird die Architektur finalisiert.** Der Ablauf ist daher:
 
-1. exakten Brief, Coverage, Risiken und Kostenrahmen erneut vorlegen;
-2. `main` repository-seitig als protected erzwingen;
-3. **STOP für frische explizite Owner-Freigabe**;
-4. höchstens einen Paid Canary ausführen;
-5. Owner hands-on ACCEPT/REJECT;
-6. Evidence klassifizieren, bevor weitere Architekturänderungen folgen.
+1. verbleibende akzeptierte Architecture-Audit-Tracks separat implementieren und regressionsprüfen;
+2. repository-seitiges C-3 Enforcement als Final-Gate schließen;
+3. Gesamtarchitektur gegen den Audit erneut prüfen;
+4. erst danach Brief, Coverage, Risiken und Kostenrahmen für einen möglichen Canary vorlegen;
+5. **STOP für frische explizite Owner-Freigabe**;
+6. höchstens einen Paid Canary ausführen;
+7. Owner hands-on ACCEPT/REJECT.
 
 ## 12. Cross-Domain Portability Hypothesis
 
@@ -280,10 +294,20 @@ Cross-Domain-Portabilität bleibt eine begründete Hypothese, keine gemessene Ke
 
 Aktuell gerechtfertigt: **EVIDENCE-DRIVEN CONTROLLED IMPROVEMENT**.
 
-Nicht gerechtfertigt:
+Zusätzlich gerechtfertigt:
+
+- 34 aktive Corpus-Fälle besitzen 34 fallbezogene, zero-paid Einzelbeobachtungen;
+- 5 reale Production-derived Fehler sind explizit als Historical Regression mit Origin-Run-/Fix-Commit-Provenance registriert.
+
+Nicht gerechtfertigt bzw. noch offen:
 
 - vollständige GitHub Protected-Branch-Enforcement, solange die Admin-Einstellung nicht aktiviert ist;
-- 29 voneinander unabhängige Corpus-Beobachtungen;
+- strukturelle Trennung von Proposal- und privilegierten Learning-Capabilities (C-2);
+- run-scoped Budget Ledger und concurrency-safe/append-only Memory (D-2);
+- durable Binary Evidence außerhalb normalen Git-History-Wachstums (D-1);
+- S5 Sampling/Variance/Confidence (B-4);
+- separate Origin für untrusted generated code (E-3);
+- typed Proof Duration / Lesson Contracts und verbleibende Maintainability/Governance-Tracks;
 - fully self-modifying/self-authorizing Factory;
 - realer model-backed Benchmark-Gewinner;
 - automatische Production-Model-Promotion;
