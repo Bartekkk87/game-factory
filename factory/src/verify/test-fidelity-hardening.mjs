@@ -101,13 +101,22 @@ assert.match(fullBriefVerdict.coverage.scope, /mandatory independent screenshot\
 
 const reviewPass = enforceIndependentFullBriefReview({
   fidelityVerdict: 'PASS', missingRequirements: [], fidelityCritique: ['Dark industrial atmosphere is visible.'],
+  independentClaimReviews: [{
+    claimId: 'UN-01', verdict: 'PASS', evidenceSources: ['screenshot'],
+    evidenceNote: 'Captured gameplay visibly uses a dark industrial palette and machinery-like geometry.'
+  }],
   scores: { visuals: 8, uiClarity: 8, funProxy: 8, performance: 10 }, overall: 8.2, critique: [], priorityFixes: []
 }, fullBriefContract);
 assert.equal(reviewPass.fullBriefCoverage.pass, true);
 assert.deepEqual(reviewPass.fullBriefCoverage.independentReviewClaimIds, ['UN-01']);
+assert.equal(reviewPass.fullBriefCoverage.evidencePolicy, 'independent-observation-required');
 
 assert.throws(() => enforceIndependentFullBriefReview({
   fidelityVerdict: 'FAIL', missingRequirements: ['UN-01'], fidelityCritique: ['Atmosphere is not recognizable.'],
+  independentClaimReviews: [{
+    claimId: 'UN-01', verdict: 'FAIL', evidenceSources: ['screenshot'],
+    evidenceNote: 'Captured gameplay is bright/default and does not show the requested industrial atmosphere.'
+  }],
   scores: { visuals: 7, uiClarity: 8, funProxy: 8, performance: 10 }, overall: 7.8, critique: [], priorityFixes: []
 }, fullBriefContract), (error) => error?.code === 'FULL_BRIEF_FIDELITY_FAILED' && error?.failedClaimIds?.[0] === 'UN-01');
 
