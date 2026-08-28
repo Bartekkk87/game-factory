@@ -14,8 +14,8 @@ fs.writeFileSync(path.join(runDir, 'gdd.json'), JSON.stringify({
     pass: true,
     scenarios: [
       { id: 'base', inputMode: 'active+idle-control', seconds: 1.5, stopStates: [], restartAtEnd: false },
-      { id: 'success-proof', inputMode: 'active', seconds: 2, stopStates: ['success'], restartAtEnd: true },
-      { id: 'failure-proof', inputMode: 'idle', seconds: 2, stopStates: ['failure'], restartAtEnd: true }
+      { id: 'success-proof', inputMode: 'active', seconds: 0.8, stopStates: ['success'], restartAtEnd: true },
+      { id: 'failure-proof', inputMode: 'idle', seconds: 0.8, stopStates: ['failure'], restartAtEnd: true }
     ]
   }
 }, null, 2));
@@ -28,14 +28,16 @@ let state = 'title';
 let score = 0;
 let startedAt = performance.now();
 let hadGameplayInput = false;
-function startFresh(){ state = 'playing'; score = 0; hadGameplayInput = false; startedAt = performance.now(); }
+let runNo = 0;
+function startFresh(){ runNo++; state = 'playing'; score = 0; hadGameplayInput = false; startedAt = performance.now(); }
 addEventListener('keydown', (e) => {
   if (state === 'title') { startFresh(); return; }
   if (state === 'won' || state === 'gameover') { startFresh(); return; }
   if (state === 'playing') { hadGameplayInput = true; score = 10; }
 });
 setInterval(() => {
-  if (state === 'playing' && performance.now() - startedAt > 350) state = hadGameplayInput ? 'won' : 'gameover';
+  const terminalAfterMs = runNo <= 1 ? 350 : 900;
+  if (state === 'playing' && performance.now() - startedAt > terminalAfterMs) state = hadGameplayInput ? 'won' : 'gameover';
 }, 10);
 function draw(){
   ctx.fillStyle = '#123456'; ctx.fillRect(0,0,960,540);
