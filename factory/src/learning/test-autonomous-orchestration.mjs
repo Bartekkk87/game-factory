@@ -60,8 +60,40 @@ try {
   const second = orchestration.orchestrateControlledLearning({ eventKind: 'production-run', eventId: runId });
   assert.equal(second.created, false);
   assert.equal(second.candidateId, first.candidateId);
-  assert.equal(fs.readdirSync(path.join(tmp, 'learning', 'root-causes')).filter((name) => name.endsWith('.json')).length, 1);
-  assert.equal(fs.readdirSync(path.join(tmp, 'learning', 'candidates')).filter((name) => name.endsWith('.json')).length, 1);
+
+  // Lumen-class early Director failure: no GDD/attempt exists yet, but durable FAILURE.json is sufficient.
+  const directorRunId = 'director-contract-failed-run';
+  const directorRunDir = path.join(tmp, 'runs', directorRunId);
+  fs.mkdirSync(directorRunDir, { recursive: true });
+  fs.writeFileSync(path.join(directorRunDir, 'RUN-EVIDENCE.json'), JSON.stringify({
+    run: { id: directorRunId, status: 'failed', reason: 'director_failed' },
+    gates: { technical: { pass: false }, productFidelity: { pass: false } },
+    events: [], costs: { costUsd: 0, tokens: 0, attempts: [] }
+  }, null, 2));
+  fs.writeFileSync(path.join(directorRunDir, 'FAILURE.json'), JSON.stringify({
+    reason: 'director_failed',
+    error: 'Director proof plan unreachable: probe PR-MH-03 uses unsupported verifier state restored; probe PR-MH-04 uses unsupported verifier state glass_breach'
+  }, null, 2));
+
+  const director = orchestration.orchestrateControlledLearning({ eventKind: 'production-run', eventId: directorRunId });
+  assert.equal(director.created, true);
+  assert.equal(director.triggerAllowed, true);
+  assert.equal(director.focusScope, 'case-root-cause');
+  assert.ok(director.candidateId);
+  assert.equal(director.candidateActive, false);
+  const directorRootCause = JSON.parse(fs.readFileSync(path.join(tmp, director.rootCauseRef), 'utf8'));
+  assert.equal(directorRootCause.primaryFindingId, 'director-verifier-state-contract-mismatch');
+  const directorCandidate = JSON.parse(fs.readFileSync(path.join(tmp, 'learning', 'candidates', `${director.candidateId}.json`), 'utf8'));
+  assert.equal(directorCandidate.status, 'candidate');
+  assert.equal(directorCandidate.active, false);
+  assert.equal(directorCandidate.role, 'director');
+  assert.equal(directorCandidate.targetLayer, 'skill');
+  assert.equal(directorCandidate.sourceKind, 'autonomous-failed-run-root-cause');
+  assert.deepEqual(directorCandidate.sourceRunIds, [directorRunId]);
+  assert.match(directorCandidate.text, /unsupported state_reached verifier state/);
+
+  assert.equal(fs.readdirSync(path.join(tmp, 'learning', 'root-causes')).filter((name) => name.endsWith('.json')).length, 2);
+  assert.equal(fs.readdirSync(path.join(tmp, 'learning', 'candidates')).filter((name) => name.endsWith('.json')).length, 2);
 
   console.log('autonomous failed-run orchestration selftest: PASS');
 } finally {
