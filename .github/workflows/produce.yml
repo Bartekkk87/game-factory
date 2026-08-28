@@ -108,6 +108,10 @@ jobs:
           printf '%s' "$IDEA_B64" | base64 -d > /tmp/idea-decoded.txt
           node factory/src/index.mjs --idea-file /tmp/idea-decoded.txt --budget "$BUDGET"
 
+      - name: Prepare opaque-origin Owner preview
+        if: success()
+        run: node factory/src/publish/prepare-sandbox-preview.mjs
+
       - name: Identify latest draft
         id: meta
         if: success()
