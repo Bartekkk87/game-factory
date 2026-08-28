@@ -19,8 +19,33 @@ const EMPTY = {
 };
 
 function normalizeLesson(lesson) {
-  if (lesson && typeof lesson === 'object' && Object.hasOwn(lesson, 'status') && Object.hasOwn(lesson, 'active')) return { ...lesson };
-  return { ...(lesson || {}), status: 'legacy-unvalidated', active: false };
+  if (!lesson || typeof lesson !== 'object') return { status: 'legacy-unvalidated', active: false };
+  if (lesson.schemaVersion === LESSON_SCHEMA) return { ...lesson };
+
+  // Deterministic migration is allowed only for an older lesson that already
+  // carries the full governed promotion provenance. Untyped/free-form memory
+  // without that evidence remains inactive and cannot reach Production prompts.
+  const governedLegacy = lesson.status === 'validated'
+    && lesson.active === true
+    && lesson.targetLayer === 'prompt'
+    && typeof lesson.text === 'string'
+    && lesson.text.trim().length > 0
+    && lesson.text.length <= MAX_LESSON_DIRECTIVE_CHARS
+    && typeof lesson.role === 'string'
+    && typeof lesson.scope === 'string'
+    && Array.isArray(lesson.sourceRunIds)
+    && Array.isArray(lesson.ownerFeedbackIds)
+    && typeof lesson.promotionRef === 'string'
+    && typeof lesson.mergeCommitSha === 'string'
+    && /^[0-9a-f]{64}$/.test(String(lesson.candidateArtifactSha256 || ''));
+  if (governedLegacy) {
+    return {
+      ...lesson,
+      schemaVersion: LESSON_SCHEMA,
+      directive: lesson.text
+    };
+  }
+  return { ...lesson, status: lesson.status || 'legacy-unvalidated', active: false };
 }
 
 export function assertProductionLesson(lesson) {
