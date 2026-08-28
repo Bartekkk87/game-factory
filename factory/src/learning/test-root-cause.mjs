@@ -4,6 +4,9 @@ import os from 'node:os';
 import path from 'node:path';
 import { analyzeFailedProductionRun, proposalFromRootCause } from './root-cause.mjs';
 
+const source = fs.readFileSync(new URL('./root-cause.mjs', import.meta.url), 'utf8');
+assert.doesNotMatch(source, /verify\/state-semantics/, 'root-cause falsifier must not inherit the verifier state vocabulary it is supposed to challenge');
+
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'gf-root-cause-'));
 const runId = 'failed-fixture-1';
 const runDir = path.join(root, runId);
@@ -60,6 +63,7 @@ try {
   assert.equal(report.bestAttempt, 'attempt-02');
   assert.equal(report.finalAttempt, 'attempt-03');
   assert.equal(report.authority.mustNot.includes('activate-candidate'), true);
+  assert.match(report.diagnosticIndependence, /do not import verifier state semantics/);
   const ids = report.findings.map((item) => item.id);
   assert(ids.includes('repair-regression-after-best-attempt'));
   assert(ids.includes('new-runtime-error-after-repair'));
