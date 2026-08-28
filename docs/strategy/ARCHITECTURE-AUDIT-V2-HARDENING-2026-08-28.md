@@ -1,214 +1,102 @@
-# Architecture Audit v2 — Hardening Implementation — 28.08.2026
+# Architecture Audit v2 — Hardening Implementation
 
-## Status
+## Status — 29.08.2026
 
-This document records the implementation response to the independently revised Architecture Audit v2.
+This document is the current implementation ledger for the revised Architecture Audit v2. All work remains architecture hardening only unless a separate Owner decision explicitly authorizes a Product or model-backed run.
 
-Change branch: `audit-v2-hardening-20260828`
+No Canary is authorized by this document. The Owner decision is: **finalize the architecture first; only then consider a new Canary.**
 
-The change set is intentionally split into:
+## Merged pre-Canary hardening — PR #37
 
-1. **pre-Canary / immediate safety hardening** — implemented in this branch;
-2. **repository-admin enforcement** — requires GitHub settings outside the executable repository;
-3. **medium-term scaling / architecture tracks** — deliberately not mixed into this safety PR.
+PR #37 merged to `main` as `3740483a9b95c14689f249761d86f3c92c417724`. Exact-main Full Verifier `33217538397` completed SUCCESS.
 
-## Implemented in this change set
+Implemented there:
 
-### C-3 / C-5 — workflow write boundary + runtime-state isolation
+- **C-3/C-5 code-side:** authoritative `main` separated from non-authoritative `runtime-state`; Production/Review no longer push runtime evidence to `main`; staged allow-lists, secret scan and runtime-state history/tree guards added.
+- **C-1:** prompt promotion bound to Candidate artifact SHA, PR ref and merged commit containing exactly that artifact.
+- **B-1/B-2:** declarative per-model request contracts plus zero-paid request-contract tests.
+- **A-3:** binding Release = Technical PASS + Product Fidelity PASS + Budget PASS; Experience is advisory.
+- **E-1:** bounded Director semantic repair on deterministic validation errors.
+- **A-2b:** immutable Lumen Director-state historical regression; no conditional dependency on a mutable `runs/` directory.
+- **C-4:** direct active-Lesson write bypass removed.
+- **A-4:** screenshot-pixel flat-frame/content evidence replaces guessed source background parsing.
+- **B-3:** only definitely pre-delivery transport failures may release a reservation and retry; uncertain delivery remains fail-closed.
+- **D-3:** zero-valued operational limits use explicit typed semantics.
+- **E-2/E-3 immediate:** generated script/style terminator isolation and restrictive CSP.
+- **F-3 partial:** `SECURITY.md`, `CONTRIBUTING.md`, `CODEOWNERS`; LICENSE remains a separate Owner/legal decision.
 
-`main` is now designed as the authoritative code / policy branch. Automated Production and Review state is routed to the separate `runtime-state` branch. The branch was initialized from current `main` and currently has no independent changes.
+Repository-level C-3 protection remains an external GitHub-admin enforcement boundary. The available connector can read but cannot create rulesets/branch protection. It is intentionally deferred as a final gate rather than blocking architecture work the assistant can complete itself.
 
-Production and Review workflows now:
+## A-1 / A-2 — independent Corpus observations + historical regressions
 
-- explicitly check out authoritative code from `main`;
-- fetch `runtime-state` only as durable Runtime/Evidence input;
-- reject any changes unique to `runtime-state` that are outside the allowed state paths;
-- merge the permitted Runtime/Evidence state locally into the current `main` tree;
-- verify that the resulting tree differs from `main` only under allowed Runtime/Evidence paths;
-- use explicit commit allow-lists instead of repository-wide staging;
-- scan staged evidence for common secret-key formats;
-- push only `HEAD:runtime-state`, never to `main`.
+Branch: `audit-v2-a1-a2-20260829`.
 
-Allowed Runtime/Evidence paths are bounded to:
+Detailed closure evidence: `docs/strategy/ARCHITECTURE-AUDIT-V2-A1-A2-CLOSURE-2026-08-29.md`.
 
-- `runs/**`
-- `drafts/**`
-- `products/**`
-- `archive/**`
-- `memory/**`
-- `learning/**`
-- `evaluation/results/**`
+### A-1 — closed in implementation pending merge
 
-Production and Review also share the repository-wide concurrency group `game-factory-runtime-state`, preventing those two workflows from racing each other while writing the same state branch.
+The previous S2 architecture had 29 registered cases but deduplicated them to 8 shared selftest executions. That state is no longer the current design.
 
-GitHub Pages likewise executes the current code from `main`, validates `runtime-state`, merges only permitted state locally, and builds the gallery from that combined read-only tree. Pages redeploys on relevant `main` or `runtime-state` changes.
+The v2 execution contract now requires:
 
-Additional defense in depth:
+- one addressable `--case <case-id>` execution per active Corpus case;
+- one focused case assertion per observation;
+- one Node process per case from the S2 runner;
+- explicit `independentObservationCount`;
+- explicit `observationDeficit`;
+- fail-closed regression whenever `observationDeficit > 0`.
 
-- a deterministic runtime guard rejects protected-path modifications during Production/Review;
-- `.github/CODEOWNERS` assigns protected code/policy paths to the repository owner.
+Current contract:
 
-**Remaining boundary:** GitHub still reports `main` as unprotected. The repository-level part of C-3 remains open until branch protection/rulesets are enabled with required human review and without an Actions bypass. The runtime-state split removes the previous technical need for Actions to push Runtime/Evidence commits to `main`; repository protection can therefore be enabled without disabling Production/Review persistence.
+- **34 active cases**;
+- **34 required independent case observations**;
+- **9 shared oracle implementation files**;
+- **0 model-backed cases / 0 API calls / $0 cost**.
 
-### C-1 — SHA/PR/merge-bound prompt promotion
+Shared source files do not collapse observation count because each case is independently invoked and can independently fail.
 
-`promoteCandidate()` now requires:
+### A-2 — closed in implementation pending merge
 
-- validated + inactive prompt candidate;
-- `human-merge` approval kind;
-- GitHub PR reference;
-- full merge commit SHA that is contained in current `HEAD`;
-- SHA-256 of the validated Candidate artifact;
-- proof that exactly that Candidate artifact exists in the named merge commit.
+Five real Production-derived failures are now explicit Tier-2 `historical-regression` Corpus cases with origin-run and fix-commit provenance:
 
-A free-form `promotionRef` / `human-merge` claim is no longer sufficient.
+1. Harbor Repair Regression — run `20260827-203110`, fix `9e07c632bf12b8d117e41c176e200e4e5d15fdd9` / PR #18;
+2. Harbor Proof-Plan Unreachability — run `20260827-210323`, fix `11a02908b43805dd0e07ccfe7342262b2a6e0349` / PR #19;
+3. Lumen Director State Contract — run `20260828-201007`, fix `7af126e3300b23c19bd088ca32c08c7e81947d8b` / PR #36;
+4. Provider request token-parameter failure — run `20260827-111826`;
+5. Provider unsupported-temperature failure — run `20260827-113631`.
 
-### B-1 / B-2 — declarative provider request contract
+The two provider cases replay only request construction; they make no provider call and therefore do not invent new provider-compatibility evidence.
 
-Every model record now declares `requestShape`:
+The original S0 registry and S1 variant manifest remain untouched. New A-1/A-2 contract files are pinned separately in the S2-v2 baseline, avoiding a rewrite of historical closure artifacts.
 
-- token parameter;
-- temperature policy;
-- JSON request mode;
-- contract source / verification state.
+Initial executable-head Full Verifier `33219316057` proved the new 34-case S2 evaluation step SUCCESS. A fresh exact-head Full Verifier is required after final documentation and before merge.
 
-The OpenAI-compatible adapter consumes this contract rather than branching on the provider name.
+## Remaining accepted architecture tracks
 
-A zero-paid selftest builds and validates the request for every model registry entry. Provider routes whose exact request semantics have not been confirmed by real evidence remain explicitly marked `unverified`; no new compatibility claim was invented.
+These remain open and are to be worked before any Canary proposal:
 
-### A-3 — Experience becomes advisory
-
-Binding release authority is now:
-
-`Technical PASS + Product Fidelity PASS + Budget PASS`
-
-The LLM Experience score remains available for critique and Polish but carries:
-
-- `advisory: true`
-- `authoritative: false`
-
-This makes the release rule consistent with the architecture principle that LLM output is a claim rather than deterministic truth.
-
-### E-1 — bounded Director repair
-
-Director output now receives bounded deterministic repair when its generated GDD fails schema/traceability/proof-plan validation.
-
-- first attempt: Director generation;
-- bounded repair attempts receive the invalid output and exact deterministic validation error;
-- repair instructions explicitly forbid weakening Owner requirements or verifier criteria;
-- transport/provider failures still fail closed and do not become semantic repair attempts.
-
-### A-2b — historical regression is unconditional
-
-The real Lumen Director-state-contract failure is no longer tested conditionally from a mutable `runs/` directory.
-
-An immutable regression fixture now binds:
-
-- origin run `20260828-201007`;
-- evidence commit `70200dce341fc06d0213991ff569481dd99774f6`;
-- original Git blob SHAs;
-- the exact unsupported-state failure text;
-- the expected root-cause class and target layer.
-
-Missing regression evidence is therefore a hard test failure rather than a silent skip.
-
-### C-4 — direct active-Lesson bypass removed
-
-The direct `recordLesson()` write path was removed from `memory/store.mjs`. Active Production lessons can only be materialized through the governed promotion path.
-
-### A-4 — visual-content evidence hardened
-
-The verifier no longer parses a guessed background color from generated source code.
-
-Visual-content evidence now detects flat frames from image data itself by measuring dominant-color versus non-dominant visual content. This removes the confirmed `parseInt`/hex false-PASS class.
-
-### B-3 — conservative transport retry
-
-Only transport failures that are clearly pre-delivery (selected DNS/connect/TLS failures) may release the reservation and retry.
-
-Unknown delivery state remains unchanged:
-
-- conservative reservation settlement;
-- `accountingComplete=false`;
-- no further paid call.
-
-Timeout/Abort and `ECONNRESET` remain fail-closed because delivery/billing status is ambiguous.
-
-### D-3 — zero-valued limits
-
-Count-style controls now accept `0`; positive-only controls still reject it. Invalid operator values produce a visible warning instead of silently falling back.
-
-### E-2 / E-3 — generated-code isolation
-
-- generated JavaScript cannot terminate its host `<script>` tag via `</script>`;
-- generated CSS cannot terminate `<style>` via `</style>`;
-- raw HTML is not escaped because markup is intentional;
-- generated pages receive a restrictive Content Security Policy blocking external network/resource access by default.
-
-A separate origin for untrusted generated code remains the long-term isolation target.
-
-### A-1 — communication corrected immediately
-
-The implementation does **not** claim that the existing S2 runner already supplies 29 independent observations.
-
-Current truth is documented as:
-
-- 29 registered Corpus cases;
-- 8 unique executable selftest scripts in the current S2 runner.
-
-README and Architecture no longer present isolated `29/29` as if it were 29 independent measurements.
-
-## Full Verifier additions
-
-The verifier now explicitly covers:
-
-- zero-valued limit semantics;
-- workflow path allow-list / protected-path policy;
-- runtime-state path isolation and workflow routing to `runtime-state`;
-- deterministic authoritative release gate;
-- every model request contract;
-- transport retry / billing-uncertainty boundary;
-- generated-page CSP and tag isolation;
-- flat-frame and external-network verifier behavior;
-- SHA/PR/merge-bound prompt promotion;
-- unconditional Lumen historical regression.
-
-## Still open before the next paid Product Canary
-
-### Repository-level C-3 admin enforcement
-
-The code-side architecture is now compatible with a protected `main`: Runtime/Evidence persistence no longer requires bot pushes to the authoritative branch.
-
-GitHub branch protection/rulesets must still be enabled for `main` with required human review and without an Actions bypass for protected changes.
-
-This setting cannot be truthfully replaced by repository code. Until it is enabled and the protected-layer PR is human-reviewed/merged, no further paid Product Canary should be authorized.
-
-## Deliberately separate medium-term tracks
-
-These findings are accepted but are not mixed into this pre-Canary safety PR because they require larger data-model, infrastructure or governance decisions:
-
-- **A-1:** true case-specific oracles / independent observations for all Corpus cases;
-- **A-2:** reclassify real failures as `historical-regression` in the frozen Corpus inventory;
-- **D-1:** durable binary Evidence migration to LFS/object storage and retention policy;
-- **C-2:** structural read/privileged lifecycle module split;
-- **D-2:** instance-scoped budget ledger and concurrent/append-only memory persistence; the shared Production/Review concurrency group is only a bounded race-prevention measure, not a replacement for this refactor;
-- **B-4:** S5 sampling parameters and variance/confidence reporting;
-- **E-3:** separate origin for generated code;
-- **E-4:** explicit proof-duration field instead of prose fallback;
-- **F-4:** typed Lesson schema and immutable prompt hierarchy;
-- **F-1:** formatter/linter rollout on critical modules;
-- **F-2:** strategy-document supersedes/status chain;
-- **F-3:** repository LICENSE remains an explicit Owner/legal choice. `SECURITY.md`, `CONTRIBUTING.md` and `CODEOWNERS` are added in this change set.
-
-These tracks should be implemented as separately reviewable PRs after the safety boundary above is merged and repository branch protection is active.
+- **C-2 — structural privilege separation:** automatic proposal/read code must not import validation/promotion/deactivation capability.
+- **D-2 — concurrent state model:** replace module-global Budget state with run-scoped ledger instances; make Memory updates append-only or transactionally concurrency-safe.
+- **D-1 — durable binary Evidence:** keep screenshots/binary proof from growing ordinary Git history indefinitely; bind durable external/LFS evidence by SHA and retention contract.
+- **B-4 — S5 statistics:** pin sampling parameters and report trial count plus variance/confidence before interpreting model-backed differences.
+- **E-3 — separate generated-code origin:** CSP is immediate defense, not equivalent to origin isolation.
+- **E-4 — typed proof duration:** remove semantic dependence on prose regex inference.
+- **F-4 — typed bounded Lessons:** immutable authority hierarchy above Lessons and bounded typed prompt injection contract.
+- **F-1 — maintainability:** formatter/linter coverage on critical modules without behavioral change.
+- **F-2 — strategy status chain:** canonical current/superseded index across GitHub with mirrored Notion status.
+- **F-3 — LICENSE:** explicit Owner/legal choice; not silently invented.
+- **C-3 repository enforcement:** final GitHub-admin gate once architecture work is otherwise complete.
 
 ## Proof boundary
 
-This change set does not claim:
+Current claims must remain bounded:
 
-- that C-3 is fully closed before GitHub admin protection is enabled;
-- that `runtime-state` is an authority branch — it is explicitly non-authoritative durable state only;
-- that 29 Corpus cases are 29 independent observations;
-- that unverified provider request contracts are production-compatible;
-- that CSP is equivalent to a separate untrusted-code origin;
-- that medium-term scaling findings are already resolved.
+- the Factory is an **evidence-driven controlled-improvement system**, not a self-authorizing self-modifying system;
+- protected-layer application remains human-reviewed;
+- Release remains deterministic/governed;
+- A-1/A-2 now support 34 independent zero-paid Corpus observations and five explicit historical Production regressions once merged;
+- no real model-backed S5 benchmark winner exists;
+- unverified provider contracts are not claimed compatible;
+- CSP is not claimed equivalent to separate-origin isolation;
+- architecture is **not final yet** while the remaining accepted tracks above are open;
+- no further paid Product Canary is authorized before a final architecture audit and fresh explicit Owner GO.
