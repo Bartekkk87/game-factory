@@ -113,6 +113,21 @@ try {
     assert.equal(lumen.findings[0].targetLayer, 'skill');
     assert.match(lumen.findings[0].summary, /restored/);
     assert.match(lumen.findings[0].summary, /glass_breach/);
+
+    const candidatePath = path.join(repoRoot, 'learning', 'candidates', 'candidate-production-run-b37ac8d268e8549c.json');
+    if (fs.existsSync(candidatePath)) {
+      const candidate = JSON.parse(fs.readFileSync(candidatePath, 'utf8'));
+      assert.equal(candidate.schemaVersion, 'learning-candidate-v1');
+      assert.equal(candidate.status, 'candidate');
+      assert.equal(candidate.active, false);
+      assert.equal(candidate.role, 'director');
+      assert.equal(candidate.scope, 'case-root-cause');
+      assert.equal(candidate.targetLayer, 'skill');
+      assert.deepEqual(candidate.sourceRunIds, ['20260828-201007']);
+      assert.equal(candidate.confidence, 1);
+      assert.match(candidate.text, /restored/);
+      assert.match(candidate.text, /glass_breach/);
+    }
   }
 
   fs.writeFileSync(path.join(runDir, 'RUN-EVIDENCE.json'), JSON.stringify({ run: { id: runId, status: 'success' } }, null, 2));
