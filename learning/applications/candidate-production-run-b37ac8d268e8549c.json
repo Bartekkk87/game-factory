@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "learning-application-receipt-v1",
+  "receiptId": "application-candidate-production-run-b37ac8d268e8549c",
+  "terminalState": "APPLIED-CLOSED",
+  "candidateId": "candidate-production-run-b37ac8d268e8549c",
+  "candidateArtifactSha256": "2665f1b3fc869a014b1ec257730bc4690b7adca166d48d77f71fdf9687738067",
+  "sourceCandidateSha": null,
+  "targetLayer": "skill",
+  "changeScope": "Bounded Director verifier-state protocol and directing-skill repair derived from Lumen Current Production failure 20260828-201007; includes early director_failed root-cause intake and exact Owner brief byte binding without weakening verifier gates.",
+  "implementation": {
+    "prRef": "#36",
+    "mergeCommitSha": "7af126e3300b23c19bd088ca32c08c7e81947d8b"
+  },
+  "humanApprovalRef": "owner-chat-2026-08-28-fortfahren-and-document",
+  "validationEvidence": {
+    "ref": "learning/validations/candidate-production-run-b37ac8d268e8549c.json",
+    "sha256": "d414798a0ca93b2492edb3e81ffdb92d5ad0893f589a11b35aa82091e81ae11d"
+  },
+  "regressionEvidence": [
+    {
+      "ref": "learning/evidence/applications/candidate-production-run-b37ac8d268e8549c-full-verifier.json",
+      "sha256": "3bd73e5e2f9414cfd5076e1e61cf1f453e8a5c684133a5c78bed5ef8313504e1",
+      "kind": "full-verifier",
+      "sourceRef": "github-actions:33211092911",
+      "evaluatedCommitSha": "7af126e3300b23c19bd088ca32c08c7e81947d8b",
+      "outcome": "PASS"
+    }
+  ],
+  "corpusEvidence": {
+    "ref": "evaluation/results/LUMEN-LEARNING-APPLICATION-CORPUS-7af126e.json",
+    "sha256": "d6f6238a49529b5476828f59c8c12a8a8e29b1be539723f37ec47a73d1eb2832",
+    "evaluatedCommitSha": "7af126e3300b23c19bd088ca32c08c7e81947d8b",
+    "baselineId": "s2-s1-closure-reference-2026-08-28",
+    "outcome": "PASS"
+  },
+  "appliedAt": "2026-08-28T21:10:00.000Z",
+  "supersedesReceiptId": null,
+  "reversalOfReceiptId": null
+}
