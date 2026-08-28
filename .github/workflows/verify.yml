@@ -35,6 +35,10 @@ jobs:
         run: find factory/src -name '*.mjs' -print0 | xargs -0 -n1 node --check
       - name: Prove Golden Corpus S0 registry and coverage baseline
         run: node factory/src/evaluation/test-corpus-registry.mjs
+      - name: Prove Golden Corpus S1 manifest and bounded sibling provenance
+        run: node factory/src/evaluation/test-corpus-s1.mjs
+      - name: Prove Golden Corpus S1a individual case execution contract
+        run: node factory/src/evaluation/test-corpus-case-execution.mjs
       - name: Prove control kernel budgets and release gate
         run: node factory/src/control/test-control.mjs
       - name: Prove model/provider router and capability gates
