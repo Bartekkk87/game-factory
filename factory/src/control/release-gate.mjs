@@ -1,4 +1,4 @@
-export const RELEASE_RULE = 'Technical PASS + Product Fidelity PASS + Experience >= threshold + Budget PASS';
+export const RELEASE_RULE = 'Technical PASS + Product Fidelity PASS + Budget PASS';
 
 const RELEASE_INPUT_KEYS = new Set([
   'technical',
@@ -35,15 +35,18 @@ export function evaluateReleaseGate(input = {}) {
   const budgetPass = passValue(budget);
 
   const gates = {
-    technical: { pass: technicalPass },
-    productFidelity: { pass: productFidelityPass },
+    technical: { pass: technicalPass, authoritative: true },
+    productFidelity: { pass: productFidelityPass, authoritative: true },
     experience: {
       pass: experiencePass,
+      advisory: true,
+      authoritative: false,
       score: Number.isFinite(score) ? score : null,
       threshold: Number(minExperience)
     },
     budget: {
       pass: budgetPass,
+      authoritative: true,
       spentUsd: Number.isFinite(Number(budget?.spentUsd)) ? Number(budget.spentUsd) : null,
       budgetUsd: Number.isFinite(Number(budget?.budgetUsd)) ? Number(budget.budgetUsd) : null
     }
@@ -52,7 +55,6 @@ export function evaluateReleaseGate(input = {}) {
   const reasons = [];
   if (!technicalPass) reasons.push('technical_not_passed');
   if (!productFidelityPass) reasons.push('product_fidelity_not_passed');
-  if (!experiencePass) reasons.push('experience_below_threshold');
   if (!budgetPass) reasons.push('budget_not_passed');
 
   return {
