@@ -5,6 +5,7 @@ on:
     paths:
       - 'engine/**'
       - 'examples/**'
+      - 'evaluation/**'
       - 'factory/src/**'
       - 'factory/prompts/**'
       - 'skills/**'
@@ -32,6 +33,8 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Check all Node modules
         run: find factory/src -name '*.mjs' -print0 | xargs -0 -n1 node --check
+      - name: Prove Golden Corpus S0 registry and coverage baseline
+        run: node factory/src/evaluation/test-corpus-registry.mjs
       - name: Prove control kernel budgets and release gate
         run: node factory/src/control/test-control.mjs
       - name: Prove model/provider router and capability gates
