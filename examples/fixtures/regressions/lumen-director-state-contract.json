@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "game-factory.historical-regression-fixture/v1",
+  "id": "lumen-director-state-contract",
+  "origin": {
+    "runId": "20260828-201007",
+    "evidenceCommitSha": "70200dce341fc06d0213991ff569481dd99774f6",
+    "sourceRefs": [
+      {
+        "path": "runs/20260828-201007/RUN-EVIDENCE.json",
+        "gitBlobSha": "f56e9c6d3bb755578ac5f97e4367b891bfdae217"
+      },
+      {
+        "path": "runs/20260828-201007/FAILURE.json",
+        "gitBlobSha": "26794cdaa14ff7d7aeea63ec330fe7954976827c"
+      }
+    ]
+  },
+  "runEvidence": {
+    "schema": "game-factory.run-evidence/v1",
+    "run": {
+      "id": "lumen-director-state-contract",
+      "status": "failed",
+      "reason": "director_failed",
+      "source": "historical-regression-fixture",
+      "candidateSha": null
+    },
+    "gates": {
+      "technical": { "pass": false },
+      "productFidelity": { "pass": false },
+      "experience": { "pass": false },
+      "budget": { "pass": true },
+      "release": { "pass": false }
+    }
+  },
+  "failure": {
+    "reason": "director_failed",
+    "error": "Director proof plan unreachable: probe PR-MH-03 uses unsupported verifier state restored; probe PR-MH-04 uses unsupported verifier state glass_breach"
+  },
+  "expected": {
+    "primaryFindingId": "director-verifier-state-contract-mismatch",
+    "targetLayer": "skill",
+    "requiredEvidenceTerms": ["restored", "glass_breach"]
+  }
+}

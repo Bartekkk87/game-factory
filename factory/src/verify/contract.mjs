@@ -1,15 +1,5 @@
 import { LIMITS } from '../config.mjs';
 
-function hexToRgb(hex) {
-  const m = hex.replace('#', '');
-  const bigint = parseInt(m, 16);
-  return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
-}
-
-function colorDist(c1, c2) {
-  return Math.abs(c1.r - c2.r) + Math.abs(c1.g - c2.g) + Math.abs(c1.b - c2.b);
-}
-
 async function decodePng(dataUrl) {
   if (!dataUrl || !dataUrl.startsWith('data:image/')) throw new Error('no image data');
   const base64 = dataUrl.split(',')[1];
@@ -18,19 +8,28 @@ async function decodePng(dataUrl) {
   return PNG.sync.read(buf);
 }
 
-async function analyzeScreenshot(dataUrl, bgColor) {
+async function analyzeScreenshot(dataUrl) {
   try {
     const png = await decodePng(dataUrl);
-    const bg = hexToRgb(bgColor || '#101010');
-    let diff = 0;
+    const bins = new Uint32Array(4096);
+    let opaquePixels = 0;
     for (let i = 0; i < png.data.length; i += 4) {
-      const r = png.data[i], g = png.data[i + 1], b = png.data[i + 2], a = png.data[i + 3];
-      if (a > 128 && colorDist({ r, g, b }, bg) > 30) diff++;
+      if (png.data[i + 3] <= 128) continue;
+      const key = ((png.data[i] >> 4) << 8) | ((png.data[i + 1] >> 4) << 4) | (png.data[i + 2] >> 4);
+      bins[key]++;
+      opaquePixels++;
     }
-    const ratio = diff / (png.width * png.height);
-    return { visible: ratio > 0.02, ratio: Math.round(ratio * 10000) / 100 };
-  } catch (e) {
-    return { visible: false, ratio: 0, error: String(e.message || e) };
+    let dominant = 0;
+    for (const count of bins) dominant = Math.max(dominant, count);
+    const nonDominantRatio = opaquePixels ? (opaquePixels - dominant) / opaquePixels : 0;
+    const dominantShare = opaquePixels ? dominant / opaquePixels : 1;
+    return {
+      visible: nonDominantRatio > 0.02,
+      ratio: Math.round(nonDominantRatio * 10000) / 100,
+      dominantShare: Math.round(dominantShare * 10000) / 100
+    };
+  } catch (error) {
+    return { visible: false, ratio: 0, dominantShare: 100, error: String(error.message || error) };
   }
 }
 
@@ -55,8 +54,8 @@ async function analyzeFrameDelta(firstDataUrl, secondDataUrl) {
       active: ratio >= 0.002,
       ratio: Math.round(ratio * 1000000) / 10000
     };
-  } catch (e) {
-    return { active: false, ratio: 0, error: String(e.message || e) };
+  } catch (error) {
+    return { active: false, ratio: 0, error: String(error.message || error) };
   }
 }
 
@@ -105,8 +104,9 @@ function causalityEvidence(active, idle) {
   const idleClean = idle.probeOk === true
     && requiredTimelineComplete(idle.timeline)
     && (idle.pageErrors || []).length === 0
-    && (idle.consoleErrors || []).filter((e) => !/favicon/i.test(e)).length === 0
-    && (idle.requestFailed || []).length === 0;
+    && (idle.consoleErrors || []).filter((error) => !/favicon/i.test(error)).length === 0
+    && (idle.requestFailed || []).length === 0
+    && (idle.externalRequests || []).length === 0;
   if (!sameSeed || !idleClean) {
     return {
       pass: false,
@@ -129,7 +129,7 @@ function causalityEvidence(active, idle) {
   };
 }
 
-export async function evaluateContract(report, { minFps = LIMITS.minFps, bgColor = '#101010' } = {}) {
+export async function evaluateContract(report, { minFps = LIMITS.minFps } = {}) {
   const checks = [];
   const add = (id, label, pass, detail = '') => checks.push({ id, label, pass, detail });
 
@@ -163,13 +163,21 @@ export async function evaluateContract(report, { minFps = LIMITS.minFps, bgColor
   );
 
   const runtimeErrors = [
-    ...report.pageErrors.map((e) => 'pageerror: ' + e),
-    ...report.consoleErrors.filter((e) => !/favicon/i.test(e)).map((e) => 'console: ' + e),
-    ...((report.endSnapshot?.errors || []).map((e) => 'probe: ' + e))
+    ...report.pageErrors.map((error) => `pageerror: ${error}`),
+    ...report.consoleErrors.filter((error) => !/favicon/i.test(error)).map((error) => `console: ${error}`),
+    ...((report.endSnapshot?.errors || []).map((error) => `probe: ${error}`))
   ];
   add('no_runtime_errors', 'Keine Laufzeitfehler', runtimeErrors.length === 0, runtimeErrors.slice(0, 5).join(' | '));
 
   add('assets_ok', 'Alle Assets geladen', report.requestFailed.length === 0, report.requestFailed.slice(0, 3).join(' | '));
+
+  const externalRequests = Array.isArray(report.externalRequests) ? report.externalRequests : [];
+  add(
+    'no_external_network',
+    'Keine ausgehenden Requests zu Fremd-Origins',
+    externalRequests.length === 0,
+    externalRequests.slice(0, 3).join(' | ')
+  );
 
   const endState = report.endSnapshot?.state ?? null;
   const started = ['playing', 'gameover', 'won'].includes(endState);
@@ -193,16 +201,21 @@ export async function evaluateContract(report, { minFps = LIMITS.minFps, bgColor
 
   add('fps_ok', `Performance >= ${minFps} FPS`, typeof report.fps === 'number' && report.fps >= minFps, `fps=${report.fps}`);
 
-  const gameplayShots = (report._images || []).filter((s) => s.name.startsWith('shot-2') || s.name.startsWith('shot-3'));
+  const gameplayShots = (report._images || []).filter((shot) => shot.name.startsWith('shot-2') || shot.name.startsWith('shot-3'));
   let visibleCount = 0;
   const details = [];
   for (const shot of gameplayShots) {
-    const res = await analyzeScreenshot(shot.dataUrl, bgColor);
-    if (res.visible) visibleCount++;
-    details.push(`${shot.name}: ${res.visible ? 'VISIBLE' : 'BLACK'} (${res.ratio}% diff)`);
-    if (res.error) details[details.length - 1] += ` [${res.error}]`;
+    const result = await analyzeScreenshot(shot.dataUrl);
+    if (result.visible) visibleCount++;
+    details.push(`${shot.name}: ${result.visible ? 'VISIBLE' : 'FLAT'} (${result.ratio}% non-dominant; dominant=${result.dominantShare}%)`);
+    if (result.error) details[details.length - 1] += ` [${result.error}]`;
   }
-  add('visual_content', 'Spielinhalt auf Screenshots sichtbar (nicht schwarz)', visibleCount >= Math.max(1, gameplayShots.length - 1), details.join(' | '));
+  add(
+    'visual_content',
+    'Spielinhalt zeigt visuelle Bildvariation statt eines flachen Vollbilds',
+    visibleCount >= Math.max(1, gameplayShots.length - 1),
+    details.join(' | ')
+  );
 
   const activityShots = (report._images || []).filter((shot) => shot.name.startsWith('activity-'));
   const firstActivity = activityShots.find((shot) => shot.name.startsWith('activity-1'));
@@ -217,6 +230,6 @@ export async function evaluateContract(report, { minFps = LIMITS.minFps, bgColor
     `${frameDelta.ratio}% pixels changed from live gameplay frames${frameDelta.error ? ` [${frameDelta.error}]` : ''}`
   );
 
-  const failures = checks.filter((c) => !c.pass);
+  const failures = checks.filter((check) => !check.pass);
   return { passed: failures.length === 0, checks, failures };
 }

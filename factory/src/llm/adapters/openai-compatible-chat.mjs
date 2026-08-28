@@ -1,23 +1,48 @@
+function requestShapeFor(route) {
+  const shape = route?.model?.requestShape;
+  if (!shape || !['max_tokens', 'max_completion_tokens'].includes(shape.tokenParam)) {
+    throw new Error(`Model ${route?.model?.id || 'unknown'} has no valid request tokenParam contract`);
+  }
+  if (!['free', 'unsupported'].includes(shape.temperature)) {
+    throw new Error(`Model ${route.model.id} has no valid temperature request contract`);
+  }
+  if (!['response_format', 'none'].includes(shape.jsonMode)) {
+    throw new Error(`Model ${route.model.id} has no valid JSON request contract`);
+  }
+  return shape;
+}
+
 function assertRequestShape({ route, images, json, temperature, maxTokens }) {
   if (!route?.provider?.id || !route?.model?.id) throw new Error('LLM route is incomplete');
   if (!Number.isInteger(maxTokens) || maxTokens < 1) throw new Error(`Invalid maxTokens: ${maxTokens}`);
 
   const caps = route.model.capabilities ?? {};
+  const shape = requestShapeFor(route);
   if (Number.isFinite(caps.maxOutputTokens) && maxTokens > caps.maxOutputTokens) {
     throw new Error(`Requested maxTokens ${maxTokens} exceeds model limit ${caps.maxOutputTokens}`);
   }
   if (images.length && caps.vision !== true) throw new Error(`Model ${route.model.id} does not support vision input`);
   if (json && caps.jsonObject === false) throw new Error(`Model ${route.model.id} does not support JSON-object mode`);
+  if (json && shape.jsonMode === 'none') throw new Error(`Model ${route.model.id} has no configured JSON request mode`);
 
-  const openAiReasoning = route.provider.id === 'openai' && caps.reasoning === true;
-  if (!openAiReasoning && temperature != null) {
-    const t = Number(temperature);
-    if (!Number.isFinite(t) || t < 0 || t > 2) throw new Error(`Invalid temperature: ${temperature}`);
+  if (shape.temperature === 'free' && temperature != null) {
+    const value = Number(temperature);
+    if (!Number.isFinite(value) || value < 0 || value > 2) throw new Error(`Invalid temperature: ${temperature}`);
   }
+
+  return shape;
 }
 
-export function buildOpenAiCompatibleChatRequest({ route, system, user, images = [], json = false, temperature = 0.7, maxTokens = 8192 }) {
-  assertRequestShape({ route, images, json, temperature, maxTokens });
+export function buildOpenAiCompatibleChatRequest({
+  route,
+  system,
+  user,
+  images = [],
+  json = false,
+  temperature = 0.7,
+  maxTokens = 8192
+}) {
+  const shape = assertRequestShape({ route, images, json, temperature, maxTokens });
 
   const content = images.length
     ? [{ type: 'text', text: user }, ...images.map((img) => ({ type: 'image_url', image_url: { url: img } }))]
@@ -31,20 +56,15 @@ export function buildOpenAiCompatibleChatRequest({ route, system, user, images =
     ]
   };
 
-  const openAiReasoning = route.provider.id === 'openai' && route.model.capabilities?.reasoning === true;
+  body[shape.tokenParam] = maxTokens;
 
-  // GPT-5.6 and other OpenAI reasoning models use max_completion_tokens on
-  // Chat Completions. Legacy OpenAI and other compatible providers keep
-  // max_tokens to avoid changing their established request contract.
-  if (openAiReasoning) body.max_completion_tokens = maxTokens;
-  else body.max_tokens = maxTokens;
+  if (shape.temperature === 'free' && temperature != null) {
+    body.temperature = Number(temperature);
+  }
 
-  // OpenAI reasoning models can reject non-default sampling values. The role
-  // may still express a temperature preference for providers/models that
-  // support it, but it is deliberately omitted for the reasoning route.
-  if (!openAiReasoning && temperature != null) body.temperature = Number(temperature);
-
-  if (json) body.response_format = { type: 'json_object' };
+  if (json && shape.jsonMode === 'response_format') {
+    body.response_format = { type: 'json_object' };
+  }
 
   const headers = {
     'content-type': 'application/json',

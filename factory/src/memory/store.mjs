@@ -10,9 +10,11 @@ const EMPTY = {
   stats: { runs: 0, published: 0, rejected: 0, failed: 0, tokens: 0, costUsd: 0 }
 };
 
-function normalizeLesson(l) {
-  if (l && typeof l === 'object' && Object.hasOwn(l, 'status') && Object.hasOwn(l, 'active')) return { ...l };
-  return { ...(l || {}), status: 'legacy-unvalidated', active: false };
+function normalizeLesson(lesson) {
+  if (lesson && typeof lesson === 'object' && Object.hasOwn(lesson, 'status') && Object.hasOwn(lesson, 'active')) {
+    return { ...lesson };
+  }
+  return { ...(lesson || {}), status: 'legacy-unvalidated', active: false };
 }
 
 export function loadMemory() {
@@ -24,50 +26,42 @@ export function loadMemory() {
   return merged;
 }
 
-export function saveMemory(m) {
-  writeJson(FILE, { ...m, lessons: (m.lessons ?? []).map(normalizeLesson) });
+export function saveMemory(memory) {
+  writeJson(FILE, { ...memory, lessons: (memory.lessons ?? []).map(normalizeLesson) });
 }
 
 export function lessonsFor(role, limit = 12) {
   return loadMemory()
-    .lessons.filter((l) => l.role === role && l.status === 'validated' && l.active === true)
+    .lessons.filter((lesson) => lesson.role === role && lesson.status === 'validated' && lesson.active === true)
     .slice(-limit)
-    .map((l) => `- ${l.text}`);
+    .map((lesson) => `- ${lesson.text}`);
 }
 
-// Direct calls are fail-closed. Promotion through learning/lifecycle.mjs is the
-// only supported way to create an active production lesson.
-export function recordLesson(role, text, metadata = {}) {
-  const m = loadMemory();
-  if (!m.lessons.some((l) => l.text === text && l.role === role)) {
-    m.lessons.push({
-      date: new Date().toISOString().slice(0, 10),
-      role,
-      text,
-      ...metadata,
-      status: metadata.status === 'validated' ? 'validated' : 'candidate',
-      active: metadata.status === 'validated' && metadata.active === true
-    });
-  }
-  saveMemory(m);
-}
+// There is intentionally no direct lesson-write helper. Active Production
+// lessons can only be materialized by the SHA/PR/merge-bound promotion path in
+// learning/lifecycle.mjs.
 
 export function knownConcepts(limit = 30) {
   return loadMemory()
     .products.slice(-limit)
-    .map((p) => ({ title: p.title, genre: p.genre ?? null, status: p.status, score: p.score ?? null }));
+    .map((product) => ({
+      title: product.title,
+      genre: product.genre ?? null,
+      status: product.status,
+      score: product.score ?? null
+    }));
 }
 
 export function registerProduct(entry) {
-  const m = loadMemory();
-  const i = m.products.findIndex((p) => p.slug === entry.slug);
-  if (i >= 0) m.products[i] = { ...m.products[i], ...entry };
-  else m.products.push(entry);
-  saveMemory(m);
+  const memory = loadMemory();
+  const index = memory.products.findIndex((product) => product.slug === entry.slug);
+  if (index >= 0) memory.products[index] = { ...memory.products[index], ...entry };
+  else memory.products.push(entry);
+  saveMemory(memory);
 }
 
 export function bumpStats(delta) {
-  const m = loadMemory();
-  for (const k of Object.keys(delta)) m.stats[k] = (m.stats[k] ?? 0) + delta[k];
-  saveMemory(m);
+  const memory = loadMemory();
+  for (const key of Object.keys(delta)) memory.stats[key] = (memory.stats[key] ?? 0) + delta[key];
+  saveMemory(memory);
 }

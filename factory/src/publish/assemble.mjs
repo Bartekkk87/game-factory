@@ -68,29 +68,43 @@ const PROBE_EXTENSION = `
 })();
 `;
 
+function escapeScriptTerminator(value) {
+  return String(value || '').replace(/<\/script/gi, '<\\/script');
+}
+
+function escapeStyleTerminator(value) {
+  return String(value || '').replace(/<\/style/gi, '<\\/style');
+}
+
 export function assemble({ title, css = '', html = '', js = '' }) {
   if (!cachedEngine) cachedEngine = fs.readFileSync(PATHS.engineFile, 'utf8');
   const safeTitle = String(title).replace(/[<>&"]/g, '');
+  const safeCss = escapeStyleTerminator(css);
+  const safeJs = escapeScriptTerminator(js);
+  const safeEngine = escapeScriptTerminator(cachedEngine);
+  const safeProbe = escapeScriptTerminator(PROBE_EXTENSION);
+
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; media-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>${safeTitle}</title>
 <style>
 html,body{margin:0;height:100%;background:#000;display:grid;place-items:center;overflow:hidden}
 canvas{image-rendering:auto}
-${css}
+${safeCss}
 </style>
 </head>
 <body>
 ${html}
 <script>
-${cachedEngine}
-${PROBE_EXTENSION}
+${safeEngine}
+${safeProbe}
 </script>
 <script>
-${js}
+${safeJs}
 </script>
 </body>
 </html>
