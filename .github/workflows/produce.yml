@@ -4,22 +4,34 @@ on:
   workflow_dispatch:
     inputs:
       idea:
-        description: 'Spielidee (leer lassen = Director waehlt frei)'
-        required: false
-        default: ''
+        description: 'Game idea (plain text)'
+        required: true
+        type: string
       budget_usd:
-        description: 'Maximale API-Kosten in USD fuer diesen Lauf'
+        description: 'Max USD budget'
         required: false
         default: '10'
+        type: string
       provider:
-        description: 'LLM Provider'
+        description: 'LLM provider'
         required: false
         default: 'openai'
         type: choice
-        options: [openai, openrouter]
+        options:
+          - openai
+          - openrouter
   push:
-    paths: ['ideas/**']
-    branches: [main]
+    branches:
+      - main
+    paths:
+      - 'ideas/**'
+
+permissions:
+  contents: write
+  issues: write
+
+env:
+  CI: true
 
 concurrency:
   group: game-factory-production
@@ -28,56 +40,42 @@ concurrency:
 jobs:
   produce:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    permissions:
-      contents: write
-      issues: write
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
-        with: { node-version: '24' }
-
+        with:
+          node-version: '24'
       - name: Check API configuration
         env:
           OPENAI_PRODUCTION: ${{ secrets.OPENAI_PRODUCTION }}
           OPENROUTER_PRODUCTION: ${{ secrets.OPENROUTER_PRODUCTION }}
-          GF_LLM_PROVIDER: ${{ github.event.inputs.provider || 'openai' }}
+          PROVIDER: ${{ github.event.inputs.provider || 'openai' }}
         run: |
-          case "$GF_LLM_PROVIDER" in
-            openai)
-              test -n "$OPENAI_PRODUCTION" || { echo "OPENAI_PRODUCTION is missing in repository secrets" >&2; exit 1; }
-              ;;
-            openrouter)
-              test -n "$OPENROUTER_PRODUCTION" || { echo "OPENROUTER_PRODUCTION is missing in repository secrets" >&2; exit 1; }
-              ;;
-            *)
-              echo "Provider $GF_LLM_PROVIDER has no approved Production credential lane in this workflow" >&2
-              exit 1
-              ;;
-          esac
-          echo "Using provider: $GF_LLM_PROVIDER (isolated production credential lane)"
-
+          if [ "$PROVIDER" = "openrouter" ]; then
+            test -n "$OPENROUTER_PRODUCTION" || (echo 'OPENROUTER_PRODUCTION missing' >&2; exit 1)
+          else
+            test -n "$OPENAI_PRODUCTION" || (echo 'OPENAI_PRODUCTION missing' >&2; exit 1)
+          fi
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
       - name: Install browser
         run: npx playwright install --with-deps chromium
-
       - name: Prepare idea
         id: prep
         env:
-          MANUAL_IDEA: ${{ github.event.inputs.idea }}
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_IDEA: ${{ github.event.inputs.idea }}
         run: |
-          if [ -n "$MANUAL_IDEA" ]; then
-            printf '%s\n' "$MANUAL_IDEA" > /tmp/idea.txt
-            echo "Using manual trigger idea"
-          elif [ "$GITHUB_EVENT_NAME" = "push" ]; then
-            IDEA_FILE=$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" -- 'ideas/*.md' | head -n1)
-            if [ -z "$IDEA_FILE" ]; then echo "Push trigger did not contain an idea file" >&2; exit 1; fi
-            cp "$IDEA_FILE" /tmp/idea.txt
-            echo "Using pushed idea: $IDEA_FILE"
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            printf '%s' "$INPUT_IDEA" > /tmp/idea.txt
           else
-            LATEST=$(git log -1 --format= --name-only -- 'ideas/*.md' | head -n1)
+            LATEST=$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" -- 'ideas/*.md' | head -n1)
+            if [ -z "$LATEST" ]; then
+              LATEST=$(git log -1 --format= --name-only -- 'ideas/*.md' | head -n1)
+            fi
             if [ -z "$LATEST" ]; then echo "No idea file found in ideas/" >&2; exit 1; fi
             cp "$LATEST" /tmp/idea.txt
             echo "Using most recently committed idea: $LATEST"
@@ -132,6 +130,7 @@ jobs:
             learning/aggregates/
             learning/triggers/
             learning/analysis/
+            learning/root-causes/
             learning/candidates/
             learning/orchestration/
           if-no-files-found: ignore
@@ -140,4 +139,4 @@ jobs:
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh issue create --title "[Review] ${{ steps.meta.outputs.title }}" --body-file "drafts/${{ steps.meta.outputs.slug }}/REVIEW.md"
+        run: gh issue create --title "[Review] ${{ steps.meta.outputs.title }}" --body-file "drafts/${{ steps.meta.outputs.slug}/REVIEW.md"
