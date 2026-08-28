@@ -18,6 +18,7 @@ import { beginRunBudget, costReport } from '../llm/client.mjs';
 import { evaluateReleaseGate } from '../control/release-gate.mjs';
 import { createRunEvidence } from '../control/evidence.mjs';
 import { retainBestFailed } from '../control/repair-policy.mjs';
+import { semanticFailureSignature } from '../control/failure-signature.mjs';
 
 function stamp() {
   const d = new Date();
@@ -49,15 +50,6 @@ function failureBundle(evidence) {
     fps: evidence.fps,
     states: evidence.states
   };
-}
-
-function failureSignature(bundle) {
-  return JSON.stringify({
-    failures: bundle.failures.map((f) => [f.id, f.detail || '']),
-    consoleErrors: bundle.consoleErrors.slice(0, 3),
-    pageErrors: bundle.pageErrors.slice(0, 3),
-    probeErrors: bundle.probeErrors.slice(0, 3)
-  });
 }
 
 function summarizeFailure(bundle) {
@@ -177,6 +169,21 @@ function failClosed(runDir, state, reason, extra = {}) {
   return { status: 'failed', reason, runDir };
 }
 
+async function verifyAttemptFailClosed({ runDir, state, attempt, design, ownerContract, gdd, phase }) {
+  try {
+    return {
+      tech: await verifyAttempt({ runDir, attempt, design, ownerContract, gdd }),
+      failure: null
+    };
+  } catch (e) {
+    const error = String(e?.message || e);
+    return {
+      tech: null,
+      failure: failClosed(runDir, state, 'verifier_failed', { error, attempt, phase })
+    };
+  }
+}
+
 function llmFailureReason(error, fallback) {
   return error?.code === 'BUDGET_BLOCKED' ? 'budget_blocked' : fallback;
 }
@@ -292,12 +299,16 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
       return failClosed(runDir, state, llmFailureReason(e, 'engineer_invalid_output'), { error: String(e.message), attempt });
     }
 
-    tech = await verifyAttempt({ runDir, attempt, design, ownerContract, gdd });
+    const verification = await verifyAttemptFailClosed({
+      runDir, state, attempt, design, ownerContract, gdd, phase: 'build-debug'
+    });
+    if (verification.failure) return verification.failure;
+    tech = verification.tech;
     applyVerificationState(state, tech);
     if (tech.passed) break;
 
     const bundle = failureBundle(tech.evidence);
-    const signature = failureSignature(bundle);
+    const signature = semanticFailureSignature(bundle);
     const candidateSha = tech.evidence.candidateSha;
     const sameFailure = lastFailureSignature !== null && signature === lastFailureSignature;
     const sameCandidate = lastCandidateSha !== null && candidateSha === lastCandidateSha;
@@ -414,7 +425,11 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
     }
     attempt++;
     state.counters.attempts = attempt;
-    tech = await verifyAttempt({ runDir, attempt, design, ownerContract, gdd });
+    const polishVerification = await verifyAttemptFailClosed({
+      runDir, state, attempt, design, ownerContract, gdd, phase: 'polish'
+    });
+    if (polishVerification.failure) return polishVerification.failure;
+    tech = polishVerification.tech;
     applyVerificationState(state, tech);
     let repairs = 0;
     while (!tech.passed && repairs < 2) {
@@ -431,7 +446,11 @@ export async function produceGame({ idea = '', source = 'chat', budgetUsd = LIMI
       }
       attempt++;
       state.counters.attempts = attempt;
-      tech = await verifyAttempt({ runDir, attempt, design, ownerContract, gdd });
+      const repairVerification = await verifyAttemptFailClosed({
+        runDir, state, attempt, design, ownerContract, gdd, phase: 'polish-repair'
+      });
+      if (repairVerification.failure) return repairVerification.failure;
+      tech = repairVerification.tech;
       applyVerificationState(state, tech);
     }
     if (!tech.passed) {
