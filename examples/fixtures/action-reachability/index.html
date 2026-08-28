@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Action Reachability Fixture</title>
+  <style>
+    html, body { margin: 0; width: 100%; height: 100%; background: #0f172a; color: #e2e8f0; font-family: system-ui, sans-serif; overflow: hidden; }
+    #arena { position: relative; width: 1000px; height: 600px; margin: 40px auto; border: 2px solid #475569; background: #111827; }
+    #player { position: absolute; left: 120px; top: 280px; width: 32px; height: 32px; background: #38bdf8; border-radius: 6px; }
+    #target { position: absolute; left: 560px; top: 266px; width: 60px; height: 60px; border: 3px solid #22c55e; border-radius: 50%; box-sizing: border-box; }
+    #status { position: absolute; left: 16px; top: 12px; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div id="arena">
+    <div id="status">Press Enter to start</div>
+    <div id="player" aria-label="player"></div>
+    <div id="target" aria-label="target"></div>
+  </div>
+  <script>
+    const player = document.getElementById('player');
+    const target = document.getElementById('target');
+    const status = document.getElementById('status');
+    const pressed = new Set();
+    const events = [];
+    let state = 'title';
+    let score = 0;
+    let x = 120;
+    let y = 280;
+    let startedAt = performance.now();
+    let last = performance.now();
+
+    const SPEED = 180;
+    const ARENA_W = 1000;
+    const ARENA_H = 600;
+    const PLAYER = 32;
+
+    function setPosition() {
+      player.style.left = `${x}px`;
+      player.style.top = `${y}px`;
+    }
+
+    function intersectsTarget() {
+      const px2 = x + PLAYER;
+      const py2 = y + PLAYER;
+      const tx = 560;
+      const ty = 266;
+      const tw = 60;
+      const th = 60;
+      return x < tx + tw && px2 > tx && y < ty + th && py2 > ty;
+    }
+
+    function start() {
+      if (state !== 'title') return;
+      state = 'playing';
+      startedAt = performance.now();
+      status.textContent = 'Navigate to the green target';
+    }
+
+    addEventListener('keydown', (event) => {
+      if (event.code === 'Enter') {
+        start();
+        return;
+      }
+      pressed.add(event.code);
+    });
+    addEventListener('keyup', (event) => pressed.delete(event.code));
+
+    function tick(now) {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      if (state === 'playing') {
+        const left = pressed.has('ArrowLeft') || pressed.has('KeyA');
+        const right = pressed.has('ArrowRight') || pressed.has('KeyD');
+        const up = pressed.has('ArrowUp') || pressed.has('KeyW');
+        const down = pressed.has('ArrowDown') || pressed.has('KeyS');
+        x += (right - left) * SPEED * dt;
+        y += (down - up) * SPEED * dt;
+        x = Math.max(0, Math.min(ARENA_W - PLAYER, x));
+        y = Math.max(0, Math.min(ARENA_H - PLAYER, y));
+        setPosition();
+        if (intersectsTarget()) {
+          state = 'success';
+          score = 1;
+          events.push({ type: 'target_reached', data: { score: 1 }, at: Math.round(performance.now() - startedAt) });
+          status.textContent = 'SUCCESS';
+          pressed.clear();
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    window.__GF__ = {
+      flags: {},
+      errors: [],
+      events,
+      getState: () => state,
+      getScore: () => score,
+      getBest: () => score,
+      getFps: () => 60,
+      getTime: () => (performance.now() - startedAt) / 1000,
+      getEvents: () => events.slice()
+    };
+  </script>
+</body>
+</html>

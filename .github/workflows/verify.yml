@@ -62,6 +62,8 @@ jobs:
         run: node factory/src/verify/test-proof-reachability.mjs
       - name: Install browser
         run: npx playwright install --with-deps chromium
+      - name: Reproduce P0 action reachability blind spot
+        run: node factory/src/verify/test-action-reachability.mjs
       - name: Prove independent terminal proof scenarios
         run: node factory/src/verify/test-proof-scenarios.mjs
       - name: Prove independent HUD geometry verifier
