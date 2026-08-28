@@ -2,7 +2,7 @@
 
 Autonome, evidence-first Game-Development-Plattform auf GitHub. GitHub ist die executable/durable Source of Truth für Code, Runs, Evidence, Learning-Artefakte und Promotionen. Notion spiegelt Entscheidungen und Status.
 
-Stand: 27.08.2026 — Controlled Improvement v1 ist technisch implementiert; Titan Canary #3 ist der erste reale Evidence-to-Candidate-Fall.
+Stand: 28.08.2026 — Golden Corpus S0–S3 und Controlled Improvement v1 sind technisch integriert; S3 bleibt strikt analysis-only.
 
 ## 1. Architekturprinzipien
 
@@ -141,11 +141,11 @@ Implementation:
 ### Candidate schema
 
 Required core fields include:
-`id`, `status`, `role`, `scope`, `targetLayer`, `text`, `sourceRunIds`, `sourceKind`, `ownerFeedbackIds`, `candidateSha`, `confidence`, `evidenceCount`, timestamps, validation/regression evidence, `active`, promotion and reversal provenance.
+`id`, `status`, `role`, `scope`, `targetLayer`, `text`, Production-Run- oder Evaluation-Failure-Provenance, `sourceKind`, `ownerFeedbackIds`, `candidateSha`, `confidence`, `evidenceCount`, timestamps, validation/regression evidence, `active`, promotion and reversal provenance.
 
 ### Deterministic aggregate
 
-The aggregator consumes canonical `RUN-EVIDENCE.json`, explicit relevant attempt evidence, and Owner feedback. It preserves:
+The aggregator consumes canonical `RUN-EVIDENCE.json`, explicit relevant attempt evidence, Owner feedback, and admitted Golden-Corpus evaluation failures. It preserves:
 - final Technical/Product Fidelity failure counts;
 - attempt-level failure signatures separately;
 - repair/rebuild/polish counts;
@@ -153,16 +153,18 @@ The aggregator consumes canonical `RUN-EVIDENCE.json`, explicit relevant attempt
 - Owner verdicts/classification claims;
 - role/model/operation costs and tokens;
 - recurring failures/positive patterns where evidence exists.
+- evaluation-failure clusters, exact case/commit/signature provenance, distinct observation counts, and explicit `known`/`unclassified` classification.
 
 Identical inputs produce deterministic output; generated timestamps are excluded from aggregate semantics.
 
 ### Trigger
 
-Policy version: `controlled-improvement-trigger-v1`.
+Policy version: `controlled-improvement-trigger-v3`.
 
 Current bounded rules:
 - Owner negative/feedback evidence may allow `product-feedback` analysis.
 - the same engineering failure signature across >=2 independent runs may allow `engineering` analysis.
+- every admitted `evaluation-failure` may enter bounded analysis, but an inactive Candidate requires the same cluster/signature in at least two separate observations.
 - trigger only authorizes analysis; it cannot validate or activate.
 
 ### Improvement Analysis authority
@@ -184,6 +186,35 @@ Protected layers:
 `skill`, `prompt`, `owner-contract`, `verifier`, `product-fidelity`, `release-gate`, `engine-contract`, `control-plane`.
 
 Protected promotion requires a separate `human-merge`. Activation is versioned/reversible; deactivation updates both candidate and active-memory representation.
+
+## 7A. Golden Corpus S3 — analysis-only Evaluation Failure Intake
+
+S3 reuses the existing Controlled Improvement path; there is no second Learning orchestrator.
+
+```text
+S2 mismatch report
+ -> learning/evidence/evaluation-failures/<id>.json
+ -> existing aggregate
+ -> existing trigger
+ -> bounded analysis
+ -> only after repeated identical observation: one stable inactive Candidate
+```
+
+The intake requires:
+- compatible S2 baseline evidence;
+- exact evaluated commit;
+- exact corpus case and source kind;
+- expected vs actual outcome;
+- deterministic failure signature and diagnostic;
+- explicit known failure class or `unclassified`.
+
+Classification remains fail-closed:
+- a corpus mismatch is `evaluation-failure`, never silently `production-run`;
+- runner/report incompatibility is not admitted as a case-level learning event;
+- fixture cause is not inferred from `sourceKind` alone;
+- flakiness is not claimed from one observation.
+
+S3 authority cannot validate or activate a Candidate, change Production, weaken a gate, mutate a prompt/skill, or start paid work. Evaluation candidates target protected layer `evaluation`; the existing promotion adapter cannot turn them into Production prompt lessons.
 
 ## 8. Titan #3 — first real controlled learning case
 
@@ -268,6 +299,7 @@ The Verifier now parses every `.github/workflows/*.yml|yaml`; this guard was add
 ```text
 runs/<run>/                       production evidence
 learning/evidence/owner-feedback/ raw owner evidence
+learning/evidence/evaluation-failures/ admitted S2 mismatch evidence
 learning/aggregates/              deterministic aggregates
 learning/triggers/                deterministic trigger decisions
 learning/analysis/                bounded claims/hypotheses
@@ -276,6 +308,8 @@ learning/validations/             validation records
 learning/promotions/              activation records
 memory/                           only production-visible validated+active lessons
 ```
+
+GitHub Actions preserves the S2 report and S3 intake chain as a workflow artifact even when the corpus step fails. The Verifier workflow retains read-only repository permissions; S3 does not auto-commit or auto-merge a repair.
 
 ## 13. Repository strategy
 

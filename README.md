@@ -38,7 +38,7 @@ Auditor- und qualitative Playtester-Fidelity-Urteile bleiben advisory und besitz
 Factory-Learning ist bewusst von der Production Authority getrennt:
 
 ```text
-Durable Run / Owner Evidence
+Durable Run / Owner / Evaluation-Failure Evidence
   -> deterministic Aggregate
   -> deterministic Trigger
   -> wenn erlaubt: bounded Improvement Analysis
@@ -53,6 +53,7 @@ Wichtig:
 - Nur `validated && active` Learning darf in Production-Prompts sichtbar werden.
 - Automatische Orchestrierung darf Candidates erzeugen, aber nicht selbst validieren oder aktivieren.
 - Wiederkehrende Engineering-Learnings benötigen dieselbe Failure-Signatur über mindestens zwei unabhängige Runs.
+- Ein Golden-Corpus-Fehler erhält zunächst nur analysis-only Evidence. Erst dieselbe Signatur in mindestens zwei getrennten Evaluation-Beobachtungen darf genau einen stabilen, inaktiven Candidate erzeugen.
 - Die Factory wird deshalb als **evidence-driven controlled improvement** beschrieben, nicht als bereits vollständig self-improving.
 
 ## Production Credentials
@@ -153,6 +154,7 @@ Model-/Provider-/Pricing-Konfiguration bleibt fail closed und wird über die Reg
 - Provider-/Model-Routing und Credential-Isolation
 - Owner Contract Decomposition
 - Controlled-Learning Lifecycle + Cross-Run Trigger + Orchestration
+- Golden Corpus S0–S3: Registry, Case Contract, Quality/Delta und analysis-only Evaluation-Failure Intake
 - Production-Agent-/Prompt-Integrity
 - Product Fidelity
 - deterministische Idle-Control, Input-Kausalität und Visual Activity

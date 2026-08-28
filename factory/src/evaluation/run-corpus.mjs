@@ -51,6 +51,17 @@ function failureSignature(stdout, stderr) {
   return crypto.createHash('sha256').update(normalized).digest('hex').slice(0, 24);
 }
 
+function caseMismatchSignature(entry, expectedCaseResult, actualCaseResult, execution) {
+  const semanticMismatch = JSON.stringify({
+    caseId: entry.id,
+    failureClass: entry.failureClass || 'unclassified',
+    expectedCaseResult,
+    actualCaseResult,
+    executionFailureSignature: execution.failureSignature || null
+  });
+  return crypto.createHash('sha256').update(semanticMismatch).digest('hex').slice(0, 24);
+}
+
 function currentCommitSha() {
   if (process.env.GITHUB_SHA) return process.env.GITHUB_SHA;
   const git = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' });
@@ -132,6 +143,9 @@ try {
     const actualCaseResult = execution.caseResult;
     const matchedExpected = actualCaseResult === expectedCaseResult;
     const falsePass = actualCaseResult === 'PASS' && expectedCaseResult === 'FAIL';
+    const mismatchDiagnostic = matchedExpected
+      ? null
+      : execution.diagnostic || `expected ${expectedCaseResult}, observed ${actualCaseResult}`;
     return {
       caseId: entry.id,
       population: entry.population,
@@ -150,8 +164,10 @@ try {
       matchedExpected,
       falsePass,
       criticalFalsePass: falsePass && entry.severity === 'critical-integrity',
-      failureSignature: matchedExpected ? null : execution.failureSignature,
-      diagnostic: matchedExpected ? null : execution.diagnostic
+      failureSignature: matchedExpected
+        ? null
+        : caseMismatchSignature(entry, expectedCaseResult, actualCaseResult, execution),
+      diagnostic: mismatchDiagnostic
     };
   });
 

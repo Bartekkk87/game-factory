@@ -4,14 +4,16 @@ import { readJson, writeJson } from '../util/fsx.mjs';
 import { loadMemory, saveMemory } from '../memory/store.mjs';
 
 export const LEARNING_SCHEMA = 'learning-candidate-v1';
-export const PROTECTED_LAYERS = Object.freeze(new Set(['skill','prompt','owner-contract','verifier','product-fidelity','release-gate','engine-contract','control-plane']));
+export const PROTECTED_LAYERS = Object.freeze(new Set(['skill','prompt','owner-contract','verifier','product-fidelity','release-gate','engine-contract','control-plane','evaluation']));
 export const LESSON_PROMOTION_TARGET_LAYER = 'prompt';
 const DIRS = Object.freeze({ candidates: path.join(ROOT,'learning','candidates'), validations: path.join(ROOT,'learning','validations'), promotions: path.join(ROOT,'learning','promotions') });
 const candidatePath = (id) => path.join(DIRS.candidates, `${id}.json`);
 
 export function assertCandidate(c) {
   for (const key of ['id','status','role','scope','targetLayer','text','sourceKind','createdAt']) if (!c?.[key]) throw new Error(`learning candidate missing ${key}`);
-  if (!Array.isArray(c.sourceRunIds) || !c.sourceRunIds.length) throw new Error('learning candidate requires sourceRunIds');
+  if (!Array.isArray(c.sourceRunIds)) throw new Error('learning candidate sourceRunIds must be an array');
+  if (c.sourceEvaluationFailureIds !== undefined && !Array.isArray(c.sourceEvaluationFailureIds)) throw new Error('learning candidate sourceEvaluationFailureIds must be an array');
+  if (!c.sourceRunIds.length && !(c.sourceEvaluationFailureIds || []).length) throw new Error('learning candidate requires run or evaluation-failure provenance');
   if (!Array.isArray(c.ownerFeedbackIds)) throw new Error('learning candidate ownerFeedbackIds must be an array');
   if (c.active === true && c.status !== 'validated') throw new Error('only validated candidates may be active');
   return c;
@@ -19,7 +21,7 @@ export function assertCandidate(c) {
 
 export function createCandidate(input) {
   const c = assertCandidate({ schemaVersion: LEARNING_SCHEMA, id: input.id, status:'candidate', role:input.role, scope:input.scope, targetLayer:input.targetLayer, text:input.text,
-    sourceRunIds:[...new Set(input.sourceRunIds||[])].map(String).sort(), sourceKind:input.sourceKind, ownerFeedbackIds:[...new Set(input.ownerFeedbackIds||[])].map(String).sort(),
+    sourceRunIds:[...new Set(input.sourceRunIds||[])].map(String).sort(), sourceEvaluationFailureIds:[...new Set(input.sourceEvaluationFailureIds||[])].map(String).sort(), sourceKind:input.sourceKind, ownerFeedbackIds:[...new Set(input.ownerFeedbackIds||[])].map(String).sort(),
     candidateSha:input.candidateSha||null, confidence:Number.isFinite(Number(input.confidence))?Number(input.confidence):null, evidenceCount:Number.isFinite(Number(input.evidenceCount))?Number(input.evidenceCount):0,
     createdAt:input.createdAt||new Date().toISOString(), validatedAt:null, expiresAfter:input.expiresAfter||null, supersedes:input.supersedes||null, validationEvidence:[], regressionResults:[], active:false,
     activatedAt:null, promotionRef:null, deactivatedAt:null, deactivatedBy:null, rollbackOf:null, reversalReason:null });
