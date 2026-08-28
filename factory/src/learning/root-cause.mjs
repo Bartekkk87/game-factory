@@ -2,9 +2,22 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { PATHS } from '../config.mjs';
 import { readJson } from '../util/fsx.mjs';
-import { canonicalTerminalState, canonicalVerifierState } from '../verify/state-semantics.mjs';
 
 export const ROOT_CAUSE_SCHEMA = 'failed-run-root-cause-v1';
+
+// Intentionally independent from verify/state-semantics.mjs. The diagnostic layer
+// must be able to falsify a broken verifier vocabulary rather than inheriting it.
+const DIAGNOSTIC_TERMINAL_FAMILIES = new Map([
+  ['success', 'success'],
+  ['won', 'success'],
+  ['failure', 'failure'],
+  ['failed', 'failure'],
+  ['gameover', 'failure']
+]);
+
+function diagnosticTerminalFamily(value) {
+  return DIAGNOSTIC_TERMINAL_FAMILIES.get(String(value ?? '').trim().toLowerCase()) || null;
+}
 
 function listAttemptDirs(runDir) {
   if (!fs.existsSync(runDir)) return [];
@@ -64,7 +77,7 @@ function collectStateProbes(value, out = [], seen = new Set()) {
     return out;
   }
   if (String(value.kind || '') === 'state_reached' && typeof value.state === 'string') {
-    out.push({ id: value.id || value.probeId || null, state: value.state, canonical: canonicalVerifierState(value.state) });
+    out.push({ id: value.id || value.probeId || null, state: value.state, diagnosticFamily: diagnosticTerminalFamily(value.state) });
   }
   for (const child of Object.values(value)) collectStateProbes(child, out, seen);
   return out;
@@ -83,7 +96,7 @@ function collectProofScenarios(value, out = [], seen = new Set()) {
       inputMode: value.inputMode,
       seconds: Number(value.seconds) || null,
       stopStates: value.stopStates.map(String),
-      canonicalStopStates: value.stopStates.map(canonicalTerminalState).filter(Boolean),
+      diagnosticTerminalFamilies: value.stopStates.map(diagnosticTerminalFamily).filter(Boolean),
       restartAtEnd: value.restartAtEnd === true
     });
   }
@@ -162,31 +175,31 @@ export function analyzeFailedProductionRun({ runId, runsRoot = PATHS.runs } = {}
     }
   }
 
-  const terminalProbes = stateProbes.filter((probe) => canonicalTerminalState(probe.state));
+  const terminalProbes = stateProbes.filter((probe) => diagnosticTerminalFamily(probe.state));
   for (const probe of terminalProbes) {
-    const terminal = canonicalTerminalState(probe.state);
-    const matchingScenario = proofScenarios.find((scenario) => scenario.canonicalStopStates.includes(terminal));
+    const terminal = diagnosticTerminalFamily(probe.state);
+    const matchingScenario = proofScenarios.find((scenario) => scenario.diagnosticTerminalFamilies.includes(terminal));
     if (!matchingScenario) {
       findings.push(finding(
         'terminal-proof-scenario-gap', 1, 'verifier', 'director',
-        `Terminal probe ${probe.id || '(unnamed)'} requests raw state ${probe.state} (${terminal}) but no proof scenario stops on canonical ${terminal}.`,
+        `Terminal probe ${probe.id || '(unnamed)'} requests raw state ${probe.state} (${terminal}) but no proof scenario independently represents diagnostic terminal family ${terminal}.`,
         ['gdd.json', probe.id || probe.state],
-        'Compile the proof plan with known terminal aliases and fail closed before Engineer spend when any terminal probe lacks an independent reachable scenario.'
+        'Compare Director probe vocabulary, compiled scenarios and runtime states independently. Fail closed before Engineer spend when a terminal family has no reachable proof scenario.'
       ));
     }
   }
 
   const observedStates = [...new Set(attempts.flatMap((attempt) => attempt.observedStates))].sort();
   for (const probe of terminalProbes) {
-    const desired = canonicalTerminalState(probe.state);
-    const observedAlias = observedStates.find((state) => canonicalTerminalState(state) === desired && state !== String(probe.state).toLowerCase());
+    const desired = diagnosticTerminalFamily(probe.state);
+    const observedAlias = observedStates.find((state) => diagnosticTerminalFamily(state) === desired && state !== String(probe.state).toLowerCase());
     const failedSomewhere = attempts.some((attempt) => attempt.failedCriteria.some((criterion) => criterion.probeId === probe.id || criterion.detail?.includes(`state ${probe.state}`)));
     if (observedAlias && failedSomewhere) {
       findings.push(finding(
         'terminal-state-vocabulary-mismatch', 0.95, 'verifier', 'director',
-        `Verifier evidence observed runtime state ${observedAlias}, semantically equivalent to requested ${probe.state}, while the related terminal proof still failed in at least one attempt.`,
+        `Independent learning evidence observed runtime state ${observedAlias}, in the same diagnostic terminal family as requested ${probe.state}, while the related terminal proof still failed in at least one attempt.`,
         ['gdd.json', observedAlias, probe.id || probe.state],
-        'Normalize only proven verifier/runtime state aliases at one verifier-owned boundary, preserve raw states as evidence, and keep unknown states fail closed.'
+        'Compare verifier-owned state semantics against this independent diagnostic family. Normalize only proven aliases in the verifier, preserve raw states as evidence, and keep unknown states fail closed.'
       ));
     }
   }
@@ -196,11 +209,11 @@ export function analyzeFailedProductionRun({ runId, runsRoot = PATHS.runs } = {}
     for (const criterion of terminalFailures) {
       const detail = String(criterion.detail || '').toLowerCase();
       const target = detail.includes('success') ? 'success' : detail.includes('failure') || detail.includes('failed') ? 'failure' : null;
-      const scenario = target ? proofScenarios.find((item) => item.canonicalStopStates.includes(target)) : null;
-      if (target && scenario && !best.observedStates.some((state) => canonicalTerminalState(state) === target)) {
+      const scenario = target ? proofScenarios.find((item) => item.diagnosticTerminalFamilies.includes(target)) : null;
+      if (target && scenario && !best.observedStates.some((state) => diagnosticTerminalFamily(state) === target)) {
         findings.push(finding(
           'terminal-action-reachability-unresolved', 0.7, 'verifier', 'director',
-          `${best.id} had a planned ${target} scenario (${scenario.id}) but no observed runtime state canonicalized to ${target}; the generic action policy may be insufficient or the game path may be unreachable.`,
+          `${best.id} had a planned ${target} scenario (${scenario.id}) but no observed runtime state entered diagnostic terminal family ${target}; the generic action policy may be insufficient or the game path may be unreachable.`,
           [best.id, 'gdd.json', scenario.id],
           'Create a deterministic browser fixture that requires a non-trivial action sequence. Prove whether the harness action policy can reach the target without self-attestation; if not, repair action reachability without weakening Product Fidelity.'
         ));
@@ -224,6 +237,7 @@ export function analyzeFailedProductionRun({ runId, runsRoot = PATHS.runs } = {}
     runStatus: runEvidence.run.status,
     runReason: runEvidence.run.reason || null,
     generatedFrom: 'durable-run-evidence-only',
+    diagnosticIndependence: 'terminal families are defined in learning/root-cause.mjs and do not import verifier state semantics',
     authority: {
       may: ['diagnose-evidence', 'rank-hypotheses', 'propose-validation'],
       mustNot: ['edit-production', 'validate-candidate', 'activate-candidate', 'weaken-gates', 'start-paid-run']
