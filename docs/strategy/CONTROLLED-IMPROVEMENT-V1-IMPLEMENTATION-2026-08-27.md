@@ -1,113 +1,189 @@
-# Controlled Improvement v1 — Implementation Status — 2026-08-27
+# Controlled Improvement v1 — Implementation Status — updated 28.08.2026
 
 ## Scope
 
-This document records the implemented state of Evidence-Driven Controlled Improvement v1 plus the OpenRouter/model-agnostic hardening. It supersedes earlier planning wording where those documents still describe L0/M0/M1/L1-L7 as future work.
+This document records the implemented state of Evidence-Driven Controlled Improvement v1 plus the model/provider hardening and the first real Production-failure path that reached a validated protected-layer Candidate and human-reviewed application.
 
-No new paid game or Titan Canary was started.
+Preferred claim: **EVIDENCE-DRIVEN CONTROLLED IMPROVEMENT**.
 
-## Verified implementation
+No automatic self-validation, self-promotion or paid retry authority is granted by this architecture.
 
-### L0 — Learning Safety Gate
+## Canonical lifecycle
 
-- `/reject` no longer creates an immediately active Director lesson.
-- `/reject` and `/feedback` capture durable Owner evidence before any learning decision.
-- raw GitHub Owner comment text is stored unchanged; parsed command/reason are separate fields.
-- `lessonsFor(role)` exposes only `status=validated && active=true`.
-- legacy lessons are normalized fail-closed as unvalidated/inactive.
+`raw durable evidence -> deterministic aggregate -> deterministic trigger -> bounded analysis/root cause -> inactive candidate -> validation/regression -> validated inactive -> explicit human application/promotion -> post-application regression -> reversible/auditable state`
 
-### L1-L7 — Controlled lifecycle
+Protected target layers include:
 
-Canonical lifecycle:
+`skill`, `prompt`, `owner-contract`, `verifier`, `product-fidelity`, `release-gate`, `engine-contract`, `control-plane`, `evaluation`.
 
-`raw evidence -> deterministic aggregate -> deterministic trigger -> bounded analysis -> candidate -> validation/regression -> validated inactive -> explicit promotion -> active -> reversible deactivation`
+Hard invariants:
+- `/reject` and `/feedback` preserve durable Owner evidence but do not directly create active lessons;
+- `lessonsFor(role)` exposes only `status=validated && active=true`;
+- legacy lessons normalize fail-closed as unvalidated/inactive;
+- analysis may propose but not validate, activate, promote, edit Production, weaken gates, change authority or start paid work;
+- Candidate state and applied code/policy state remain separate concepts.
 
-Implementation modules:
+## Implementation modules
+
+Core learning path:
 - `factory/src/learning/owner-feedback.mjs`
 - `factory/src/learning/aggregate.mjs`
 - `factory/src/learning/trigger.mjs`
 - `factory/src/learning/analysis.mjs`
+- `factory/src/learning/orchestrate.mjs`
+- `factory/src/learning/root-cause.mjs`
 - `factory/src/learning/lifecycle.mjs`
 
-Hard invariant: candidate or validated-inactive learning cannot enter Production prompts.
+Persistent role guidance:
+- `skills/directing.md`
+- `skills/engineering.md`
+- `skills/art-direction.md`
 
-Protected target layers require `human-merge` promotion: skill, prompt, owner-contract, verifier, product-fidelity, release-gate, engine-contract and control-plane.
+Evaluation/closure support:
+- Golden Corpus S0–S5
+- `learning-validation-v1`
+- `learning-application-receipt-v1` / `APPLIED-CLOSED` mechanism for eligible protected non-prompt applications.
 
-Improvement Analysis may propose a scoped candidate only. It cannot activate Production, edit Production, change its own authority or weaken release gates.
+## Real RUN-EVIDENCE support
 
-### Real RUN-EVIDENCE support
+The deterministic aggregator consumes the canonical nested Production evidence shape (`run.id`, `gates.*`, `costs.attempts`, stage budgets and role/model/operation cost tables) plus explicit relevant attempt evidence.
 
-The deterministic aggregator now consumes the canonical nested production evidence shape (`run.id`, `gates.*.pass`, `gates.experience.score`, `costs.attempts`, stage budgets and role/model/operation cost tables) and explicit relevant attempt evidence. Final gate failures are kept separate from intra-run attempt failures.
+Failed-run root cause can also inspect early durable `FAILURE.json` signatures when no GDD or Engineer attempt exists. This closes the gap exposed by Lumen Current Canary #1.
 
-This correction was found by applying the new pipeline to the real Titan #3 evidence rather than only synthetic fixtures.
-
-## Titan Canary #3 — first real learning case
+## Real learning case 1 — Titan Canary #3
 
 Production evidence:
-- run evidence: `runs/20260827-120138/RUN-EVIDENCE.json`
-- failed attempt evidence: `runs/20260827-120138/attempt-01/evidence-fidelity.json`
-- GitHub Actions production run: `33069903383`
-- candidate SHA: `0c675f626042c25c49326bca19b9aba95860d54845b02e91bfc600c05884110d`
-- final Technical: PASS
-- final Product Fidelity: PASS
-- final Experience: 7.7/10
-- cost: $0.442821 / 109,703 tokens
-- Owner result preserved from the approved handoff: PRODUCT ACCEPTANCE FAIL
+- run `33069903383`
+- Technical PASS
+- Product Fidelity PASS after autonomous repair
+- Experience `7.7/10` after polish
+- cost `$0.442821` / `109,703` tokens
+- Owner hands-on: **PRODUCT ACCEPTANCE FAIL**.
 
-Durable learning artifacts:
-- raw Owner result: `learning/evidence/owner-feedback/titan-canary-3-owner-result-2026-08-27.json`
-- aggregate: `learning/aggregates/titan-canary-3-2026-08-27.json`
-- trigger: `learning/triggers/titan-canary-3-2026-08-27.json`
-- bounded analysis: `learning/analysis/titan-canary-3-product-acceptance-analysis-v1.json`
-- inactive candidate: `learning/candidates/titan-canary-3-visual-target-intake-v1.json`
+Durable learning artifacts preserved the Owner result, aggregate, trigger, bounded analysis and an inactive candidate. Competing hypotheses remained open because the evidence did not justify a single causal root cause.
 
-No GitHub Owner `/reject` comment existed for Issue #6, so the evidence backfill explicitly records that fact and does not fabricate one. The exact Owner-result wording from the approved handoff is preserved separately from the richer expectation summary.
+This demonstrated:
 
-The analysis keeps competing hypotheses open: intake/Product Truth loss, Owner Contract decomposition, Director reinterpretation, Product/Visual Fidelity gaps, Experience-evaluation gaps, or a combination. No root cause is promoted as truth.
+`real Production/Owner evidence -> deterministic aggregate/trigger -> bounded analysis -> inactive candidate`
 
-The candidate is `status=candidate`, `active=false`, targets protected layer `owner-contract`, and therefore cannot affect Production without validation/regression followed by a separate human merge.
+It did not yet demonstrate validation + human application.
 
-## OpenRouter / M0-M1
+## Real learning case 2 — Lumen Current Canary #1
 
-The existing router remains the only routing authority.
+### Production failure
 
-Credential lanes:
-- `OPENROUTER_PRODUCTION`
-- `OPENROUTER_BENCHMARK`
-- `OPENROUTER_IMPROVEMENT`
+Owner-authorized run:
+- Produce Game run `33207019862`
+- durable run `runs/20260828-201007/`
+- evidence commit `70200dce341fc06d0213991ff569481dd99774f6`
+- cost `$0.050686`
+- tokens `7,883`
+- Engineer / Repair / Polish calls `0 / 0 / 0`.
 
-Benchmark and Improvement lanes do not silently fall back to Production credentials.
+Director proof-plan values:
+- `PR-MH-03 -> restored`
+- `PR-MH-04 -> glass_breach`.
 
-OpenAI remains the Production reference default. The explicitly registered OpenRouter challenger is:
+Both were unsupported `state_reached` verifier states. The fail-closed proof-plan compiler stopped before Engineer spend.
 
-`openrouter:deepseek/deepseek-chat-v3.1`
+### First learning result
 
-Registry record as verified on 2026-08-27 from OpenRouter official model metadata:
-- context: 163,840
-- max output: 32,768
-- structured outputs: supported
-- input: $0.25/M tokens
-- cache read: $0.13/M tokens
-- output: $0.95/M tokens
+The historical automatic Learning run safely triggered analysis but produced no Candidate because early `director_failed` signatures were not yet a recognized root-cause family. Those old artifacts remain unchanged as truthful audit evidence.
 
-The challenger is not a Production default and requires explicit provider/model selection. Unknown models and missing credentials fail closed.
+### Evidence-backed repair
 
-## Regression evidence
+The real failure justified exactly three bounded repair themes:
+1. make the finite verifier-state protocol explicit to Director runtime/prompt/skill;
+2. recognize early unsupported-state Director failures deterministically in root cause;
+3. bind exact Owner brief bytes across preflight and Production ingestion.
 
-Relevant successful Verifier Selftests on the implementation branch:
-- Run `33083567504` — initial learning/OpenRouter regression suite PASS
-- Run `33087199746` — workflow YAML validation + Produce workflow syntax fix PASS
-- Run `33087639058` — canonical RUN-EVIDENCE aggregation PASS
-- Run `33088083507` — explicit attempt-evidence aggregation PASS
+The repair deliberately did **not** weaken fail-closed verification and did not accept arbitrary product-specific aliases.
 
-The Verifier now validates syntax for every `.github/workflows/*.yml|yaml` file because an invalid Produce workflow was reproduced during this implementation.
+### Candidate
+
+Durable Candidate:
+`learning/candidates/candidate-production-run-b37ac8d268e8549c.json`
+
+Current state:
+- role `director`
+- scope `case-root-cause`
+- target layer `skill`
+- source run `20260828-201007`
+- confidence `1`
+- `status=validated`
+- `active=false`.
+
+Canonical validation:
+`learning/validations/candidate-production-run-b37ac8d268e8549c.json`
+
+The Candidate remains inactive because a protected skill/code application is not the same as an active Memory lesson.
+
+### Validation evidence
+
+Zero-paid pre-merge Full Verifiers:
+- `33208519229` — SUCCESS, all 37 steps;
+- `33209130248` — SUCCESS, all 37 steps after real Candidate binding;
+- `33209616277` — SUCCESS with validated-inactive enforcement.
+
+Golden Corpus remained:
+- 29/29 Expected Outcomes;
+- 0 mismatches;
+- 0 Critical False PASS;
+- API/model-backed validation cost `$0`.
+
+### Human-reviewed application
+
+PR `#36` was merged after validation.
+
+Merge commit:
+`7af126e3300b23c19bd088ca32c08c7e81947d8b`
+
+The application updates the Director runtime contract, Director prompt and `skills/directing.md` while keeping the Candidate inactive. Exact-main post-merge Full Verifier is run `33211092911`.
+
+This demonstrates, for the first time in this Factory, the real sequence:
+
+`real Production failure -> durable evidence -> deterministic failure class -> protected-layer Candidate -> zero-paid validation -> validated inactive -> human merge`
+
+## What is actually learned
+
+The learned rule is generalized rather than game-name-specific:
+
+**Verifier protocol semantics are separate from product fiction. `state_reached` must use only the finite protocol supplied by the verifier contract; thematic states belong in events, UI or world-state data.**
+
+This rule is persisted in `skills/directing.md` and reinforced by the runtime/prompt contract.
+
+## Golden Corpus relationship
+
+The Lumen regression is attached to the existing root-cause diagnostic execution path so the frozen S2 baseline is not silently rewritten. A failure of the new Lumen assertions causes the existing executable seed path to fail.
+
+Golden Corpus provides regression evidence; it has no authority to apply Production changes.
+
+## Model/provider boundary
+
+The existing router remains the only model-routing authority. OpenAI remains the Production reference; the Lumen evidence did not justify a model/provider switch because the failure was a contract/Learning defect.
+
+OpenRouter lanes remain isolated. Benchmark or improvement work cannot silently fall back to Production credentials or mutate Production defaults.
+
+## Cost boundary
+
+Automatic Learning analysis/root-cause/candidate lifecycle is deterministic Node/Git logic and does not call `chat()`.
+
+Paid/model-billed work occurs only through the normal LLM client/router path. A future paid retry must be separately Owner-authorized.
 
 ## Current proof boundary
 
-The real Titan case demonstrates:
+Now demonstrated:
+- real Owner/Production evidence into controlled learning;
+- deterministic single-run failed-root-cause classification for supported classes;
+- inactive Candidate creation;
+- zero-paid Candidate validation/regression;
+- validated-inactive protected-layer Candidate;
+- human-reviewed application through GitHub merge.
 
-`real production evidence + Owner rejection evidence -> deterministic aggregate -> deterministic trigger -> bounded analysis -> inactive scoped candidate`
+Still unproven:
+- that this learning improves a later Owner-accepted game;
+- that the same architecture transfers unchanged outside Gaming;
+- fully self-modifying/self-authorizing operation.
 
-It does **not** demonstrate a real learning candidate being validated, human-promoted and then improving a later paid game. No such paid Canary was authorized or run.
-
-Therefore the correct claim is: controlled cross-run learning infrastructure and the real evidence-to-candidate path are demonstrated; real validated/published learning impact on a later production game remains unproven.
+Canonical explanation:
+`docs/strategy/LEARNING-ARCHITECTURE-EVIDENCE-TO-APPLIED-CHANGE-2026-08-28.md`
