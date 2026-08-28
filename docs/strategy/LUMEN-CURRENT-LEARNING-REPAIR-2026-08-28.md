@@ -18,7 +18,7 @@ The existing fail-closed proof-plan boundary behaved correctly. The new failure 
 
 ## Repair scope
 
-PR `#36` (`repair/lumen-learning-contract-20260828`) is intentionally zero-paid and bounded to the proven failure.
+PR `#36` (`repair/lumen-learning-contract-20260828`) was intentionally zero-paid and bounded to the proven failure.
 
 Implemented:
 1. `verifierStateContract()` exposes the finite verifier state protocol without changing canonical state semantics.
@@ -33,18 +33,22 @@ Implemented:
 
 Historical artifacts from the failed Canary are not rewritten. The original orchestration receipt correctly records that the old analyzer produced no Candidate.
 
-A new inactive reanalysis Candidate is stored as:
+A new deterministic reanalysis Candidate is stored as:
 `learning/candidates/candidate-production-run-b37ac8d268e8549c.json`
 
-Candidate properties:
+Candidate properties after validation:
 - role: `director`
 - target layer: `skill`
 - source run: `20260828-201007`
 - confidence: `1`
+- status: `validated`
 - active: `false`
-- no authority to validate itself, activate, promote, weaken gates or start paid work.
+- no authority to activate/promote itself, weaken gates or start paid work.
 
-`skill`, `prompt`, `verifier` and `evaluation` remain protected layers. The repair is only effective after deterministic regression evidence and human merge.
+Canonical validation artifact:
+`learning/validations/candidate-production-run-b37ac8d268e8549c.json`
+
+`skill`, `prompt`, `verifier` and `evaluation` remain protected layers. The validated Candidate itself remains inactive; the reviewed code/skill repair is applied through GitHub merge authority rather than self-promotion.
 
 ## Golden Corpus coverage
 
@@ -60,11 +64,42 @@ Because the S2 runner deduplicates and executes the seed script, a regression of
 
 ## Validation evidence
 
-First complete zero-paid repair verifier:
-- commit: `b826bf67bd1cf98517ed315fac8bdb0ee5cac6b3`
-- Full Verifier: `33208519229`
-- result: **SUCCESS in all 37 steps**
-- Golden Corpus S2: PASS on the frozen 29-case baseline
-- API / model-backed corpus cost: `$0`
+Zero-paid regression evidence before merge:
+- Full Verifier `33208519229` — **SUCCESS in all 37 steps**;
+- Full Verifier `33209130248` — **SUCCESS in all 37 steps** after real-run Candidate binding;
+- Full Verifier `33209616277` — **SUCCESS** with enforced `validated-inactive` Candidate state;
+- Golden Corpus S2 stayed **29/29, 0 mismatches, 0 Critical False PASS**;
+- API/model-backed Learning/Corpus cost: `$0`.
 
-Further validation after orchestration/candidate binding is required before merge. No second paid Production Canary is authorized by this document.
+## Human application
+
+PR `#36` was human-reviewed and merged to `main` after the validated-inactive gate.
+
+Merge commit:
+`7af126e3300b23c19bd088ca32c08c7e81947d8b`
+
+This is the protected-layer application authority for the bounded Director state-contract / directing-skill repair. It does **not** set the Candidate to `active=true` and does not create an autonomous Memory lesson.
+
+Exact-main post-merge Full Verifier:
+- run: `33211092911`
+- evaluated executable merge: `7af126e3300b23c19bd088ca32c08c7e81947d8b`
+- tracked until complete before final application-closure claim.
+
+## What the Factory learned
+
+The reusable lesson is not "Lumen must not use restored". It is:
+
+> Product/thematic semantics and verifier protocol semantics are separate. `state_reached` uses only the finite verifier contract; fictional/game-specific states belong in events, UI or world-state data.
+
+That rule is persisted in `skills/directing.md` and supported by the runtime contract so future Directors receive it automatically.
+
+## Proof boundary
+
+This case now demonstrates a real path through:
+
+`Production failure -> durable evidence -> deterministic root cause -> protected-layer Candidate -> validated inactive -> human-reviewed merge`
+
+It still does **not** demonstrate that the learned change produces a later Owner-accepted game. A second paid Lumen/independent Product Canary remains separately Owner-gated.
+
+Canonical architecture explanation:
+`docs/strategy/LEARNING-ARCHITECTURE-EVIDENCE-TO-APPLIED-CHANGE-2026-08-28.md`
