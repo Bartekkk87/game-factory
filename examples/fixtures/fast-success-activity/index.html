@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Fixture Fast Success Activity</title>
+<style>html,body{margin:0;height:100%;background:#101426;display:grid;place-items:center}canvas{background:#1a2140}</style>
+</head>
+<body>
+<script>
+(function () {
+  const W = 640;
+  const H = 360;
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  let state = 'title';
+  let score = 0;
+  let playStartedAt = null;
+
+  function start() {
+    if (state !== 'title') return;
+    state = 'playing';
+    playStartedAt = performance.now();
+  }
+
+  window.addEventListener('keydown', (event) => {
+    start();
+    if (state === 'playing' && event.code !== 'Enter') score += 10;
+  });
+  canvas.addEventListener('pointerdown', () => {
+    start();
+    if (state === 'playing') score += 5;
+  });
+
+  window.__GF__ = {
+    version: 'fixture-fast-success-activity-1.0',
+    info: { title: 'Fixture Fast Success Activity' },
+    errors: [],
+    flags: {},
+    getState: () => state,
+    getScore: () => score,
+    getBest: () => score,
+    getFps: () => 60,
+    getTime: () => playStartedAt === null ? 0 : (performance.now() - playStartedAt) / 1000,
+    restart: () => {
+      state = 'playing';
+      score = 0;
+      playStartedAt = performance.now();
+    }
+  };
+
+  function frame(now) {
+    requestAnimationFrame(frame);
+    if (state === 'playing' && playStartedAt !== null && now - playStartedAt >= 1800) {
+      state = 'won';
+      score += 1000;
+    }
+
+    ctx.fillStyle = '#1a2140';
+    ctx.fillRect(0, 0, W, H);
+
+    if (state === 'title') {
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '700 24px system-ui';
+      ctx.textAlign = 'center';
+      ctx.fillText('PRESS ENTER', W / 2, H / 2);
+      return;
+    }
+
+    if (state === 'playing') {
+      const x = 60 + ((now / 3) % 520);
+      ctx.fillStyle = '#7c5cff';
+      ctx.fillRect(x - 30, 145, 60, 60);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '700 20px system-ui';
+      ctx.textAlign = 'center';
+      ctx.fillText('LIVE GAMEPLAY', W / 2, 60);
+      return;
+    }
+
+    // Deliberately static terminal screen. A verifier that samples activity only
+    // from late fixed timestamps will falsely report zero activity for this game.
+    ctx.fillStyle = '#274060';
+    ctx.fillRect(120, 90, 400, 180);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '700 30px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('YOU WON', W / 2, 175);
+    ctx.font = '600 18px system-ui';
+    ctx.fillText('STATIC RESULT SCREEN', W / 2, 215);
+  }
+
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
