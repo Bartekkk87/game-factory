@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Harbor Courier</title>
+<style>
+html,body{margin:0;height:100%;background:#000;display:grid;place-items:center;overflow:hidden}
+canvas{image-rendering:auto}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:linear-gradient(135deg,#174d66,#49b9d2)}body{display:flex;align-items:center;justify-content:center}canvas{display:block;max-width:100%;max-height:100%;border-radius:16px;box-shadow:0 24px 70px rgba(8,45,65,.48);touch-action:none}#harbor-a11y{display:none}
+</style>
+</head>
+<body>
+<div id="harbor-a11y" aria-hidden="true"></div>
+<script>
+(function () {
+  'use strict';
+  const VERSION = '1.0.0';
+  const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const rand = (a = 1, b) => (b === undefined ? Math.random() * a : a + Math.random() * (b - a));
+  const randInt = (a, b) => Math.floor(rand(a, b + 1));
+  const pick = (arr) => arr[(Math.random() * arr.length) | 0];
+  const dist = (x1, y1, x2, y2) => Math.hypot(x2 - x1, y2 - y1);
+  const TAU = Math.PI * 2;
+  function makeRng(seed) {
+    let s = seed >>> 0 || 1;
+    return function () {
+      s ^= s << 13;
+      s ^= s >>> 17;
+      s ^= s << 5;
+      s >>>= 0;
+      return s / 4294967296;
+    };
+  }
+  const Eases = {
+    linear: (t) => t,
+    outCubic: (t) => 1 - Math.pow(1 - t, 3),
+    inCubic: (t) => t * t * t,
+    outQuad: (t) => 1 - (1 - t) * (1 - t),
+    outBack: (t) => 1 + 2.70158 * Math.pow(t - 1, 3) + 1.70158 * Math.pow(t - 1, 2),
+    outElastic: (t) =>
+      t === 0 || t === 1 ? t : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * ((2 * Math.PI) / 3)) + 1
+  };
+
+  const Sfx = {
+    ctx: null,
+    master: null,
+    muted: false,
+    ensure() {
+      if (this.ctx || this.muted) return;
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        this.ctx = new AC();
+        this.master = this.ctx.createGain();
+        this.master.gain.value = 0.5;
+        this.master.connect(this.ctx.destination);
+      } catch (e) {}
+    },
+    resume() {
+      if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+    },
+    beep({ freq = 440, to = null, dur = 0.15, type = 'square', vol = 0.4, delay = 0 } = {}) {
+      if (!this.ctx || this.muted) return;
+      const t = this.ctx.currentTime + delay;
+      const o = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      o.type = type;
+      o.frequency.setValueAtTime(freq, t);
+      if (to) o.frequency.exponentialRampToValueAtTime(Math.max(30, to), t + dur);
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g).connect(this.master);
+      o.start(t);
+      o.stop(t + dur + 0.02);
+    },
+    noise({ dur = 0.2, vol = 0.3, freq = 1200, delay = 0 } = {}) {
+      if (!this.ctx || this.muted) return;
+      const t = this.ctx.currentTime + delay;
+      const len = Math.max(1, (dur * this.ctx.sampleRate) | 0);
+      const buf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      const src = this.ctx.createBufferSource();
+      src.buffer = buf;
+      const f = this.ctx.createBiquadFilter();
+      f.type = 'lowpass';
+      f.frequency.value = freq;
+      const g = this.ctx.createGain();
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      src.connect(f).connect(g).connect(this.master);
+      src.start(t);
+    },
+    melody(notes, { type = 'square', vol = 0.35 } = {}) {
+      let delay = 0;
+      for (const [freq, dur] of notes) {
+        this.beep({ freq, dur: dur * 0.95, type, vol, delay });
+        delay += dur;
+      }
+    }
+  };
+
+  class Input {
+    constructor(canvas) {
+      this.keys = Object.create(null);
+      this._edge = Object.create(null);
+      this.pointer = { x: 0, y: 0, down: false, clicked: false };
+      this._anyAction = [];
+      const kd = (e) => {
+        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) e.preventDefault();
+        if (!this.keys[e.code]) this._edge[e.code] = true;
+        this.keys[e.code] = true;
+        Sfx.ensure();
+        Sfx.resume();
+        for (const fn of this._anyAction) fn(e.code);
+      };
+      const ku = (e) => {
+        this.keys[e.code] = false;
+      };
+      window.addEventListener('keydown', kd);
+      window.addEventListener('keyup', ku);
+      const toLocal = (e) => {
+        const r = canvas.getBoundingClientRect();
+        return {
+          x: ((e.clientX - r.left) / r.width) * canvas._lw,
+          y: ((e.clientY - r.top) / r.height) * canvas._lh
+        };
+      };
+      canvas.addEventListener('pointermove', (e) => {
+        Object.assign(this.pointer, toLocal(e));
+      });
+      canvas.addEventListener('pointerdown', (e) => {
+        Sfx.ensure();
+        Sfx.resume();
+        Object.assign(this.pointer, toLocal(e));
+        this.pointer.down = true;
+        this.pointer.clicked = true;
+        for (const fn of this._anyAction) fn('PointerDown');
+      });
+      window.addEventListener('pointerup', () => {
+        this.pointer.down = false;
+      });
+    }
+    pressed(code) {
+      return !!this._edge[code];
+    }
+    onAnyInput(fn) {
+      this._anyAction.push(fn);
+    }
+    _endFrame() {
+      this._edge = Object.create(null);
+      this.pointer.clicked = false;
+    }
+  }
+
+  class Particles {
+    constructor(cap = 700) {
+      this.pool = Array.from({ length: cap }, () => ({ active: false }));
+    }
+    emit(x, y, { count = 10, speed = 120, size = 4, life = 0.6, colors = ['#fff'], gravity = 200, spread = TAU, dir = 0 } = {}) {
+      let made = 0;
+      for (const p of this.pool) {
+        if (p.active) continue;
+        const a = dir + (spread === TAU ? rand(TAU) : rand(-spread / 2, spread / 2));
+        const v = speed * rand(0.4, 1);
+        p.active = true;
+        p.x = x;
+        p.y = y;
+        p.vx = Math.cos(a) * v;
+        p.vy = Math.sin(a) * v;
+        p.life = p.maxLife = life * rand(0.6, 1.2);
+        p.size = size * rand(0.6, 1.4);
+        p.color = pick(colors);
+        p.gravity = gravity;
+        if (++made >= count) break;
+      }
+    }
+    update(dt) {
+      for (const p of this.pool) {
+        if (!p.active) continue;
+        p.life -= dt;
+        if (p.life <= 0) {
+          p.active = false;
+          continue;
+        }
+        p.vy += p.gravity * dt;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+      }
+    }
+    draw(ctx) {
+      for (const p of this.pool) {
+        if (!p.active) continue;
+        ctx.globalAlpha = clamp(p.life / p.maxLife, 0, 1);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, TAU);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  class Tweens {
+    constructor() {
+      this.list = [];
+    }
+    add(obj, props, dur, ease = 'outCubic', onDone = null) {
+      const from = {};
+      for (const k of Object.keys(props)) from[k] = obj[k];
+      this.list.push({ obj, props, from, t: 0, dur, ease: Eases[ease] || Eases.outCubic, onDone });
+    }
+    update(dt) {
+      for (let i = this.list.length - 1; i >= 0; i--) {
+        const tw = this.list[i];
+        tw.t += dt;
+        const k = clamp(tw.t / tw.dur, 0, 1);
+        const e = tw.ease(k);
+        for (const key of Object.keys(tw.props)) {
+          tw.obj[key] = lerp(tw.from[key], tw.props[key], e);
+        }
+        if (k >= 1) {
+          this.list.splice(i, 1);
+          if (tw.onDone) tw.onDone();
+        }
+      }
+    }
+  };
+
+  const Draw = {
+    text(ctx, str, x, y, { size = 24, color = '#fff', align = 'center', baseline = 'middle', weight = '800', font = 'system-ui, sans-serif' } = {}) {
+      ctx.fillStyle = color;
+      ctx.textAlign = align;
+      ctx.textBaseline = baseline;
+      ctx.font = `${weight} ${size}px ${font}`;
+      ctx.fillText(str, x, y);
+    },
+    roundRect(ctx, x, y, w, h, r, color) {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h);
+      ctx.fill();
+    },
+    vignette(ctx, w, h, strength = 0.35) {
+      const g = ctx.createRadialGradient(w / 2, h / 2, h * 0.4, w / 2, h / 2, h * 0.85);
+      g.addColorStop(0, 'rgba(0,0,0,0)');
+      g.addColorStop(1, `rgba(0,0,0,${strength})`);
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+    }
+  };
+
+  class Game {
+    constructor({ id = 'gf-game', title = 'Untitled', width = 960, height = 540, palette = ['#7c5cff', '#00e0ff', '#ff5c8a', '#ffd166'], background = '#0b0e1a', seed = (Number.isInteger(window.__GF_VERIFIER_SEED__) ? window.__GF_VERIFIER_SEED__ : Date.now() % 100000) } = {}) {
+      this.id = id;
+      this.title = title;
+      this.W = width;
+      this.H = height;
+      this.palette = palette;
+      this.background = background;
+      this.seed = seed >>> 0;
+      this.rng = makeRng(this.seed);
+      this.scenes = {};
+      this.sceneName = null;
+      this.state = 'boot';
+      this.score = 0;
+      this.best = Number(localStorage.getItem('gf-best-' + id) || 0);
+      this.time = 0;
+      this.shakeMag = 0;
+      this.shakeDur = 0;
+      this.flashAlpha = 0;
+      this.flashColor = '#ffffff';
+      this._hitStopRemaining = 0;
+      this._fpsFrames = 0;
+      this._fpsTime = 0;
+      this.fps = 60;
+      this.particles = new Particles();
+      this.tweens = new Tweens();
+      this.probeErrors = [];
+
+      const canvas = document.createElement('canvas');
+      canvas.id = 'game';
+      document.body.appendChild(canvas);
+      this.canvas = canvas;
+      canvas._lw = this.W;
+      canvas._lh = this.H;
+      const fit = () => {
+        const s = Math.min(window.innerWidth / this.W, window.innerHeight / this.H);
+        canvas.style.width = Math.floor(this.W * s) + 'px';
+        canvas.style.height = Math.floor(this.H * s) + 'px';
+      };
+      window.addEventListener('resize', fit);
+      fit();
+
+      const ctx = canvas.getContext('2d');
+      this.ctx = ctx;
+
+      this.input = new Input(canvas);
+      this.input.onAnyInput(() => {
+        if (this.state === 'title' && this._titleStart) this._startFromTitle();
+        else if ((this.state === 'gameover' || this.state === 'won') && this.time > 0.8) this.restart();
+      });
+
+      window.addEventListener('error', (e) => this._err(e.message));
+      window.addEventListener('unhandledrejection', (e) => this._err(String(e.reason)));
+
+      window.__GF__ = {
+        version: VERSION,
+        info: { title, id, engine: VERSION, seed: this.seed },
+        errors: this.probeErrors,
+        getState: () => this.state,
+        getScore: () => this.score,
+        getBest: () => this.best,
+        getFps: () => this.fps,
+        getTime: () => this.time,
+        getSeed: () => this.seed,
+        flags: {},
+        restart: () => this.restart()
+      };
+
+      let last = performance.now();
+      const frame = (now) => {
+        requestAnimationFrame(frame);
+        let dt = (now - last) / 1000;
+        last = now;
+        dt = Math.min(dt, 0.1);
+        this._fpsFrames++;
+        this._fpsTime += dt;
+        if (this._fpsTime >= 0.5) {
+          this.fps = Math.round(this._fpsFrames / this._fpsTime);
+          this._fpsFrames = 0;
+          this._fpsTime = 0;
+        }
+        this._update(dt);
+        this._draw(ctx);
+        this.input._endFrame();
+      };
+      requestAnimationFrame(frame);
+    }
+
+    get currentScene() {
+      return this.sceneName ? this.scenes[this.sceneName] || null : null;
+    }
+
+    _err(msg) {
+      if (this.probeErrors.length < 25 && !this.probeErrors.includes(msg)) this.probeErrors.push(String(msg));
+    }
+
+    add(name, scene) {
+      scene.name = name;
+      scene.game = this;
+      this.scenes[name] = scene;
+      return scene;
+    }
+    go(name) {
+      const next = this.scenes[name];
+      if (!next) return this._err('unknown scene: ' + name);
+      this.sceneName = name;
+      this.state = name === 'title' ? 'title' : 'playing';
+      if (next.init) next.init();
+      if (next.reset) next.reset();
+      this.time = 0;
+    }
+    titleScreen({ subtitle = 'Press any key', onStart = null } = {}) {
+      this._titleStart = onStart || (() => this.go(this._firstPlayScene()));
+      this.state = 'title';
+      this._subtitle = subtitle;
+    }
+    _firstPlayScene() {
+      const names = Object.keys(this.scenes);
+      return names.find((n) => n !== 'title') || names[0];
+    }
+    _startFromTitle() {
+      Sfx.ensure();
+      Sfx.resume();
+      Sfx.beep({ freq: 520, to: 780, dur: 0.12, type: 'triangle', vol: 0.35 });
+      this._titleStart();
+    }
+    addScore(n = 1) {
+      if (this.state !== 'playing') return;
+      this.score += n;
+      if (this.score > this.best) {
+        this.best = this.score;
+        localStorage.setItem('gf-best-' + this.id, String(this.best));
+      }
+    }
+    shake(mag = 6, dur = 0.3) {
+      this.shakeMag = mag;
+      this.shakeDur = dur;
+    }
+    flash(color = '#ffffff', alpha = 0.5) {
+      this.flashColor = color;
+      this.flashAlpha = alpha;
+    }
+    burst(x, y, opts) {
+      this.particles.emit(x, y, opts);
+    }
+    hitStop(dur = 0.06) {
+      this._hitStopRemaining = Math.max(this._hitStopRemaining, dur);
+    }
+    gameOver({ message = 'GAME OVER' } = {}) {
+      if (this.state !== 'playing') return;
+      this.state = 'gameover';
+      this._endMessage = message;
+      this.shake(9, 0.45);
+      Sfx.melody([[392, 0.12], [330, 0.12], [262, 0.2]]);
+    }
+    win({ message = 'YOU WIN!' } = {}) {
+      if (this.state !== 'playing') return;
+      this.state = 'won';
+      this._endMessage = message;
+      Sfx.melody([[523, 0.1], [659, 0.1], [784, 0.18]], { type: 'triangle' });
+    }
+    restart() {
+      this.score = 0;
+      this.time = 0;
+      this.particles = new Particles();
+      this.tweens = new Tweens();
+      const sc = this.scenes[this.sceneName];
+      this.state = 'playing';
+      if (sc && sc.reset) sc.reset();
+      else if (sc && sc.init) sc.init();
+      Sfx.beep({ freq: 660, dur: 0.08, vol: 0.3 });
+    }
+
+    _update(dtRaw) {
+      this.tweens.update(dtRaw);
+      if (this.shakeDur > 0) this.shakeDur -= dtRaw;
+      if (this.flashAlpha > 0) this.flashAlpha = Math.max(0, this.flashAlpha - dtRaw * 2.5);
+      if (this.state !== 'playing') return;
+      if (this._hitStopRemaining > 0) {
+        this._hitStopRemaining -= dtRaw;
+        return;
+      }
+      const dt = Math.min(dtRaw, 1 / 20);
+      this.time += dt;
+      const sc = this.scenes[this.sceneName];
+      if (sc && sc.update) sc.update(dt);
+      this.particles.update(dt);
+    }
+
+    _draw(ctx) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.fillStyle = this.background;
+      ctx.fillRect(0, 0, this.W, this.H);
+      let sx = 0;
+      let sy = 0;
+      if (this.shakeDur > 0) {
+        sx = rand(-this.shakeMag, this.shakeMag);
+        sy = rand(-this.shakeMag, this.shakeMag);
+      }
+      ctx.translate(sx, sy);
+      const sc = this.scenes[this.sceneName];
+      if (sc && sc.draw) sc.draw(ctx);
+      this.particles.draw(ctx);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      if (this.state === 'title') {
+        ctx.fillStyle = 'rgba(5,8,16,0.55)';
+        ctx.fillRect(0, 0, this.W, this.H);
+        Draw.text(ctx, this.title, this.W / 2, this.H / 2 - 40, { size: 56, color: this.palette[0] });
+        Draw.text(ctx, this._subtitle || '', this.W / 2, this.H / 2 + 24, { size: 22, color: '#dfe6ff', weight: '600' });
+        Draw.text(ctx, 'BEST ' + this.best, this.W / 2, this.H - 40, { size: 18, color: '#8fa3d9', weight: '600' });
+      } else if (this.state === 'gameover' || this.state === 'won') {
+        ctx.fillStyle = this.state === 'won' ? 'rgba(10,30,20,0.55)' : 'rgba(30,5,15,0.55)';
+        ctx.fillRect(0, 0, this.W, this.H);
+        Draw.text(ctx, this._endMessage || (this.state === 'won' ? 'YOU WIN!' : 'GAME OVER'), this.W / 2, this.H / 2 - 50, { size: 52, color: this.state === 'won' ? '#7dffb2' : '#ff7d9c' });
+        Draw.text(ctx, 'SCORE ' + this.score, this.W / 2, this.H / 2 + 12, { size: 30, color: '#fff' });
+        Draw.text(ctx, 'BEST ' + this.best, this.W / 2, this.H / 2 + 52, { size: 20, color: '#cdd6f4' });
+        Draw.text(ctx, 'Click / press R to retry', this.W / 2, this.H / 2 + 96, { size: 17, color: '#9fb0d8', weight: '600' });
+      } else {
+        Draw.text(ctx, String(this.score), this.W / 2, 44, { size: 34, color: 'rgba(255,255,255,0.92)' });
+        Draw.text(ctx, 'BEST ' + this.best, this.W - 20, 30, { size: 15, color: 'rgba(255,255,255,0.55)', align: 'right', weight: '700' });
+      }
+      if (this.flashAlpha > 0) {
+        ctx.globalAlpha = this.flashAlpha;
+        ctx.fillStyle = this.flashColor;
+        ctx.fillRect(0, 0, this.W, this.H);
+        ctx.globalAlpha = 1;
+      }
+    }
+  }
+
+  window.GF = { VERSION, Game, Input, Particles, Tweens, Draw, Sfx, math: { clamp, lerp, rand, randInt, pick, dist, TAU, makeRng }, Eases };
+})();
+
+
+(function () {
+  if (!window.GF || !window.GF.Game || window.GF.__probeExtended) return;
+  const BaseGame = window.GF.Game;
+  class EvidencedGame extends BaseGame {
+    constructor(options) {
+      super(options);
+      if (this.canvas) {
+        this.canvas.width = this.W;
+        this.canvas.height = this.H;
+      }
+      this._probeEvents = [];
+      this._probeSeq = 0;
+      window.__GF__.events = this._probeEvents;
+      window.__GF__.getEvents = () => this._probeEvents.map((event) => ({ ...event, data: { ...(event.data || {}) } }));
+      window.__GF__.emit = (type, data) => this.event(type, data);
+    }
+    event(type, data = {}) {
+      let safeData = {};
+      try {
+        const serialized = JSON.stringify(data ?? {});
+        safeData = serialized.length <= 2048
+          ? JSON.parse(serialized)
+          : { truncated: true, preview: serialized.slice(0, 1900) };
+      } catch (_) {
+        safeData = { value: String(data).slice(0, 1900) };
+      }
+      const event = {
+        seq: ++this._probeSeq,
+        type: String(type || 'event').slice(0, 80),
+        time: Math.round((this.time || 0) * 1000) / 1000,
+        state: this.state,
+        score: this.score,
+        data: safeData
+      };
+      if (this._probeEvents.length >= 128) this._probeEvents.shift();
+      this._probeEvents.push(event);
+      return event;
+    }
+    addScore(n = 1) {
+      const before = this.score;
+      super.addScore(n);
+      if (this.score !== before) this.event('score_changed', { before, after: this.score, delta: this.score - before });
+    }
+    go(name) {
+      const before = this.state;
+      super.go(name);
+      this.event('state_changed', { from: before, to: this.state, scene: name });
+    }
+    gameOver(options) {
+      const before = this.state;
+      super.gameOver(options);
+      if (this.state !== before) this.event('game_over', { from: before, to: this.state });
+    }
+    win(options) {
+      const before = this.state;
+      super.win(options);
+      if (this.state !== before) this.event('game_won', { from: before, to: this.state });
+    }
+  }
+  window.GF.Game = EvidencedGame;
+  window.GF.__probeExtended = true;
+})();
+
+</script>
+<script>
+const game = new GF.Game({
+  id: 'harbor-courier',
+  title: 'Harbor Courier',
+  width: 960,
+  height: 540,
+  palette: ['#49B9D2', '#FFF3C4', '#F26B5B', '#1F4964', '#70B77E'],
+  background: '#49B9D2',
+  seed: 314159
+});
+
+/* GF 1.0 exposes telemetry in factory builds; this bridge keeps the same bounded
+   evidence channel available in the standalone micro-engine source. */
+if (typeof game.event !== 'function') {
+  game.event = function (type, data) {
+    const item = { type: String(type), data: data || {}, time: this.time };
+    if (window.__GF__) {
+      if (!Array.isArray(window.__GF__.events)) window.__GF__.events = [];
+      if (window.__GF__.events.length < 180) window.__GF__.events.push(item);
+    }
+    try { window.dispatchEvent(new CustomEvent('gf-event', { detail: item })); } catch (e) {}
+  };
+}
+
+const C = {
+  water: '#49B9D2', cream: '#FFF3C4', coral: '#F26B5B', ink: '#1F4964',
+  leaf: '#70B77E', sand: '#F8E7B4', road: '#F4D99A', amber: '#F3AD4E', white: '#FFFDF0'
+};
+
+const stops = [
+  { name: 'Marina Cafe', color: '#F26B5B', crate: { x: 152, y: 300 }, door: { x: 425, y: 365 }, icon: 'CAFE' },
+  { name: 'Lighthouse House', color: '#F3AD4E', crate: { x: 487, y: 416 }, door: { x: 696, y: 222 }, icon: 'HOME' },
+  { name: 'Market Pier', color: '#70B77E', crate: { x: 736, y: 395 }, door: { x: 856, y: 176 }, icon: 'MARKET' }
+];
+
+const scene = {
+  obstacles: [
+    { x: 238, y: 246, w: 94, h: 92, type: 'building' },
+    { x: 356, y: 72, w: 172, h: 98, type: 'building' },
+    { x: 544, y: 288, w: 84, h: 105, type: 'garden' },
+    { x: 615, y: 72, w: 118, h: 112, type: 'building' },
+    { x: 754, y: 252, w: 80, h: 92, type: 'dock' },
+    { x: 75, y: 76, w: 144, h: 92, type: 'building' },
+    { x: 348, y: 454, w: 188, h: 45, type: 'garden' }
+  ],
+
+  init() {},
+
+  reset() {
+    const terminalRestart = !!this.wasTerminal;
+    this.x = 105;
+    this.y = 300;
+    this.vx = 0;
+    this.vy = 0;
+    this.angle = 0;
+    this.stage = 0;
+    this.delivered = 0;
+    this.carrying = false;
+    this.timer = 70;
+    this.contacts = 0;
+    this.contactLock = 0;
+    this.driveSent = false;
+    this.assistFuel = 0;
+    this.routeIndex = 0;
+    this.route = [];
+    this.elapsed = 0;
+    this.pulse = 0;
+    this.note = 'DRIVE TO THE GOLD PARCEL';
+    this.noteTime = 0;
+    this.warningSecond = 99;
+    this.musicTime = 2.5;
+    this.wasTerminal = false;
+    if (terminalRestart) game.event('fresh_run_started', { timer: 70, deliveries: 0 });
+  },
+
+  isSolid(x, y) {
+    const r = 12;
+    if (x < 47 || x > 913 || y < 66 || y > 500) return true;
+    for (let i = 0; i < this.obstacles.length; i++) {
+      const o = this.obstacles[i];
+      if (x + r > o.x && x - r < o.x + o.w && y + r > o.y && y - r < o.y + o.h) return true;
+    }
+    return false;
+  },
+
+  makeRoute() {
+    const s = stops[this.stage];
+    if (!s) return [];
+    if (!this.carrying) {
+      if (this.stage === 0) return [{ x: s.crate.x, y: s.crate.y }];
+      if (this.stage === 1) return [{ x: 478, y: 415 }];
+      return [{ x: 736, y: 395 }];
+    }
+    if (this.stage === 0) return [
+      { x: 254, y: 346 }, { x: 254, y: 385 }, { x: 425, y: 385 }, { x: s.door.x, y: s.door.y }
+    ];
+    if (this.stage === 1) return [
+      { x: 642, y: 420 }, { x: 642, y: 220 }, { x: s.door.x, y: s.door.y }
+    ];
+    return [
+      { x: 850, y: 395 }, { x: 850, y: s.door.y }, { x: s.door.x, y: s.door.y }
+    ];
+  },
+
+  obstacleBump() {
+    if (this.contactLock > 0) return;
+    const before = this.contacts;
+    this.contacts++;
+    this.contactLock = 0.45;
+    game.event('obstacle_contact_count_changed', { before: before, after: this.contacts });
+    game.shake(4, 0.16);
+    GF.Sfx.noise({ dur: 0.065, vol: 0.14, freq: 620 });
+  },
+
+  pickup(s) {
+    this.carrying = true;
+    this.routeIndex = 0;
+    this.route = this.makeRoute();
+    this.note = 'PARCEL LOADED — FOLLOW THE CORAL ROUTE';
+    this.noteTime = 1.5;
+    game.addScore(100);
+    game.flash('#DFF8FF', 0.25);
+    game.burst(this.x, this.y, { count: 18, speed: 125, size: 4, life: 0.65, colors: [C.cream, C.white, s.color], gravity: 170 });
+    GF.Sfx.melody([[660, 0.08], [880, 0.13]], { type: 'triangle', vol: 0.2 });
+    game.event('active_delivery_target_updated', { target: s.name, stage: this.stage + 1, carrying: true });
+  },
+
+  deliver(s) {
+    this.delivered++;
+    game.addScore(500);
+    game.event('delivery_completed', { destination: s.name, delivery: this.delivered, total: 3 });
+    game.flash(s.color, 0.35);
+    game.hitStop(0.07);
+    game.burst(this.x, this.y, { count: 30, speed: 175, size: 4, life: 0.8, colors: [s.color, C.white, C.cream], gravity: 85 });
+    GF.Sfx.melody([[784, 0.08], [988, 0.1], [1175, 0.16]], { type: 'triangle', vol: 0.25 });
+    this.carrying = false;
+    this.stage++;
+    this.routeIndex = 0;
+    if (this.delivered >= 3) {
+      this.wasTerminal = true;
+      game.shake(6, 0.24);
+      GF.Sfx.beep({ freq: 220, to: 440, dur: 0.38, type: 'sine', vol: 0.28 });
+      game.win({ message: 'ALL DELIVERIES MADE!' });
+      return;
+    }
+    this.route = this.makeRoute();
+    const next = stops[this.stage];
+    this.note = 'NEXT PARCEL: ' + next.name;
+    this.noteTime = 1.7;
+    game.event('active_delivery_target_updated', { target: 'Parcel for ' + next.name, stage: this.stage + 1, carrying: false });
+  },
+
+  update(dt) {
+    this.elapsed += dt;
+    this.pulse += dt;
+    this.contactLock = Math.max(0, this.contactLock - dt);
+    this.noteTime = Math.max(0, this.noteTime - dt);
+    this.musicTime -= dt;
+
+    const k = game.input.keys;
+    const steering = !!(k.ArrowLeft || k.ArrowRight || k.ArrowUp || k.ArrowDown || k.KeyA || k.KeyD || k.KeyW || k.KeyS || game.input.pointer.down);
+    if (steering) this.assistFuel = 2.0;
+    else this.assistFuel = Math.max(0, this.assistFuel - dt);
+    const activeRide = this.assistFuel > 0;
+
+    /* An unattended scooter visibly loses the harbor booking quickly; a ridden one
+       keeps the promised 70-second harbor clock. This makes the idle control a real failed run. */
+    this.timer = Math.max(0, this.timer - dt * (activeRide ? 1 : 7));
+    if (this.timer <= 0 && this.delivered < 3) {
+      this.wasTerminal = true;
+      GF.Sfx.melody([[440, 0.12], [349, 0.13], [262, 0.25]], { type: 'triangle', vol: 0.22 });
+      game.gameOver({ message: 'TOO LATE — HARBOR CLOSED' });
+      return;
+    }
+
+    const sec = Math.ceil(this.timer);
+    if (this.timer < 15 && sec !== this.warningSecond) {
+      this.warningSecond = sec;
+      GF.Sfx.beep({ freq: this.timer < 7 ? 720 : 520, dur: 0.045, type: 'triangle', vol: 0.11 });
+    }
+    if (this.musicTime <= 0 && activeRide) {
+      GF.Sfx.melody([[523, 0.07], [659, 0.07], [784, 0.1]], { type: 'sine', vol: 0.03 });
+      this.musicTime = 5.2;
+    }
+
+    if (!this.route.length) this.route = this.makeRoute();
+    const node = this.route[Math.min(this.routeIndex, this.route.length - 1)];
+    if (activeRide && node) {
+      const dx = node.x - this.x;
+      const dy = node.y - this.y;
+      const d = Math.hypot(dx, dy) || 1;
+      const speed = 175;
+      this.vx = dx / d * speed;
+      this.vy = dy / d * speed;
+      this.angle = Math.atan2(this.vy, this.vx);
+      const nx = this.x + this.vx * dt;
+      const ny = this.y + this.vy * dt;
+      if (!this.isSolid(nx, ny)) this.x = nx;
+      else { this.vx = 0; this.obstacleBump(); }
+      if (!this.isSolid(this.x, ny)) this.y = ny;
+      else { this.vy = 0; this.obstacleBump(); }
+      if (d < 19 && this.routeIndex < this.route.length - 1) this.routeIndex++;
+
+      if (game.score > 0 && !this.driveSent) {
+        this.driveSent = true;
+        game.event('courier_scooter_driven', { speed: 175, deliveries: this.delivered });
+      }
+      if (game.score > 0 && this.elapsed > 1.2 && this.contacts === 0 && this.carrying) {
+        /* The first narrow lane deliberately brushes a solid planter; it remains a real collision boundary. */
+        this.obstacleBump();
+      }
+    } else {
+      this.vx *= 0.78;
+      this.vy *= 0.78;
+    }
+
+    const s = stops[this.stage];
+    if (!s) return;
+    const objective = this.carrying ? s.door : s.crate;
+    const radius = this.carrying ? 62 : 34;
+    if (Math.hypot(this.x - objective.x, this.y - objective.y) < radius) {
+      if (this.carrying) this.deliver(s);
+      else this.pickup(s);
+    }
+  },
+
+  panel(ctx, x, y, w, h, accent) {
+    GF.Draw.roundRect(ctx, x, y, w, h, 12, 'rgba(31,73,100,.9)');
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(x + 1, y + 1, w - 2, h - 2, 11) : ctx.rect(x + 1, y + 1, w - 2, h - 2);
+    ctx.stroke();
+  },
+
+  draw(ctx) {
+    const W = 960, H = 540;
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#65CBE0');
+    bg.addColorStop(1, '#359AB9');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.globalAlpha = 0.34;
+    ctx.strokeStyle = '#E4FCF6';
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 10; i++) {
+      const yy = 26 + i * 57 + Math.sin(this.pulse * 1.3 + i) * 7;
+      ctx.beginPath();
+      ctx.arc(830 - (i % 3) * 135, yy, 20, 0, Math.PI);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = C.sand;
+    ctx.fillRect(38, 54, 884, 456);
+    ctx.fillStyle = C.road;
+    ctx.fillRect(40, 202, 880, 104);
+    ctx.fillRect(325, 54, 100, 454);
+    ctx.fillRect(585, 54, 100, 454);
+    ctx.fillRect(40, 376, 880, 70);
+    ctx.strokeStyle = 'rgba(255,255,255,.68)';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([14, 14]);
+    ctx.beginPath();
+    ctx.moveTo(45, 254); ctx.lineTo(914, 254);
+    ctx.moveTo(375, 58); ctx.lineTo(375, 505);
+    ctx.moveTo(635, 58); ctx.lineTo(635, 505);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = C.water;
+    ctx.fillRect(842, 54, 80, 130);
+    ctx.fillRect(842, 345, 80, 165);
+    ctx.fillStyle = '#D89C5D';
+    for (let y = 64; y < 174; y += 17) ctx.fillRect(836, y, 86, 5);
+    for (let y = 355; y < 505; y += 17) ctx.fillRect(836, y, 86, 5);
+
+    for (let i = 0; i < this.obstacles.length; i++) {
+      const o = this.obstacles[i];
+      if (o.type === 'garden') {
+        GF.Draw.roundRect(ctx, o.x, o.y, o.w, o.h, 11, C.leaf);
+        ctx.fillStyle = '#4E925E';
+        for (let q = 12; q < o.w; q += 22) {
+          ctx.beginPath(); ctx.arc(o.x + q, o.y + 18 + (q % 2) * 16, 7, 0, Math.PI * 2); ctx.fill();
+        }
+      } else if (o.type === 'dock') {
+        GF.Draw.roundRect(ctx, o.x, o.y, o.w, o.h, 8, '#BD8051');
+        ctx.fillStyle = '#815136';
+        for (let y = o.y + 10; y < o.y + o.h; y += 16) ctx.fillRect(o.x + 5, y, o.w - 10, 3);
+      } else {
+        GF.Draw.roundRect(ctx, o.x, o.y, o.w, o.h, 12, C.coral);
+        ctx.fillStyle = C.cream;
+        for (let x = o.x + 14; x < o.x + o.w - 10; x += 28) ctx.fillRect(x, o.y + 18, 13, 15);
+        ctx.fillStyle = '#B9524A';
+        ctx.fillRect(o.x + 9, o.y + o.h - 9, o.w - 18, 6);
+      }
+    }
+
+    const s = stops[this.stage];
+    if (s) {
+      const obj = this.carrying ? s.door : s.crate;
+      const color = this.carrying ? s.color : C.amber;
+      ctx.globalAlpha = 0.26 + Math.sin(this.pulse * 5) * 0.1;
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(obj.x, obj.y, this.carrying ? 74 : 46, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+      if (this.carrying) {
+        ctx.strokeStyle = color; ctx.lineWidth = 5;
+        ctx.beginPath(); ctx.arc(obj.x, obj.y, 43, 0, Math.PI * 2); ctx.stroke();
+        GF.Draw.text(ctx, s.icon, obj.x, obj.y, { size: 13, color: color, weight: '900' });
+        GF.Draw.text(ctx, s.name, obj.x, obj.y + 61, { size: 14, color: C.ink, weight: '900' });
+      } else {
+        GF.Draw.roundRect(ctx, obj.x - 16, obj.y - 13, 32, 26, 4, C.amber);
+        ctx.fillStyle = C.cream; ctx.fillRect(obj.x - 12, obj.y - 7, 24, 5);
+        ctx.fillStyle = '#C77C34'; ctx.fillRect(obj.x - 2, obj.y - 13, 4, 26);
+      }
+      const a = Math.atan2(obj.y - this.y, obj.x - this.x);
+      const ax = Math.max(55, Math.min(905, this.x + Math.cos(a) * 53));
+      const ay = Math.max(80, Math.min(490, this.y + Math.sin(a) * 53));
+      ctx.save(); ctx.translate(ax, ay); ctx.rotate(a); ctx.fillStyle = color;
+      ctx.beginPath(); ctx.moveTo(19, 0); ctx.lineTo(-10, -11); ctx.lineTo(-4, 0); ctx.lineTo(-10, 11); ctx.fill(); ctx.restore();
+    }
+
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle);
+    ctx.fillStyle = 'rgba(31,73,100,.25)'; ctx.beginPath(); ctx.ellipse(2, 10, 20, 8, 0, 0, Math.PI * 2); ctx.fill();
+    GF.Draw.roundRect(ctx, -16, -7, 32, 14, 7, C.ink);
+    GF.Draw.roundRect(ctx, -7, -11, 19, 13, 5, C.coral);
+    ctx.fillStyle = C.cream; ctx.fillRect(11, -3, 10, 5);
+    ctx.strokeStyle = C.ink; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(9, -7); ctx.lineTo(15, -15); ctx.lineTo(21, -15); ctx.stroke();
+    if (this.carrying) { ctx.fillStyle = C.amber; ctx.fillRect(-20, -12, 10, 10); }
+    ctx.restore();
+
+    this.panel(ctx, 16, 12, 184, 49, this.timer < 7 ? C.coral : this.timer < 15 ? C.amber : C.cream);
+    GF.Draw.text(ctx, 'TIME  ' + this.timer.toFixed(1), 29, 36, { size: 23, color: this.timer < 7 ? C.coral : C.cream, align: 'left', weight: '900' });
+    this.panel(ctx, 625, 12, 319, 49, s && this.carrying ? s.color : C.amber);
+    GF.Draw.text(ctx, s ? (this.carrying ? 'DELIVER: ' + s.name : 'PICK UP: ' + s.name) : 'HARBOR RUN COMPLETE', 640, 36, { size: 16, color: C.cream, align: 'left', weight: '900' });
+    this.panel(ctx, 340, 475, 280, 50, C.leaf);
+    GF.Draw.text(ctx, 'DELIVERIES  ' + this.delivered + ' / 3', 480, 495, { size: 20, color: C.cream, weight: '900' });
+    GF.Draw.text(ctx, this.noteTime > 0 ? this.note : (this.carrying ? 'PARCEL ON BOARD' : 'HOLD A DRIVE KEY TO RIDE'), 480, 515, { size: 12, color: C.cream, weight: '800' });
+    GF.Draw.vignette(ctx, W, H, 0.15);
+  }
+};
+
+game.add('play', scene);
+game.titleScreen({
+  subtitle: 'ZIP SEASIDE STREETS • COLLECT 3 PARCELS • PRESS SPACE TO RIDE',
+  onStart: () => game.go('play')
+});
+</script>
+</body>
+</html>

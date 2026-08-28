@@ -1,0 +1,5249 @@
+{
+  "attempt": 3,
+  "candidateSha": "81eb62638c496eb1f5d0263df3c7efc6bb1824dd58c40ed132663606e00a32b4",
+  "ownerContractSha256": "d3a83649db0972a9e5f03568402d4248f28c0c9cc0058a6a990472247c70e3c1",
+  "seed": 1207618270,
+  "inputSequence": {
+    "mode": "active",
+    "seed": 1207618270,
+    "startImpulse": [
+      "Enter",
+      "pointer@640,400"
+    ],
+    "keys": [
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+      "Space",
+      "KeyW",
+      "KeyA",
+      "KeyS",
+      "KeyD",
+      "Enter"
+    ],
+    "pointerPath": [
+      [
+        420,
+        300
+      ],
+      [
+        640,
+        280
+      ],
+      [
+        820,
+        360
+      ],
+      [
+        700,
+        480
+      ],
+      [
+        480,
+        460
+      ],
+      [
+        560,
+        350
+      ]
+    ],
+    "keyEveryMs": 190,
+    "keyHoldMs": 110,
+    "pointerEveryMs": 450,
+    "clickEveryMs": 1300
+  },
+  "telemetry": [
+    {
+      "phase": "start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 63,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": [],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 444.98,
+                "top": 493.5,
+                "right": 515.02,
+                "bottom": 506.5,
+                "width": 70.04,
+                "height": 13
+              },
+              "labels": [
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 70,
+          "recentTextDraws": 3,
+          "hudTextDraws": 1
+        }
+      }
+    },
+    {
+      "phase": "early",
+      "atMs": 1200,
+      "snapshot": {
+        "state": "playing",
+        "score": 100,
+        "best": 100,
+        "fps": 60,
+        "time": 1.2499999999999993,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 0.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 17,
+                "top": 13,
+                "right": 205,
+                "bottom": 61,
+                "width": 188,
+                "height": 48
+              },
+              "labels": [
+                "TIME  64.0",
+                "TIME  63.9",
+                "TIME  63.7",
+                "TIME  63.6",
+                "TIME  63.4",
+                "TIME  63.3",
+                "TIME  63.1",
+                "TIME  63.0",
+                "TIME  62.8",
+                "TIME  62.7",
+                "TIME  62.6"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 621,
+                "top": 13,
+                "right": 943,
+                "bottom": 61,
+                "width": 322,
+                "height": 48
+              },
+              "labels": [
+                "DELIVER: Marina Cafe",
+                "BEST 100"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 444.51,
+                "top": 31.5,
+                "right": 515.49,
+                "bottom": 56.5,
+                "width": 70.98,
+                "height": 25
+              },
+              "labels": [
+                "100"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 40,
+                "top": 376,
+                "right": 920,
+                "bottom": 446,
+                "width": 880,
+                "height": 70
+              },
+              "labels": [
+                "Marina Cafe"
+              ],
+              "geometrySource": "canvas-fillRect+text"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 336,
+                "top": 476,
+                "right": 624,
+                "bottom": 524,
+                "width": 288,
+                "height": 48
+              },
+              "labels": [
+                "DELIVERIES  0 / 3"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-06",
+              "bounds": {
+                "left": 315.78,
+                "top": 511.5,
+                "right": 644.22,
+                "bottom": 520.5,
+                "width": 328.44,
+                "height": 9
+              },
+              "labels": [
+                "PARCEL LOADED — FOLLOW THE COLOR MARKER"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-06",
+              "intersection": {
+                "left": 336,
+                "top": 511.5,
+                "right": 624,
+                "bottom": 520.5,
+                "width": 288,
+                "height": 9
+              }
+            }
+          ],
+          "recentDrawCalls": 1024,
+          "recentTextDraws": 18,
+          "hudTextDraws": 17
+        }
+      }
+    },
+    {
+      "phase": "mid",
+      "atMs": 3500,
+      "snapshot": {
+        "state": "playing",
+        "score": 100,
+        "best": 100,
+        "fps": 60,
+        "time": 3.5498999999999943,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 0.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 3,
+            "type": "active_delivery_target_updated",
+            "time": 1.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "target": "Marina Cafe",
+              "stage": 1,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 4,
+            "type": "courier_scooter_driven",
+            "time": 1.4,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "speed": 190,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 5,
+            "type": "obstacle_contact_count_changed",
+            "time": 1.467,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 1
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 17,
+                "top": 13,
+                "right": 205,
+                "bottom": 61,
+                "width": 188,
+                "height": 48
+              },
+              "labels": [
+                "TIME  51.9",
+                "TIME  51.8",
+                "TIME  51.7",
+                "TIME  51.5",
+                "TIME  51.4",
+                "TIME  51.2",
+                "TIME  51.1",
+                "TIME  51.0"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 621,
+                "top": 13,
+                "right": 943,
+                "bottom": 61,
+                "width": 322,
+                "height": 48
+              },
+              "labels": [
+                "DELIVER: Marina Cafe",
+                "BEST 100"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 444.51,
+                "top": 31.5,
+                "right": 515.49,
+                "bottom": 56.5,
+                "width": 70.98,
+                "height": 25
+              },
+              "labels": [
+                "100"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 40,
+                "top": 376,
+                "right": 920,
+                "bottom": 446,
+                "width": 880,
+                "height": 70
+              },
+              "labels": [
+                "Marina Cafe"
+              ],
+              "geometrySource": "canvas-fillRect+text"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 336,
+                "top": 476,
+                "right": 624,
+                "bottom": 524,
+                "width": 288,
+                "height": 48
+              },
+              "labels": [
+                "DELIVERIES  0 / 3",
+                "PARCEL ON BOARD"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 1024,
+          "recentTextDraws": 15,
+          "hudTextDraws": 14
+        }
+      }
+    },
+    {
+      "phase": "end",
+      "atMs": 12000,
+      "snapshot": {
+        "state": "playing",
+        "score": 1300,
+        "best": 1300,
+        "fps": 60,
+        "time": 11.882899999999973,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 0.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 3,
+            "type": "active_delivery_target_updated",
+            "time": 1.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "target": "Marina Cafe",
+              "stage": 1,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 4,
+            "type": "courier_scooter_driven",
+            "time": 1.4,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "speed": 190,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 5,
+            "type": "obstacle_contact_count_changed",
+            "time": 1.467,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 6,
+            "type": "score_changed",
+            "time": 3.683,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "before": 100,
+              "after": 600,
+              "delta": 500
+            }
+          },
+          {
+            "seq": 7,
+            "type": "delivery_completed",
+            "time": 3.683,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "destination": "Marina Cafe",
+              "delivery": 1,
+              "total": 3
+            }
+          },
+          {
+            "seq": 8,
+            "type": "active_delivery_target_updated",
+            "time": 3.7,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "target": "Parcel for Lighthouse House",
+              "stage": 2,
+              "carrying": false
+            }
+          },
+          {
+            "seq": 9,
+            "type": "score_changed",
+            "time": 4.6,
+            "state": "playing",
+            "score": 700,
+            "data": {
+              "before": 600,
+              "after": 700,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 10,
+            "type": "active_delivery_target_updated",
+            "time": 4.617,
+            "state": "playing",
+            "score": 700,
+            "data": {
+              "target": "Lighthouse House",
+              "stage": 2,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 11,
+            "type": "score_changed",
+            "time": 8.833,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "before": 700,
+              "after": 1200,
+              "delta": 500
+            }
+          },
+          {
+            "seq": 12,
+            "type": "delivery_completed",
+            "time": 8.833,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "destination": "Lighthouse House",
+              "delivery": 2,
+              "total": 3
+            }
+          },
+          {
+            "seq": 13,
+            "type": "active_delivery_target_updated",
+            "time": 8.85,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "target": "Parcel for Market Pier",
+              "stage": 3,
+              "carrying": false
+            }
+          },
+          {
+            "seq": 14,
+            "type": "score_changed",
+            "time": 9.816,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 1200,
+              "after": 1300,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 15,
+            "type": "active_delivery_target_updated",
+            "time": 9.833,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "target": "Market Pier",
+              "stage": 3,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 16,
+            "type": "obstacle_contact_count_changed",
+            "time": 11.616,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 1,
+              "after": 2
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 19.46,
+                "top": 9.3,
+                "right": 207.46,
+                "bottom": 57.3,
+                "width": 188,
+                "height": 48
+              },
+              "labels": [
+                "TIME  7.8",
+                "TIME  7.6",
+                "TIME  7.5",
+                "TIME  7.4",
+                "TIME  7.2",
+                "TIME  7.1",
+                "TIME  6.9",
+                "TIME  6.8"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 623.46,
+                "top": 9.3,
+                "right": 945.46,
+                "bottom": 57.3,
+                "width": 322,
+                "height": 48
+              },
+              "labels": [
+                "DELIVER: Market Pier",
+                "BEST 1300"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 432.69,
+                "top": 31.5,
+                "right": 527.31,
+                "bottom": 56.5,
+                "width": 94.62,
+                "height": 25
+              },
+              "labels": [
+                "1300"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 834.4,
+                "top": 165.2,
+                "right": 920.4,
+                "bottom": 170.2,
+                "width": 86,
+                "height": 5
+              },
+              "labels": [
+                "MARKET"
+              ],
+              "geometrySource": "canvas-fillRect+text"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 823.66,
+                "top": 167.61,
+                "right": 884.49,
+                "bottom": 176.61,
+                "width": 60.83,
+                "height": 9
+              },
+              "labels": [
+                "MARKET"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-06",
+              "bounds": {
+                "left": 823.98,
+                "top": 170.7,
+                "right": 884.81,
+                "bottom": 179.7,
+                "width": 60.83,
+                "height": 9
+              },
+              "labels": [
+                "MARKET"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-07",
+              "bounds": {
+                "left": 825.59,
+                "top": 171.5,
+                "right": 886.41,
+                "bottom": 180.5,
+                "width": 60.82,
+                "height": 9
+              },
+              "labels": [
+                "MARKET"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-08",
+              "bounds": {
+                "left": 825.46,
+                "top": 171.61,
+                "right": 886.29,
+                "bottom": 180.61,
+                "width": 60.83,
+                "height": 9
+              },
+              "labels": [
+                "MARKET"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-09",
+              "bounds": {
+                "left": 826.37,
+                "top": 172.37,
+                "right": 887.2,
+                "bottom": 181.37,
+                "width": 60.83,
+                "height": 9
+              },
+              "labels": [
+                "MARKET"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-10",
+              "bounds": {
+                "left": 827.27,
+                "top": 174.03,
+                "right": 888.1,
+                "bottom": 183.03,
+                "width": 60.83,
+                "height": 9
+              },
+              "labels": [
+                "MARKET"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-11",
+              "bounds": {
+                "left": 41.69,
+                "top": 204.53,
+                "right": 921.69,
+                "bottom": 308.53,
+                "width": 880,
+                "height": 104
+              },
+              "labels": [
+                "Market Pier"
+              ],
+              "geometrySource": "canvas-fillRect+text"
+            },
+            {
+              "id": "HUD-12",
+              "bounds": {
+                "left": 338.46,
+                "top": 472.3,
+                "right": 626.46,
+                "bottom": 520.3,
+                "width": 288,
+                "height": 48
+              },
+              "labels": [
+                "DELIVERIES  2 / 3",
+                "PARCEL ON BOARD"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            }
+          ],
+          "issues": [
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-06",
+              "intersection": {
+                "left": 823.98,
+                "top": 170.7,
+                "right": 884.49,
+                "bottom": 176.61,
+                "width": 60.51,
+                "height": 5.91
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-07",
+              "intersection": {
+                "left": 825.59,
+                "top": 171.5,
+                "right": 884.49,
+                "bottom": 176.61,
+                "width": 58.9,
+                "height": 5.11
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-08",
+              "intersection": {
+                "left": 825.46,
+                "top": 171.61,
+                "right": 884.49,
+                "bottom": 176.61,
+                "width": 59.03,
+                "height": 5
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-09",
+              "intersection": {
+                "left": 826.37,
+                "top": 172.37,
+                "right": 884.49,
+                "bottom": 176.61,
+                "width": 58.12,
+                "height": 4.24
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-07",
+              "intersection": {
+                "left": 825.59,
+                "top": 171.5,
+                "right": 884.81,
+                "bottom": 179.7,
+                "width": 59.22,
+                "height": 8.2
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-08",
+              "intersection": {
+                "left": 825.46,
+                "top": 171.61,
+                "right": 884.81,
+                "bottom": 179.7,
+                "width": 59.35,
+                "height": 8.09
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-09",
+              "intersection": {
+                "left": 826.37,
+                "top": 172.37,
+                "right": 884.81,
+                "bottom": 179.7,
+                "width": 58.44,
+                "height": 7.33
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-10",
+              "intersection": {
+                "left": 827.27,
+                "top": 174.03,
+                "right": 884.81,
+                "bottom": 179.7,
+                "width": 57.54,
+                "height": 5.67
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-07",
+              "regionB": "HUD-08",
+              "intersection": {
+                "left": 825.59,
+                "top": 171.61,
+                "right": 886.29,
+                "bottom": 180.5,
+                "width": 60.7,
+                "height": 8.89
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-07",
+              "regionB": "HUD-09",
+              "intersection": {
+                "left": 826.37,
+                "top": 172.37,
+                "right": 886.41,
+                "bottom": 180.5,
+                "width": 60.04,
+                "height": 8.13
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-07",
+              "regionB": "HUD-10",
+              "intersection": {
+                "left": 827.27,
+                "top": 174.03,
+                "right": 886.41,
+                "bottom": 180.5,
+                "width": 59.14,
+                "height": 6.47
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-08",
+              "regionB": "HUD-09",
+              "intersection": {
+                "left": 826.37,
+                "top": 172.37,
+                "right": 886.29,
+                "bottom": 180.61,
+                "width": 59.92,
+                "height": 8.24
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-08",
+              "regionB": "HUD-10",
+              "intersection": {
+                "left": 827.27,
+                "top": 174.03,
+                "right": 886.29,
+                "bottom": 180.61,
+                "width": 59.02,
+                "height": 6.58
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-09",
+              "regionB": "HUD-10",
+              "intersection": {
+                "left": 827.27,
+                "top": 174.03,
+                "right": 887.2,
+                "bottom": 181.37,
+                "width": 59.93,
+                "height": 7.34
+              }
+            }
+          ],
+          "recentDrawCalls": 1024,
+          "recentTextDraws": 45,
+          "hudTextDraws": 45
+        }
+      }
+    },
+    {
+      "phase": "success-proof:start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 62,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": [],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 444.98,
+                "top": 493.5,
+                "right": 515.02,
+                "bottom": 506.5,
+                "width": 70.04,
+                "height": 13
+              },
+              "labels": [
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 70,
+          "recentTextDraws": 3,
+          "hudTextDraws": 1
+        }
+      },
+      "scenarioId": "success-proof"
+    },
+    {
+      "phase": "success-proof:end",
+      "atMs": 75000,
+      "snapshot": {
+        "state": "playing",
+        "score": 700,
+        "best": 1300,
+        "fps": 60,
+        "time": 7.9496000000000455,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 0.317,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 3,
+            "type": "active_delivery_target_updated",
+            "time": 1.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "target": "Marina Cafe",
+              "stage": 1,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 4,
+            "type": "courier_scooter_driven",
+            "time": 1.4,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "speed": 190,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 5,
+            "type": "obstacle_contact_count_changed",
+            "time": 1.467,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 6,
+            "type": "score_changed",
+            "time": 3.7,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "before": 100,
+              "after": 600,
+              "delta": 500
+            }
+          },
+          {
+            "seq": 7,
+            "type": "delivery_completed",
+            "time": 3.7,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "destination": "Marina Cafe",
+              "delivery": 1,
+              "total": 3
+            }
+          },
+          {
+            "seq": 8,
+            "type": "active_delivery_target_updated",
+            "time": 3.716,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "target": "Parcel for Lighthouse House",
+              "stage": 2,
+              "carrying": false
+            }
+          },
+          {
+            "seq": 9,
+            "type": "score_changed",
+            "time": 4.633,
+            "state": "playing",
+            "score": 700,
+            "data": {
+              "before": 600,
+              "after": 700,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 10,
+            "type": "active_delivery_target_updated",
+            "time": 4.65,
+            "state": "playing",
+            "score": 700,
+            "data": {
+              "target": "Lighthouse House",
+              "stage": 2,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 11,
+            "type": "score_changed",
+            "time": 8.95,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "before": 700,
+              "after": 1200,
+              "delta": 500
+            }
+          },
+          {
+            "seq": 12,
+            "type": "delivery_completed",
+            "time": 8.95,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "destination": "Lighthouse House",
+              "delivery": 2,
+              "total": 3
+            }
+          },
+          {
+            "seq": 13,
+            "type": "active_delivery_target_updated",
+            "time": 8.966,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "target": "Parcel for Market Pier",
+              "stage": 3,
+              "carrying": false
+            }
+          },
+          {
+            "seq": 14,
+            "type": "score_changed",
+            "time": 9.9,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 1200,
+              "after": 1300,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 15,
+            "type": "active_delivery_target_updated",
+            "time": 9.916,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "target": "Market Pier",
+              "stage": 3,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 16,
+            "type": "obstacle_contact_count_changed",
+            "time": 11.783,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 1,
+              "after": 2
+            }
+          },
+          {
+            "seq": 17,
+            "type": "obstacle_contact_count_changed",
+            "time": 12.166,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 2,
+              "after": 3
+            }
+          },
+          {
+            "seq": 18,
+            "type": "obstacle_contact_count_changed",
+            "time": 12.549,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 3,
+              "after": 4
+            }
+          },
+          {
+            "seq": 19,
+            "type": "obstacle_contact_count_changed",
+            "time": 12.933,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 4,
+              "after": 5
+            }
+          },
+          {
+            "seq": 20,
+            "type": "game_over",
+            "time": 13.083,
+            "state": "gameover",
+            "score": 1300,
+            "data": {
+              "from": "playing",
+              "to": "gameover"
+            }
+          },
+          {
+            "seq": 21,
+            "type": "fresh_run_started",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "timer": 70,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 22,
+            "type": "score_changed",
+            "time": 0.267,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 23,
+            "type": "active_delivery_target_updated",
+            "time": 1.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "target": "Marina Cafe",
+              "stage": 1,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 24,
+            "type": "courier_scooter_driven",
+            "time": 1.367,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "speed": 190,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 25,
+            "type": "obstacle_contact_count_changed",
+            "time": 1.45,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 26,
+            "type": "score_changed",
+            "time": 3.667,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "before": 100,
+              "after": 600,
+              "delta": 500
+            }
+          },
+          {
+            "seq": 27,
+            "type": "delivery_completed",
+            "time": 3.667,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "destination": "Marina Cafe",
+              "delivery": 1,
+              "total": 3
+            }
+          },
+          {
+            "seq": 28,
+            "type": "active_delivery_target_updated",
+            "time": 3.683,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "target": "Parcel for Lighthouse House",
+              "stage": 2,
+              "carrying": false
+            }
+          },
+          {
+            "seq": 29,
+            "type": "score_changed",
+            "time": 4.567,
+            "state": "playing",
+            "score": 700,
+            "data": {
+              "before": 600,
+              "after": 700,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 30,
+            "type": "active_delivery_target_updated",
+            "time": 4.583,
+            "state": "playing",
+            "score": 700,
+            "data": {
+              "target": "Lighthouse House",
+              "stage": 2,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 31,
+            "type": "score_changed",
+            "time": 8.766,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "before": 700,
+              "after": 1200,
+              "delta": 500
+            }
+          },
+          {
+            "seq": 32,
+            "type": "delivery_completed",
+            "time": 8.766,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "destination": "Lighthouse House",
+              "delivery": 2,
+              "total": 3
+            }
+          },
+          {
+            "seq": 33,
+            "type": "active_delivery_target_updated",
+            "time": 8.783,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "target": "Parcel for Market Pier",
+              "stage": 3,
+              "carrying": false
+            }
+          },
+          {
+            "seq": 34,
+            "type": "score_changed",
+            "time": 9.766,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 1200,
+              "after": 1300,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 35,
+            "type": "active_delivery_target_updated",
+            "time": 9.783,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "target": "Market Pier",
+              "stage": 3,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 36,
+            "type": "obstacle_contact_count_changed",
+            "time": 11.649,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 1,
+              "after": 2
+            }
+          },
+          {
+            "seq": 37,
+            "type": "obstacle_contact_count_changed",
+            "time": 12.033,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 2,
+              "after": 3
+            }
+          },
+          {
+            "seq": 38,
+            "type": "obstacle_contact_count_changed",
+            "time": 12.416,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 3,
+              "after": 4
+            }
+          },
+          {
+            "seq": 39,
+            "type": "obstacle_contact_count_changed",
+            "time": 12.799,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 4,
+              "after": 5
+            }
+          },
+          {
+            "seq": 40,
+            "type": "game_over",
+            "time": 13.216,
+            "state": "gameover",
+            "score": 1300,
+            "data": {
+              "from": "playing",
+              "to": "gameover"
+            }
+          },
+          {
+            "seq": 41,
+            "type": "fresh_run_started",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "timer": 70,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 42,
+            "type": "score_changed",
+            "time": 0.083,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 43,
+            "type": "active_delivery_target_updated",
+            "time": 1.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "target": "Marina Cafe",
+              "stage": 1,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 44,
+            "type": "courier_scooter_driven",
+            "time": 1.367,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "speed": 190,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 45,
+            "type": "obstacle_contact_count_changed",
+            "time": 1.533,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 46,
+            "type": "score_changed",
+            "time": 3.433,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "before": 100,
+              "after": 600,
+              "delta": 500
+            }
+          },
+          {
+            "seq": 47,
+            "type": "delivery_completed",
+            "time": 3.433,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "destination": "Marina Cafe",
+              "delivery": 1,
+              "total": 3
+            }
+          },
+          {
+            "seq": 48,
+            "type": "active_delivery_target_updated",
+            "time": 3.45,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "target": "Parcel for Lighthouse House",
+              "stage": 2,
+              "carrying": false
+            }
+          },
+          {
+            "seq": 49,
+            "type": "score_changed",
+            "time": 4.35,
+            "state": "playing",
+            "score": 700,
+            "data": {
+              "before": 600,
+              "after": 700,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 50,
+            "type": "active_delivery_target_updated",
+            "time": 4.367,
+            "state": "playing",
+            "score": 700,
+            "data": {
+              "target": "Lighthouse House",
+              "stage": 2,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 51,
+            "type": "score_changed",
+            "time": 8.683,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "before": 700,
+              "after": 1200,
+              "delta": 500
+            }
+          },
+          {
+            "seq": 52,
+            "type": "delivery_completed",
+            "time": 8.683,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "destination": "Lighthouse House",
+              "delivery": 2,
+              "total": 3
+            }
+          },
+          {
+            "seq": 53,
+            "type": "active_delivery_target_updated",
+            "time": 8.7,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "target": "Parcel for Market Pier",
+              "stage": 3,
+              "carrying": false
+            }
+          },
+          {
+            "seq": 54,
+            "type": "score_changed",
+            "time": 9.633,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 1200,
+              "after": 1300,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 55,
+            "type": "active_delivery_target_updated",
+            "time": 9.65,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "target": "Market Pier",
+              "stage": 3,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 56,
+            "type": "obstacle_contact_count_changed",
+            "time": 11.516,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 1,
+              "after": 2
+            }
+          },
+          {
+            "seq": 57,
+            "type": "obstacle_contact_count_changed",
+            "time": 11.9,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 2,
+              "after": 3
+            }
+          },
+          {
+            "seq": 58,
+            "type": "obstacle_contact_count_changed",
+            "time": 12.283,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 3,
+              "after": 4
+            }
+          },
+          {
+            "seq": 59,
+            "type": "obstacle_contact_count_changed",
+            "time": 12.666,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 4,
+              "after": 5
+            }
+          },
+          {
+            "seq": 60,
+            "type": "game_over",
+            "time": 13.149,
+            "state": "gameover",
+            "score": 1300,
+            "data": {
+              "from": "playing",
+              "to": "gameover"
+            }
+          },
+          {
+            "seq": 61,
+            "type": "fresh_run_started",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "timer": 70,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 62,
+            "type": "score_changed",
+            "time": 0.083,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 63,
+            "type": "active_delivery_target_updated",
+            "time": 1.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "target": "Marina Cafe",
+              "stage": 1,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 64,
+            "type": "courier_scooter_driven",
+            "time": 1.367,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "speed": 190,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 65,
+            "type": "obstacle_contact_count_changed",
+            "time": 1.55,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 66,
+            "type": "score_changed",
+            "time": 3.466,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "before": 100,
+              "after": 600,
+              "delta": 500
+            }
+          },
+          {
+            "seq": 67,
+            "type": "delivery_completed",
+            "time": 3.466,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "destination": "Marina Cafe",
+              "delivery": 1,
+              "total": 3
+            }
+          },
+          {
+            "seq": 68,
+            "type": "active_delivery_target_updated",
+            "time": 3.483,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "target": "Parcel for Lighthouse House",
+              "stage": 2,
+              "carrying": false
+            }
+          },
+          {
+            "seq": 69,
+            "type": "score_changed",
+            "time": 4.383,
+            "state": "playing",
+            "score": 700,
+            "data": {
+              "before": 600,
+              "after": 700,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 70,
+            "type": "active_delivery_target_updated",
+            "time": 4.4,
+            "state": "playing",
+            "score": 700,
+            "data": {
+              "target": "Lighthouse House",
+              "stage": 2,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 71,
+            "type": "score_changed",
+            "time": 8.716,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "before": 700,
+              "after": 1200,
+              "delta": 500
+            }
+          },
+          {
+            "seq": 72,
+            "type": "delivery_completed",
+            "time": 8.716,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "destination": "Lighthouse House",
+              "delivery": 2,
+              "total": 3
+            }
+          },
+          {
+            "seq": 73,
+            "type": "active_delivery_target_updated",
+            "time": 8.733,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "target": "Parcel for Market Pier",
+              "stage": 3,
+              "carrying": false
+            }
+          },
+          {
+            "seq": 74,
+            "type": "score_changed",
+            "time": 9.75,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 1200,
+              "after": 1300,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 75,
+            "type": "active_delivery_target_updated",
+            "time": 9.766,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "target": "Market Pier",
+              "stage": 3,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 76,
+            "type": "obstacle_contact_count_changed",
+            "time": 11.649,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 1,
+              "after": 2
+            }
+          },
+          {
+            "seq": 77,
+            "type": "obstacle_contact_count_changed",
+            "time": 12.216,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 2,
+              "after": 3
+            }
+          },
+          {
+            "seq": 78,
+            "type": "obstacle_contact_count_changed",
+            "time": 12.599,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 3,
+              "after": 4
+            }
+          },
+          {
+            "seq": 79,
+            "type": "game_over",
+            "time": 13.099,
+            "state": "gameover",
+            "score": 1300,
+            "data": {
+              "from": "playing",
+              "to": "gameover"
+            }
+          },
+          {
+            "seq": 80,
+            "type": "fresh_run_started",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "timer": 70,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 81,
+            "type": "score_changed",
+            "time": 0.083,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 82,
+            "type": "active_delivery_target_updated",
+            "time": 1.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "target": "Marina Cafe",
+              "stage": 1,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 83,
+            "type": "courier_scooter_driven",
+            "time": 1.367,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "speed": 190,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 84,
+            "type": "obstacle_contact_count_changed",
+            "time": 1.55,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 85,
+            "type": "score_changed",
+            "time": 3.483,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "before": 100,
+              "after": 600,
+              "delta": 500
+            }
+          },
+          {
+            "seq": 86,
+            "type": "delivery_completed",
+            "time": 3.483,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "destination": "Marina Cafe",
+              "delivery": 1,
+              "total": 3
+            }
+          },
+          {
+            "seq": 87,
+            "type": "active_delivery_target_updated",
+            "time": 3.5,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "target": "Parcel for Lighthouse House",
+              "stage": 2,
+              "carrying": false
+            }
+          },
+          {
+            "seq": 88,
+            "type": "score_changed",
+            "time": 4.383,
+            "state": "playing",
+            "score": 700,
+            "data": {
+              "before": 600,
+              "after": 700,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 89,
+            "type": "active_delivery_target_updated",
+            "time": 4.4,
+            "state": "playing",
+            "score": 700,
+            "data": {
+              "target": "Lighthouse House",
+              "stage": 2,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 90,
+            "type": "score_changed",
+            "time": 8.6,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "before": 700,
+              "after": 1200,
+              "delta": 500
+            }
+          },
+          {
+            "seq": 91,
+            "type": "delivery_completed",
+            "time": 8.6,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "destination": "Lighthouse House",
+              "delivery": 2,
+              "total": 3
+            }
+          },
+          {
+            "seq": 92,
+            "type": "active_delivery_target_updated",
+            "time": 8.616,
+            "state": "playing",
+            "score": 1200,
+            "data": {
+              "target": "Parcel for Market Pier",
+              "stage": 3,
+              "carrying": false
+            }
+          },
+          {
+            "seq": 93,
+            "type": "score_changed",
+            "time": 9.583,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 1200,
+              "after": 1300,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 94,
+            "type": "active_delivery_target_updated",
+            "time": 9.6,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "target": "Market Pier",
+              "stage": 3,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 95,
+            "type": "obstacle_contact_count_changed",
+            "time": 11.499,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 1,
+              "after": 2
+            }
+          },
+          {
+            "seq": 96,
+            "type": "obstacle_contact_count_changed",
+            "time": 11.883,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 2,
+              "after": 3
+            }
+          },
+          {
+            "seq": 97,
+            "type": "obstacle_contact_count_changed",
+            "time": 12.266,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 3,
+              "after": 4
+            }
+          },
+          {
+            "seq": 98,
+            "type": "obstacle_contact_count_changed",
+            "time": 12.649,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 4,
+              "after": 5
+            }
+          },
+          {
+            "seq": 99,
+            "type": "obstacle_contact_count_changed",
+            "time": 13.183,
+            "state": "playing",
+            "score": 1300,
+            "data": {
+              "before": 5,
+              "after": 6
+            }
+          },
+          {
+            "seq": 100,
+            "type": "game_over",
+            "time": 13.199,
+            "state": "gameover",
+            "score": 1300,
+            "data": {
+              "from": "playing",
+              "to": "gameover"
+            }
+          },
+          {
+            "seq": 101,
+            "type": "fresh_run_started",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "timer": 70,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 102,
+            "type": "score_changed",
+            "time": 0.083,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 103,
+            "type": "active_delivery_target_updated",
+            "time": 1.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "target": "Marina Cafe",
+              "stage": 1,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 104,
+            "type": "courier_scooter_driven",
+            "time": 1.367,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "speed": 190,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 105,
+            "type": "obstacle_contact_count_changed",
+            "time": 1.733,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 106,
+            "type": "score_changed",
+            "time": 3.633,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "before": 100,
+              "after": 600,
+              "delta": 500
+            }
+          },
+          {
+            "seq": 107,
+            "type": "delivery_completed",
+            "time": 3.633,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "destination": "Marina Cafe",
+              "delivery": 1,
+              "total": 3
+            }
+          },
+          {
+            "seq": 108,
+            "type": "active_delivery_target_updated",
+            "time": 3.65,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "target": "Parcel for Lighthouse House",
+              "stage": 2,
+              "carrying": false
+            }
+          },
+          {
+            "seq": 109,
+            "type": "score_changed",
+            "time": 4.55,
+            "state": "playing",
+            "score": 700,
+            "data": {
+              "before": 600,
+              "after": 700,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 110,
+            "type": "active_delivery_target_updated",
+            "time": 4.566,
+            "state": "playing",
+            "score": 700,
+            "data": {
+              "target": "Lighthouse House",
+              "stage": 2,
+              "carrying": true
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 17,
+                "top": 13,
+                "right": 205,
+                "bottom": 61,
+                "width": 188,
+                "height": 48
+              },
+              "labels": [
+                "TIME  28.9",
+                "TIME  28.8",
+                "TIME  28.7",
+                "TIME  28.5",
+                "TIME  28.4",
+                "TIME  28.2",
+                "TIME  28.1"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 621,
+                "top": 13,
+                "right": 943,
+                "bottom": 61,
+                "width": 322,
+                "height": 48
+              },
+              "labels": [
+                "DELIVER: Lighthouse House",
+                "BEST 1300"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 444.51,
+                "top": 31.5,
+                "right": 515.49,
+                "bottom": 56.5,
+                "width": 70.98,
+                "height": 25
+              },
+              "labels": [
+                "700"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 336,
+                "top": 476,
+                "right": 624,
+                "bottom": 524,
+                "width": 288,
+                "height": 48
+              },
+              "labels": [
+                "DELIVERIES  1 / 3",
+                "PARCEL ON BOARD"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 1024,
+          "recentTextDraws": 14,
+          "hudTextDraws": 12
+        }
+      },
+      "scenarioId": "success-proof"
+    }
+  ],
+  "fps": 61,
+  "states": {
+    "start": {
+      "state": "title",
+      "score": 0,
+      "best": 0,
+      "fps": 63,
+      "time": 0,
+      "flags": [],
+      "errors": [],
+      "events": [],
+      "layout": {
+        "source": "playwright-canvas-draw-observation-v1",
+        "canvas": {
+          "domId": "game",
+          "logicalWidth": 960,
+          "logicalHeight": 540,
+          "intrinsicWidth": 960,
+          "intrinsicHeight": 540,
+          "logicalIntrinsicMatch": true
+        },
+        "regions": [
+          {
+            "id": "HUD-01",
+            "bounds": {
+              "left": 444.98,
+              "top": 493.5,
+              "right": 515.02,
+              "bottom": 506.5,
+              "width": 70.04,
+              "height": 13
+            },
+            "labels": [
+              "BEST 0"
+            ],
+            "geometrySource": "canvas-fillText"
+          }
+        ],
+        "issues": [],
+        "recentDrawCalls": 70,
+        "recentTextDraws": 3,
+        "hudTextDraws": 1
+      }
+    },
+    "early": {
+      "state": "playing",
+      "score": 100,
+      "best": 100,
+      "fps": 60,
+      "time": 1.2499999999999993,
+      "flags": [],
+      "errors": [],
+      "events": [
+        {
+          "seq": 1,
+          "type": "state_changed",
+          "time": 0,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "from": "title",
+            "to": "playing",
+            "scene": "play"
+          }
+        },
+        {
+          "seq": 2,
+          "type": "score_changed",
+          "time": 0.333,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 0,
+            "after": 100,
+            "delta": 100
+          }
+        }
+      ],
+      "layout": {
+        "source": "playwright-canvas-draw-observation-v1",
+        "canvas": {
+          "domId": "game",
+          "logicalWidth": 960,
+          "logicalHeight": 540,
+          "intrinsicWidth": 960,
+          "intrinsicHeight": 540,
+          "logicalIntrinsicMatch": true
+        },
+        "regions": [
+          {
+            "id": "HUD-01",
+            "bounds": {
+              "left": 17,
+              "top": 13,
+              "right": 205,
+              "bottom": 61,
+              "width": 188,
+              "height": 48
+            },
+            "labels": [
+              "TIME  64.0",
+              "TIME  63.9",
+              "TIME  63.7",
+              "TIME  63.6",
+              "TIME  63.4",
+              "TIME  63.3",
+              "TIME  63.1",
+              "TIME  63.0",
+              "TIME  62.8",
+              "TIME  62.7",
+              "TIME  62.6"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          },
+          {
+            "id": "HUD-02",
+            "bounds": {
+              "left": 621,
+              "top": 13,
+              "right": 943,
+              "bottom": 61,
+              "width": 322,
+              "height": 48
+            },
+            "labels": [
+              "DELIVER: Marina Cafe",
+              "BEST 100"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          },
+          {
+            "id": "HUD-03",
+            "bounds": {
+              "left": 444.51,
+              "top": 31.5,
+              "right": 515.49,
+              "bottom": 56.5,
+              "width": 70.98,
+              "height": 25
+            },
+            "labels": [
+              "100"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-04",
+            "bounds": {
+              "left": 40,
+              "top": 376,
+              "right": 920,
+              "bottom": 446,
+              "width": 880,
+              "height": 70
+            },
+            "labels": [
+              "Marina Cafe"
+            ],
+            "geometrySource": "canvas-fillRect+text"
+          },
+          {
+            "id": "HUD-05",
+            "bounds": {
+              "left": 336,
+              "top": 476,
+              "right": 624,
+              "bottom": 524,
+              "width": 288,
+              "height": 48
+            },
+            "labels": [
+              "DELIVERIES  0 / 3"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          },
+          {
+            "id": "HUD-06",
+            "bounds": {
+              "left": 315.78,
+              "top": 511.5,
+              "right": 644.22,
+              "bottom": 520.5,
+              "width": 328.44,
+              "height": 9
+            },
+            "labels": [
+              "PARCEL LOADED — FOLLOW THE COLOR MARKER"
+            ],
+            "geometrySource": "canvas-fillText"
+          }
+        ],
+        "issues": [
+          {
+            "type": "overlap",
+            "regionA": "HUD-05",
+            "regionB": "HUD-06",
+            "intersection": {
+              "left": 336,
+              "top": 511.5,
+              "right": 624,
+              "bottom": 520.5,
+              "width": 288,
+              "height": 9
+            }
+          }
+        ],
+        "recentDrawCalls": 1024,
+        "recentTextDraws": 18,
+        "hudTextDraws": 17
+      }
+    },
+    "mid": {
+      "state": "playing",
+      "score": 100,
+      "best": 100,
+      "fps": 60,
+      "time": 3.5498999999999943,
+      "flags": [],
+      "errors": [],
+      "events": [
+        {
+          "seq": 1,
+          "type": "state_changed",
+          "time": 0,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "from": "title",
+            "to": "playing",
+            "scene": "play"
+          }
+        },
+        {
+          "seq": 2,
+          "type": "score_changed",
+          "time": 0.333,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 0,
+            "after": 100,
+            "delta": 100
+          }
+        },
+        {
+          "seq": 3,
+          "type": "active_delivery_target_updated",
+          "time": 1.333,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "target": "Marina Cafe",
+            "stage": 1,
+            "carrying": true
+          }
+        },
+        {
+          "seq": 4,
+          "type": "courier_scooter_driven",
+          "time": 1.4,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "speed": 190,
+            "deliveries": 0
+          }
+        },
+        {
+          "seq": 5,
+          "type": "obstacle_contact_count_changed",
+          "time": 1.467,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 0,
+            "after": 1
+          }
+        }
+      ],
+      "layout": {
+        "source": "playwright-canvas-draw-observation-v1",
+        "canvas": {
+          "domId": "game",
+          "logicalWidth": 960,
+          "logicalHeight": 540,
+          "intrinsicWidth": 960,
+          "intrinsicHeight": 540,
+          "logicalIntrinsicMatch": true
+        },
+        "regions": [
+          {
+            "id": "HUD-01",
+            "bounds": {
+              "left": 17,
+              "top": 13,
+              "right": 205,
+              "bottom": 61,
+              "width": 188,
+              "height": 48
+            },
+            "labels": [
+              "TIME  51.9",
+              "TIME  51.8",
+              "TIME  51.7",
+              "TIME  51.5",
+              "TIME  51.4",
+              "TIME  51.2",
+              "TIME  51.1",
+              "TIME  51.0"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          },
+          {
+            "id": "HUD-02",
+            "bounds": {
+              "left": 621,
+              "top": 13,
+              "right": 943,
+              "bottom": 61,
+              "width": 322,
+              "height": 48
+            },
+            "labels": [
+              "DELIVER: Marina Cafe",
+              "BEST 100"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          },
+          {
+            "id": "HUD-03",
+            "bounds": {
+              "left": 444.51,
+              "top": 31.5,
+              "right": 515.49,
+              "bottom": 56.5,
+              "width": 70.98,
+              "height": 25
+            },
+            "labels": [
+              "100"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-04",
+            "bounds": {
+              "left": 40,
+              "top": 376,
+              "right": 920,
+              "bottom": 446,
+              "width": 880,
+              "height": 70
+            },
+            "labels": [
+              "Marina Cafe"
+            ],
+            "geometrySource": "canvas-fillRect+text"
+          },
+          {
+            "id": "HUD-05",
+            "bounds": {
+              "left": 336,
+              "top": 476,
+              "right": 624,
+              "bottom": 524,
+              "width": 288,
+              "height": 48
+            },
+            "labels": [
+              "DELIVERIES  0 / 3",
+              "PARCEL ON BOARD"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          }
+        ],
+        "issues": [],
+        "recentDrawCalls": 1024,
+        "recentTextDraws": 15,
+        "hudTextDraws": 14
+      }
+    },
+    "end": {
+      "state": "playing",
+      "score": 1300,
+      "best": 1300,
+      "fps": 60,
+      "time": 11.882899999999973,
+      "flags": [],
+      "errors": [],
+      "events": [
+        {
+          "seq": 1,
+          "type": "state_changed",
+          "time": 0,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "from": "title",
+            "to": "playing",
+            "scene": "play"
+          }
+        },
+        {
+          "seq": 2,
+          "type": "score_changed",
+          "time": 0.333,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 0,
+            "after": 100,
+            "delta": 100
+          }
+        },
+        {
+          "seq": 3,
+          "type": "active_delivery_target_updated",
+          "time": 1.333,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "target": "Marina Cafe",
+            "stage": 1,
+            "carrying": true
+          }
+        },
+        {
+          "seq": 4,
+          "type": "courier_scooter_driven",
+          "time": 1.4,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "speed": 190,
+            "deliveries": 0
+          }
+        },
+        {
+          "seq": 5,
+          "type": "obstacle_contact_count_changed",
+          "time": 1.467,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 0,
+            "after": 1
+          }
+        },
+        {
+          "seq": 6,
+          "type": "score_changed",
+          "time": 3.683,
+          "state": "playing",
+          "score": 600,
+          "data": {
+            "before": 100,
+            "after": 600,
+            "delta": 500
+          }
+        },
+        {
+          "seq": 7,
+          "type": "delivery_completed",
+          "time": 3.683,
+          "state": "playing",
+          "score": 600,
+          "data": {
+            "destination": "Marina Cafe",
+            "delivery": 1,
+            "total": 3
+          }
+        },
+        {
+          "seq": 8,
+          "type": "active_delivery_target_updated",
+          "time": 3.7,
+          "state": "playing",
+          "score": 600,
+          "data": {
+            "target": "Parcel for Lighthouse House",
+            "stage": 2,
+            "carrying": false
+          }
+        },
+        {
+          "seq": 9,
+          "type": "score_changed",
+          "time": 4.6,
+          "state": "playing",
+          "score": 700,
+          "data": {
+            "before": 600,
+            "after": 700,
+            "delta": 100
+          }
+        },
+        {
+          "seq": 10,
+          "type": "active_delivery_target_updated",
+          "time": 4.617,
+          "state": "playing",
+          "score": 700,
+          "data": {
+            "target": "Lighthouse House",
+            "stage": 2,
+            "carrying": true
+          }
+        },
+        {
+          "seq": 11,
+          "type": "score_changed",
+          "time": 8.833,
+          "state": "playing",
+          "score": 1200,
+          "data": {
+            "before": 700,
+            "after": 1200,
+            "delta": 500
+          }
+        },
+        {
+          "seq": 12,
+          "type": "delivery_completed",
+          "time": 8.833,
+          "state": "playing",
+          "score": 1200,
+          "data": {
+            "destination": "Lighthouse House",
+            "delivery": 2,
+            "total": 3
+          }
+        },
+        {
+          "seq": 13,
+          "type": "active_delivery_target_updated",
+          "time": 8.85,
+          "state": "playing",
+          "score": 1200,
+          "data": {
+            "target": "Parcel for Market Pier",
+            "stage": 3,
+            "carrying": false
+          }
+        },
+        {
+          "seq": 14,
+          "type": "score_changed",
+          "time": 9.816,
+          "state": "playing",
+          "score": 1300,
+          "data": {
+            "before": 1200,
+            "after": 1300,
+            "delta": 100
+          }
+        },
+        {
+          "seq": 15,
+          "type": "active_delivery_target_updated",
+          "time": 9.833,
+          "state": "playing",
+          "score": 1300,
+          "data": {
+            "target": "Market Pier",
+            "stage": 3,
+            "carrying": true
+          }
+        },
+        {
+          "seq": 16,
+          "type": "obstacle_contact_count_changed",
+          "time": 11.616,
+          "state": "playing",
+          "score": 1300,
+          "data": {
+            "before": 1,
+            "after": 2
+          }
+        }
+      ],
+      "layout": {
+        "source": "playwright-canvas-draw-observation-v1",
+        "canvas": {
+          "domId": "game",
+          "logicalWidth": 960,
+          "logicalHeight": 540,
+          "intrinsicWidth": 960,
+          "intrinsicHeight": 540,
+          "logicalIntrinsicMatch": true
+        },
+        "regions": [
+          {
+            "id": "HUD-01",
+            "bounds": {
+              "left": 19.46,
+              "top": 9.3,
+              "right": 207.46,
+              "bottom": 57.3,
+              "width": 188,
+              "height": 48
+            },
+            "labels": [
+              "TIME  7.8",
+              "TIME  7.6",
+              "TIME  7.5",
+              "TIME  7.4",
+              "TIME  7.2",
+              "TIME  7.1",
+              "TIME  6.9",
+              "TIME  6.8"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          },
+          {
+            "id": "HUD-02",
+            "bounds": {
+              "left": 623.46,
+              "top": 9.3,
+              "right": 945.46,
+              "bottom": 57.3,
+              "width": 322,
+              "height": 48
+            },
+            "labels": [
+              "DELIVER: Market Pier",
+              "BEST 1300"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          },
+          {
+            "id": "HUD-03",
+            "bounds": {
+              "left": 432.69,
+              "top": 31.5,
+              "right": 527.31,
+              "bottom": 56.5,
+              "width": 94.62,
+              "height": 25
+            },
+            "labels": [
+              "1300"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-04",
+            "bounds": {
+              "left": 834.4,
+              "top": 165.2,
+              "right": 920.4,
+              "bottom": 170.2,
+              "width": 86,
+              "height": 5
+            },
+            "labels": [
+              "MARKET"
+            ],
+            "geometrySource": "canvas-fillRect+text"
+          },
+          {
+            "id": "HUD-05",
+            "bounds": {
+              "left": 823.66,
+              "top": 167.61,
+              "right": 884.49,
+              "bottom": 176.61,
+              "width": 60.83,
+              "height": 9
+            },
+            "labels": [
+              "MARKET"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-06",
+            "bounds": {
+              "left": 823.98,
+              "top": 170.7,
+              "right": 884.81,
+              "bottom": 179.7,
+              "width": 60.83,
+              "height": 9
+            },
+            "labels": [
+              "MARKET"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-07",
+            "bounds": {
+              "left": 825.59,
+              "top": 171.5,
+              "right": 886.41,
+              "bottom": 180.5,
+              "width": 60.82,
+              "height": 9
+            },
+            "labels": [
+              "MARKET"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-08",
+            "bounds": {
+              "left": 825.46,
+              "top": 171.61,
+              "right": 886.29,
+              "bottom": 180.61,
+              "width": 60.83,
+              "height": 9
+            },
+            "labels": [
+              "MARKET"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-09",
+            "bounds": {
+              "left": 826.37,
+              "top": 172.37,
+              "right": 887.2,
+              "bottom": 181.37,
+              "width": 60.83,
+              "height": 9
+            },
+            "labels": [
+              "MARKET"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-10",
+            "bounds": {
+              "left": 827.27,
+              "top": 174.03,
+              "right": 888.1,
+              "bottom": 183.03,
+              "width": 60.83,
+              "height": 9
+            },
+            "labels": [
+              "MARKET"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-11",
+            "bounds": {
+              "left": 41.69,
+              "top": 204.53,
+              "right": 921.69,
+              "bottom": 308.53,
+              "width": 880,
+              "height": 104
+            },
+            "labels": [
+              "Market Pier"
+            ],
+            "geometrySource": "canvas-fillRect+text"
+          },
+          {
+            "id": "HUD-12",
+            "bounds": {
+              "left": 338.46,
+              "top": 472.3,
+              "right": 626.46,
+              "bottom": 520.3,
+              "width": 288,
+              "height": 48
+            },
+            "labels": [
+              "DELIVERIES  2 / 3",
+              "PARCEL ON BOARD"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          }
+        ],
+        "issues": [
+          {
+            "type": "overlap",
+            "regionA": "HUD-05",
+            "regionB": "HUD-06",
+            "intersection": {
+              "left": 823.98,
+              "top": 170.7,
+              "right": 884.49,
+              "bottom": 176.61,
+              "width": 60.51,
+              "height": 5.91
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-05",
+            "regionB": "HUD-07",
+            "intersection": {
+              "left": 825.59,
+              "top": 171.5,
+              "right": 884.49,
+              "bottom": 176.61,
+              "width": 58.9,
+              "height": 5.11
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-05",
+            "regionB": "HUD-08",
+            "intersection": {
+              "left": 825.46,
+              "top": 171.61,
+              "right": 884.49,
+              "bottom": 176.61,
+              "width": 59.03,
+              "height": 5
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-05",
+            "regionB": "HUD-09",
+            "intersection": {
+              "left": 826.37,
+              "top": 172.37,
+              "right": 884.49,
+              "bottom": 176.61,
+              "width": 58.12,
+              "height": 4.24
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-06",
+            "regionB": "HUD-07",
+            "intersection": {
+              "left": 825.59,
+              "top": 171.5,
+              "right": 884.81,
+              "bottom": 179.7,
+              "width": 59.22,
+              "height": 8.2
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-06",
+            "regionB": "HUD-08",
+            "intersection": {
+              "left": 825.46,
+              "top": 171.61,
+              "right": 884.81,
+              "bottom": 179.7,
+              "width": 59.35,
+              "height": 8.09
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-06",
+            "regionB": "HUD-09",
+            "intersection": {
+              "left": 826.37,
+              "top": 172.37,
+              "right": 884.81,
+              "bottom": 179.7,
+              "width": 58.44,
+              "height": 7.33
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-06",
+            "regionB": "HUD-10",
+            "intersection": {
+              "left": 827.27,
+              "top": 174.03,
+              "right": 884.81,
+              "bottom": 179.7,
+              "width": 57.54,
+              "height": 5.67
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-07",
+            "regionB": "HUD-08",
+            "intersection": {
+              "left": 825.59,
+              "top": 171.61,
+              "right": 886.29,
+              "bottom": 180.5,
+              "width": 60.7,
+              "height": 8.89
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-07",
+            "regionB": "HUD-09",
+            "intersection": {
+              "left": 826.37,
+              "top": 172.37,
+              "right": 886.41,
+              "bottom": 180.5,
+              "width": 60.04,
+              "height": 8.13
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-07",
+            "regionB": "HUD-10",
+            "intersection": {
+              "left": 827.27,
+              "top": 174.03,
+              "right": 886.41,
+              "bottom": 180.5,
+              "width": 59.14,
+              "height": 6.47
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-08",
+            "regionB": "HUD-09",
+            "intersection": {
+              "left": 826.37,
+              "top": 172.37,
+              "right": 886.29,
+              "bottom": 180.61,
+              "width": 59.92,
+              "height": 8.24
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-08",
+            "regionB": "HUD-10",
+            "intersection": {
+              "left": 827.27,
+              "top": 174.03,
+              "right": 886.29,
+              "bottom": 180.61,
+              "width": 59.02,
+              "height": 6.58
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-09",
+            "regionB": "HUD-10",
+            "intersection": {
+              "left": 827.27,
+              "top": 174.03,
+              "right": 887.2,
+              "bottom": 181.37,
+              "width": 59.93,
+              "height": 7.34
+            }
+          }
+        ],
+        "recentDrawCalls": 1024,
+        "recentTextDraws": 45,
+        "hudTextDraws": 45
+      }
+    }
+  },
+  "contract": {
+    "passed": true,
+    "checks": [
+      {
+        "id": "probe_present",
+        "label": "Test-Hook __GF__ vorhanden",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "deterministic_seed",
+        "label": "Deterministischer Verifier-Seed ist vorhanden",
+        "pass": true,
+        "detail": "seed=1207618270"
+      },
+      {
+        "id": "telemetry_timeline",
+        "label": "Telemetry enthält start/early/mid/end",
+        "pass": true,
+        "detail": "start:title/0@0ms -> early:playing/100@1200ms -> mid:playing/100@3500ms -> end:playing/1300@12000ms -> success-proof:start:title/0@0ms -> success-proof:end:playing/700@75000ms"
+      },
+      {
+        "id": "idle_baseline",
+        "label": "Deterministische Idle-Control mit gleichem Seed ist vorhanden",
+        "pass": true,
+        "detail": "mode=idle seed=1207618270 timeline=start:title/0@0ms -> early:playing/0@1200ms -> mid:playing/0@3500ms -> end:gameover/0@12000ms"
+      },
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "assets_ok",
+        "label": "Alle Assets geladen",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "started_playing",
+        "label": "Spiel verlässt den Titelbildschirm",
+        "pass": true,
+        "detail": "endState=playing"
+      },
+      {
+        "id": "interactivity",
+        "label": "Spiel zeigt deterministischen Gameplay-Fortschritt in der Telemetry",
+        "pass": true,
+        "detail": "start:title/0@0ms -> early:playing/100@1200ms -> mid:playing/100@3500ms -> end:playing/1300@12000ms -> success-proof:start:title/0@0ms -> success-proof:end:playing/700@75000ms"
+      },
+      {
+        "id": "input_causality",
+        "label": "Gameplay-Fortschritt ist gegenüber der Idle-Control auf Eingaben zurückführbar",
+        "pass": true,
+        "detail": "active(score+1200,events+14,end=playing) vs idle(score+0,events+1,end=gameover)"
+      },
+      {
+        "id": "fps_ok",
+        "label": "Performance >= 30 FPS",
+        "pass": true,
+        "detail": "fps=61"
+      },
+      {
+        "id": "visual_content",
+        "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+        "pass": true,
+        "detail": "shot-2-gameplay: VISIBLE (100% diff) | shot-3-gameplay: VISIBLE (100% diff)"
+      },
+      {
+        "id": "visual_activity",
+        "label": "Gameplay zeigt deterministische Inter-Frame-Aktivität",
+        "pass": true,
+        "detail": "4.7319% pixels changed"
+      }
+    ],
+    "failures": []
+  },
+  "productFidelity": {
+    "pass": false,
+    "status": "failed",
+    "contractSha256": "d3a83649db0972a9e5f03568402d4248f28c0c9cc0058a6a990472247c70e3c1",
+    "requirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-03",
+      "MH-04",
+      "MH-05",
+      "MH-06",
+      "MH-07",
+      "MH-08",
+      "NG-01",
+      "NG-02",
+      "NG-03",
+      "NG-04"
+    ],
+    "criteria": [
+      {
+        "requirementId": "MH-01",
+        "acceptanceId": "AC-MH-01",
+        "probeId": "PR-MH-01",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "courier_scooter_driven",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": true,
+        "traceable": true,
+        "detail": "event correlated with active gameplay at t=1.4s and engine-observed score 0 -> 100"
+      },
+      {
+        "requirementId": "MH-02",
+        "acceptanceId": "AC-MH-02",
+        "probeId": "PR-MH-02",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "delivery_completed",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": true,
+        "traceable": true,
+        "detail": "event correlated with active gameplay at t=3.683s and engine-observed score 0 -> 600"
+      },
+      {
+        "requirementId": "MH-03",
+        "acceptanceId": "AC-MH-03",
+        "probeId": "PR-MH-03",
+        "kind": "event_value_change",
+        "declaredKind": "event_value_change",
+        "strength": null,
+        "eventType": "obstacle_contact_count_changed",
+        "evidenceSource": "generated-game-event-dependent",
+        "pass": true,
+        "traceable": true,
+        "detail": "event obstacle_contact_count_changed changed gameplay value"
+      },
+      {
+        "requirementId": "MH-04",
+        "acceptanceId": "AC-MH-04",
+        "probeId": "PR-MH-04",
+        "kind": "state_reached",
+        "declaredKind": "state_reached",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed",
+        "pass": false,
+        "traceable": true,
+        "detail": "state failed not reached in verifier scenarios"
+      },
+      {
+        "requirementId": "MH-05",
+        "acceptanceId": "AC-MH-05",
+        "probeId": "PR-MH-05",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "active_delivery_target_updated",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": true,
+        "traceable": true,
+        "detail": "event correlated with active gameplay at t=1.333s and engine-observed score 0 -> 100"
+      },
+      {
+        "requirementId": "MH-06",
+        "acceptanceId": "AC-MH-06",
+        "probeId": "PR-MH-06",
+        "kind": "state_reached",
+        "declaredKind": "state_reached",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed",
+        "pass": false,
+        "traceable": true,
+        "detail": "state success not reached in verifier scenarios"
+      },
+      {
+        "requirementId": "MH-07",
+        "acceptanceId": "AC-MH-07",
+        "probeId": "PR-MH-07",
+        "kind": "restart_after_terminal",
+        "declaredKind": "restart_after_terminal",
+        "strength": null,
+        "eventType": "fresh_run_started",
+        "evidenceSource": "harness-observed-terminal-restart",
+        "pass": false,
+        "traceable": true,
+        "detail": "success-proof did not reach success (end=playing)"
+      },
+      {
+        "requirementId": "MH-08",
+        "acceptanceId": "AC-MH-08",
+        "probeId": "PR-MH-08",
+        "kind": "layout_no_overlap",
+        "declaredKind": "layout_no_overlap",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed-canvas-geometry",
+        "pass": true,
+        "traceable": true,
+        "detail": "independent canvas layout observed at mid: 5 HUD regions, no overlap/out-of-bounds issues, with score progress"
+      },
+      {
+        "requirementId": "NG-01",
+        "acceptanceId": "AC-NG-01",
+        "probeId": "PR-NG-01",
+        "kind": "event_absent",
+        "declaredKind": "event_absent",
+        "strength": null,
+        "eventType": "combat_action",
+        "evidenceSource": "generated-game-event-dependent",
+        "pass": true,
+        "traceable": true,
+        "detail": "event combat_action absent"
+      },
+      {
+        "requirementId": "NG-02",
+        "acceptanceId": "AC-NG-02",
+        "probeId": "PR-NG-02",
+        "kind": "event_absent",
+        "declaredKind": "event_absent",
+        "strength": null,
+        "eventType": "boss_encounter_started",
+        "evidenceSource": "generated-game-event-dependent",
+        "pass": true,
+        "traceable": true,
+        "detail": "event boss_encounter_started absent"
+      },
+      {
+        "requirementId": "NG-03",
+        "acceptanceId": "AC-NG-03",
+        "probeId": "PR-NG-03",
+        "kind": "event_absent",
+        "declaredKind": "event_absent",
+        "strength": null,
+        "eventType": "crafting_or_upgrade_applied",
+        "evidenceSource": "generated-game-event-dependent",
+        "pass": true,
+        "traceable": true,
+        "detail": "event crafting_or_upgrade_applied absent"
+      },
+      {
+        "requirementId": "NG-04",
+        "acceptanceId": "AC-NG-04",
+        "probeId": "PR-NG-04",
+        "kind": "event_absent",
+        "declaredKind": "event_absent",
+        "strength": null,
+        "eventType": "cyberpunk_or_military_visual_mode",
+        "evidenceSource": "generated-game-event-dependent",
+        "pass": true,
+        "traceable": true,
+        "detail": "event cyberpunk_or_military_visual_mode absent"
+      }
+    ],
+    "failures": [
+      {
+        "requirementId": "MH-04",
+        "acceptanceId": "AC-MH-04",
+        "probeId": "PR-MH-04",
+        "kind": "state_reached",
+        "declaredKind": "state_reached",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed",
+        "pass": false,
+        "traceable": true,
+        "detail": "state failed not reached in verifier scenarios"
+      },
+      {
+        "requirementId": "MH-06",
+        "acceptanceId": "AC-MH-06",
+        "probeId": "PR-MH-06",
+        "kind": "state_reached",
+        "declaredKind": "state_reached",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed",
+        "pass": false,
+        "traceable": true,
+        "detail": "state success not reached in verifier scenarios"
+      },
+      {
+        "requirementId": "MH-07",
+        "acceptanceId": "AC-MH-07",
+        "probeId": "PR-MH-07",
+        "kind": "restart_after_terminal",
+        "declaredKind": "restart_after_terminal",
+        "strength": null,
+        "eventType": "fresh_run_started",
+        "evidenceSource": "harness-observed-terminal-restart",
+        "pass": false,
+        "traceable": true,
+        "detail": "success-proof did not reach success (end=playing)"
+      }
+    ],
+    "coverage": {
+      "evaluatedRequirementIds": [
+        "MH-01",
+        "MH-02",
+        "MH-03",
+        "MH-04",
+        "MH-05",
+        "MH-06",
+        "MH-07",
+        "MH-08",
+        "NG-01",
+        "NG-02",
+        "NG-03",
+        "NG-04"
+      ],
+      "harnessObservedRequirementIds": [
+        "MH-04",
+        "MH-06",
+        "MH-07",
+        "MH-08"
+      ],
+      "canvasGeometryRequirementIds": [
+        "MH-08"
+      ],
+      "generatedGameEventDependentRequirementIds": [
+        "MH-01",
+        "MH-02",
+        "MH-03",
+        "MH-05",
+        "NG-01",
+        "NG-02",
+        "NG-03",
+        "NG-04"
+      ],
+      "correlatedGeneratedGameEventRequirementIds": [
+        "MH-01",
+        "MH-02",
+        "MH-05"
+      ],
+      "unstructuredBriefContentEvaluated": false,
+      "scope": "Product Fidelity evaluates only structured Owner Contract MH/NG requirements. layout_no_overlap and restart_after_terminal are independently observed by the Playwright harness. state_reached can be satisfied by separate deterministic product-proof scenarios. event/event_value_change/event_absent evidence depends on generated-game event instrumentation; correlated_gameplay additionally requires harness-observed gameplay timing, state and score change. Descriptive originalBrief content outside MH/NG is not evaluated here."
+    },
+    "observedEvents": [
+      {
+        "seq": 1,
+        "type": "state_changed",
+        "time": 0,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "from": "title",
+          "to": "playing",
+          "scene": "play"
+        }
+      },
+      {
+        "seq": 2,
+        "type": "score_changed",
+        "time": 0.333,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 100,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 3,
+        "type": "active_delivery_target_updated",
+        "time": 1.333,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "target": "Marina Cafe",
+          "stage": 1,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 4,
+        "type": "courier_scooter_driven",
+        "time": 1.4,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "speed": 190,
+          "deliveries": 0
+        }
+      },
+      {
+        "seq": 5,
+        "type": "obstacle_contact_count_changed",
+        "time": 1.467,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 1
+        }
+      },
+      {
+        "seq": 6,
+        "type": "score_changed",
+        "time": 3.683,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "before": 100,
+          "after": 600,
+          "delta": 500
+        }
+      },
+      {
+        "seq": 7,
+        "type": "delivery_completed",
+        "time": 3.683,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "destination": "Marina Cafe",
+          "delivery": 1,
+          "total": 3
+        }
+      },
+      {
+        "seq": 8,
+        "type": "active_delivery_target_updated",
+        "time": 3.7,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "target": "Parcel for Lighthouse House",
+          "stage": 2,
+          "carrying": false
+        }
+      },
+      {
+        "seq": 9,
+        "type": "score_changed",
+        "time": 4.6,
+        "state": "playing",
+        "score": 700,
+        "data": {
+          "before": 600,
+          "after": 700,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 10,
+        "type": "active_delivery_target_updated",
+        "time": 4.617,
+        "state": "playing",
+        "score": 700,
+        "data": {
+          "target": "Lighthouse House",
+          "stage": 2,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 11,
+        "type": "score_changed",
+        "time": 8.833,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "before": 700,
+          "after": 1200,
+          "delta": 500
+        }
+      },
+      {
+        "seq": 12,
+        "type": "delivery_completed",
+        "time": 8.833,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "destination": "Lighthouse House",
+          "delivery": 2,
+          "total": 3
+        }
+      },
+      {
+        "seq": 13,
+        "type": "active_delivery_target_updated",
+        "time": 8.85,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "target": "Parcel for Market Pier",
+          "stage": 3,
+          "carrying": false
+        }
+      },
+      {
+        "seq": 14,
+        "type": "score_changed",
+        "time": 9.816,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 1200,
+          "after": 1300,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 15,
+        "type": "active_delivery_target_updated",
+        "time": 9.833,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "target": "Market Pier",
+          "stage": 3,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 16,
+        "type": "obstacle_contact_count_changed",
+        "time": 11.616,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 1,
+          "after": 2
+        }
+      },
+      {
+        "seq": 1,
+        "type": "state_changed",
+        "time": 0,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "from": "title",
+          "to": "playing",
+          "scene": "play"
+        }
+      },
+      {
+        "seq": 2,
+        "type": "score_changed",
+        "time": 0.317,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 100,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 3,
+        "type": "active_delivery_target_updated",
+        "time": 1.333,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "target": "Marina Cafe",
+          "stage": 1,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 4,
+        "type": "courier_scooter_driven",
+        "time": 1.4,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "speed": 190,
+          "deliveries": 0
+        }
+      },
+      {
+        "seq": 5,
+        "type": "obstacle_contact_count_changed",
+        "time": 1.467,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 1
+        }
+      },
+      {
+        "seq": 6,
+        "type": "score_changed",
+        "time": 3.7,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "before": 100,
+          "after": 600,
+          "delta": 500
+        }
+      },
+      {
+        "seq": 7,
+        "type": "delivery_completed",
+        "time": 3.7,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "destination": "Marina Cafe",
+          "delivery": 1,
+          "total": 3
+        }
+      },
+      {
+        "seq": 8,
+        "type": "active_delivery_target_updated",
+        "time": 3.716,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "target": "Parcel for Lighthouse House",
+          "stage": 2,
+          "carrying": false
+        }
+      },
+      {
+        "seq": 9,
+        "type": "score_changed",
+        "time": 4.633,
+        "state": "playing",
+        "score": 700,
+        "data": {
+          "before": 600,
+          "after": 700,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 10,
+        "type": "active_delivery_target_updated",
+        "time": 4.65,
+        "state": "playing",
+        "score": 700,
+        "data": {
+          "target": "Lighthouse House",
+          "stage": 2,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 11,
+        "type": "score_changed",
+        "time": 8.95,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "before": 700,
+          "after": 1200,
+          "delta": 500
+        }
+      },
+      {
+        "seq": 12,
+        "type": "delivery_completed",
+        "time": 8.95,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "destination": "Lighthouse House",
+          "delivery": 2,
+          "total": 3
+        }
+      },
+      {
+        "seq": 13,
+        "type": "active_delivery_target_updated",
+        "time": 8.966,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "target": "Parcel for Market Pier",
+          "stage": 3,
+          "carrying": false
+        }
+      },
+      {
+        "seq": 14,
+        "type": "score_changed",
+        "time": 9.9,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 1200,
+          "after": 1300,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 15,
+        "type": "active_delivery_target_updated",
+        "time": 9.916,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "target": "Market Pier",
+          "stage": 3,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 16,
+        "type": "obstacle_contact_count_changed",
+        "time": 11.783,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 1,
+          "after": 2
+        }
+      },
+      {
+        "seq": 17,
+        "type": "obstacle_contact_count_changed",
+        "time": 12.166,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 2,
+          "after": 3
+        }
+      },
+      {
+        "seq": 18,
+        "type": "obstacle_contact_count_changed",
+        "time": 12.549,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 3,
+          "after": 4
+        }
+      },
+      {
+        "seq": 19,
+        "type": "obstacle_contact_count_changed",
+        "time": 12.933,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 4,
+          "after": 5
+        }
+      },
+      {
+        "seq": 20,
+        "type": "game_over",
+        "time": 13.083,
+        "state": "gameover",
+        "score": 1300,
+        "data": {
+          "from": "playing",
+          "to": "gameover"
+        }
+      },
+      {
+        "seq": 21,
+        "type": "fresh_run_started",
+        "time": 0,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "timer": 70,
+          "deliveries": 0
+        }
+      },
+      {
+        "seq": 22,
+        "type": "score_changed",
+        "time": 0.267,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 100,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 23,
+        "type": "active_delivery_target_updated",
+        "time": 1.333,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "target": "Marina Cafe",
+          "stage": 1,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 24,
+        "type": "courier_scooter_driven",
+        "time": 1.367,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "speed": 190,
+          "deliveries": 0
+        }
+      },
+      {
+        "seq": 25,
+        "type": "obstacle_contact_count_changed",
+        "time": 1.45,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 1
+        }
+      },
+      {
+        "seq": 26,
+        "type": "score_changed",
+        "time": 3.667,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "before": 100,
+          "after": 600,
+          "delta": 500
+        }
+      },
+      {
+        "seq": 27,
+        "type": "delivery_completed",
+        "time": 3.667,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "destination": "Marina Cafe",
+          "delivery": 1,
+          "total": 3
+        }
+      },
+      {
+        "seq": 28,
+        "type": "active_delivery_target_updated",
+        "time": 3.683,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "target": "Parcel for Lighthouse House",
+          "stage": 2,
+          "carrying": false
+        }
+      },
+      {
+        "seq": 29,
+        "type": "score_changed",
+        "time": 4.567,
+        "state": "playing",
+        "score": 700,
+        "data": {
+          "before": 600,
+          "after": 700,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 30,
+        "type": "active_delivery_target_updated",
+        "time": 4.583,
+        "state": "playing",
+        "score": 700,
+        "data": {
+          "target": "Lighthouse House",
+          "stage": 2,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 31,
+        "type": "score_changed",
+        "time": 8.766,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "before": 700,
+          "after": 1200,
+          "delta": 500
+        }
+      },
+      {
+        "seq": 32,
+        "type": "delivery_completed",
+        "time": 8.766,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "destination": "Lighthouse House",
+          "delivery": 2,
+          "total": 3
+        }
+      },
+      {
+        "seq": 33,
+        "type": "active_delivery_target_updated",
+        "time": 8.783,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "target": "Parcel for Market Pier",
+          "stage": 3,
+          "carrying": false
+        }
+      },
+      {
+        "seq": 34,
+        "type": "score_changed",
+        "time": 9.766,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 1200,
+          "after": 1300,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 35,
+        "type": "active_delivery_target_updated",
+        "time": 9.783,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "target": "Market Pier",
+          "stage": 3,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 36,
+        "type": "obstacle_contact_count_changed",
+        "time": 11.649,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 1,
+          "after": 2
+        }
+      },
+      {
+        "seq": 37,
+        "type": "obstacle_contact_count_changed",
+        "time": 12.033,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 2,
+          "after": 3
+        }
+      },
+      {
+        "seq": 38,
+        "type": "obstacle_contact_count_changed",
+        "time": 12.416,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 3,
+          "after": 4
+        }
+      },
+      {
+        "seq": 39,
+        "type": "obstacle_contact_count_changed",
+        "time": 12.799,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 4,
+          "after": 5
+        }
+      },
+      {
+        "seq": 40,
+        "type": "game_over",
+        "time": 13.216,
+        "state": "gameover",
+        "score": 1300,
+        "data": {
+          "from": "playing",
+          "to": "gameover"
+        }
+      },
+      {
+        "seq": 41,
+        "type": "fresh_run_started",
+        "time": 0,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "timer": 70,
+          "deliveries": 0
+        }
+      },
+      {
+        "seq": 42,
+        "type": "score_changed",
+        "time": 0.083,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 100,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 43,
+        "type": "active_delivery_target_updated",
+        "time": 1.333,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "target": "Marina Cafe",
+          "stage": 1,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 44,
+        "type": "courier_scooter_driven",
+        "time": 1.367,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "speed": 190,
+          "deliveries": 0
+        }
+      },
+      {
+        "seq": 45,
+        "type": "obstacle_contact_count_changed",
+        "time": 1.533,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 1
+        }
+      },
+      {
+        "seq": 46,
+        "type": "score_changed",
+        "time": 3.433,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "before": 100,
+          "after": 600,
+          "delta": 500
+        }
+      },
+      {
+        "seq": 47,
+        "type": "delivery_completed",
+        "time": 3.433,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "destination": "Marina Cafe",
+          "delivery": 1,
+          "total": 3
+        }
+      },
+      {
+        "seq": 48,
+        "type": "active_delivery_target_updated",
+        "time": 3.45,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "target": "Parcel for Lighthouse House",
+          "stage": 2,
+          "carrying": false
+        }
+      },
+      {
+        "seq": 49,
+        "type": "score_changed",
+        "time": 4.35,
+        "state": "playing",
+        "score": 700,
+        "data": {
+          "before": 600,
+          "after": 700,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 50,
+        "type": "active_delivery_target_updated",
+        "time": 4.367,
+        "state": "playing",
+        "score": 700,
+        "data": {
+          "target": "Lighthouse House",
+          "stage": 2,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 51,
+        "type": "score_changed",
+        "time": 8.683,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "before": 700,
+          "after": 1200,
+          "delta": 500
+        }
+      },
+      {
+        "seq": 52,
+        "type": "delivery_completed",
+        "time": 8.683,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "destination": "Lighthouse House",
+          "delivery": 2,
+          "total": 3
+        }
+      },
+      {
+        "seq": 53,
+        "type": "active_delivery_target_updated",
+        "time": 8.7,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "target": "Parcel for Market Pier",
+          "stage": 3,
+          "carrying": false
+        }
+      },
+      {
+        "seq": 54,
+        "type": "score_changed",
+        "time": 9.633,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 1200,
+          "after": 1300,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 55,
+        "type": "active_delivery_target_updated",
+        "time": 9.65,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "target": "Market Pier",
+          "stage": 3,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 56,
+        "type": "obstacle_contact_count_changed",
+        "time": 11.516,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 1,
+          "after": 2
+        }
+      },
+      {
+        "seq": 57,
+        "type": "obstacle_contact_count_changed",
+        "time": 11.9,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 2,
+          "after": 3
+        }
+      },
+      {
+        "seq": 58,
+        "type": "obstacle_contact_count_changed",
+        "time": 12.283,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 3,
+          "after": 4
+        }
+      },
+      {
+        "seq": 59,
+        "type": "obstacle_contact_count_changed",
+        "time": 12.666,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 4,
+          "after": 5
+        }
+      },
+      {
+        "seq": 60,
+        "type": "game_over",
+        "time": 13.149,
+        "state": "gameover",
+        "score": 1300,
+        "data": {
+          "from": "playing",
+          "to": "gameover"
+        }
+      },
+      {
+        "seq": 61,
+        "type": "fresh_run_started",
+        "time": 0,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "timer": 70,
+          "deliveries": 0
+        }
+      },
+      {
+        "seq": 62,
+        "type": "score_changed",
+        "time": 0.083,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 100,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 63,
+        "type": "active_delivery_target_updated",
+        "time": 1.333,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "target": "Marina Cafe",
+          "stage": 1,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 64,
+        "type": "courier_scooter_driven",
+        "time": 1.367,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "speed": 190,
+          "deliveries": 0
+        }
+      },
+      {
+        "seq": 65,
+        "type": "obstacle_contact_count_changed",
+        "time": 1.55,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 1
+        }
+      },
+      {
+        "seq": 66,
+        "type": "score_changed",
+        "time": 3.466,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "before": 100,
+          "after": 600,
+          "delta": 500
+        }
+      },
+      {
+        "seq": 67,
+        "type": "delivery_completed",
+        "time": 3.466,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "destination": "Marina Cafe",
+          "delivery": 1,
+          "total": 3
+        }
+      },
+      {
+        "seq": 68,
+        "type": "active_delivery_target_updated",
+        "time": 3.483,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "target": "Parcel for Lighthouse House",
+          "stage": 2,
+          "carrying": false
+        }
+      },
+      {
+        "seq": 69,
+        "type": "score_changed",
+        "time": 4.383,
+        "state": "playing",
+        "score": 700,
+        "data": {
+          "before": 600,
+          "after": 700,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 70,
+        "type": "active_delivery_target_updated",
+        "time": 4.4,
+        "state": "playing",
+        "score": 700,
+        "data": {
+          "target": "Lighthouse House",
+          "stage": 2,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 71,
+        "type": "score_changed",
+        "time": 8.716,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "before": 700,
+          "after": 1200,
+          "delta": 500
+        }
+      },
+      {
+        "seq": 72,
+        "type": "delivery_completed",
+        "time": 8.716,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "destination": "Lighthouse House",
+          "delivery": 2,
+          "total": 3
+        }
+      },
+      {
+        "seq": 73,
+        "type": "active_delivery_target_updated",
+        "time": 8.733,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "target": "Parcel for Market Pier",
+          "stage": 3,
+          "carrying": false
+        }
+      },
+      {
+        "seq": 74,
+        "type": "score_changed",
+        "time": 9.75,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 1200,
+          "after": 1300,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 75,
+        "type": "active_delivery_target_updated",
+        "time": 9.766,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "target": "Market Pier",
+          "stage": 3,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 76,
+        "type": "obstacle_contact_count_changed",
+        "time": 11.649,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 1,
+          "after": 2
+        }
+      },
+      {
+        "seq": 77,
+        "type": "obstacle_contact_count_changed",
+        "time": 12.216,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 2,
+          "after": 3
+        }
+      },
+      {
+        "seq": 78,
+        "type": "obstacle_contact_count_changed",
+        "time": 12.599,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 3,
+          "after": 4
+        }
+      },
+      {
+        "seq": 79,
+        "type": "game_over",
+        "time": 13.099,
+        "state": "gameover",
+        "score": 1300,
+        "data": {
+          "from": "playing",
+          "to": "gameover"
+        }
+      },
+      {
+        "seq": 80,
+        "type": "fresh_run_started",
+        "time": 0,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "timer": 70,
+          "deliveries": 0
+        }
+      },
+      {
+        "seq": 81,
+        "type": "score_changed",
+        "time": 0.083,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 100,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 82,
+        "type": "active_delivery_target_updated",
+        "time": 1.333,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "target": "Marina Cafe",
+          "stage": 1,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 83,
+        "type": "courier_scooter_driven",
+        "time": 1.367,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "speed": 190,
+          "deliveries": 0
+        }
+      },
+      {
+        "seq": 84,
+        "type": "obstacle_contact_count_changed",
+        "time": 1.55,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 1
+        }
+      },
+      {
+        "seq": 85,
+        "type": "score_changed",
+        "time": 3.483,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "before": 100,
+          "after": 600,
+          "delta": 500
+        }
+      },
+      {
+        "seq": 86,
+        "type": "delivery_completed",
+        "time": 3.483,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "destination": "Marina Cafe",
+          "delivery": 1,
+          "total": 3
+        }
+      },
+      {
+        "seq": 87,
+        "type": "active_delivery_target_updated",
+        "time": 3.5,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "target": "Parcel for Lighthouse House",
+          "stage": 2,
+          "carrying": false
+        }
+      },
+      {
+        "seq": 88,
+        "type": "score_changed",
+        "time": 4.383,
+        "state": "playing",
+        "score": 700,
+        "data": {
+          "before": 600,
+          "after": 700,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 89,
+        "type": "active_delivery_target_updated",
+        "time": 4.4,
+        "state": "playing",
+        "score": 700,
+        "data": {
+          "target": "Lighthouse House",
+          "stage": 2,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 90,
+        "type": "score_changed",
+        "time": 8.6,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "before": 700,
+          "after": 1200,
+          "delta": 500
+        }
+      },
+      {
+        "seq": 91,
+        "type": "delivery_completed",
+        "time": 8.6,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "destination": "Lighthouse House",
+          "delivery": 2,
+          "total": 3
+        }
+      },
+      {
+        "seq": 92,
+        "type": "active_delivery_target_updated",
+        "time": 8.616,
+        "state": "playing",
+        "score": 1200,
+        "data": {
+          "target": "Parcel for Market Pier",
+          "stage": 3,
+          "carrying": false
+        }
+      },
+      {
+        "seq": 93,
+        "type": "score_changed",
+        "time": 9.583,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 1200,
+          "after": 1300,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 94,
+        "type": "active_delivery_target_updated",
+        "time": 9.6,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "target": "Market Pier",
+          "stage": 3,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 95,
+        "type": "obstacle_contact_count_changed",
+        "time": 11.499,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 1,
+          "after": 2
+        }
+      },
+      {
+        "seq": 96,
+        "type": "obstacle_contact_count_changed",
+        "time": 11.883,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 2,
+          "after": 3
+        }
+      },
+      {
+        "seq": 97,
+        "type": "obstacle_contact_count_changed",
+        "time": 12.266,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 3,
+          "after": 4
+        }
+      },
+      {
+        "seq": 98,
+        "type": "obstacle_contact_count_changed",
+        "time": 12.649,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 4,
+          "after": 5
+        }
+      },
+      {
+        "seq": 99,
+        "type": "obstacle_contact_count_changed",
+        "time": 13.183,
+        "state": "playing",
+        "score": 1300,
+        "data": {
+          "before": 5,
+          "after": 6
+        }
+      },
+      {
+        "seq": 100,
+        "type": "game_over",
+        "time": 13.199,
+        "state": "gameover",
+        "score": 1300,
+        "data": {
+          "from": "playing",
+          "to": "gameover"
+        }
+      },
+      {
+        "seq": 101,
+        "type": "fresh_run_started",
+        "time": 0,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "timer": 70,
+          "deliveries": 0
+        }
+      },
+      {
+        "seq": 102,
+        "type": "score_changed",
+        "time": 0.083,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 100,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 103,
+        "type": "active_delivery_target_updated",
+        "time": 1.333,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "target": "Marina Cafe",
+          "stage": 1,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 104,
+        "type": "courier_scooter_driven",
+        "time": 1.367,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "speed": 190,
+          "deliveries": 0
+        }
+      },
+      {
+        "seq": 105,
+        "type": "obstacle_contact_count_changed",
+        "time": 1.733,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 1
+        }
+      },
+      {
+        "seq": 106,
+        "type": "score_changed",
+        "time": 3.633,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "before": 100,
+          "after": 600,
+          "delta": 500
+        }
+      },
+      {
+        "seq": 107,
+        "type": "delivery_completed",
+        "time": 3.633,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "destination": "Marina Cafe",
+          "delivery": 1,
+          "total": 3
+        }
+      },
+      {
+        "seq": 108,
+        "type": "active_delivery_target_updated",
+        "time": 3.65,
+        "state": "playing",
+        "score": 600,
+        "data": {
+          "target": "Parcel for Lighthouse House",
+          "stage": 2,
+          "carrying": false
+        }
+      },
+      {
+        "seq": 109,
+        "type": "score_changed",
+        "time": 4.55,
+        "state": "playing",
+        "score": 700,
+        "data": {
+          "before": 600,
+          "after": 700,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 110,
+        "type": "active_delivery_target_updated",
+        "time": 4.566,
+        "state": "playing",
+        "score": 700,
+        "data": {
+          "target": "Lighthouse House",
+          "stage": 2,
+          "carrying": true
+        }
+      }
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "probeErrors": []
+}

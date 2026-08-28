@@ -1,0 +1,5876 @@
+{
+  "attempt": 2,
+  "candidateSha": "b8be88cdc367aa6e9f261d385886b3629b41761ed43b37216e4173f234038d0d",
+  "ownerContractSha256": "d3a83649db0972a9e5f03568402d4248f28c0c9cc0058a6a990472247c70e3c1",
+  "seed": 1207618270,
+  "inputSequence": {
+    "mode": "active",
+    "seed": 1207618270,
+    "startImpulse": [
+      "Enter",
+      "pointer@640,400"
+    ],
+    "keys": [
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+      "Space",
+      "KeyW",
+      "KeyA",
+      "KeyS",
+      "KeyD",
+      "Enter"
+    ],
+    "pointerPath": [
+      [
+        420,
+        300
+      ],
+      [
+        640,
+        280
+      ],
+      [
+        820,
+        360
+      ],
+      [
+        700,
+        480
+      ],
+      [
+        480,
+        460
+      ],
+      [
+        560,
+        350
+      ]
+    ],
+    "keyEveryMs": 190,
+    "keyHoldMs": 110,
+    "pointerEveryMs": 450,
+    "clickEveryMs": 1300
+  },
+  "telemetry": [
+    {
+      "phase": "start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 63,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": [],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 444.98,
+                "top": 493.5,
+                "right": 515.02,
+                "bottom": 506.5,
+                "width": 70.04,
+                "height": 13
+              },
+              "labels": [
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 70,
+          "recentTextDraws": 3,
+          "hudTextDraws": 1
+        }
+      }
+    },
+    {
+      "phase": "early",
+      "atMs": 1200,
+      "snapshot": {
+        "state": "playing",
+        "score": 100,
+        "best": 100,
+        "fps": 60,
+        "time": 1.2499,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 0.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 3,
+            "type": "active_delivery_target_updated",
+            "time": 0.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "target": "Marina Cafe",
+              "stage": 1,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 4,
+            "type": "courier_scooter_driven",
+            "time": 0.35,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "speed": 175,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 5,
+            "type": "obstacle_contact_count_changed",
+            "time": 0.983,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 1
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 18.76,
+                "top": 12.12,
+                "right": 200.76,
+                "bottom": 59.12,
+                "width": 182,
+                "height": 47
+              },
+              "labels": [
+                "TIME  67.5",
+                "TIME  67.4",
+                "TIME  67.3"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 627.76,
+                "top": 12.12,
+                "right": 944.76,
+                "bottom": 59.12,
+                "width": 317,
+                "height": 47
+              },
+              "labels": [
+                "DELIVER: Marina Cafe",
+                "BEST 100"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 444.51,
+                "top": 31.5,
+                "right": 515.49,
+                "bottom": 56.5,
+                "width": 70.98,
+                "height": 25
+              },
+              "labels": [
+                "100"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 41.76,
+                "top": 375.12,
+                "right": 921.76,
+                "bottom": 445.12,
+                "width": 880,
+                "height": 70
+              },
+              "labels": [
+                "Marina Cafe"
+              ],
+              "geometrySource": "canvas-fillRect+text"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 343.28,
+                "top": 479.18,
+                "right": 621.28,
+                "bottom": 527.18,
+                "width": 278,
+                "height": 48
+              },
+              "labels": [
+                "DELIVERIES  0 / 3"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-06",
+              "bounds": {
+                "left": 321.48,
+                "top": 509.31,
+                "right": 637.8,
+                "bottom": 518.31,
+                "width": 316.32,
+                "height": 9
+              },
+              "labels": [
+                "PARCEL LOADED — FOLLOW THE CORAL ROUTE"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-07",
+              "bounds": {
+                "left": 323.61,
+                "top": 509.62,
+                "right": 639.92,
+                "bottom": 518.62,
+                "width": 316.31,
+                "height": 9
+              },
+              "labels": [
+                "PARCEL LOADED — FOLLOW THE CORAL ROUTE"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-08",
+              "bounds": {
+                "left": 321.84,
+                "top": 510.5,
+                "right": 638.16,
+                "bottom": 519.5,
+                "width": 316.32,
+                "height": 9
+              },
+              "labels": [
+                "PARCEL LOADED — FOLLOW THE CORAL ROUTE"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-09",
+              "bounds": {
+                "left": 325.62,
+                "top": 512.36,
+                "right": 641.94,
+                "bottom": 521.36,
+                "width": 316.32,
+                "height": 9
+              },
+              "labels": [
+                "PARCEL LOADED — FOLLOW THE CORAL ROUTE"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-10",
+              "bounds": {
+                "left": 324.58,
+                "top": 512.65,
+                "right": 640.9,
+                "bottom": 521.65,
+                "width": 316.32,
+                "height": 9
+              },
+              "labels": [
+                "PARCEL LOADED — FOLLOW THE CORAL ROUTE"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-11",
+              "bounds": {
+                "left": 324.06,
+                "top": 514.35,
+                "right": 640.38,
+                "bottom": 523.35,
+                "width": 316.32,
+                "height": 9
+              },
+              "labels": [
+                "PARCEL LOADED — FOLLOW THE CORAL ROUTE"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-06",
+              "intersection": {
+                "left": 343.28,
+                "top": 509.31,
+                "right": 621.28,
+                "bottom": 518.31,
+                "width": 278,
+                "height": 9
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-07",
+              "intersection": {
+                "left": 343.28,
+                "top": 509.62,
+                "right": 621.28,
+                "bottom": 518.62,
+                "width": 278,
+                "height": 9
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-08",
+              "intersection": {
+                "left": 343.28,
+                "top": 510.5,
+                "right": 621.28,
+                "bottom": 519.5,
+                "width": 278,
+                "height": 9
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-09",
+              "intersection": {
+                "left": 343.28,
+                "top": 512.36,
+                "right": 621.28,
+                "bottom": 521.36,
+                "width": 278,
+                "height": 9
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-10",
+              "intersection": {
+                "left": 343.28,
+                "top": 512.65,
+                "right": 621.28,
+                "bottom": 521.65,
+                "width": 278,
+                "height": 9
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-11",
+              "intersection": {
+                "left": 343.28,
+                "top": 514.35,
+                "right": 621.28,
+                "bottom": 523.35,
+                "width": 278,
+                "height": 9
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-07",
+              "intersection": {
+                "left": 323.61,
+                "top": 509.62,
+                "right": 637.8,
+                "bottom": 518.31,
+                "width": 314.19,
+                "height": 8.69
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-08",
+              "intersection": {
+                "left": 321.84,
+                "top": 510.5,
+                "right": 637.8,
+                "bottom": 518.31,
+                "width": 315.96,
+                "height": 7.81
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-09",
+              "intersection": {
+                "left": 325.62,
+                "top": 512.36,
+                "right": 637.8,
+                "bottom": 518.31,
+                "width": 312.18,
+                "height": 5.95
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-10",
+              "intersection": {
+                "left": 324.58,
+                "top": 512.65,
+                "right": 637.8,
+                "bottom": 518.31,
+                "width": 313.22,
+                "height": 5.66
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-11",
+              "intersection": {
+                "left": 324.06,
+                "top": 514.35,
+                "right": 637.8,
+                "bottom": 518.31,
+                "width": 313.74,
+                "height": 3.96
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-07",
+              "regionB": "HUD-08",
+              "intersection": {
+                "left": 323.61,
+                "top": 510.5,
+                "right": 638.16,
+                "bottom": 518.62,
+                "width": 314.55,
+                "height": 8.12
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-07",
+              "regionB": "HUD-09",
+              "intersection": {
+                "left": 325.62,
+                "top": 512.36,
+                "right": 639.92,
+                "bottom": 518.62,
+                "width": 314.3,
+                "height": 6.26
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-07",
+              "regionB": "HUD-10",
+              "intersection": {
+                "left": 324.58,
+                "top": 512.65,
+                "right": 639.92,
+                "bottom": 518.62,
+                "width": 315.34,
+                "height": 5.97
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-07",
+              "regionB": "HUD-11",
+              "intersection": {
+                "left": 324.06,
+                "top": 514.35,
+                "right": 639.92,
+                "bottom": 518.62,
+                "width": 315.86,
+                "height": 4.27
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-08",
+              "regionB": "HUD-09",
+              "intersection": {
+                "left": 325.62,
+                "top": 512.36,
+                "right": 638.16,
+                "bottom": 519.5,
+                "width": 312.54,
+                "height": 7.14
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-08",
+              "regionB": "HUD-10",
+              "intersection": {
+                "left": 324.58,
+                "top": 512.65,
+                "right": 638.16,
+                "bottom": 519.5,
+                "width": 313.58,
+                "height": 6.85
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-08",
+              "regionB": "HUD-11",
+              "intersection": {
+                "left": 324.06,
+                "top": 514.35,
+                "right": 638.16,
+                "bottom": 519.5,
+                "width": 314.1,
+                "height": 5.15
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-09",
+              "regionB": "HUD-10",
+              "intersection": {
+                "left": 325.62,
+                "top": 512.65,
+                "right": 640.9,
+                "bottom": 521.36,
+                "width": 315.28,
+                "height": 8.71
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-09",
+              "regionB": "HUD-11",
+              "intersection": {
+                "left": 325.62,
+                "top": 514.35,
+                "right": 640.38,
+                "bottom": 521.36,
+                "width": 314.76,
+                "height": 7.01
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-10",
+              "regionB": "HUD-11",
+              "intersection": {
+                "left": 324.58,
+                "top": 514.35,
+                "right": 640.38,
+                "bottom": 521.65,
+                "width": 315.8,
+                "height": 7.3
+              }
+            }
+          ],
+          "recentDrawCalls": 1024,
+          "recentTextDraws": 41,
+          "hudTextDraws": 35
+        }
+      }
+    },
+    {
+      "phase": "mid",
+      "atMs": 3500,
+      "snapshot": {
+        "state": "playing",
+        "score": 100,
+        "best": 100,
+        "fps": 60,
+        "time": 3.549899999999996,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 0.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 3,
+            "type": "active_delivery_target_updated",
+            "time": 0.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "target": "Marina Cafe",
+              "stage": 1,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 4,
+            "type": "courier_scooter_driven",
+            "time": 0.35,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "speed": 175,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 5,
+            "type": "obstacle_contact_count_changed",
+            "time": 0.983,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 6,
+            "type": "obstacle_contact_count_changed",
+            "time": 1.45,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 1,
+              "after": 2
+            }
+          },
+          {
+            "seq": 7,
+            "type": "obstacle_contact_count_changed",
+            "time": 1.917,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 2,
+              "after": 3
+            }
+          },
+          {
+            "seq": 8,
+            "type": "obstacle_contact_count_changed",
+            "time": 2.383,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 3,
+              "after": 4
+            }
+          },
+          {
+            "seq": 9,
+            "type": "obstacle_contact_count_changed",
+            "time": 2.833,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 4,
+              "after": 5
+            }
+          },
+          {
+            "seq": 10,
+            "type": "obstacle_contact_count_changed",
+            "time": 3.3,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 5,
+              "after": 6
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 15.11,
+                "top": 12.81,
+                "right": 197.11,
+                "bottom": 59.81,
+                "width": 182,
+                "height": 47
+              },
+              "labels": [
+                "TIME  65.2",
+                "TIME  65.1",
+                "TIME  65.0"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 624.11,
+                "top": 12.81,
+                "right": 941.11,
+                "bottom": 59.81,
+                "width": 317,
+                "height": 47
+              },
+              "labels": [
+                "DELIVER: Marina Cafe",
+                "BEST 100"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 444.51,
+                "top": 31.5,
+                "right": 515.49,
+                "bottom": 56.5,
+                "width": 70.98,
+                "height": 25
+              },
+              "labels": [
+                "100"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 38.11,
+                "top": 375.81,
+                "right": 918.11,
+                "bottom": 445.81,
+                "width": 880,
+                "height": 70
+              },
+              "labels": [
+                "Marina Cafe"
+              ],
+              "geometrySource": "canvas-fillRect+text"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 339.11,
+                "top": 475.81,
+                "right": 617.11,
+                "bottom": 523.81,
+                "width": 278,
+                "height": 48
+              },
+              "labels": [
+                "DELIVERIES  0 / 3",
+                "PARCEL ON BOARD"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 1024,
+          "recentTextDraws": 48,
+          "hudTextDraws": 41
+        }
+      }
+    },
+    {
+      "phase": "end",
+      "atMs": 12000,
+      "snapshot": {
+        "state": "playing",
+        "score": 100,
+        "best": 100,
+        "fps": 60,
+        "time": 12.049499999999966,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 0.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 3,
+            "type": "active_delivery_target_updated",
+            "time": 0.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "target": "Marina Cafe",
+              "stage": 1,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 4,
+            "type": "courier_scooter_driven",
+            "time": 0.35,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "speed": 175,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 5,
+            "type": "obstacle_contact_count_changed",
+            "time": 0.983,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 6,
+            "type": "obstacle_contact_count_changed",
+            "time": 1.45,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 1,
+              "after": 2
+            }
+          },
+          {
+            "seq": 7,
+            "type": "obstacle_contact_count_changed",
+            "time": 1.917,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 2,
+              "after": 3
+            }
+          },
+          {
+            "seq": 8,
+            "type": "obstacle_contact_count_changed",
+            "time": 2.383,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 3,
+              "after": 4
+            }
+          },
+          {
+            "seq": 9,
+            "type": "obstacle_contact_count_changed",
+            "time": 2.833,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 4,
+              "after": 5
+            }
+          },
+          {
+            "seq": 10,
+            "type": "obstacle_contact_count_changed",
+            "time": 3.3,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 5,
+              "after": 6
+            }
+          },
+          {
+            "seq": 11,
+            "type": "obstacle_contact_count_changed",
+            "time": 3.75,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 6,
+              "after": 7
+            }
+          },
+          {
+            "seq": 12,
+            "type": "obstacle_contact_count_changed",
+            "time": 4.2,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 7,
+              "after": 8
+            }
+          },
+          {
+            "seq": 13,
+            "type": "obstacle_contact_count_changed",
+            "time": 4.65,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 8,
+              "after": 9
+            }
+          },
+          {
+            "seq": 14,
+            "type": "obstacle_contact_count_changed",
+            "time": 5.117,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 9,
+              "after": 10
+            }
+          },
+          {
+            "seq": 15,
+            "type": "obstacle_contact_count_changed",
+            "time": 5.583,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 10,
+              "after": 11
+            }
+          },
+          {
+            "seq": 16,
+            "type": "obstacle_contact_count_changed",
+            "time": 6.05,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 11,
+              "after": 12
+            }
+          },
+          {
+            "seq": 17,
+            "type": "obstacle_contact_count_changed",
+            "time": 6.5,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 12,
+              "after": 13
+            }
+          },
+          {
+            "seq": 18,
+            "type": "obstacle_contact_count_changed",
+            "time": 6.95,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 13,
+              "after": 14
+            }
+          },
+          {
+            "seq": 19,
+            "type": "obstacle_contact_count_changed",
+            "time": 7.416,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 14,
+              "after": 15
+            }
+          },
+          {
+            "seq": 20,
+            "type": "obstacle_contact_count_changed",
+            "time": 7.883,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 15,
+              "after": 16
+            }
+          },
+          {
+            "seq": 21,
+            "type": "obstacle_contact_count_changed",
+            "time": 8.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 16,
+              "after": 17
+            }
+          },
+          {
+            "seq": 22,
+            "type": "obstacle_contact_count_changed",
+            "time": 8.8,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 17,
+              "after": 18
+            }
+          },
+          {
+            "seq": 23,
+            "type": "obstacle_contact_count_changed",
+            "time": 9.266,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 18,
+              "after": 19
+            }
+          },
+          {
+            "seq": 24,
+            "type": "obstacle_contact_count_changed",
+            "time": 9.716,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 19,
+              "after": 20
+            }
+          },
+          {
+            "seq": 25,
+            "type": "obstacle_contact_count_changed",
+            "time": 10.183,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 20,
+              "after": 21
+            }
+          },
+          {
+            "seq": 26,
+            "type": "obstacle_contact_count_changed",
+            "time": 10.633,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 21,
+              "after": 22
+            }
+          },
+          {
+            "seq": 27,
+            "type": "obstacle_contact_count_changed",
+            "time": 11.1,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 22,
+              "after": 23
+            }
+          },
+          {
+            "seq": 28,
+            "type": "obstacle_contact_count_changed",
+            "time": 11.566,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 23,
+              "after": 24
+            }
+          },
+          {
+            "seq": 29,
+            "type": "obstacle_contact_count_changed",
+            "time": 12.016,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 24,
+              "after": 25
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 17,
+                "top": 13,
+                "right": 199,
+                "bottom": 60,
+                "width": 182,
+                "height": 47
+              },
+              "labels": [
+                "TIME  56.7",
+                "TIME  56.6",
+                "TIME  56.5"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 626,
+                "top": 13,
+                "right": 943,
+                "bottom": 60,
+                "width": 317,
+                "height": 47
+              },
+              "labels": [
+                "DELIVER: Marina Cafe",
+                "BEST 100"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 444.51,
+                "top": 31.5,
+                "right": 515.49,
+                "bottom": 56.5,
+                "width": 70.98,
+                "height": 25
+              },
+              "labels": [
+                "100"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 40,
+                "top": 376,
+                "right": 920,
+                "bottom": 446,
+                "width": 880,
+                "height": 70
+              },
+              "labels": [
+                "Marina Cafe"
+              ],
+              "geometrySource": "canvas-fillRect+text"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 341,
+                "top": 476,
+                "right": 619,
+                "bottom": 524,
+                "width": 278,
+                "height": 48
+              },
+              "labels": [
+                "DELIVERIES  0 / 3",
+                "PARCEL ON BOARD"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 1024,
+          "recentTextDraws": 28,
+          "hudTextDraws": 24
+        }
+      }
+    },
+    {
+      "phase": "success-proof:start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 63,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": [],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 444.98,
+                "top": 493.5,
+                "right": 515.02,
+                "bottom": 506.5,
+                "width": 70.04,
+                "height": 13
+              },
+              "labels": [
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 70,
+          "recentTextDraws": 3,
+          "hudTextDraws": 1
+        }
+      },
+      "scenarioId": "success-proof"
+    },
+    {
+      "phase": "success-proof:end",
+      "atMs": 75000,
+      "snapshot": {
+        "state": "playing",
+        "score": 100,
+        "best": 100,
+        "fps": 60,
+        "time": 6.266400000000012,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 43,
+            "type": "obstacle_contact_count_changed",
+            "time": 18.416,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 38,
+              "after": 39
+            }
+          },
+          {
+            "seq": 44,
+            "type": "obstacle_contact_count_changed",
+            "time": 18.883,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 39,
+              "after": 40
+            }
+          },
+          {
+            "seq": 45,
+            "type": "obstacle_contact_count_changed",
+            "time": 19.349,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 40,
+              "after": 41
+            }
+          },
+          {
+            "seq": 46,
+            "type": "obstacle_contact_count_changed",
+            "time": 19.799,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 41,
+              "after": 42
+            }
+          },
+          {
+            "seq": 47,
+            "type": "obstacle_contact_count_changed",
+            "time": 20.266,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 42,
+              "after": 43
+            }
+          },
+          {
+            "seq": 48,
+            "type": "obstacle_contact_count_changed",
+            "time": 20.732,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 43,
+              "after": 44
+            }
+          },
+          {
+            "seq": 49,
+            "type": "obstacle_contact_count_changed",
+            "time": 21.199,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 44,
+              "after": 45
+            }
+          },
+          {
+            "seq": 50,
+            "type": "obstacle_contact_count_changed",
+            "time": 21.666,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 45,
+              "after": 46
+            }
+          },
+          {
+            "seq": 51,
+            "type": "obstacle_contact_count_changed",
+            "time": 22.132,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 46,
+              "after": 47
+            }
+          },
+          {
+            "seq": 52,
+            "type": "obstacle_contact_count_changed",
+            "time": 22.599,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 47,
+              "after": 48
+            }
+          },
+          {
+            "seq": 53,
+            "type": "obstacle_contact_count_changed",
+            "time": 23.066,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 48,
+              "after": 49
+            }
+          },
+          {
+            "seq": 54,
+            "type": "obstacle_contact_count_changed",
+            "time": 23.532,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 49,
+              "after": 50
+            }
+          },
+          {
+            "seq": 55,
+            "type": "obstacle_contact_count_changed",
+            "time": 23.999,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 50,
+              "after": 51
+            }
+          },
+          {
+            "seq": 56,
+            "type": "obstacle_contact_count_changed",
+            "time": 24.466,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 51,
+              "after": 52
+            }
+          },
+          {
+            "seq": 57,
+            "type": "obstacle_contact_count_changed",
+            "time": 24.932,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 52,
+              "after": 53
+            }
+          },
+          {
+            "seq": 58,
+            "type": "obstacle_contact_count_changed",
+            "time": 25.399,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 53,
+              "after": 54
+            }
+          },
+          {
+            "seq": 59,
+            "type": "obstacle_contact_count_changed",
+            "time": 25.866,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 54,
+              "after": 55
+            }
+          },
+          {
+            "seq": 60,
+            "type": "obstacle_contact_count_changed",
+            "time": 26.316,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 55,
+              "after": 56
+            }
+          },
+          {
+            "seq": 61,
+            "type": "obstacle_contact_count_changed",
+            "time": 26.782,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 56,
+              "after": 57
+            }
+          },
+          {
+            "seq": 62,
+            "type": "obstacle_contact_count_changed",
+            "time": 27.249,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 57,
+              "after": 58
+            }
+          },
+          {
+            "seq": 63,
+            "type": "obstacle_contact_count_changed",
+            "time": 27.716,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 58,
+              "after": 59
+            }
+          },
+          {
+            "seq": 64,
+            "type": "obstacle_contact_count_changed",
+            "time": 28.182,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 59,
+              "after": 60
+            }
+          },
+          {
+            "seq": 65,
+            "type": "obstacle_contact_count_changed",
+            "time": 28.649,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 60,
+              "after": 61
+            }
+          },
+          {
+            "seq": 66,
+            "type": "obstacle_contact_count_changed",
+            "time": 29.115,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 61,
+              "after": 62
+            }
+          },
+          {
+            "seq": 67,
+            "type": "obstacle_contact_count_changed",
+            "time": 29.582,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 62,
+              "after": 63
+            }
+          },
+          {
+            "seq": 68,
+            "type": "obstacle_contact_count_changed",
+            "time": 30.049,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 63,
+              "after": 64
+            }
+          },
+          {
+            "seq": 69,
+            "type": "obstacle_contact_count_changed",
+            "time": 30.515,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 64,
+              "after": 65
+            }
+          },
+          {
+            "seq": 70,
+            "type": "obstacle_contact_count_changed",
+            "time": 30.982,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 65,
+              "after": 66
+            }
+          },
+          {
+            "seq": 71,
+            "type": "obstacle_contact_count_changed",
+            "time": 31.449,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 66,
+              "after": 67
+            }
+          },
+          {
+            "seq": 72,
+            "type": "obstacle_contact_count_changed",
+            "time": 31.915,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 67,
+              "after": 68
+            }
+          },
+          {
+            "seq": 73,
+            "type": "obstacle_contact_count_changed",
+            "time": 32.365,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 68,
+              "after": 69
+            }
+          },
+          {
+            "seq": 74,
+            "type": "obstacle_contact_count_changed",
+            "time": 32.815,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 69,
+              "after": 70
+            }
+          },
+          {
+            "seq": 75,
+            "type": "obstacle_contact_count_changed",
+            "time": 33.265,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 70,
+              "after": 71
+            }
+          },
+          {
+            "seq": 76,
+            "type": "obstacle_contact_count_changed",
+            "time": 33.715,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 71,
+              "after": 72
+            }
+          },
+          {
+            "seq": 77,
+            "type": "obstacle_contact_count_changed",
+            "time": 34.165,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 72,
+              "after": 73
+            }
+          },
+          {
+            "seq": 78,
+            "type": "obstacle_contact_count_changed",
+            "time": 34.632,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 73,
+              "after": 74
+            }
+          },
+          {
+            "seq": 79,
+            "type": "obstacle_contact_count_changed",
+            "time": 35.082,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 74,
+              "after": 75
+            }
+          },
+          {
+            "seq": 80,
+            "type": "obstacle_contact_count_changed",
+            "time": 35.532,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 75,
+              "after": 76
+            }
+          },
+          {
+            "seq": 81,
+            "type": "obstacle_contact_count_changed",
+            "time": 35.999,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 76,
+              "after": 77
+            }
+          },
+          {
+            "seq": 82,
+            "type": "obstacle_contact_count_changed",
+            "time": 36.449,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 77,
+              "after": 78
+            }
+          },
+          {
+            "seq": 83,
+            "type": "obstacle_contact_count_changed",
+            "time": 36.899,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 78,
+              "after": 79
+            }
+          },
+          {
+            "seq": 84,
+            "type": "obstacle_contact_count_changed",
+            "time": 37.365,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 79,
+              "after": 80
+            }
+          },
+          {
+            "seq": 85,
+            "type": "obstacle_contact_count_changed",
+            "time": 37.815,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 80,
+              "after": 81
+            }
+          },
+          {
+            "seq": 86,
+            "type": "obstacle_contact_count_changed",
+            "time": 38.282,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 81,
+              "after": 82
+            }
+          },
+          {
+            "seq": 87,
+            "type": "obstacle_contact_count_changed",
+            "time": 38.732,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 82,
+              "after": 83
+            }
+          },
+          {
+            "seq": 88,
+            "type": "obstacle_contact_count_changed",
+            "time": 39.199,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 83,
+              "after": 84
+            }
+          },
+          {
+            "seq": 89,
+            "type": "obstacle_contact_count_changed",
+            "time": 39.665,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 84,
+              "after": 85
+            }
+          },
+          {
+            "seq": 90,
+            "type": "obstacle_contact_count_changed",
+            "time": 40.115,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 85,
+              "after": 86
+            }
+          },
+          {
+            "seq": 91,
+            "type": "obstacle_contact_count_changed",
+            "time": 40.565,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 86,
+              "after": 87
+            }
+          },
+          {
+            "seq": 92,
+            "type": "obstacle_contact_count_changed",
+            "time": 41.015,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 87,
+              "after": 88
+            }
+          },
+          {
+            "seq": 93,
+            "type": "obstacle_contact_count_changed",
+            "time": 41.465,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 88,
+              "after": 89
+            }
+          },
+          {
+            "seq": 94,
+            "type": "obstacle_contact_count_changed",
+            "time": 41.932,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 89,
+              "after": 90
+            }
+          },
+          {
+            "seq": 95,
+            "type": "obstacle_contact_count_changed",
+            "time": 42.382,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 90,
+              "after": 91
+            }
+          },
+          {
+            "seq": 96,
+            "type": "obstacle_contact_count_changed",
+            "time": 42.848,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 91,
+              "after": 92
+            }
+          },
+          {
+            "seq": 97,
+            "type": "obstacle_contact_count_changed",
+            "time": 43.298,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 92,
+              "after": 93
+            }
+          },
+          {
+            "seq": 98,
+            "type": "obstacle_contact_count_changed",
+            "time": 43.765,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 93,
+              "after": 94
+            }
+          },
+          {
+            "seq": 99,
+            "type": "obstacle_contact_count_changed",
+            "time": 44.215,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 94,
+              "after": 95
+            }
+          },
+          {
+            "seq": 100,
+            "type": "obstacle_contact_count_changed",
+            "time": 44.665,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 95,
+              "after": 96
+            }
+          },
+          {
+            "seq": 101,
+            "type": "obstacle_contact_count_changed",
+            "time": 45.132,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 96,
+              "after": 97
+            }
+          },
+          {
+            "seq": 102,
+            "type": "obstacle_contact_count_changed",
+            "time": 45.582,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 97,
+              "after": 98
+            }
+          },
+          {
+            "seq": 103,
+            "type": "obstacle_contact_count_changed",
+            "time": 46.048,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 98,
+              "after": 99
+            }
+          },
+          {
+            "seq": 104,
+            "type": "obstacle_contact_count_changed",
+            "time": 46.498,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 99,
+              "after": 100
+            }
+          },
+          {
+            "seq": 105,
+            "type": "obstacle_contact_count_changed",
+            "time": 46.948,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 100,
+              "after": 101
+            }
+          },
+          {
+            "seq": 106,
+            "type": "obstacle_contact_count_changed",
+            "time": 47.415,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 101,
+              "after": 102
+            }
+          },
+          {
+            "seq": 107,
+            "type": "obstacle_contact_count_changed",
+            "time": 47.865,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 102,
+              "after": 103
+            }
+          },
+          {
+            "seq": 108,
+            "type": "obstacle_contact_count_changed",
+            "time": 48.331,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 103,
+              "after": 104
+            }
+          },
+          {
+            "seq": 109,
+            "type": "obstacle_contact_count_changed",
+            "time": 48.781,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 104,
+              "after": 105
+            }
+          },
+          {
+            "seq": 110,
+            "type": "obstacle_contact_count_changed",
+            "time": 49.231,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 105,
+              "after": 106
+            }
+          },
+          {
+            "seq": 111,
+            "type": "obstacle_contact_count_changed",
+            "time": 49.681,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 106,
+              "after": 107
+            }
+          },
+          {
+            "seq": 112,
+            "type": "obstacle_contact_count_changed",
+            "time": 50.131,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 107,
+              "after": 108
+            }
+          },
+          {
+            "seq": 113,
+            "type": "obstacle_contact_count_changed",
+            "time": 50.598,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 108,
+              "after": 109
+            }
+          },
+          {
+            "seq": 114,
+            "type": "obstacle_contact_count_changed",
+            "time": 51.048,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 109,
+              "after": 110
+            }
+          },
+          {
+            "seq": 115,
+            "type": "obstacle_contact_count_changed",
+            "time": 51.498,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 110,
+              "after": 111
+            }
+          },
+          {
+            "seq": 116,
+            "type": "obstacle_contact_count_changed",
+            "time": 51.948,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 111,
+              "after": 112
+            }
+          },
+          {
+            "seq": 117,
+            "type": "obstacle_contact_count_changed",
+            "time": 52.415,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 112,
+              "after": 113
+            }
+          },
+          {
+            "seq": 118,
+            "type": "obstacle_contact_count_changed",
+            "time": 52.865,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 113,
+              "after": 114
+            }
+          },
+          {
+            "seq": 119,
+            "type": "obstacle_contact_count_changed",
+            "time": 53.315,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 114,
+              "after": 115
+            }
+          },
+          {
+            "seq": 120,
+            "type": "obstacle_contact_count_changed",
+            "time": 53.765,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 115,
+              "after": 116
+            }
+          },
+          {
+            "seq": 121,
+            "type": "obstacle_contact_count_changed",
+            "time": 54.231,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 116,
+              "after": 117
+            }
+          },
+          {
+            "seq": 122,
+            "type": "obstacle_contact_count_changed",
+            "time": 54.681,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 117,
+              "after": 118
+            }
+          },
+          {
+            "seq": 123,
+            "type": "obstacle_contact_count_changed",
+            "time": 55.131,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 118,
+              "after": 119
+            }
+          },
+          {
+            "seq": 124,
+            "type": "obstacle_contact_count_changed",
+            "time": 55.598,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 119,
+              "after": 120
+            }
+          },
+          {
+            "seq": 125,
+            "type": "obstacle_contact_count_changed",
+            "time": 56.064,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 120,
+              "after": 121
+            }
+          },
+          {
+            "seq": 126,
+            "type": "obstacle_contact_count_changed",
+            "time": 56.514,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 121,
+              "after": 122
+            }
+          },
+          {
+            "seq": 127,
+            "type": "obstacle_contact_count_changed",
+            "time": 56.964,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 122,
+              "after": 123
+            }
+          },
+          {
+            "seq": 128,
+            "type": "obstacle_contact_count_changed",
+            "time": 57.414,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 123,
+              "after": 124
+            }
+          },
+          {
+            "seq": 129,
+            "type": "obstacle_contact_count_changed",
+            "time": 57.864,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 124,
+              "after": 125
+            }
+          },
+          {
+            "seq": 130,
+            "type": "obstacle_contact_count_changed",
+            "time": 58.331,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 125,
+              "after": 126
+            }
+          },
+          {
+            "seq": 131,
+            "type": "obstacle_contact_count_changed",
+            "time": 58.798,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 126,
+              "after": 127
+            }
+          },
+          {
+            "seq": 132,
+            "type": "obstacle_contact_count_changed",
+            "time": 59.248,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 127,
+              "after": 128
+            }
+          },
+          {
+            "seq": 133,
+            "type": "obstacle_contact_count_changed",
+            "time": 59.714,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 128,
+              "after": 129
+            }
+          },
+          {
+            "seq": 134,
+            "type": "obstacle_contact_count_changed",
+            "time": 60.164,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 129,
+              "after": 130
+            }
+          },
+          {
+            "seq": 135,
+            "type": "obstacle_contact_count_changed",
+            "time": 60.614,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 130,
+              "after": 131
+            }
+          },
+          {
+            "seq": 136,
+            "type": "obstacle_contact_count_changed",
+            "time": 61.081,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 131,
+              "after": 132
+            }
+          },
+          {
+            "seq": 137,
+            "type": "obstacle_contact_count_changed",
+            "time": 61.531,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 132,
+              "after": 133
+            }
+          },
+          {
+            "seq": 138,
+            "type": "obstacle_contact_count_changed",
+            "time": 61.981,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 133,
+              "after": 134
+            }
+          },
+          {
+            "seq": 139,
+            "type": "obstacle_contact_count_changed",
+            "time": 62.448,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 134,
+              "after": 135
+            }
+          },
+          {
+            "seq": 140,
+            "type": "obstacle_contact_count_changed",
+            "time": 62.914,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 135,
+              "after": 136
+            }
+          },
+          {
+            "seq": 141,
+            "type": "obstacle_contact_count_changed",
+            "time": 63.364,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 136,
+              "after": 137
+            }
+          },
+          {
+            "seq": 142,
+            "type": "obstacle_contact_count_changed",
+            "time": 63.831,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 137,
+              "after": 138
+            }
+          },
+          {
+            "seq": 143,
+            "type": "obstacle_contact_count_changed",
+            "time": 64.281,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 138,
+              "after": 139
+            }
+          },
+          {
+            "seq": 144,
+            "type": "obstacle_contact_count_changed",
+            "time": 64.731,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 139,
+              "after": 140
+            }
+          },
+          {
+            "seq": 145,
+            "type": "obstacle_contact_count_changed",
+            "time": 65.181,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 140,
+              "after": 141
+            }
+          },
+          {
+            "seq": 146,
+            "type": "obstacle_contact_count_changed",
+            "time": 65.647,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 141,
+              "after": 142
+            }
+          },
+          {
+            "seq": 147,
+            "type": "obstacle_contact_count_changed",
+            "time": 66.097,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 142,
+              "after": 143
+            }
+          },
+          {
+            "seq": 148,
+            "type": "obstacle_contact_count_changed",
+            "time": 66.547,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 143,
+              "after": 144
+            }
+          },
+          {
+            "seq": 149,
+            "type": "obstacle_contact_count_changed",
+            "time": 67.014,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 144,
+              "after": 145
+            }
+          },
+          {
+            "seq": 150,
+            "type": "obstacle_contact_count_changed",
+            "time": 67.464,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 145,
+              "after": 146
+            }
+          },
+          {
+            "seq": 151,
+            "type": "obstacle_contact_count_changed",
+            "time": 67.931,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 146,
+              "after": 147
+            }
+          },
+          {
+            "seq": 152,
+            "type": "obstacle_contact_count_changed",
+            "time": 68.397,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 147,
+              "after": 148
+            }
+          },
+          {
+            "seq": 153,
+            "type": "game_over",
+            "time": 68.614,
+            "state": "gameover",
+            "score": 100,
+            "data": {
+              "from": "playing",
+              "to": "gameover"
+            }
+          },
+          {
+            "seq": 154,
+            "type": "fresh_run_started",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "timer": 70,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 155,
+            "type": "score_changed",
+            "time": 0.083,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 156,
+            "type": "active_delivery_target_updated",
+            "time": 0.083,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "target": "Marina Cafe",
+              "stage": 1,
+              "carrying": true
+            }
+          },
+          {
+            "seq": 157,
+            "type": "courier_scooter_driven",
+            "time": 0.1,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "speed": 175,
+              "deliveries": 0
+            }
+          },
+          {
+            "seq": 158,
+            "type": "obstacle_contact_count_changed",
+            "time": 0.733,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 159,
+            "type": "obstacle_contact_count_changed",
+            "time": 1.183,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 1,
+              "after": 2
+            }
+          },
+          {
+            "seq": 160,
+            "type": "obstacle_contact_count_changed",
+            "time": 1.633,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 2,
+              "after": 3
+            }
+          },
+          {
+            "seq": 161,
+            "type": "obstacle_contact_count_changed",
+            "time": 2.1,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 3,
+              "after": 4
+            }
+          },
+          {
+            "seq": 162,
+            "type": "obstacle_contact_count_changed",
+            "time": 2.55,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 4,
+              "after": 5
+            }
+          },
+          {
+            "seq": 163,
+            "type": "obstacle_contact_count_changed",
+            "time": 3.016,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 5,
+              "after": 6
+            }
+          },
+          {
+            "seq": 164,
+            "type": "obstacle_contact_count_changed",
+            "time": 3.466,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 6,
+              "after": 7
+            }
+          },
+          {
+            "seq": 165,
+            "type": "obstacle_contact_count_changed",
+            "time": 3.916,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 7,
+              "after": 8
+            }
+          },
+          {
+            "seq": 166,
+            "type": "obstacle_contact_count_changed",
+            "time": 4.366,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 8,
+              "after": 9
+            }
+          },
+          {
+            "seq": 167,
+            "type": "obstacle_contact_count_changed",
+            "time": 4.833,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 9,
+              "after": 10
+            }
+          },
+          {
+            "seq": 168,
+            "type": "obstacle_contact_count_changed",
+            "time": 5.283,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 10,
+              "after": 11
+            }
+          },
+          {
+            "seq": 169,
+            "type": "obstacle_contact_count_changed",
+            "time": 5.75,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 11,
+              "after": 12
+            }
+          },
+          {
+            "seq": 170,
+            "type": "obstacle_contact_count_changed",
+            "time": 6.216,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 12,
+              "after": 13
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 17,
+                "top": 13,
+                "right": 199,
+                "bottom": 60,
+                "width": 182,
+                "height": 47
+              },
+              "labels": [
+                "TIME  63.9",
+                "TIME  63.8",
+                "TIME  63.7"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 626,
+                "top": 13,
+                "right": 943,
+                "bottom": 60,
+                "width": 317,
+                "height": 47
+              },
+              "labels": [
+                "DELIVER: Marina Cafe",
+                "BEST 100"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 444.51,
+                "top": 31.5,
+                "right": 515.49,
+                "bottom": 56.5,
+                "width": 70.98,
+                "height": 25
+              },
+              "labels": [
+                "100"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 40,
+                "top": 376,
+                "right": 920,
+                "bottom": 446,
+                "width": 880,
+                "height": 70
+              },
+              "labels": [
+                "Marina Cafe"
+              ],
+              "geometrySource": "canvas-fillRect+text"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 340.33,
+                "top": 475.81,
+                "right": 618.33,
+                "bottom": 523.81,
+                "width": 278,
+                "height": 48
+              },
+              "labels": [
+                "DELIVERIES  0 / 3",
+                "PARCEL ON BOARD"
+              ],
+              "geometrySource": "canvas-strokePathRect+text"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 1024,
+          "recentTextDraws": 31,
+          "hudTextDraws": 26
+        }
+      },
+      "scenarioId": "success-proof"
+    }
+  ],
+  "fps": 61,
+  "states": {
+    "start": {
+      "state": "title",
+      "score": 0,
+      "best": 0,
+      "fps": 63,
+      "time": 0,
+      "flags": [],
+      "errors": [],
+      "events": [],
+      "layout": {
+        "source": "playwright-canvas-draw-observation-v1",
+        "canvas": {
+          "domId": "game",
+          "logicalWidth": 960,
+          "logicalHeight": 540,
+          "intrinsicWidth": 960,
+          "intrinsicHeight": 540,
+          "logicalIntrinsicMatch": true
+        },
+        "regions": [
+          {
+            "id": "HUD-01",
+            "bounds": {
+              "left": 444.98,
+              "top": 493.5,
+              "right": 515.02,
+              "bottom": 506.5,
+              "width": 70.04,
+              "height": 13
+            },
+            "labels": [
+              "BEST 0"
+            ],
+            "geometrySource": "canvas-fillText"
+          }
+        ],
+        "issues": [],
+        "recentDrawCalls": 70,
+        "recentTextDraws": 3,
+        "hudTextDraws": 1
+      }
+    },
+    "early": {
+      "state": "playing",
+      "score": 100,
+      "best": 100,
+      "fps": 60,
+      "time": 1.2499,
+      "flags": [],
+      "errors": [],
+      "events": [
+        {
+          "seq": 1,
+          "type": "state_changed",
+          "time": 0,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "from": "title",
+            "to": "playing",
+            "scene": "play"
+          }
+        },
+        {
+          "seq": 2,
+          "type": "score_changed",
+          "time": 0.333,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 0,
+            "after": 100,
+            "delta": 100
+          }
+        },
+        {
+          "seq": 3,
+          "type": "active_delivery_target_updated",
+          "time": 0.333,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "target": "Marina Cafe",
+            "stage": 1,
+            "carrying": true
+          }
+        },
+        {
+          "seq": 4,
+          "type": "courier_scooter_driven",
+          "time": 0.35,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "speed": 175,
+            "deliveries": 0
+          }
+        },
+        {
+          "seq": 5,
+          "type": "obstacle_contact_count_changed",
+          "time": 0.983,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 0,
+            "after": 1
+          }
+        }
+      ],
+      "layout": {
+        "source": "playwright-canvas-draw-observation-v1",
+        "canvas": {
+          "domId": "game",
+          "logicalWidth": 960,
+          "logicalHeight": 540,
+          "intrinsicWidth": 960,
+          "intrinsicHeight": 540,
+          "logicalIntrinsicMatch": true
+        },
+        "regions": [
+          {
+            "id": "HUD-01",
+            "bounds": {
+              "left": 18.76,
+              "top": 12.12,
+              "right": 200.76,
+              "bottom": 59.12,
+              "width": 182,
+              "height": 47
+            },
+            "labels": [
+              "TIME  67.5",
+              "TIME  67.4",
+              "TIME  67.3"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          },
+          {
+            "id": "HUD-02",
+            "bounds": {
+              "left": 627.76,
+              "top": 12.12,
+              "right": 944.76,
+              "bottom": 59.12,
+              "width": 317,
+              "height": 47
+            },
+            "labels": [
+              "DELIVER: Marina Cafe",
+              "BEST 100"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          },
+          {
+            "id": "HUD-03",
+            "bounds": {
+              "left": 444.51,
+              "top": 31.5,
+              "right": 515.49,
+              "bottom": 56.5,
+              "width": 70.98,
+              "height": 25
+            },
+            "labels": [
+              "100"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-04",
+            "bounds": {
+              "left": 41.76,
+              "top": 375.12,
+              "right": 921.76,
+              "bottom": 445.12,
+              "width": 880,
+              "height": 70
+            },
+            "labels": [
+              "Marina Cafe"
+            ],
+            "geometrySource": "canvas-fillRect+text"
+          },
+          {
+            "id": "HUD-05",
+            "bounds": {
+              "left": 343.28,
+              "top": 479.18,
+              "right": 621.28,
+              "bottom": 527.18,
+              "width": 278,
+              "height": 48
+            },
+            "labels": [
+              "DELIVERIES  0 / 3"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          },
+          {
+            "id": "HUD-06",
+            "bounds": {
+              "left": 321.48,
+              "top": 509.31,
+              "right": 637.8,
+              "bottom": 518.31,
+              "width": 316.32,
+              "height": 9
+            },
+            "labels": [
+              "PARCEL LOADED — FOLLOW THE CORAL ROUTE"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-07",
+            "bounds": {
+              "left": 323.61,
+              "top": 509.62,
+              "right": 639.92,
+              "bottom": 518.62,
+              "width": 316.31,
+              "height": 9
+            },
+            "labels": [
+              "PARCEL LOADED — FOLLOW THE CORAL ROUTE"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-08",
+            "bounds": {
+              "left": 321.84,
+              "top": 510.5,
+              "right": 638.16,
+              "bottom": 519.5,
+              "width": 316.32,
+              "height": 9
+            },
+            "labels": [
+              "PARCEL LOADED — FOLLOW THE CORAL ROUTE"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-09",
+            "bounds": {
+              "left": 325.62,
+              "top": 512.36,
+              "right": 641.94,
+              "bottom": 521.36,
+              "width": 316.32,
+              "height": 9
+            },
+            "labels": [
+              "PARCEL LOADED — FOLLOW THE CORAL ROUTE"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-10",
+            "bounds": {
+              "left": 324.58,
+              "top": 512.65,
+              "right": 640.9,
+              "bottom": 521.65,
+              "width": 316.32,
+              "height": 9
+            },
+            "labels": [
+              "PARCEL LOADED — FOLLOW THE CORAL ROUTE"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-11",
+            "bounds": {
+              "left": 324.06,
+              "top": 514.35,
+              "right": 640.38,
+              "bottom": 523.35,
+              "width": 316.32,
+              "height": 9
+            },
+            "labels": [
+              "PARCEL LOADED — FOLLOW THE CORAL ROUTE"
+            ],
+            "geometrySource": "canvas-fillText"
+          }
+        ],
+        "issues": [
+          {
+            "type": "overlap",
+            "regionA": "HUD-05",
+            "regionB": "HUD-06",
+            "intersection": {
+              "left": 343.28,
+              "top": 509.31,
+              "right": 621.28,
+              "bottom": 518.31,
+              "width": 278,
+              "height": 9
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-05",
+            "regionB": "HUD-07",
+            "intersection": {
+              "left": 343.28,
+              "top": 509.62,
+              "right": 621.28,
+              "bottom": 518.62,
+              "width": 278,
+              "height": 9
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-05",
+            "regionB": "HUD-08",
+            "intersection": {
+              "left": 343.28,
+              "top": 510.5,
+              "right": 621.28,
+              "bottom": 519.5,
+              "width": 278,
+              "height": 9
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-05",
+            "regionB": "HUD-09",
+            "intersection": {
+              "left": 343.28,
+              "top": 512.36,
+              "right": 621.28,
+              "bottom": 521.36,
+              "width": 278,
+              "height": 9
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-05",
+            "regionB": "HUD-10",
+            "intersection": {
+              "left": 343.28,
+              "top": 512.65,
+              "right": 621.28,
+              "bottom": 521.65,
+              "width": 278,
+              "height": 9
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-05",
+            "regionB": "HUD-11",
+            "intersection": {
+              "left": 343.28,
+              "top": 514.35,
+              "right": 621.28,
+              "bottom": 523.35,
+              "width": 278,
+              "height": 9
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-06",
+            "regionB": "HUD-07",
+            "intersection": {
+              "left": 323.61,
+              "top": 509.62,
+              "right": 637.8,
+              "bottom": 518.31,
+              "width": 314.19,
+              "height": 8.69
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-06",
+            "regionB": "HUD-08",
+            "intersection": {
+              "left": 321.84,
+              "top": 510.5,
+              "right": 637.8,
+              "bottom": 518.31,
+              "width": 315.96,
+              "height": 7.81
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-06",
+            "regionB": "HUD-09",
+            "intersection": {
+              "left": 325.62,
+              "top": 512.36,
+              "right": 637.8,
+              "bottom": 518.31,
+              "width": 312.18,
+              "height": 5.95
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-06",
+            "regionB": "HUD-10",
+            "intersection": {
+              "left": 324.58,
+              "top": 512.65,
+              "right": 637.8,
+              "bottom": 518.31,
+              "width": 313.22,
+              "height": 5.66
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-06",
+            "regionB": "HUD-11",
+            "intersection": {
+              "left": 324.06,
+              "top": 514.35,
+              "right": 637.8,
+              "bottom": 518.31,
+              "width": 313.74,
+              "height": 3.96
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-07",
+            "regionB": "HUD-08",
+            "intersection": {
+              "left": 323.61,
+              "top": 510.5,
+              "right": 638.16,
+              "bottom": 518.62,
+              "width": 314.55,
+              "height": 8.12
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-07",
+            "regionB": "HUD-09",
+            "intersection": {
+              "left": 325.62,
+              "top": 512.36,
+              "right": 639.92,
+              "bottom": 518.62,
+              "width": 314.3,
+              "height": 6.26
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-07",
+            "regionB": "HUD-10",
+            "intersection": {
+              "left": 324.58,
+              "top": 512.65,
+              "right": 639.92,
+              "bottom": 518.62,
+              "width": 315.34,
+              "height": 5.97
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-07",
+            "regionB": "HUD-11",
+            "intersection": {
+              "left": 324.06,
+              "top": 514.35,
+              "right": 639.92,
+              "bottom": 518.62,
+              "width": 315.86,
+              "height": 4.27
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-08",
+            "regionB": "HUD-09",
+            "intersection": {
+              "left": 325.62,
+              "top": 512.36,
+              "right": 638.16,
+              "bottom": 519.5,
+              "width": 312.54,
+              "height": 7.14
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-08",
+            "regionB": "HUD-10",
+            "intersection": {
+              "left": 324.58,
+              "top": 512.65,
+              "right": 638.16,
+              "bottom": 519.5,
+              "width": 313.58,
+              "height": 6.85
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-08",
+            "regionB": "HUD-11",
+            "intersection": {
+              "left": 324.06,
+              "top": 514.35,
+              "right": 638.16,
+              "bottom": 519.5,
+              "width": 314.1,
+              "height": 5.15
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-09",
+            "regionB": "HUD-10",
+            "intersection": {
+              "left": 325.62,
+              "top": 512.65,
+              "right": 640.9,
+              "bottom": 521.36,
+              "width": 315.28,
+              "height": 8.71
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-09",
+            "regionB": "HUD-11",
+            "intersection": {
+              "left": 325.62,
+              "top": 514.35,
+              "right": 640.38,
+              "bottom": 521.36,
+              "width": 314.76,
+              "height": 7.01
+            }
+          },
+          {
+            "type": "overlap",
+            "regionA": "HUD-10",
+            "regionB": "HUD-11",
+            "intersection": {
+              "left": 324.58,
+              "top": 514.35,
+              "right": 640.38,
+              "bottom": 521.65,
+              "width": 315.8,
+              "height": 7.3
+            }
+          }
+        ],
+        "recentDrawCalls": 1024,
+        "recentTextDraws": 41,
+        "hudTextDraws": 35
+      }
+    },
+    "mid": {
+      "state": "playing",
+      "score": 100,
+      "best": 100,
+      "fps": 60,
+      "time": 3.549899999999996,
+      "flags": [],
+      "errors": [],
+      "events": [
+        {
+          "seq": 1,
+          "type": "state_changed",
+          "time": 0,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "from": "title",
+            "to": "playing",
+            "scene": "play"
+          }
+        },
+        {
+          "seq": 2,
+          "type": "score_changed",
+          "time": 0.333,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 0,
+            "after": 100,
+            "delta": 100
+          }
+        },
+        {
+          "seq": 3,
+          "type": "active_delivery_target_updated",
+          "time": 0.333,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "target": "Marina Cafe",
+            "stage": 1,
+            "carrying": true
+          }
+        },
+        {
+          "seq": 4,
+          "type": "courier_scooter_driven",
+          "time": 0.35,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "speed": 175,
+            "deliveries": 0
+          }
+        },
+        {
+          "seq": 5,
+          "type": "obstacle_contact_count_changed",
+          "time": 0.983,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 0,
+            "after": 1
+          }
+        },
+        {
+          "seq": 6,
+          "type": "obstacle_contact_count_changed",
+          "time": 1.45,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 1,
+            "after": 2
+          }
+        },
+        {
+          "seq": 7,
+          "type": "obstacle_contact_count_changed",
+          "time": 1.917,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 2,
+            "after": 3
+          }
+        },
+        {
+          "seq": 8,
+          "type": "obstacle_contact_count_changed",
+          "time": 2.383,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 3,
+            "after": 4
+          }
+        },
+        {
+          "seq": 9,
+          "type": "obstacle_contact_count_changed",
+          "time": 2.833,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 4,
+            "after": 5
+          }
+        },
+        {
+          "seq": 10,
+          "type": "obstacle_contact_count_changed",
+          "time": 3.3,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 5,
+            "after": 6
+          }
+        }
+      ],
+      "layout": {
+        "source": "playwright-canvas-draw-observation-v1",
+        "canvas": {
+          "domId": "game",
+          "logicalWidth": 960,
+          "logicalHeight": 540,
+          "intrinsicWidth": 960,
+          "intrinsicHeight": 540,
+          "logicalIntrinsicMatch": true
+        },
+        "regions": [
+          {
+            "id": "HUD-01",
+            "bounds": {
+              "left": 15.11,
+              "top": 12.81,
+              "right": 197.11,
+              "bottom": 59.81,
+              "width": 182,
+              "height": 47
+            },
+            "labels": [
+              "TIME  65.2",
+              "TIME  65.1",
+              "TIME  65.0"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          },
+          {
+            "id": "HUD-02",
+            "bounds": {
+              "left": 624.11,
+              "top": 12.81,
+              "right": 941.11,
+              "bottom": 59.81,
+              "width": 317,
+              "height": 47
+            },
+            "labels": [
+              "DELIVER: Marina Cafe",
+              "BEST 100"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          },
+          {
+            "id": "HUD-03",
+            "bounds": {
+              "left": 444.51,
+              "top": 31.5,
+              "right": 515.49,
+              "bottom": 56.5,
+              "width": 70.98,
+              "height": 25
+            },
+            "labels": [
+              "100"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-04",
+            "bounds": {
+              "left": 38.11,
+              "top": 375.81,
+              "right": 918.11,
+              "bottom": 445.81,
+              "width": 880,
+              "height": 70
+            },
+            "labels": [
+              "Marina Cafe"
+            ],
+            "geometrySource": "canvas-fillRect+text"
+          },
+          {
+            "id": "HUD-05",
+            "bounds": {
+              "left": 339.11,
+              "top": 475.81,
+              "right": 617.11,
+              "bottom": 523.81,
+              "width": 278,
+              "height": 48
+            },
+            "labels": [
+              "DELIVERIES  0 / 3",
+              "PARCEL ON BOARD"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          }
+        ],
+        "issues": [],
+        "recentDrawCalls": 1024,
+        "recentTextDraws": 48,
+        "hudTextDraws": 41
+      }
+    },
+    "end": {
+      "state": "playing",
+      "score": 100,
+      "best": 100,
+      "fps": 60,
+      "time": 12.049499999999966,
+      "flags": [],
+      "errors": [],
+      "events": [
+        {
+          "seq": 1,
+          "type": "state_changed",
+          "time": 0,
+          "state": "playing",
+          "score": 0,
+          "data": {
+            "from": "title",
+            "to": "playing",
+            "scene": "play"
+          }
+        },
+        {
+          "seq": 2,
+          "type": "score_changed",
+          "time": 0.333,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 0,
+            "after": 100,
+            "delta": 100
+          }
+        },
+        {
+          "seq": 3,
+          "type": "active_delivery_target_updated",
+          "time": 0.333,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "target": "Marina Cafe",
+            "stage": 1,
+            "carrying": true
+          }
+        },
+        {
+          "seq": 4,
+          "type": "courier_scooter_driven",
+          "time": 0.35,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "speed": 175,
+            "deliveries": 0
+          }
+        },
+        {
+          "seq": 5,
+          "type": "obstacle_contact_count_changed",
+          "time": 0.983,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 0,
+            "after": 1
+          }
+        },
+        {
+          "seq": 6,
+          "type": "obstacle_contact_count_changed",
+          "time": 1.45,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 1,
+            "after": 2
+          }
+        },
+        {
+          "seq": 7,
+          "type": "obstacle_contact_count_changed",
+          "time": 1.917,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 2,
+            "after": 3
+          }
+        },
+        {
+          "seq": 8,
+          "type": "obstacle_contact_count_changed",
+          "time": 2.383,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 3,
+            "after": 4
+          }
+        },
+        {
+          "seq": 9,
+          "type": "obstacle_contact_count_changed",
+          "time": 2.833,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 4,
+            "after": 5
+          }
+        },
+        {
+          "seq": 10,
+          "type": "obstacle_contact_count_changed",
+          "time": 3.3,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 5,
+            "after": 6
+          }
+        },
+        {
+          "seq": 11,
+          "type": "obstacle_contact_count_changed",
+          "time": 3.75,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 6,
+            "after": 7
+          }
+        },
+        {
+          "seq": 12,
+          "type": "obstacle_contact_count_changed",
+          "time": 4.2,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 7,
+            "after": 8
+          }
+        },
+        {
+          "seq": 13,
+          "type": "obstacle_contact_count_changed",
+          "time": 4.65,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 8,
+            "after": 9
+          }
+        },
+        {
+          "seq": 14,
+          "type": "obstacle_contact_count_changed",
+          "time": 5.117,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 9,
+            "after": 10
+          }
+        },
+        {
+          "seq": 15,
+          "type": "obstacle_contact_count_changed",
+          "time": 5.583,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 10,
+            "after": 11
+          }
+        },
+        {
+          "seq": 16,
+          "type": "obstacle_contact_count_changed",
+          "time": 6.05,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 11,
+            "after": 12
+          }
+        },
+        {
+          "seq": 17,
+          "type": "obstacle_contact_count_changed",
+          "time": 6.5,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 12,
+            "after": 13
+          }
+        },
+        {
+          "seq": 18,
+          "type": "obstacle_contact_count_changed",
+          "time": 6.95,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 13,
+            "after": 14
+          }
+        },
+        {
+          "seq": 19,
+          "type": "obstacle_contact_count_changed",
+          "time": 7.416,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 14,
+            "after": 15
+          }
+        },
+        {
+          "seq": 20,
+          "type": "obstacle_contact_count_changed",
+          "time": 7.883,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 15,
+            "after": 16
+          }
+        },
+        {
+          "seq": 21,
+          "type": "obstacle_contact_count_changed",
+          "time": 8.333,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 16,
+            "after": 17
+          }
+        },
+        {
+          "seq": 22,
+          "type": "obstacle_contact_count_changed",
+          "time": 8.8,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 17,
+            "after": 18
+          }
+        },
+        {
+          "seq": 23,
+          "type": "obstacle_contact_count_changed",
+          "time": 9.266,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 18,
+            "after": 19
+          }
+        },
+        {
+          "seq": 24,
+          "type": "obstacle_contact_count_changed",
+          "time": 9.716,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 19,
+            "after": 20
+          }
+        },
+        {
+          "seq": 25,
+          "type": "obstacle_contact_count_changed",
+          "time": 10.183,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 20,
+            "after": 21
+          }
+        },
+        {
+          "seq": 26,
+          "type": "obstacle_contact_count_changed",
+          "time": 10.633,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 21,
+            "after": 22
+          }
+        },
+        {
+          "seq": 27,
+          "type": "obstacle_contact_count_changed",
+          "time": 11.1,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 22,
+            "after": 23
+          }
+        },
+        {
+          "seq": 28,
+          "type": "obstacle_contact_count_changed",
+          "time": 11.566,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 23,
+            "after": 24
+          }
+        },
+        {
+          "seq": 29,
+          "type": "obstacle_contact_count_changed",
+          "time": 12.016,
+          "state": "playing",
+          "score": 100,
+          "data": {
+            "before": 24,
+            "after": 25
+          }
+        }
+      ],
+      "layout": {
+        "source": "playwright-canvas-draw-observation-v1",
+        "canvas": {
+          "domId": "game",
+          "logicalWidth": 960,
+          "logicalHeight": 540,
+          "intrinsicWidth": 960,
+          "intrinsicHeight": 540,
+          "logicalIntrinsicMatch": true
+        },
+        "regions": [
+          {
+            "id": "HUD-01",
+            "bounds": {
+              "left": 17,
+              "top": 13,
+              "right": 199,
+              "bottom": 60,
+              "width": 182,
+              "height": 47
+            },
+            "labels": [
+              "TIME  56.7",
+              "TIME  56.6",
+              "TIME  56.5"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          },
+          {
+            "id": "HUD-02",
+            "bounds": {
+              "left": 626,
+              "top": 13,
+              "right": 943,
+              "bottom": 60,
+              "width": 317,
+              "height": 47
+            },
+            "labels": [
+              "DELIVER: Marina Cafe",
+              "BEST 100"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          },
+          {
+            "id": "HUD-03",
+            "bounds": {
+              "left": 444.51,
+              "top": 31.5,
+              "right": 515.49,
+              "bottom": 56.5,
+              "width": 70.98,
+              "height": 25
+            },
+            "labels": [
+              "100"
+            ],
+            "geometrySource": "canvas-fillText"
+          },
+          {
+            "id": "HUD-04",
+            "bounds": {
+              "left": 40,
+              "top": 376,
+              "right": 920,
+              "bottom": 446,
+              "width": 880,
+              "height": 70
+            },
+            "labels": [
+              "Marina Cafe"
+            ],
+            "geometrySource": "canvas-fillRect+text"
+          },
+          {
+            "id": "HUD-05",
+            "bounds": {
+              "left": 341,
+              "top": 476,
+              "right": 619,
+              "bottom": 524,
+              "width": 278,
+              "height": 48
+            },
+            "labels": [
+              "DELIVERIES  0 / 3",
+              "PARCEL ON BOARD"
+            ],
+            "geometrySource": "canvas-strokePathRect+text"
+          }
+        ],
+        "issues": [],
+        "recentDrawCalls": 1024,
+        "recentTextDraws": 28,
+        "hudTextDraws": 24
+      }
+    }
+  },
+  "contract": {
+    "passed": true,
+    "checks": [
+      {
+        "id": "probe_present",
+        "label": "Test-Hook __GF__ vorhanden",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "deterministic_seed",
+        "label": "Deterministischer Verifier-Seed ist vorhanden",
+        "pass": true,
+        "detail": "seed=1207618270"
+      },
+      {
+        "id": "telemetry_timeline",
+        "label": "Telemetry enthält start/early/mid/end",
+        "pass": true,
+        "detail": "start:title/0@0ms -> early:playing/100@1200ms -> mid:playing/100@3500ms -> end:playing/100@12000ms -> success-proof:start:title/0@0ms -> success-proof:end:playing/100@75000ms"
+      },
+      {
+        "id": "idle_baseline",
+        "label": "Deterministische Idle-Control mit gleichem Seed ist vorhanden",
+        "pass": true,
+        "detail": "mode=idle seed=1207618270 timeline=start:title/0@0ms -> early:playing/0@1200ms -> mid:playing/0@3500ms -> end:gameover/0@12000ms"
+      },
+      {
+        "id": "no_runtime_errors",
+        "label": "Keine Laufzeitfehler",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "assets_ok",
+        "label": "Alle Assets geladen",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "started_playing",
+        "label": "Spiel verlässt den Titelbildschirm",
+        "pass": true,
+        "detail": "endState=playing"
+      },
+      {
+        "id": "interactivity",
+        "label": "Spiel zeigt deterministischen Gameplay-Fortschritt in der Telemetry",
+        "pass": true,
+        "detail": "start:title/0@0ms -> early:playing/100@1200ms -> mid:playing/100@3500ms -> end:playing/100@12000ms -> success-proof:start:title/0@0ms -> success-proof:end:playing/100@75000ms"
+      },
+      {
+        "id": "input_causality",
+        "label": "Gameplay-Fortschritt ist gegenüber der Idle-Control auf Eingaben zurückführbar",
+        "pass": true,
+        "detail": "active(score+0,events+24,end=playing) vs idle(score+0,events+1,end=gameover)"
+      },
+      {
+        "id": "fps_ok",
+        "label": "Performance >= 30 FPS",
+        "pass": true,
+        "detail": "fps=61"
+      },
+      {
+        "id": "visual_content",
+        "label": "Spielinhalt auf Screenshots sichtbar (nicht schwarz)",
+        "pass": true,
+        "detail": "shot-2-gameplay: VISIBLE (98.35% diff) | shot-3-gameplay: VISIBLE (97.57% diff)"
+      },
+      {
+        "id": "visual_activity",
+        "label": "Gameplay zeigt deterministische Inter-Frame-Aktivität",
+        "pass": true,
+        "detail": "14.1951% pixels changed"
+      }
+    ],
+    "failures": []
+  },
+  "productFidelity": {
+    "pass": false,
+    "status": "failed",
+    "contractSha256": "d3a83649db0972a9e5f03568402d4248f28c0c9cc0058a6a990472247c70e3c1",
+    "requirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-03",
+      "MH-04",
+      "MH-05",
+      "MH-06",
+      "MH-07",
+      "MH-08",
+      "NG-01",
+      "NG-02",
+      "NG-03",
+      "NG-04"
+    ],
+    "criteria": [
+      {
+        "requirementId": "MH-01",
+        "acceptanceId": "AC-MH-01",
+        "probeId": "PR-MH-01",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "courier_scooter_driven",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": false,
+        "traceable": true,
+        "detail": "courier_scooter_driven observed but not as correlated gameplay evidence: event occurred too early for correlated gameplay evidence (event=0.35, early=1.2499); event occurred too early for correlated gameplay evidence (event=0.1, early=1.2499)"
+      },
+      {
+        "requirementId": "MH-02",
+        "acceptanceId": "AC-MH-02",
+        "probeId": "PR-MH-02",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "delivery_completed",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": false,
+        "traceable": true,
+        "detail": "missing event delivery_completed"
+      },
+      {
+        "requirementId": "MH-03",
+        "acceptanceId": "AC-MH-03",
+        "probeId": "PR-MH-03",
+        "kind": "event_value_change",
+        "declaredKind": "event_value_change",
+        "strength": null,
+        "eventType": "obstacle_contact_count_changed",
+        "evidenceSource": "generated-game-event-dependent",
+        "pass": true,
+        "traceable": true,
+        "detail": "event obstacle_contact_count_changed changed gameplay value"
+      },
+      {
+        "requirementId": "MH-04",
+        "acceptanceId": "AC-MH-04",
+        "probeId": "PR-MH-04",
+        "kind": "state_reached",
+        "declaredKind": "state_reached",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed",
+        "pass": false,
+        "traceable": true,
+        "detail": "state failed not reached in verifier scenarios"
+      },
+      {
+        "requirementId": "MH-05",
+        "acceptanceId": "AC-MH-05",
+        "probeId": "PR-MH-05",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "active_delivery_target_updated",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": false,
+        "traceable": true,
+        "detail": "active_delivery_target_updated observed but not as correlated gameplay evidence: event occurred too early for correlated gameplay evidence (event=0.333, early=1.2499); event occurred too early for correlated gameplay evidence (event=0.083, early=1.2499)"
+      },
+      {
+        "requirementId": "MH-06",
+        "acceptanceId": "AC-MH-06",
+        "probeId": "PR-MH-06",
+        "kind": "state_reached",
+        "declaredKind": "state_reached",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed",
+        "pass": false,
+        "traceable": true,
+        "detail": "state success not reached in verifier scenarios"
+      },
+      {
+        "requirementId": "MH-07",
+        "acceptanceId": "AC-MH-07",
+        "probeId": "PR-MH-07",
+        "kind": "restart_after_terminal",
+        "declaredKind": "restart_after_terminal",
+        "strength": null,
+        "eventType": "fresh_run_started",
+        "evidenceSource": "harness-observed-terminal-restart",
+        "pass": false,
+        "traceable": true,
+        "detail": "success-proof did not reach success (end=playing)"
+      },
+      {
+        "requirementId": "MH-08",
+        "acceptanceId": "AC-MH-08",
+        "probeId": "PR-MH-08",
+        "kind": "layout_no_overlap",
+        "declaredKind": "layout_no_overlap",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed-canvas-geometry",
+        "pass": true,
+        "traceable": true,
+        "detail": "independent canvas layout observed at mid: 5 HUD regions, no overlap/out-of-bounds issues, with score progress"
+      },
+      {
+        "requirementId": "NG-01",
+        "acceptanceId": "AC-NG-01",
+        "probeId": "PR-NG-01",
+        "kind": "event_absent",
+        "declaredKind": "event_absent",
+        "strength": null,
+        "eventType": "combat_action",
+        "evidenceSource": "generated-game-event-dependent",
+        "pass": true,
+        "traceable": true,
+        "detail": "event combat_action absent"
+      },
+      {
+        "requirementId": "NG-02",
+        "acceptanceId": "AC-NG-02",
+        "probeId": "PR-NG-02",
+        "kind": "event_absent",
+        "declaredKind": "event_absent",
+        "strength": null,
+        "eventType": "boss_encounter_started",
+        "evidenceSource": "generated-game-event-dependent",
+        "pass": true,
+        "traceable": true,
+        "detail": "event boss_encounter_started absent"
+      },
+      {
+        "requirementId": "NG-03",
+        "acceptanceId": "AC-NG-03",
+        "probeId": "PR-NG-03",
+        "kind": "event_absent",
+        "declaredKind": "event_absent",
+        "strength": null,
+        "eventType": "crafting_or_upgrade_applied",
+        "evidenceSource": "generated-game-event-dependent",
+        "pass": true,
+        "traceable": true,
+        "detail": "event crafting_or_upgrade_applied absent"
+      },
+      {
+        "requirementId": "NG-04",
+        "acceptanceId": "AC-NG-04",
+        "probeId": "PR-NG-04",
+        "kind": "event_absent",
+        "declaredKind": "event_absent",
+        "strength": null,
+        "eventType": "cyberpunk_or_military_visual_mode",
+        "evidenceSource": "generated-game-event-dependent",
+        "pass": true,
+        "traceable": true,
+        "detail": "event cyberpunk_or_military_visual_mode absent"
+      }
+    ],
+    "failures": [
+      {
+        "requirementId": "MH-01",
+        "acceptanceId": "AC-MH-01",
+        "probeId": "PR-MH-01",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "courier_scooter_driven",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": false,
+        "traceable": true,
+        "detail": "courier_scooter_driven observed but not as correlated gameplay evidence: event occurred too early for correlated gameplay evidence (event=0.35, early=1.2499); event occurred too early for correlated gameplay evidence (event=0.1, early=1.2499)"
+      },
+      {
+        "requirementId": "MH-02",
+        "acceptanceId": "AC-MH-02",
+        "probeId": "PR-MH-02",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "delivery_completed",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": false,
+        "traceable": true,
+        "detail": "missing event delivery_completed"
+      },
+      {
+        "requirementId": "MH-04",
+        "acceptanceId": "AC-MH-04",
+        "probeId": "PR-MH-04",
+        "kind": "state_reached",
+        "declaredKind": "state_reached",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed",
+        "pass": false,
+        "traceable": true,
+        "detail": "state failed not reached in verifier scenarios"
+      },
+      {
+        "requirementId": "MH-05",
+        "acceptanceId": "AC-MH-05",
+        "probeId": "PR-MH-05",
+        "kind": "event",
+        "declaredKind": "event",
+        "strength": "correlated_gameplay",
+        "eventType": "active_delivery_target_updated",
+        "evidenceSource": "generated-game-event+runtime-correlation",
+        "pass": false,
+        "traceable": true,
+        "detail": "active_delivery_target_updated observed but not as correlated gameplay evidence: event occurred too early for correlated gameplay evidence (event=0.333, early=1.2499); event occurred too early for correlated gameplay evidence (event=0.083, early=1.2499)"
+      },
+      {
+        "requirementId": "MH-06",
+        "acceptanceId": "AC-MH-06",
+        "probeId": "PR-MH-06",
+        "kind": "state_reached",
+        "declaredKind": "state_reached",
+        "strength": null,
+        "eventType": null,
+        "evidenceSource": "harness-observed",
+        "pass": false,
+        "traceable": true,
+        "detail": "state success not reached in verifier scenarios"
+      },
+      {
+        "requirementId": "MH-07",
+        "acceptanceId": "AC-MH-07",
+        "probeId": "PR-MH-07",
+        "kind": "restart_after_terminal",
+        "declaredKind": "restart_after_terminal",
+        "strength": null,
+        "eventType": "fresh_run_started",
+        "evidenceSource": "harness-observed-terminal-restart",
+        "pass": false,
+        "traceable": true,
+        "detail": "success-proof did not reach success (end=playing)"
+      }
+    ],
+    "coverage": {
+      "evaluatedRequirementIds": [
+        "MH-01",
+        "MH-02",
+        "MH-03",
+        "MH-04",
+        "MH-05",
+        "MH-06",
+        "MH-07",
+        "MH-08",
+        "NG-01",
+        "NG-02",
+        "NG-03",
+        "NG-04"
+      ],
+      "harnessObservedRequirementIds": [
+        "MH-04",
+        "MH-06",
+        "MH-07",
+        "MH-08"
+      ],
+      "canvasGeometryRequirementIds": [
+        "MH-08"
+      ],
+      "generatedGameEventDependentRequirementIds": [
+        "MH-01",
+        "MH-02",
+        "MH-03",
+        "MH-05",
+        "NG-01",
+        "NG-02",
+        "NG-03",
+        "NG-04"
+      ],
+      "correlatedGeneratedGameEventRequirementIds": [
+        "MH-01",
+        "MH-02",
+        "MH-05"
+      ],
+      "unstructuredBriefContentEvaluated": false,
+      "scope": "Product Fidelity evaluates only structured Owner Contract MH/NG requirements. layout_no_overlap and restart_after_terminal are independently observed by the Playwright harness. state_reached can be satisfied by separate deterministic product-proof scenarios. event/event_value_change/event_absent evidence depends on generated-game event instrumentation; correlated_gameplay additionally requires harness-observed gameplay timing, state and score change. Descriptive originalBrief content outside MH/NG is not evaluated here."
+    },
+    "observedEvents": [
+      {
+        "seq": 43,
+        "type": "obstacle_contact_count_changed",
+        "time": 18.416,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 38,
+          "after": 39
+        }
+      },
+      {
+        "seq": 44,
+        "type": "obstacle_contact_count_changed",
+        "time": 18.883,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 39,
+          "after": 40
+        }
+      },
+      {
+        "seq": 45,
+        "type": "obstacle_contact_count_changed",
+        "time": 19.349,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 40,
+          "after": 41
+        }
+      },
+      {
+        "seq": 46,
+        "type": "obstacle_contact_count_changed",
+        "time": 19.799,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 41,
+          "after": 42
+        }
+      },
+      {
+        "seq": 47,
+        "type": "obstacle_contact_count_changed",
+        "time": 20.266,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 42,
+          "after": 43
+        }
+      },
+      {
+        "seq": 48,
+        "type": "obstacle_contact_count_changed",
+        "time": 20.732,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 43,
+          "after": 44
+        }
+      },
+      {
+        "seq": 49,
+        "type": "obstacle_contact_count_changed",
+        "time": 21.199,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 44,
+          "after": 45
+        }
+      },
+      {
+        "seq": 50,
+        "type": "obstacle_contact_count_changed",
+        "time": 21.666,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 45,
+          "after": 46
+        }
+      },
+      {
+        "seq": 51,
+        "type": "obstacle_contact_count_changed",
+        "time": 22.132,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 46,
+          "after": 47
+        }
+      },
+      {
+        "seq": 52,
+        "type": "obstacle_contact_count_changed",
+        "time": 22.599,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 47,
+          "after": 48
+        }
+      },
+      {
+        "seq": 53,
+        "type": "obstacle_contact_count_changed",
+        "time": 23.066,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 48,
+          "after": 49
+        }
+      },
+      {
+        "seq": 54,
+        "type": "obstacle_contact_count_changed",
+        "time": 23.532,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 49,
+          "after": 50
+        }
+      },
+      {
+        "seq": 55,
+        "type": "obstacle_contact_count_changed",
+        "time": 23.999,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 50,
+          "after": 51
+        }
+      },
+      {
+        "seq": 56,
+        "type": "obstacle_contact_count_changed",
+        "time": 24.466,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 51,
+          "after": 52
+        }
+      },
+      {
+        "seq": 57,
+        "type": "obstacle_contact_count_changed",
+        "time": 24.932,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 52,
+          "after": 53
+        }
+      },
+      {
+        "seq": 58,
+        "type": "obstacle_contact_count_changed",
+        "time": 25.399,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 53,
+          "after": 54
+        }
+      },
+      {
+        "seq": 59,
+        "type": "obstacle_contact_count_changed",
+        "time": 25.866,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 54,
+          "after": 55
+        }
+      },
+      {
+        "seq": 60,
+        "type": "obstacle_contact_count_changed",
+        "time": 26.316,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 55,
+          "after": 56
+        }
+      },
+      {
+        "seq": 61,
+        "type": "obstacle_contact_count_changed",
+        "time": 26.782,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 56,
+          "after": 57
+        }
+      },
+      {
+        "seq": 62,
+        "type": "obstacle_contact_count_changed",
+        "time": 27.249,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 57,
+          "after": 58
+        }
+      },
+      {
+        "seq": 63,
+        "type": "obstacle_contact_count_changed",
+        "time": 27.716,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 58,
+          "after": 59
+        }
+      },
+      {
+        "seq": 64,
+        "type": "obstacle_contact_count_changed",
+        "time": 28.182,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 59,
+          "after": 60
+        }
+      },
+      {
+        "seq": 65,
+        "type": "obstacle_contact_count_changed",
+        "time": 28.649,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 60,
+          "after": 61
+        }
+      },
+      {
+        "seq": 66,
+        "type": "obstacle_contact_count_changed",
+        "time": 29.115,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 61,
+          "after": 62
+        }
+      },
+      {
+        "seq": 67,
+        "type": "obstacle_contact_count_changed",
+        "time": 29.582,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 62,
+          "after": 63
+        }
+      },
+      {
+        "seq": 68,
+        "type": "obstacle_contact_count_changed",
+        "time": 30.049,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 63,
+          "after": 64
+        }
+      },
+      {
+        "seq": 69,
+        "type": "obstacle_contact_count_changed",
+        "time": 30.515,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 64,
+          "after": 65
+        }
+      },
+      {
+        "seq": 70,
+        "type": "obstacle_contact_count_changed",
+        "time": 30.982,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 65,
+          "after": 66
+        }
+      },
+      {
+        "seq": 71,
+        "type": "obstacle_contact_count_changed",
+        "time": 31.449,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 66,
+          "after": 67
+        }
+      },
+      {
+        "seq": 72,
+        "type": "obstacle_contact_count_changed",
+        "time": 31.915,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 67,
+          "after": 68
+        }
+      },
+      {
+        "seq": 73,
+        "type": "obstacle_contact_count_changed",
+        "time": 32.365,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 68,
+          "after": 69
+        }
+      },
+      {
+        "seq": 74,
+        "type": "obstacle_contact_count_changed",
+        "time": 32.815,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 69,
+          "after": 70
+        }
+      },
+      {
+        "seq": 75,
+        "type": "obstacle_contact_count_changed",
+        "time": 33.265,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 70,
+          "after": 71
+        }
+      },
+      {
+        "seq": 76,
+        "type": "obstacle_contact_count_changed",
+        "time": 33.715,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 71,
+          "after": 72
+        }
+      },
+      {
+        "seq": 77,
+        "type": "obstacle_contact_count_changed",
+        "time": 34.165,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 72,
+          "after": 73
+        }
+      },
+      {
+        "seq": 78,
+        "type": "obstacle_contact_count_changed",
+        "time": 34.632,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 73,
+          "after": 74
+        }
+      },
+      {
+        "seq": 79,
+        "type": "obstacle_contact_count_changed",
+        "time": 35.082,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 74,
+          "after": 75
+        }
+      },
+      {
+        "seq": 80,
+        "type": "obstacle_contact_count_changed",
+        "time": 35.532,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 75,
+          "after": 76
+        }
+      },
+      {
+        "seq": 81,
+        "type": "obstacle_contact_count_changed",
+        "time": 35.999,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 76,
+          "after": 77
+        }
+      },
+      {
+        "seq": 82,
+        "type": "obstacle_contact_count_changed",
+        "time": 36.449,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 77,
+          "after": 78
+        }
+      },
+      {
+        "seq": 83,
+        "type": "obstacle_contact_count_changed",
+        "time": 36.899,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 78,
+          "after": 79
+        }
+      },
+      {
+        "seq": 84,
+        "type": "obstacle_contact_count_changed",
+        "time": 37.365,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 79,
+          "after": 80
+        }
+      },
+      {
+        "seq": 85,
+        "type": "obstacle_contact_count_changed",
+        "time": 37.815,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 80,
+          "after": 81
+        }
+      },
+      {
+        "seq": 86,
+        "type": "obstacle_contact_count_changed",
+        "time": 38.282,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 81,
+          "after": 82
+        }
+      },
+      {
+        "seq": 87,
+        "type": "obstacle_contact_count_changed",
+        "time": 38.732,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 82,
+          "after": 83
+        }
+      },
+      {
+        "seq": 88,
+        "type": "obstacle_contact_count_changed",
+        "time": 39.199,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 83,
+          "after": 84
+        }
+      },
+      {
+        "seq": 89,
+        "type": "obstacle_contact_count_changed",
+        "time": 39.665,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 84,
+          "after": 85
+        }
+      },
+      {
+        "seq": 90,
+        "type": "obstacle_contact_count_changed",
+        "time": 40.115,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 85,
+          "after": 86
+        }
+      },
+      {
+        "seq": 91,
+        "type": "obstacle_contact_count_changed",
+        "time": 40.565,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 86,
+          "after": 87
+        }
+      },
+      {
+        "seq": 92,
+        "type": "obstacle_contact_count_changed",
+        "time": 41.015,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 87,
+          "after": 88
+        }
+      },
+      {
+        "seq": 93,
+        "type": "obstacle_contact_count_changed",
+        "time": 41.465,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 88,
+          "after": 89
+        }
+      },
+      {
+        "seq": 94,
+        "type": "obstacle_contact_count_changed",
+        "time": 41.932,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 89,
+          "after": 90
+        }
+      },
+      {
+        "seq": 95,
+        "type": "obstacle_contact_count_changed",
+        "time": 42.382,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 90,
+          "after": 91
+        }
+      },
+      {
+        "seq": 96,
+        "type": "obstacle_contact_count_changed",
+        "time": 42.848,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 91,
+          "after": 92
+        }
+      },
+      {
+        "seq": 97,
+        "type": "obstacle_contact_count_changed",
+        "time": 43.298,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 92,
+          "after": 93
+        }
+      },
+      {
+        "seq": 98,
+        "type": "obstacle_contact_count_changed",
+        "time": 43.765,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 93,
+          "after": 94
+        }
+      },
+      {
+        "seq": 99,
+        "type": "obstacle_contact_count_changed",
+        "time": 44.215,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 94,
+          "after": 95
+        }
+      },
+      {
+        "seq": 100,
+        "type": "obstacle_contact_count_changed",
+        "time": 44.665,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 95,
+          "after": 96
+        }
+      },
+      {
+        "seq": 101,
+        "type": "obstacle_contact_count_changed",
+        "time": 45.132,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 96,
+          "after": 97
+        }
+      },
+      {
+        "seq": 102,
+        "type": "obstacle_contact_count_changed",
+        "time": 45.582,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 97,
+          "after": 98
+        }
+      },
+      {
+        "seq": 103,
+        "type": "obstacle_contact_count_changed",
+        "time": 46.048,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 98,
+          "after": 99
+        }
+      },
+      {
+        "seq": 104,
+        "type": "obstacle_contact_count_changed",
+        "time": 46.498,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 99,
+          "after": 100
+        }
+      },
+      {
+        "seq": 105,
+        "type": "obstacle_contact_count_changed",
+        "time": 46.948,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 100,
+          "after": 101
+        }
+      },
+      {
+        "seq": 106,
+        "type": "obstacle_contact_count_changed",
+        "time": 47.415,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 101,
+          "after": 102
+        }
+      },
+      {
+        "seq": 107,
+        "type": "obstacle_contact_count_changed",
+        "time": 47.865,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 102,
+          "after": 103
+        }
+      },
+      {
+        "seq": 108,
+        "type": "obstacle_contact_count_changed",
+        "time": 48.331,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 103,
+          "after": 104
+        }
+      },
+      {
+        "seq": 109,
+        "type": "obstacle_contact_count_changed",
+        "time": 48.781,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 104,
+          "after": 105
+        }
+      },
+      {
+        "seq": 110,
+        "type": "obstacle_contact_count_changed",
+        "time": 49.231,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 105,
+          "after": 106
+        }
+      },
+      {
+        "seq": 111,
+        "type": "obstacle_contact_count_changed",
+        "time": 49.681,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 106,
+          "after": 107
+        }
+      },
+      {
+        "seq": 112,
+        "type": "obstacle_contact_count_changed",
+        "time": 50.131,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 107,
+          "after": 108
+        }
+      },
+      {
+        "seq": 113,
+        "type": "obstacle_contact_count_changed",
+        "time": 50.598,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 108,
+          "after": 109
+        }
+      },
+      {
+        "seq": 114,
+        "type": "obstacle_contact_count_changed",
+        "time": 51.048,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 109,
+          "after": 110
+        }
+      },
+      {
+        "seq": 115,
+        "type": "obstacle_contact_count_changed",
+        "time": 51.498,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 110,
+          "after": 111
+        }
+      },
+      {
+        "seq": 116,
+        "type": "obstacle_contact_count_changed",
+        "time": 51.948,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 111,
+          "after": 112
+        }
+      },
+      {
+        "seq": 117,
+        "type": "obstacle_contact_count_changed",
+        "time": 52.415,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 112,
+          "after": 113
+        }
+      },
+      {
+        "seq": 118,
+        "type": "obstacle_contact_count_changed",
+        "time": 52.865,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 113,
+          "after": 114
+        }
+      },
+      {
+        "seq": 119,
+        "type": "obstacle_contact_count_changed",
+        "time": 53.315,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 114,
+          "after": 115
+        }
+      },
+      {
+        "seq": 120,
+        "type": "obstacle_contact_count_changed",
+        "time": 53.765,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 115,
+          "after": 116
+        }
+      },
+      {
+        "seq": 121,
+        "type": "obstacle_contact_count_changed",
+        "time": 54.231,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 116,
+          "after": 117
+        }
+      },
+      {
+        "seq": 122,
+        "type": "obstacle_contact_count_changed",
+        "time": 54.681,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 117,
+          "after": 118
+        }
+      },
+      {
+        "seq": 123,
+        "type": "obstacle_contact_count_changed",
+        "time": 55.131,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 118,
+          "after": 119
+        }
+      },
+      {
+        "seq": 124,
+        "type": "obstacle_contact_count_changed",
+        "time": 55.598,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 119,
+          "after": 120
+        }
+      },
+      {
+        "seq": 125,
+        "type": "obstacle_contact_count_changed",
+        "time": 56.064,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 120,
+          "after": 121
+        }
+      },
+      {
+        "seq": 126,
+        "type": "obstacle_contact_count_changed",
+        "time": 56.514,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 121,
+          "after": 122
+        }
+      },
+      {
+        "seq": 127,
+        "type": "obstacle_contact_count_changed",
+        "time": 56.964,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 122,
+          "after": 123
+        }
+      },
+      {
+        "seq": 128,
+        "type": "obstacle_contact_count_changed",
+        "time": 57.414,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 123,
+          "after": 124
+        }
+      },
+      {
+        "seq": 129,
+        "type": "obstacle_contact_count_changed",
+        "time": 57.864,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 124,
+          "after": 125
+        }
+      },
+      {
+        "seq": 130,
+        "type": "obstacle_contact_count_changed",
+        "time": 58.331,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 125,
+          "after": 126
+        }
+      },
+      {
+        "seq": 131,
+        "type": "obstacle_contact_count_changed",
+        "time": 58.798,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 126,
+          "after": 127
+        }
+      },
+      {
+        "seq": 132,
+        "type": "obstacle_contact_count_changed",
+        "time": 59.248,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 127,
+          "after": 128
+        }
+      },
+      {
+        "seq": 133,
+        "type": "obstacle_contact_count_changed",
+        "time": 59.714,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 128,
+          "after": 129
+        }
+      },
+      {
+        "seq": 134,
+        "type": "obstacle_contact_count_changed",
+        "time": 60.164,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 129,
+          "after": 130
+        }
+      },
+      {
+        "seq": 135,
+        "type": "obstacle_contact_count_changed",
+        "time": 60.614,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 130,
+          "after": 131
+        }
+      },
+      {
+        "seq": 136,
+        "type": "obstacle_contact_count_changed",
+        "time": 61.081,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 131,
+          "after": 132
+        }
+      },
+      {
+        "seq": 137,
+        "type": "obstacle_contact_count_changed",
+        "time": 61.531,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 132,
+          "after": 133
+        }
+      },
+      {
+        "seq": 138,
+        "type": "obstacle_contact_count_changed",
+        "time": 61.981,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 133,
+          "after": 134
+        }
+      },
+      {
+        "seq": 139,
+        "type": "obstacle_contact_count_changed",
+        "time": 62.448,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 134,
+          "after": 135
+        }
+      },
+      {
+        "seq": 140,
+        "type": "obstacle_contact_count_changed",
+        "time": 62.914,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 135,
+          "after": 136
+        }
+      },
+      {
+        "seq": 141,
+        "type": "obstacle_contact_count_changed",
+        "time": 63.364,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 136,
+          "after": 137
+        }
+      },
+      {
+        "seq": 142,
+        "type": "obstacle_contact_count_changed",
+        "time": 63.831,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 137,
+          "after": 138
+        }
+      },
+      {
+        "seq": 143,
+        "type": "obstacle_contact_count_changed",
+        "time": 64.281,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 138,
+          "after": 139
+        }
+      },
+      {
+        "seq": 144,
+        "type": "obstacle_contact_count_changed",
+        "time": 64.731,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 139,
+          "after": 140
+        }
+      },
+      {
+        "seq": 145,
+        "type": "obstacle_contact_count_changed",
+        "time": 65.181,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 140,
+          "after": 141
+        }
+      },
+      {
+        "seq": 146,
+        "type": "obstacle_contact_count_changed",
+        "time": 65.647,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 141,
+          "after": 142
+        }
+      },
+      {
+        "seq": 147,
+        "type": "obstacle_contact_count_changed",
+        "time": 66.097,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 142,
+          "after": 143
+        }
+      },
+      {
+        "seq": 148,
+        "type": "obstacle_contact_count_changed",
+        "time": 66.547,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 143,
+          "after": 144
+        }
+      },
+      {
+        "seq": 149,
+        "type": "obstacle_contact_count_changed",
+        "time": 67.014,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 144,
+          "after": 145
+        }
+      },
+      {
+        "seq": 150,
+        "type": "obstacle_contact_count_changed",
+        "time": 67.464,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 145,
+          "after": 146
+        }
+      },
+      {
+        "seq": 151,
+        "type": "obstacle_contact_count_changed",
+        "time": 67.931,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 146,
+          "after": 147
+        }
+      },
+      {
+        "seq": 152,
+        "type": "obstacle_contact_count_changed",
+        "time": 68.397,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 147,
+          "after": 148
+        }
+      },
+      {
+        "seq": 153,
+        "type": "game_over",
+        "time": 68.614,
+        "state": "gameover",
+        "score": 100,
+        "data": {
+          "from": "playing",
+          "to": "gameover"
+        }
+      },
+      {
+        "seq": 154,
+        "type": "fresh_run_started",
+        "time": 0,
+        "state": "playing",
+        "score": 0,
+        "data": {
+          "timer": 70,
+          "deliveries": 0
+        }
+      },
+      {
+        "seq": 155,
+        "type": "score_changed",
+        "time": 0.083,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 100,
+          "delta": 100
+        }
+      },
+      {
+        "seq": 156,
+        "type": "active_delivery_target_updated",
+        "time": 0.083,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "target": "Marina Cafe",
+          "stage": 1,
+          "carrying": true
+        }
+      },
+      {
+        "seq": 157,
+        "type": "courier_scooter_driven",
+        "time": 0.1,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "speed": 175,
+          "deliveries": 0
+        }
+      },
+      {
+        "seq": 158,
+        "type": "obstacle_contact_count_changed",
+        "time": 0.733,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 0,
+          "after": 1
+        }
+      },
+      {
+        "seq": 159,
+        "type": "obstacle_contact_count_changed",
+        "time": 1.183,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 1,
+          "after": 2
+        }
+      },
+      {
+        "seq": 160,
+        "type": "obstacle_contact_count_changed",
+        "time": 1.633,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 2,
+          "after": 3
+        }
+      },
+      {
+        "seq": 161,
+        "type": "obstacle_contact_count_changed",
+        "time": 2.1,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 3,
+          "after": 4
+        }
+      },
+      {
+        "seq": 162,
+        "type": "obstacle_contact_count_changed",
+        "time": 2.55,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 4,
+          "after": 5
+        }
+      },
+      {
+        "seq": 163,
+        "type": "obstacle_contact_count_changed",
+        "time": 3.016,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 5,
+          "after": 6
+        }
+      },
+      {
+        "seq": 164,
+        "type": "obstacle_contact_count_changed",
+        "time": 3.466,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 6,
+          "after": 7
+        }
+      },
+      {
+        "seq": 165,
+        "type": "obstacle_contact_count_changed",
+        "time": 3.916,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 7,
+          "after": 8
+        }
+      },
+      {
+        "seq": 166,
+        "type": "obstacle_contact_count_changed",
+        "time": 4.366,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 8,
+          "after": 9
+        }
+      },
+      {
+        "seq": 167,
+        "type": "obstacle_contact_count_changed",
+        "time": 4.833,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 9,
+          "after": 10
+        }
+      },
+      {
+        "seq": 168,
+        "type": "obstacle_contact_count_changed",
+        "time": 5.283,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 10,
+          "after": 11
+        }
+      },
+      {
+        "seq": 169,
+        "type": "obstacle_contact_count_changed",
+        "time": 5.75,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 11,
+          "after": 12
+        }
+      },
+      {
+        "seq": 170,
+        "type": "obstacle_contact_count_changed",
+        "time": 6.216,
+        "state": "playing",
+        "score": 100,
+        "data": {
+          "before": 12,
+          "after": 13
+        }
+      }
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "probeErrors": []
+}

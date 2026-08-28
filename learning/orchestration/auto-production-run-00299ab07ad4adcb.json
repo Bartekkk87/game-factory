@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "controlled-learning-orchestration-v1",
+  "eventKind": "production-run",
+  "eventId": "20260828-043617",
+  "aggregateRef": "learning/aggregates/auto-production-run-00299ab07ad4adcb.json",
+  "triggerRef": "learning/triggers/auto-production-run-00299ab07ad4adcb.json",
+  "analysisRef": "learning/analysis/auto-production-run-00299ab07ad4adcb.json",
+  "triggerAllowed": true,
+  "triggerReasons": [
+    "recurring-engineering-failure-across-runs"
+  ],
+  "focusScope": "engineering",
+  "candidateId": "candidate-production-run-00299ab07ad4adcb",
+  "candidateActive": false,
+  "canValidate": false,
+  "canActivate": false
+}

@@ -1,0 +1,600 @@
+{
+  "seed": 1207618270,
+  "inputSequence": {
+    "mode": "active",
+    "seed": 1207618270,
+    "startImpulse": [
+      "Enter",
+      "pointer@640,400"
+    ],
+    "keys": [
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+      "Space",
+      "KeyW",
+      "KeyA",
+      "KeyS",
+      "KeyD",
+      "Enter"
+    ],
+    "pointerPath": [
+      [
+        420,
+        300
+      ],
+      [
+        640,
+        280
+      ],
+      [
+        820,
+        360
+      ],
+      [
+        700,
+        480
+      ],
+      [
+        480,
+        460
+      ],
+      [
+        560,
+        350
+      ]
+    ],
+    "keyEveryMs": 190,
+    "keyHoldMs": 110,
+    "pointerEveryMs": 450,
+    "clickEveryMs": 1300
+  },
+  "timeline": [
+    {
+      "phase": "start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 63,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": [],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 444.98,
+                "top": 493.5,
+                "right": 515.02,
+                "bottom": 506.5,
+                "width": 70.04,
+                "height": 13
+              },
+              "labels": [
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 70,
+          "recentTextDraws": 3,
+          "hudTextDraws": 1
+        }
+      }
+    },
+    {
+      "phase": "early",
+      "atMs": 1200,
+      "snapshot": {
+        "state": "playing",
+        "score": 0,
+        "best": 0,
+        "fps": 60,
+        "time": 1.2500000000000002,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 17,
+                "top": 13,
+                "right": 193,
+                "bottom": 59,
+                "width": 176,
+                "height": 46
+              },
+              "labels": [
+                "TIME  68.9",
+                "TIME  68.8"
+              ],
+              "geometrySource": "canvas-strokeRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 651,
+                "top": 13,
+                "right": 943,
+                "bottom": 59,
+                "width": 292,
+                "height": 46
+              },
+              "labels": [
+                "BEST 0",
+                "PICK UP: Marina Cafe"
+              ],
+              "geometrySource": "canvas-strokeRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 468.17,
+                "top": 31.5,
+                "right": 491.83,
+                "bottom": 56.5,
+                "width": 23.66,
+                "height": 25
+              },
+              "labels": [
+                "0"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 351,
+                "top": 479,
+                "right": 609,
+                "bottom": 522,
+                "width": 258,
+                "height": 43
+              },
+              "labels": [
+                "FOLLOW THE GOLD CRATE",
+                "DELIVERIES  0 / 3"
+              ],
+              "geometrySource": "canvas-strokeRect+text"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 1024,
+          "recentTextDraws": 7,
+          "hudTextDraws": 7
+        }
+      }
+    },
+    {
+      "phase": "mid",
+      "atMs": 3500,
+      "snapshot": {
+        "state": "playing",
+        "score": 0,
+        "best": 0,
+        "fps": 60,
+        "time": 3.5497999999999963,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 17,
+                "top": 13,
+                "right": 193,
+                "bottom": 59,
+                "width": 176,
+                "height": 46
+              },
+              "labels": [
+                "TIME  66.6",
+                "TIME  66.5"
+              ],
+              "geometrySource": "canvas-strokeRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 651,
+                "top": 13,
+                "right": 943,
+                "bottom": 59,
+                "width": 292,
+                "height": 46
+              },
+              "labels": [
+                "BEST 0",
+                "PICK UP: Marina Cafe"
+              ],
+              "geometrySource": "canvas-strokeRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 468.17,
+                "top": 31.5,
+                "right": 491.83,
+                "bottom": 56.5,
+                "width": 23.66,
+                "height": 25
+              },
+              "labels": [
+                "0"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 351,
+                "top": 479,
+                "right": 609,
+                "bottom": 522,
+                "width": 258,
+                "height": 43
+              },
+              "labels": [
+                "FOLLOW THE GOLD CRATE",
+                "DELIVERIES  0 / 3"
+              ],
+              "geometrySource": "canvas-strokeRect+text"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 1024,
+          "recentTextDraws": 7,
+          "hudTextDraws": 7
+        }
+      }
+    },
+    {
+      "phase": "end",
+      "atMs": 12000,
+      "snapshot": {
+        "state": "playing",
+        "score": 0,
+        "best": 0,
+        "fps": 60,
+        "time": 12.04949999999998,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 17,
+                "top": 13,
+                "right": 193,
+                "bottom": 59,
+                "width": 176,
+                "height": 46
+              },
+              "labels": [
+                "TIME  58.1",
+                "TIME  58.0"
+              ],
+              "geometrySource": "canvas-strokeRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 651,
+                "top": 13,
+                "right": 943,
+                "bottom": 59,
+                "width": 292,
+                "height": 46
+              },
+              "labels": [
+                "BEST 0",
+                "PICK UP: Marina Cafe"
+              ],
+              "geometrySource": "canvas-strokeRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 468.17,
+                "top": 31.5,
+                "right": 491.83,
+                "bottom": 56.5,
+                "width": 23.66,
+                "height": 25
+              },
+              "labels": [
+                "0"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 351,
+                "top": 479,
+                "right": 609,
+                "bottom": 522,
+                "width": 258,
+                "height": 43
+              },
+              "labels": [
+                "FOLLOW THE GOLD CRATE",
+                "DELIVERIES  0 / 3"
+              ],
+              "geometrySource": "canvas-strokeRect+text"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 1024,
+          "recentTextDraws": 7,
+          "hudTextDraws": 7
+        }
+      }
+    },
+    {
+      "phase": "success-proof:start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 62,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": [],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 444.98,
+                "top": 493.5,
+                "right": 515.02,
+                "bottom": 506.5,
+                "width": 70.04,
+                "height": 13
+              },
+              "labels": [
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 75,
+          "recentTextDraws": 3,
+          "hudTextDraws": 1
+        }
+      },
+      "scenarioId": "success-proof"
+    },
+    {
+      "phase": "success-proof:end",
+      "atMs": 75000,
+      "snapshot": {
+        "state": "playing",
+        "score": 0,
+        "best": 0,
+        "fps": 60,
+        "time": 4.999800000000007,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "game_over",
+            "time": 70.014,
+            "state": "gameover",
+            "score": 0,
+            "data": {
+              "from": "playing",
+              "to": "gameover"
+            }
+          },
+          {
+            "seq": 3,
+            "type": "fresh_run_started",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "deliveries": 0,
+              "timer": 70
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 17,
+                "top": 13,
+                "right": 193,
+                "bottom": 59,
+                "width": 176,
+                "height": 46
+              },
+              "labels": [
+                "TIME  65.2",
+                "TIME  65.1",
+                "TIME  65.0"
+              ],
+              "geometrySource": "canvas-strokeRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 651,
+                "top": 13,
+                "right": 943,
+                "bottom": 59,
+                "width": 292,
+                "height": 46
+              },
+              "labels": [
+                "BEST 0",
+                "PICK UP: Marina Cafe"
+              ],
+              "geometrySource": "canvas-strokeRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 468.17,
+                "top": 31.5,
+                "right": 491.83,
+                "bottom": 56.5,
+                "width": 23.66,
+                "height": 25
+              },
+              "labels": [
+                "0"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 351,
+                "top": 479,
+                "right": 609,
+                "bottom": 522,
+                "width": 258,
+                "height": 43
+              },
+              "labels": [
+                "FOLLOW THE GOLD CRATE",
+                "DELIVERIES  0 / 3"
+              ],
+              "geometrySource": "canvas-strokeRect+text"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 1024,
+          "recentTextDraws": 8,
+          "hudTextDraws": 8
+        }
+      },
+      "scenarioId": "success-proof"
+    }
+  ]
+}

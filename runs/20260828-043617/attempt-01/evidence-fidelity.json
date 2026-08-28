@@ -1,0 +1,373 @@
+{
+  "pass": false,
+  "status": "failed",
+  "contractSha256": "d3a83649db0972a9e5f03568402d4248f28c0c9cc0058a6a990472247c70e3c1",
+  "requirementIds": [
+    "MH-01",
+    "MH-02",
+    "MH-03",
+    "MH-04",
+    "MH-05",
+    "MH-06",
+    "MH-07",
+    "MH-08",
+    "NG-01",
+    "NG-02",
+    "NG-03",
+    "NG-04"
+  ],
+  "criteria": [
+    {
+      "requirementId": "MH-01",
+      "acceptanceId": "AC-MH-01",
+      "probeId": "PR-MH-01",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "courier_scooter_driven",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "missing event courier_scooter_driven"
+    },
+    {
+      "requirementId": "MH-02",
+      "acceptanceId": "AC-MH-02",
+      "probeId": "PR-MH-02",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "delivery_completed",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "missing event delivery_completed"
+    },
+    {
+      "requirementId": "MH-03",
+      "acceptanceId": "AC-MH-03",
+      "probeId": "PR-MH-03",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "obstacle_contact_count_changed",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": false,
+      "traceable": true,
+      "detail": "no value-changing obstacle_contact_count_changed event"
+    },
+    {
+      "requirementId": "MH-04",
+      "acceptanceId": "AC-MH-04",
+      "probeId": "PR-MH-04",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": false,
+      "traceable": true,
+      "detail": "state failed not reached in verifier scenarios"
+    },
+    {
+      "requirementId": "MH-05",
+      "acceptanceId": "AC-MH-05",
+      "probeId": "PR-MH-05",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "active_delivery_target_updated",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "missing event active_delivery_target_updated"
+    },
+    {
+      "requirementId": "MH-06",
+      "acceptanceId": "AC-MH-06",
+      "probeId": "PR-MH-06",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": false,
+      "traceable": true,
+      "detail": "state success not reached in verifier scenarios"
+    },
+    {
+      "requirementId": "MH-07",
+      "acceptanceId": "AC-MH-07",
+      "probeId": "PR-MH-07",
+      "kind": "restart_after_terminal",
+      "declaredKind": "restart_after_terminal",
+      "strength": null,
+      "eventType": "fresh_run_started",
+      "evidenceSource": "harness-observed-terminal-restart",
+      "pass": false,
+      "traceable": true,
+      "detail": "success-proof did not reach success (end=playing)"
+    },
+    {
+      "requirementId": "MH-08",
+      "acceptanceId": "AC-MH-08",
+      "probeId": "PR-MH-08",
+      "kind": "layout_no_overlap",
+      "declaredKind": "layout_no_overlap",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed-canvas-geometry",
+      "pass": false,
+      "traceable": true,
+      "detail": "independent canvas layout insufficient at best phase early: regions=4/3, issueCount=0, scoreProgress=false"
+    },
+    {
+      "requirementId": "NG-01",
+      "acceptanceId": "AC-NG-01",
+      "probeId": "PR-NG-01",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "combat_action",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event combat_action absent"
+    },
+    {
+      "requirementId": "NG-02",
+      "acceptanceId": "AC-NG-02",
+      "probeId": "PR-NG-02",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "boss_encounter_started",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event boss_encounter_started absent"
+    },
+    {
+      "requirementId": "NG-03",
+      "acceptanceId": "AC-NG-03",
+      "probeId": "PR-NG-03",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "crafting_or_upgrade_applied",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event crafting_or_upgrade_applied absent"
+    },
+    {
+      "requirementId": "NG-04",
+      "acceptanceId": "AC-NG-04",
+      "probeId": "PR-NG-04",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "cyberpunk_or_military_visual_mode",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event cyberpunk_or_military_visual_mode absent"
+    }
+  ],
+  "failures": [
+    {
+      "requirementId": "MH-01",
+      "acceptanceId": "AC-MH-01",
+      "probeId": "PR-MH-01",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "courier_scooter_driven",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "missing event courier_scooter_driven"
+    },
+    {
+      "requirementId": "MH-02",
+      "acceptanceId": "AC-MH-02",
+      "probeId": "PR-MH-02",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "delivery_completed",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "missing event delivery_completed"
+    },
+    {
+      "requirementId": "MH-03",
+      "acceptanceId": "AC-MH-03",
+      "probeId": "PR-MH-03",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "obstacle_contact_count_changed",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": false,
+      "traceable": true,
+      "detail": "no value-changing obstacle_contact_count_changed event"
+    },
+    {
+      "requirementId": "MH-04",
+      "acceptanceId": "AC-MH-04",
+      "probeId": "PR-MH-04",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": false,
+      "traceable": true,
+      "detail": "state failed not reached in verifier scenarios"
+    },
+    {
+      "requirementId": "MH-05",
+      "acceptanceId": "AC-MH-05",
+      "probeId": "PR-MH-05",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "active_delivery_target_updated",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": false,
+      "traceable": true,
+      "detail": "missing event active_delivery_target_updated"
+    },
+    {
+      "requirementId": "MH-06",
+      "acceptanceId": "AC-MH-06",
+      "probeId": "PR-MH-06",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": false,
+      "traceable": true,
+      "detail": "state success not reached in verifier scenarios"
+    },
+    {
+      "requirementId": "MH-07",
+      "acceptanceId": "AC-MH-07",
+      "probeId": "PR-MH-07",
+      "kind": "restart_after_terminal",
+      "declaredKind": "restart_after_terminal",
+      "strength": null,
+      "eventType": "fresh_run_started",
+      "evidenceSource": "harness-observed-terminal-restart",
+      "pass": false,
+      "traceable": true,
+      "detail": "success-proof did not reach success (end=playing)"
+    },
+    {
+      "requirementId": "MH-08",
+      "acceptanceId": "AC-MH-08",
+      "probeId": "PR-MH-08",
+      "kind": "layout_no_overlap",
+      "declaredKind": "layout_no_overlap",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed-canvas-geometry",
+      "pass": false,
+      "traceable": true,
+      "detail": "independent canvas layout insufficient at best phase early: regions=4/3, issueCount=0, scoreProgress=false"
+    }
+  ],
+  "coverage": {
+    "evaluatedRequirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-03",
+      "MH-04",
+      "MH-05",
+      "MH-06",
+      "MH-07",
+      "MH-08",
+      "NG-01",
+      "NG-02",
+      "NG-03",
+      "NG-04"
+    ],
+    "harnessObservedRequirementIds": [
+      "MH-04",
+      "MH-06",
+      "MH-07",
+      "MH-08"
+    ],
+    "canvasGeometryRequirementIds": [
+      "MH-08"
+    ],
+    "generatedGameEventDependentRequirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-03",
+      "MH-05",
+      "NG-01",
+      "NG-02",
+      "NG-03",
+      "NG-04"
+    ],
+    "correlatedGeneratedGameEventRequirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-05"
+    ],
+    "unstructuredBriefContentEvaluated": false,
+    "scope": "Product Fidelity evaluates only structured Owner Contract MH/NG requirements. layout_no_overlap and restart_after_terminal are independently observed by the Playwright harness. state_reached can be satisfied by separate deterministic product-proof scenarios. event/event_value_change/event_absent evidence depends on generated-game event instrumentation; correlated_gameplay additionally requires harness-observed gameplay timing, state and score change. Descriptive originalBrief content outside MH/NG is not evaluated here."
+  },
+  "observedEvents": [
+    {
+      "seq": 1,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 1,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 2,
+      "type": "game_over",
+      "time": 70.014,
+      "state": "gameover",
+      "score": 0,
+      "data": {
+        "from": "playing",
+        "to": "gameover"
+      }
+    },
+    {
+      "seq": 3,
+      "type": "fresh_run_started",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "deliveries": 0,
+        "timer": 70
+      }
+    }
+  ]
+}

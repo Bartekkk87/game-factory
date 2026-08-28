@@ -1,0 +1,373 @@
+{
+  "title": "Harbor Courier",
+  "tagline": "Zip bright seaside streets, grab the parcels, and beat the harbor clock.",
+  "genre": "arcade",
+  "pitch": "Harbor Courier is a compact top-down delivery sprint through a sunny coastal town. Ride a nimble little scooter from parcel crate to color-coded doorstep, choosing between short narrow lanes and longer open streets while the countdown drains. Each handoff turns the town map into the next clear route puzzle.",
+  "coreLoop": "Drive onto the glowing parcel crate to load it, follow the large color-and-icon destination marker through streets blocked by buildings, gardens, docks, and water, then enter the matching delivery circle to hand it off. Repeat three deliveries before the clock reaches zero.",
+  "mechanics": [
+    {
+      "name": "Scooter handling",
+      "description": "Arrow keys or WASD drive a small top-down scooter with quick acceleration, gentle momentum, and responsive steering. The scooter cannot pass through buildings, planter walls, dock barriers, or water."
+    },
+    {
+      "name": "Parcel-to-doorstep chain",
+      "description": "A parcel crate is always placed at a reachable street-side loading point. Collecting it updates the HUD and activates one of three named, color-coded destination circles: Marina Cafe, Lighthouse House, and Market Pier."
+    },
+    {
+      "name": "Meaningful harbor routes",
+      "description": "The fixed single-screen town uses blocky building blocks, water inlets, and dock fences to create two or more routes between loading points and destinations. Narrow shortcuts save time but demand cleaner turns; broad streets are safer but longer."
+    },
+    {
+      "name": "Three-stop delivery run",
+      "description": "A run requires three sequential parcel collections and deliveries to three distinct named destinations. After every delivery, a new crate and target are immediately highlighted with a world arrow and HUD instruction."
+    },
+    {
+      "name": "Countdown pressure",
+      "description": "The run begins with 70 seconds. The visible timer pulses amber below 15 seconds and red below 7 seconds; zero time ends an unfinished run in a clear Late Delivery failure screen."
+    },
+    {
+      "name": "Friendly route assist",
+      "description": "A large edge-of-screen arrow points toward the active crate or destination, while wide loading and delivery circles make the arcade task fair under keyboard control without reducing obstacle-based route choice."
+    },
+    {
+      "name": "Fresh-run restart",
+      "description": "Success and failure screens show PRESS SPACE TO RIDE AGAIN. Space resets timer, score, parcel chain, scooter position, and destination state without a page reload."
+    }
+  ],
+  "controls": {
+    "keyboard": "WASD or Arrow Keys drive; Space starts from the title and starts a fresh run after a result.",
+    "mouse": "Mouse is optional; hover over the title start button and click to begin or restart.",
+    "touch": "optional"
+  },
+  "artDirection": {
+    "mood": "bright welcoming coastal postcard",
+    "palette": [
+      "#49B9D2",
+      "#FFF3C4",
+      "#F26B5B",
+      "#1F4964"
+    ],
+    "shapes": "smooth-vector",
+    "backgroundFx": "Animated turquoise water ripples and bobbing boat silhouettes form a slow rear parallax layer; drifting gull specks and tiny sun-glints move above it behind the town streets."
+  },
+  "audioDirection": {
+    "musicMood": "breezy hand-percussion and cheerful marimba-like synth loop",
+    "sfx": [
+      "soft scooter engine hum that rises with speed",
+      "parcel pickup chime",
+      "bright doorstep bell",
+      "wooden bump on obstacle contact",
+      "countdown warning tick",
+      "celebratory harbor horn on success",
+      "gentle descending whistle on late delivery"
+    ]
+  },
+  "difficulty": {
+    "start": "The first crate is beside the spawn and the Marina Cafe is reached by a broad, clearly marked street.",
+    "progression": "The second and third legs introduce a water inlet and building blocks that make the shortcut-versus-safe-road decision more relevant, while destinations remain large and clearly signposted.",
+    "peak": "The final Market Pier delivery asks for a clean dock-side turn under the late-clock pulse, but has generous delivery radius and no hostile pressure."
+  },
+  "winLose": {
+    "win": "Deliver all three parcels before the countdown expires; show a full-screen \"ALL DELIVERIES MADE!\" result with final score and restart prompt.",
+    "lose": "If the countdown reaches 0 with fewer than three deliveries, freeze play and show a full-screen \"TOO LATE — HARBOR CLOSED\" result with restart prompt."
+  },
+  "juice": {
+    "screenShake": "A restrained 4px, 0.16-second bump occurs when the scooter clips a solid obstacle; a 6px, 0.24-second celebration shake occurs on the third delivery.",
+    "particles": "Parcel pickup emits paper-confetti squares; each doorstep handoff releases colored receipt sparks and a brief gull-feather burst; scooter tires emit sparse pale dust on fast turns.",
+    "hitStop": "A 70ms pause punctuates each successful delivery, especially the final handoff.",
+    "flash": "A warm destination-color flash at alpha 0.35 accompanies a delivery, while a soft blue-white flash at alpha 0.25 marks parcel loading."
+  },
+  "scopeNotes": "Do not build combat, enemies, weapons, attacks, health, damage, bosses, robots, crafting, salvage, forging, upgrades, inventory management, traffic AI, procedural maps, scrolling levels, multiplayer, meta-progression, or a cyberpunk, military, or heavy-industrial aesthetic. Keep one fixed 960x540 town, three mandatory deliveries, and obstacle navigation as the entire game.",
+  "acceptanceCriteria": [
+    {
+      "id": "AC-MH-01",
+      "ownerRequirementId": "MH-01",
+      "statement": "During active play, a player-controlled courier scooter movement transition is emitted after gameplay score progress."
+    },
+    {
+      "id": "AC-MH-02",
+      "ownerRequirementId": "MH-02",
+      "statement": "A completed delivery transition records a delivery to one of the three distinct named destinations after a parcel has been collected."
+    },
+    {
+      "id": "AC-MH-03",
+      "ownerRequirementId": "MH-03",
+      "statement": "Attempting to drive the scooter into a solid environment obstacle increases the real obstacle contact count."
+    },
+    {
+      "id": "AC-MH-04",
+      "ownerRequirementId": "MH-04",
+      "statement": "An unfinished run whose countdown reaches zero reaches the clear failed state."
+    },
+    {
+      "id": "AC-MH-05",
+      "ownerRequirementId": "MH-05",
+      "statement": "Collecting a parcel updates the active delivery target during gameplay."
+    },
+    {
+      "id": "AC-MH-06",
+      "ownerRequirementId": "MH-06",
+      "statement": "Completing the required three deliveries before expiry reaches the clear success state."
+    },
+    {
+      "id": "AC-MH-07",
+      "ownerRequirementId": "MH-07",
+      "statement": "Pressing Space from either result screen starts a reset fresh run in the playing state."
+    },
+    {
+      "id": "AC-MH-08",
+      "ownerRequirementId": "MH-08",
+      "statement": "During active scored gameplay, the timer, score/progress, and current target HUD regions are distinct, readable, in bounds, and non-overlapping."
+    },
+    {
+      "id": "AC-NG-01",
+      "ownerRequirementId": "NG-01",
+      "statement": "No combat action event occurs during the complete observed play session."
+    },
+    {
+      "id": "AC-NG-02",
+      "ownerRequirementId": "NG-02",
+      "statement": "No boss encounter event occurs during the complete observed play session."
+    },
+    {
+      "id": "AC-NG-03",
+      "ownerRequirementId": "NG-03",
+      "statement": "No crafting or upgrade loop event occurs during the complete observed play session."
+    },
+    {
+      "id": "AC-NG-04",
+      "ownerRequirementId": "NG-04",
+      "statement": "No cyberpunk or military visual-mode event occurs during the complete observed play session."
+    }
+  ],
+  "probePlan": {
+    "expectedStates": [
+      "title",
+      "playing",
+      "success",
+      "failed"
+    ],
+    "scoreEvents": [
+      "parcel_collected adds 100 score when the scooter enters an active parcel crate radius",
+      "delivery_completed adds 500 score when a carried parcel enters its matching destination circle",
+      "The deterministic verifier path starts with Space, reaches the nearby first parcel, follows the persistent target arrow using directional input, and earns score through parcel collection and delivery; if it remains unfinished, the 70-second countdown deterministically reaches failed."
+    ],
+    "requirementProbes": [
+      {
+        "id": "PR-MH-01",
+        "acceptanceId": "AC-MH-01",
+        "ownerRequirementId": "MH-01",
+        "kind": "event",
+        "eventType": "courier_scooter_driven",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-02",
+        "acceptanceId": "AC-MH-02",
+        "ownerRequirementId": "MH-02",
+        "kind": "event",
+        "eventType": "delivery_completed",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-03",
+        "acceptanceId": "AC-MH-03",
+        "ownerRequirementId": "MH-03",
+        "kind": "event_value_change",
+        "eventType": "obstacle_contact_count_changed",
+        "beforeField": "before",
+        "afterField": "after"
+      },
+      {
+        "id": "PR-MH-04",
+        "acceptanceId": "AC-MH-04",
+        "ownerRequirementId": "MH-04",
+        "kind": "state_reached",
+        "state": "failed"
+      },
+      {
+        "id": "PR-MH-05",
+        "acceptanceId": "AC-MH-05",
+        "ownerRequirementId": "MH-05",
+        "kind": "event",
+        "eventType": "active_delivery_target_updated",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-06",
+        "acceptanceId": "AC-MH-06",
+        "ownerRequirementId": "MH-06",
+        "kind": "state_reached",
+        "state": "success"
+      },
+      {
+        "id": "PR-MH-07",
+        "acceptanceId": "AC-MH-07",
+        "ownerRequirementId": "MH-07",
+        "kind": "restart_after_terminal",
+        "legacyEventType": "fresh_run_started"
+      },
+      {
+        "id": "PR-MH-08",
+        "acceptanceId": "AC-MH-08",
+        "ownerRequirementId": "MH-08",
+        "kind": "layout_no_overlap",
+        "minRegions": 3,
+        "requireScoreProgress": true
+      },
+      {
+        "id": "PR-NG-01",
+        "acceptanceId": "AC-NG-01",
+        "ownerRequirementId": "NG-01",
+        "kind": "event_absent",
+        "eventType": "combat_action"
+      },
+      {
+        "id": "PR-NG-02",
+        "acceptanceId": "AC-NG-02",
+        "ownerRequirementId": "NG-02",
+        "kind": "event_absent",
+        "eventType": "boss_encounter_started"
+      },
+      {
+        "id": "PR-NG-03",
+        "acceptanceId": "AC-NG-03",
+        "ownerRequirementId": "NG-03",
+        "kind": "event_absent",
+        "eventType": "crafting_or_upgrade_applied"
+      },
+      {
+        "id": "PR-NG-04",
+        "acceptanceId": "AC-NG-04",
+        "ownerRequirementId": "NG-04",
+        "kind": "event_absent",
+        "eventType": "cyberpunk_or_military_visual_mode"
+      }
+    ]
+  },
+  "proofPlan": {
+    "schemaVersion": "proof-plan-v1",
+    "baseSeconds": 12,
+    "maxProofSeconds": 125,
+    "declaredRoundSeconds": 70,
+    "scenarios": [
+      {
+        "id": "base",
+        "purpose": "technical-causality-and-active-layout",
+        "inputMode": "active+idle-control",
+        "seconds": 12,
+        "stopStates": [],
+        "restartAtEnd": false
+      },
+      {
+        "id": "success-proof",
+        "purpose": "prove real successful completion under deterministic active input",
+        "inputMode": "active",
+        "seconds": 75,
+        "stopStates": [
+          "success"
+        ],
+        "restartAtEnd": true
+      }
+    ],
+    "coverage": [
+      {
+        "probeId": "PR-MH-01",
+        "ownerRequirementId": "MH-01",
+        "scenarioIds": [
+          "base",
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-02",
+        "ownerRequirementId": "MH-02",
+        "scenarioIds": [
+          "base",
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-03",
+        "ownerRequirementId": "MH-03",
+        "scenarioIds": [
+          "base",
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-04",
+        "ownerRequirementId": "MH-04",
+        "scenarioIds": [
+          "base"
+        ]
+      },
+      {
+        "probeId": "PR-MH-05",
+        "ownerRequirementId": "MH-05",
+        "scenarioIds": [
+          "base",
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-06",
+        "ownerRequirementId": "MH-06",
+        "scenarioIds": [
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-07",
+        "ownerRequirementId": "MH-07",
+        "scenarioIds": [
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-08",
+        "ownerRequirementId": "MH-08",
+        "scenarioIds": [
+          "base"
+        ]
+      },
+      {
+        "probeId": "PR-NG-01",
+        "ownerRequirementId": "NG-01",
+        "scenarioIds": [
+          "base",
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-NG-02",
+        "ownerRequirementId": "NG-02",
+        "scenarioIds": [
+          "base",
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-NG-03",
+        "ownerRequirementId": "NG-03",
+        "scenarioIds": [
+          "base",
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-NG-04",
+        "ownerRequirementId": "NG-04",
+        "scenarioIds": [
+          "base",
+          "success-proof"
+        ]
+      }
+    ],
+    "pass": true,
+    "errors": [],
+    "requiredTerminalStates": [
+      "success"
+    ]
+  }
+}
