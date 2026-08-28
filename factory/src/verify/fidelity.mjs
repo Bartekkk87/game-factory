@@ -1,4 +1,5 @@
 import { ownerRequirementIds } from '../contract/owner.mjs';
+import { canonicalVerifierState } from './state-semantics.mjs';
 
 const SUPPORTED_KINDS = new Set(['event', 'event_value_change', 'score_change', 'state_reached', 'event_absent', 'started_by_early', 'layout_no_overlap', 'restart_after_terminal']);
 const GENERATED_EVENT_KINDS = new Set(['event', 'event_value_change', 'event_absent']);
@@ -122,11 +123,12 @@ function evaluateRestartAfterTerminal(report) {
   const failures = [];
   for (const scenario of terminal) {
     const expectedState = scenario.id === 'success-proof' ? 'success' : 'failure';
-    if (scenario.endState !== expectedState) {
+    const observedState = canonicalVerifierState(scenario.canonicalEndState || scenario.endState);
+    if (observedState !== expectedState) {
       failures.push(`${scenario.id} did not reach ${expectedState} (end=${scenario.endState ?? 'missing'})`);
       continue;
     }
-    if (scenario.postRestartState !== 'playing') {
+    if (canonicalVerifierState(scenario.postRestartState) !== 'playing') {
       failures.push(`${scenario.id} did not return to playing after harness restart (post=${scenario.postRestartState ?? 'missing'})`);
     }
   }
@@ -172,9 +174,16 @@ function evaluateProbe(probe, report, events) {
     return { pass, detail: pass ? 'score changed across telemetry' : 'score did not change across telemetry' };
   }
   if (kind === 'state_reached') {
-    const wanted = String(effectiveProbe.state || '');
-    const pass = (report?.timeline || []).some((entry) => entry?.snapshot?.state === wanted);
-    return { pass, detail: pass ? `state ${wanted} reached in verifier scenarios` : `state ${wanted} not reached in verifier scenarios` };
+    const wanted = canonicalVerifierState(effectiveProbe.state);
+    if (!wanted) return { pass: false, detail: `unsupported verifier state ${String(effectiveProbe.state ?? 'missing')}` };
+    const matching = (report?.timeline || []).find((entry) => canonicalVerifierState(entry?.snapshot?.state) === wanted);
+    const rawObserved = matching?.snapshot?.state ?? null;
+    return {
+      pass: !!matching,
+      detail: matching
+        ? `state ${wanted} reached in verifier scenarios (observed=${rawObserved})`
+        : `state ${wanted} not reached in verifier scenarios`
+    };
   }
   if (kind === 'started_by_early') {
     const early = (report?.timeline || []).find((entry) => entry?.phase === 'early')?.snapshot;
@@ -215,7 +224,7 @@ function coverageSummary(requirementIds, criteria) {
     generatedGameEventDependentRequirementIds,
     correlatedGeneratedGameEventRequirementIds,
     unstructuredBriefContentEvaluated: false,
-    scope: 'Product Fidelity evaluates only structured Owner Contract MH/NG requirements. layout_no_overlap and restart_after_terminal are independently observed by the Playwright harness. state_reached can be satisfied by separate deterministic product-proof scenarios. event/event_value_change/event_absent evidence depends on generated-game event instrumentation; correlated_gameplay additionally requires harness-observed gameplay timing, state and score change. Descriptive originalBrief content outside MH/NG is not evaluated here.'
+    scope: 'Product Fidelity evaluates only structured Owner Contract MH/NG requirements. layout_no_overlap and restart_after_terminal are independently observed by the Playwright harness. state_reached can be satisfied by separate deterministic product-proof scenarios using canonical verifier state semantics. event/event_value_change/event_absent evidence depends on generated-game event instrumentation; correlated_gameplay additionally requires harness-observed gameplay timing, state and score change. Descriptive originalBrief content outside MH/NG is not evaluated here.'
   };
 }
 
