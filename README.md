@@ -3,18 +3,19 @@
 Evidence-driven Game Factory für Web-Games auf GitHub. Die Factory führt Owner-Idee, Build, deterministische Verifikation, Repair/Polish, Release Gate, Evaluation, Controlled Improvement und Owner Review über durable Git-Evidence zusammen.
 
 > Architektur: [ARCHITECTURE.md](ARCHITECTURE.md)  
-> Aktueller Gesamtstand: [docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md](docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md)  
+> Aktueller Gesamtstand: [docs/strategy/PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md](docs/strategy/PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md)  
+> Historischer S0–S5 Closure Checkpoint: [docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md](docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md)  
 > Kanonische Learning-Architektur mit realem Lumen-Beispiel: [docs/strategy/LEARNING-ARCHITECTURE-EVIDENCE-TO-APPLIED-CHANGE-2026-08-28.md](docs/strategy/LEARNING-ARCHITECTURE-EVIDENCE-TO-APPLIED-CHANGE-2026-08-28.md)
 
 ## Aktueller Status — 28.08.2026
 
-**Factory Foundation + Controlled Improvement + Golden Corpus S0–S5 IMPLEMENTATION CLOSED.**
+**Factory Foundation + Controlled Improvement + Golden Corpus S0–S5 CLOSED. Lumen Learning Repair: `APPLIED-CLOSED`.**
 
-Der erste unabhängige Product Canary `Lumen Current` scheiterte vor Build fail-closed. Der daraus abgeleitete Director-State-Contract-/Learning-Fix wurde über einen realen, evidenzgebundenen `skill` Candidate zero-paid validiert und mit PR `#36` human-reviewed nach `main` gemerged (`7af126e3300b23c19bd088ca32c08c7e81947d8b`). Kein zweiter Paid Lumen Run wurde gestartet.
+Der erste unabhängige Product Canary `Lumen Current` scheiterte vor Build fail-closed. Der daraus abgeleitete Director-State-Contract-/Learning-Fix wurde über einen realen, evidenzgebundenen `skill` Candidate zero-paid validiert und mit PR `#36` human-reviewed nach `main` gemerged (`7af126e3300b23c19bd088ca32c08c7e81947d8b`). Exact-main Full Verifier `33211092911` = **SUCCESS in all 37 steps**. Der S4 Application Receipt ist `APPLIED-CLOSED`; der Candidate bleibt `validated`, `active=false`. Kein zweiter Paid Lumen Run wurde gestartet.
 
 Damit ist erstmals praktisch belegt:
 
-`real Production failure -> durable evidence -> deterministic root cause -> protected-layer Candidate -> validation/regression -> validated inactive -> human merge`
+`real Production failure -> durable evidence -> deterministic root cause -> protected-layer Candidate -> validation/regression -> validated inactive -> human merge -> post-merge regression -> APPLIED-CLOSED`
 
 Der noch ausstehende Product-Meilenstein bleibt Issue `#17`: ein späterer spielbarer unabhängiger Canary mit hands-on Owner ACCEPT/REJECT.
 
@@ -154,21 +155,20 @@ Der Production-Workflow verwendet standardmäßig ein maximales Run-Budget von `
 
 ## Independent Product Proof — Issue #17
 
-Lumen Canary #1 wurde nach Owner-GO ausgeführt, erzeugte aber keinen Draft. Daher wurde hands-on Owner ACCEPT/REJECT nicht erreicht.
+Lumen Canary #1 wurde nach Owner-GO ausgeführt, erzeugte aber keinen Draft. Daher wurde hands-on Owner ACCEPT/REJECT nicht erreicht. Der daraus folgende zero-paid Learning-/Contract-Fix ist jetzt vollständig `APPLIED-CLOSED`.
 
 Vor einem **zweiten** Paid Lumen/Independent Production Run gilt zwingend:
 
-1. den nun gemergten zero-paid Learning-/Contract-Fix regressionsgrün bestätigen;
-2. exakten Owner Brief + Verifier Coverage + Risiken + Kostenrahmen erneut vorlegen;
-3. **STOP für neue explizite Owner-Freigabe**;
-4. danach höchstens einen weiteren Paid Production Canary;
-5. Owner hands-on ACCEPT/REJECT.
+1. exakten Owner Brief + Verifier Coverage + Risiken + Kostenrahmen erneut vorlegen;
+2. **STOP für neue explizite Owner-Freigabe**;
+3. danach höchstens einen weiteren Paid Production Canary;
+4. Owner hands-on ACCEPT/REJECT.
 
 ## Portability hypothesis
 
 Die aktuelle Architektur enthält einen möglicherweise domänenübergreifend wiederverwendbaren Control Pattern:
 
-`Intent/Contract -> Worker -> Observable Evidence -> Deterministic Gate -> Failure Taxonomy -> Candidate Improvement -> Validation Corpus -> Human Application -> Audit Trail`
+`Intent/Contract -> Worker -> Observable Evidence -> Deterministic/Governed Gate -> Failure Taxonomy -> Candidate Improvement -> Validation Corpus -> Human Application -> Audit Trail`
 
 Das ist aktuell eine **zu prüfende Hypothese**, keine außerhalb Gaming bewiesene Produktbehauptung. Die Cross-Domain-Analyse ist bewusst als nächster separater Diskussions-/Research-Track vorgesehen.
 
@@ -176,7 +176,7 @@ Das ist aktuell eine **zu prüfende Hypothese**, keine außerhalb Gaming bewiese
 
 Aktuell gerechtfertigt: **evidence-driven controlled improvement**.
 
-Zusätzlich praktisch demonstriert: ein realer Production Failure wurde in einen deterministisch klassifizierten, zero-paid validierten, weiterhin inaktiven Protected-Layer Candidate und anschließend in eine human-reviewed Skill/Contract-Anwendung überführt.
+Zusätzlich praktisch demonstriert: ein realer Production Failure wurde in einen deterministisch klassifizierten, zero-paid validierten, weiterhin inaktiven Protected-Layer Candidate und anschließend in eine human-reviewed, post-merge regressionsgeprüfte `APPLIED-CLOSED` Skill/Contract-Anwendung überführt.
 
 Noch nicht bewiesen:
 
