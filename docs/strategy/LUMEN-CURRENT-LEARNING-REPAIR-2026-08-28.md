@@ -1,5 +1,15 @@
 # Lumen Current — Learning Repair / Director State Contract — 28.08.2026
 
+## Status
+
+**APPLICATION CLOSED — `APPLIED-CLOSED` / Candidate remains `validated`, `active=false`.**
+
+This is the first real Game Factory case that traversed:
+
+`Production failure -> durable evidence -> deterministic root cause -> protected-layer Candidate -> zero-paid validation -> validated inactive -> human-reviewed merge -> exact-main regression -> SHA-bound application receipt`
+
+No second paid Lumen run was started.
+
 ## Source evidence
 
 Real Production Canary:
@@ -33,7 +43,7 @@ Implemented:
 
 Historical artifacts from the failed Canary are not rewritten. The original orchestration receipt correctly records that the old analyzer produced no Candidate.
 
-A new deterministic reanalysis Candidate is stored as:
+Deterministic reanalysis Candidate:
 `learning/candidates/candidate-production-run-b37ac8d268e8549c.json`
 
 Candidate properties after validation:
@@ -78,12 +88,40 @@ PR `#36` was human-reviewed and merged to `main` after the validated-inactive ga
 Merge commit:
 `7af126e3300b23c19bd088ca32c08c7e81947d8b`
 
-This is the protected-layer application authority for the bounded Director state-contract / directing-skill repair. It does **not** set the Candidate to `active=true` and does not create an autonomous Memory lesson.
-
 Exact-main post-merge Full Verifier:
-- run: `33211092911`
-- evaluated executable merge: `7af126e3300b23c19bd088ca32c08c7e81947d8b`
-- tracked until complete before final application-closure claim.
+- run `33211092911`
+- result **SUCCESS in all 37 steps**
+- evaluated executable merge `7af126e3300b23c19bd088ca32c08c7e81947d8b`
+- Golden Corpus 29/29
+- Expected Mismatches 0
+- Critical False PASS 0
+- Corpus API/model-backed cost `$0`.
+
+## S4 application closure
+
+Durable post-merge regression evidence:
+`learning/evidence/applications/candidate-production-run-b37ac8d268e8549c-full-verifier.json`
+
+SHA-bound Golden Corpus application evidence:
+`evaluation/results/LUMEN-LEARNING-APPLICATION-CORPUS-7af126e.json`
+
+Immutable application receipt:
+`learning/applications/candidate-production-run-b37ac8d268e8549c.json`
+
+Receipt state:
+`APPLIED-CLOSED`
+
+The receipt binds:
+- exact validated Candidate artifact SHA-256;
+- canonical validation artifact SHA-256;
+- protected target layer `skill`;
+- PR `#36`;
+- merge commit `7af126e3300b23c19bd088ca32c08c7e81947d8b`;
+- human approval reference;
+- exact-main Full Verifier `33211092911`;
+- SHA-bound compatible Golden Corpus PASS.
+
+Crucial invariant: `APPLIED-CLOSED` describes the **application**. The Candidate itself remains `status=validated`, `active=false`. No autonomous Memory lesson was promoted.
 
 ## What the Factory learned
 
@@ -95,11 +133,15 @@ That rule is persisted in `skills/directing.md` and supported by the runtime con
 
 ## Proof boundary
 
-This case now demonstrates a real path through:
+Now demonstrated end-to-end at the architecture/application level:
 
-`Production failure -> durable evidence -> deterministic root cause -> protected-layer Candidate -> validated inactive -> human-reviewed merge`
+`real Production failure -> Evidence -> Root Cause -> Candidate -> Validation -> Human Application -> Post-Merge Regression -> Audit Receipt`
 
-It still does **not** demonstrate that the learned change produces a later Owner-accepted game. A second paid Lumen/independent Product Canary remains separately Owner-gated.
+Still not demonstrated:
+- that the learned change produces a later Owner-accepted game;
+- that the same architecture transfers unchanged outside Gaming.
+
+A second paid Lumen/independent Product Canary remains separately Owner-gated.
 
 Canonical architecture explanation:
 `docs/strategy/LEARNING-ARCHITECTURE-EVIDENCE-TO-APPLIED-CHANGE-2026-08-28.md`
