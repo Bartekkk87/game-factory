@@ -49,7 +49,9 @@ jobs:
       - name: Prove automatic controlled learning orchestration
         run: node factory/src/learning/test-orchestration.mjs
       - name: Prove autonomous failed-run root cause diagnosis
-        run: node factory/src/learning/test-root-cause.mjs
+        run: |
+          node factory/src/learning/test-root-cause.mjs
+          node factory/src/learning/test-autonomous-orchestration.mjs
       - name: Prove L4 production-agent integrity
         run: node factory/src/roles/test-production-agents.mjs
       - name: Prove art-direction runtime prompt truth
