@@ -71,4 +71,32 @@ assert.deepEqual(sectioned.mustHaves.map((r) => r.id), ['MH-01', 'MH-02']);
 assert.deepEqual(sectioned.noGos.map((r) => r.id), ['NG-01']);
 assert.equal(sectioned.unknowns.length, 0);
 
+// Package 3 / D-4 baseline reproduction: generic semantic headings are dropped
+// by freeformFragments(). Their body text survives, but the heading labels do not
+// survive in any decomposed immutable requirement.
+const headingDriven = createOwnerContract({
+  idea: [
+    '## Anchor Moves',
+    'Dash through marked lanes to build momentum.',
+    '## Signature Risk',
+    'Overcharging the dash can leave the player exposed.',
+    '## Must Survive The Cut',
+    'The upgrade choice must visibly change the next encounter.'
+  ].join('\n'),
+  source: 'package-3-d4-baseline'
+});
+const headingDrivenRequirements = [
+  ...headingDriven.mustHaves,
+  ...headingDriven.noGos,
+  ...headingDriven.unknowns
+];
+assert.equal(headingDriven.originalBrief.includes('## Anchor Moves'), true);
+assert.equal(headingDrivenRequirements.some((r) => /Anchor Moves/i.test(r.text)), false);
+assert.equal(headingDrivenRequirements.some((r) => /Signature Risk/i.test(r.text)), false);
+assert.equal(headingDrivenRequirements.some((r) => /Must Survive The Cut/i.test(r.text)), false);
+assert.equal(headingDriven.mustHaves.some((r) => /upgrade choice must visibly change/i.test(r.text)), true);
+assert.deepEqual(headingDriven.mustHaves.map((r) => r.id), ['MH-01']);
+assert.deepEqual(headingDriven.unknowns.map((r) => r.id), ['UN-01', 'UN-02']);
+
+console.log('PACKAGE 3 BASELINE REPRODUCED: D-4 generic semantic headings exist in originalBrief but are absent from all decomposed immutable requirement text.');
 console.log('Owner Contract decomposition selftest: PASS');
