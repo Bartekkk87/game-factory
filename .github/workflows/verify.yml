@@ -39,6 +39,8 @@ jobs:
         run: node factory/src/evaluation/test-corpus-s1.mjs
       - name: Prove Golden Corpus S1a individual case execution contract
         run: node factory/src/evaluation/test-corpus-case-execution.mjs
+      - name: Prove Golden Corpus S2 baseline and metric semantics
+        run: node factory/src/evaluation/test-corpus-s2.mjs
       - name: Prove control kernel budgets and release gate
         run: node factory/src/control/test-control.mjs
       - name: Prove model/provider router and capability gates
@@ -69,6 +71,10 @@ jobs:
         run: node factory/src/verify/test-proof-reachability.mjs
       - name: Install browser
         run: npx playwright install --with-deps chromium
+      - name: Run Golden Corpus S2 evaluation and quality/delta report
+        run: |
+          node factory/src/evaluation/run-corpus.mjs --out evaluation/results/S2-latest.json
+          node -e "const r=require('./evaluation/results/S2-latest.json'); console.log('S2 summary', JSON.stringify({commit:r.evaluatedCommitSha,cases:r.metrics.totalCases,passRate:r.metrics.expectedOutcomePassRate,criticalFalsePasses:r.metrics.criticalFalsePassCount,delta:r.delta.expectedOutcomePassRateDelta}))"
       - name: Prove P0 action reachability repair
         run: node factory/src/verify/test-action-reachability.mjs
       - name: Prove independent terminal proof scenarios
