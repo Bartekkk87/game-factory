@@ -10,6 +10,7 @@ import { OWNER_FEEDBACK_DIR } from './owner-feedback.mjs';
 import { analyzeFailedProductionRun, proposalFromRootCause } from './root-cause.mjs';
 
 const LEARNING_ROOT = path.join(ROOT, 'learning');
+const EVALUATION_FAILURE_DIR = path.join(LEARNING_ROOT, 'evidence', 'evaluation-failures');
 const DIRS = Object.freeze({
   aggregates: path.join(LEARNING_ROOT, 'aggregates'),
   triggers: path.join(LEARNING_ROOT, 'triggers'),
@@ -41,6 +42,23 @@ function listJsonFiles(dir) {
     .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
     .map((entry) => path.join(dir, entry.name))
     .sort();
+}
+
+function assertEvaluationFailureEvidence(record, file) {
+  const missing = [];
+  if (record?.schemaVersion !== 'evaluation-failure-evidence-v1') missing.push('schemaVersion');
+  if (!record?.id) missing.push('id');
+  if (!record?.observationId) missing.push('observationId');
+  if (!record?.clusterKey) missing.push('clusterKey');
+  if (!record?.case?.caseId) missing.push('case.caseId');
+  if (!record?.evaluation?.evaluatedCommitSha) missing.push('evaluation.evaluatedCommitSha');
+  if (!record?.failureSignature) missing.push('failureSignature');
+  if (!record?.diagnostic) missing.push('diagnostic');
+  if (!['known', 'unclassified'].includes(record?.classification?.status)) missing.push('classification.status');
+  if (!record?.classification?.failureClass) missing.push('classification.failureClass');
+  if (record?.classification?.productionFailure !== false) missing.push('classification.productionFailure');
+  if (missing.length) throw new Error(`invalid evaluation-failure evidence ${relative(file)}: ${missing.join(', ')}`);
+  return record;
 }
 
 function loadDurableEvidence() {
@@ -84,10 +102,13 @@ function loadDurableEvidence() {
     .map((file) => readJson(file, null))
     .filter((record) => record?.id)
     .sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  const evaluationFailures = listJsonFiles(EVALUATION_FAILURE_DIR)
+    .map((file) => assertEvaluationFailureEvidence(readJson(file, null), file))
+    .sort((a, b) => String(a.id).localeCompare(String(b.id)));
 
   runEvidence.sort((a, b) => String(a.run?.id || '').localeCompare(String(b.run?.id || '')));
   attemptEvidence.sort((a, b) => `${a.runId}:${a.attemptId}:${a.kind}`.localeCompare(`${b.runId}:${b.attemptId}:${b.kind}`));
-  return { runEvidence, attemptEvidence, ownerFeedback };
+  return { runEvidence, attemptEvidence, ownerFeedback, evaluationFailures };
 }
 
 function sourceRunIdsForFeedback(feedback, runEvidence) {
@@ -190,6 +211,42 @@ function buildProposal({ eventKind, eventId, trigger, aggregate, durable, candid
     };
   }
 
+  if (eventKind === 'evaluation-failure' && trigger.allowedScopes?.includes('evaluation-failure-analysis')) {
+    const evidence = durable.evaluationFailures.find((item) => item.id === eventId);
+    if (!evidence) throw new Error(`evaluation-failure evidence not found: ${eventId}`);
+    const cluster = aggregate?.evaluation?.clusters?.[evidence.clusterKey];
+    if (!cluster || Number(cluster.observationCount || 0) < 2) {
+      return {
+        scope: 'evaluation-failure-analysis',
+        blocked: 'evaluation failure has not been reproduced in a separate observation',
+        facts: [`Evaluation failure ${eventId} remains analysis-only and unconfirmed.`]
+      };
+    }
+    return {
+      scope: 'evaluation-failure-analysis',
+      facts: [
+        `Evaluation failure cluster ${evidence.clusterKey} was observed in ${cluster.observationCount} separate observations.`,
+        `Corpus case provenance: ${cluster.caseIds.join(', ') || 'unknown'}.`,
+        `Evaluated commit provenance: ${cluster.evaluatedCommitShas.join(', ') || 'unknown'}.`,
+        `Failure classification: ${cluster.classification}/${cluster.failureClass}.`,
+        'The repeated signature supports an inactive hypothesis only; it does not identify or authorize a Production fix.'
+      ],
+      proposal: {
+        id: candidateId,
+        role: 'auditor',
+        scope: 'evaluation-failure-analysis',
+        targetLayer: 'evaluation',
+        text: `Hypothesis only: repeated Golden Corpus evaluation failure cluster ${evidence.clusterKey} requires bounded root-cause validation. Preserve the exact case, commit, signature and diagnostics; do not infer a fix, mutate Production, weaken gates, validate, activate, promote, or start paid work from this candidate alone.`,
+        sourceRunIds: [],
+        sourceEvaluationFailureIds: cluster.evidenceIds,
+        sourceKind: 'evaluation-failure-analysis',
+        ownerFeedbackIds: [],
+        evidenceCount: cluster.evidenceCount,
+        createdAt: evidence.createdAt || undefined
+      }
+    };
+  }
+
   return { scope: null, facts: [], proposal: null };
 }
 
@@ -213,7 +270,7 @@ function ensureInactiveCandidate(trigger, proposal) {
 export function orchestrateControlledLearning({ eventKind, eventId } = {}) {
   const kind = String(eventKind || '').trim();
   const id = String(eventId || '').trim();
-  if (!['production-run', 'owner-feedback'].includes(kind)) throw new Error(`unsupported learning event kind: ${kind || '(empty)'}`);
+  if (!['production-run', 'owner-feedback', 'evaluation-failure'].includes(kind)) throw new Error(`unsupported learning event kind: ${kind || '(empty)'}`);
   if (!id) throw new Error('learning event id is required');
 
   const eventIdentity = `${kind}:${id}`;
@@ -243,6 +300,12 @@ export function orchestrateControlledLearning({ eventKind, eventId } = {}) {
   if (kind === 'owner-feedback' && !durable.ownerFeedback.some((feedback) => feedback.id === id)) {
     throw new Error(`owner-feedback evidence not found: ${id}`);
   }
+  const eventEvaluationFailure = kind === 'evaluation-failure'
+    ? durable.evaluationFailures.find((record) => record.id === id)
+    : null;
+  if (kind === 'evaluation-failure' && !eventEvaluationFailure) {
+    throw new Error(`evaluation-failure evidence not found: ${id}`);
+  }
 
   const eventFeedback = kind === 'owner-feedback'
     ? durable.ownerFeedback.find((feedback) => feedback.id === id)
@@ -256,7 +319,8 @@ export function orchestrateControlledLearning({ eventKind, eventId } = {}) {
     eventKind: kind,
     eventId: id,
     eventVerdict: eventFeedback?.parsedCommand || eventFeedback?.verdict || '',
-    eventFailed
+    eventFailed,
+    evaluationFailure: eventEvaluationFailure
   });
   writeJson(aggregateFile, {
     ...aggregate,
@@ -267,11 +331,15 @@ export function orchestrateControlledLearning({ eventKind, eventId } = {}) {
     eventKind: kind,
     eventId: id,
     eventFailed,
+    evaluationFailureRef: eventEvaluationFailure?.evidenceRef || null,
+    evaluationFailureClass: eventEvaluationFailure?.classification?.failureClass || null,
     aggregateRef: relative(aggregateFile),
     rootCauseRef: rootCause ? relative(rootCauseFile) : null
   });
 
-  const candidateId = `candidate-${kind}-${key}`;
+  const candidateId = kind === 'evaluation-failure'
+    ? `candidate-evaluation-failure-${stableKey(eventEvaluationFailure.clusterKey)}`
+    : `candidate-${kind}-${key}`;
   const bounded = trigger.allowed
     ? buildProposal({ eventKind: kind, eventId: id, trigger, aggregate, durable, candidateId, rootCause })
     : { scope: null, facts: [], proposal: null };
@@ -289,6 +357,7 @@ export function orchestrateControlledLearning({ eventKind, eventId } = {}) {
       authority: IMPROVEMENT_AUTHORITY,
       facts: bounded.facts,
       findingIds: rootCause?.findings?.map((item) => item.id) || [],
+      evaluationFailureClass: eventEvaluationFailure?.classification?.failureClass || null,
       conclusion: bounded.blocked
         ? `Analysis stopped safely: ${bounded.blocked}.`
         : candidate
@@ -308,6 +377,11 @@ export function orchestrateControlledLearning({ eventKind, eventId } = {}) {
     aggregateRef: relative(aggregateFile),
     triggerRef: relative(triggerFile),
     rootCauseRef: rootCause ? relative(rootCauseFile) : null,
+    evaluationFailureRef: eventEvaluationFailure?.evidenceRef || null,
+    evaluationFailureClass: eventEvaluationFailure?.classification?.failureClass || null,
+    reproducibilityStatus: eventEvaluationFailure
+      ? (Number(aggregate?.evaluation?.clusters?.[eventEvaluationFailure.clusterKey]?.observationCount || 0) >= 2 ? 'repeated' : 'unconfirmed')
+      : null,
     analysisRef: trigger.allowed && bounded.scope ? relative(analysisFile) : null,
     triggerAllowed: trigger.allowed,
     triggerReasons: trigger.reasons,

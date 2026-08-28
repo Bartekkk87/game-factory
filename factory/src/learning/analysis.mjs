@@ -2,7 +2,7 @@ import { createCandidate } from './lifecycle.mjs';
 
 export const IMPROVEMENT_AUTHORITY = Object.freeze({
   may: ['propose-scoped-learning-candidate'],
-  mustNot: ['activate-production','edit-production','change-own-authority','weaken-release-gates']
+  mustNot: ['validate-candidate','activate-candidate','promote-candidate','activate-production','edit-production','change-own-authority','weaken-release-gates','start-paid-work']
 });
 
 export function persistImprovementClaim({ trigger, proposal }) {

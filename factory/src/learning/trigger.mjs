@@ -1,4 +1,4 @@
-export const TRIGGER_POLICY_VERSION = 'controlled-improvement-trigger-v2';
+export const TRIGGER_POLICY_VERSION = 'controlled-improvement-trigger-v3';
 
 function recurringFailureForEvent(recurringFailures, eventId) {
   return recurringFailures.some((x) => {
@@ -16,6 +16,7 @@ export function evaluateImprovementTrigger(aggregate, context = {}) {
   const eventId = String(context?.eventId || '').trim();
   const eventVerdict = String(context?.eventVerdict || '').trim().toLowerCase();
   const eventFailed = context?.eventFailed === true;
+  const evaluationFailure = context?.evaluationFailure || null;
 
   const aggregateFeedbackNegative = Number(verdicts.reject || 0) > 0 || Number(verdicts.feedback || 0) > 0;
   const feedbackNegative = eventKind === 'owner-feedback'
@@ -25,6 +26,10 @@ export function evaluateImprovementTrigger(aggregate, context = {}) {
     recurringFailures,
     eventKind === 'production-run' ? eventId : ''
   );
+  const evaluationCluster = eventKind === 'evaluation-failure' && evaluationFailure?.clusterKey
+    ? aggregate?.evaluation?.clusters?.[evaluationFailure.clusterKey]
+    : null;
+  const repeatedEvaluationFailure = Number(evaluationCluster?.observationCount || 0) >= 2;
 
   const reasons = [], allowedScopes = [];
   if ((!eventKind || eventKind === 'owner-feedback') && feedbackNegative) {
@@ -38,6 +43,11 @@ export function evaluateImprovementTrigger(aggregate, context = {}) {
   if ((!eventKind || eventKind === 'production-run') && recurringEngineeringFailure) {
     reasons.push('recurring-engineering-failure-across-runs');
     allowedScopes.push('engineering');
+  }
+  if (eventKind === 'evaluation-failure') {
+    reasons.push('evaluation-failure-requires-analysis');
+    allowedScopes.push('evaluation-failure-analysis');
+    if (repeatedEvaluationFailure) reasons.push('repeated-evaluation-failure-observation');
   }
 
   return {

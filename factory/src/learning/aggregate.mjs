@@ -49,7 +49,43 @@ function failureSignature(kind, failure) {
   ].filter(Boolean).join(':');
 }
 
-export function aggregateEvidence({ runEvidence = [], attemptEvidence = [], ownerFeedback = [] } = {}) {
+function aggregateEvaluationFailures(records) {
+  const groups = new Map();
+  const sorted = [...records].sort((a, b) => String(a?.id || '').localeCompare(String(b?.id || '')));
+  for (const item of sorted) {
+    const clusterKey = String(item?.clusterKey || '').trim();
+    if (!clusterKey) continue;
+    if (!groups.has(clusterKey)) groups.set(clusterKey, []);
+    groups.get(clusterKey).push(item);
+  }
+
+  const clusters = Object.fromEntries([...groups.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([clusterKey, items]) => {
+      const observationIds = [...new Set(items.map((item) => String(item.observationId || '')).filter(Boolean))].sort();
+      return [clusterKey, {
+        evidenceCount: items.length,
+        observationCount: observationIds.length,
+        observationIds,
+        evidenceIds: items.map((item) => String(item.id)).filter(Boolean).sort(),
+        caseIds: [...new Set(items.map((item) => String(item.case?.caseId || '')).filter(Boolean))].sort(),
+        evaluatedCommitShas: [...new Set(items.map((item) => String(item.evaluation?.evaluatedCommitSha || '')).filter(Boolean))].sort(),
+        failureSignatures: [...new Set(items.map((item) => String(item.failureSignature || '')).filter(Boolean))].sort(),
+        failureClass: items[0]?.classification?.failureClass || 'unclassified',
+        classification: items[0]?.classification?.status || 'unclassified',
+        repeated: observationIds.length >= 2
+      }];
+    }));
+
+  return {
+    evidenceIds: sorted.map((item) => String(item?.id || '')).filter(Boolean),
+    totalEvidence: sorted.length,
+    unclassifiedEvidence: sorted.filter((item) => item?.classification?.status === 'unclassified').length,
+    clusters
+  };
+}
+
+export function aggregateEvidence({ runEvidence = [], attemptEvidence = [], ownerFeedback = [], evaluationFailures = [] } = {}) {
   const failures = new Map();
   const failureRuns = new Map();
   const positives = new Map();
@@ -146,13 +182,15 @@ export function aggregateEvidence({ runEvidence = [], attemptEvidence = [], owne
     bump(ownerVerdicts, item.parsedCommand || item.verdict);
     for (const claim of item.classificationClaims || []) bump(classifications, claim.type || claim);
   }
+  const evaluation = aggregateEvaluationFailures(evaluationFailures);
 
   return {
     schemaVersion: 'learning-aggregate-v1',
     input: {
       runIds: runs.map(runId).filter(Boolean),
       attemptEvidence: attemptInputs.map((a) => ({ runId: String(a.runId || ''), attemptId: String(a.attemptId || ''), kind: a.kind || null, sourceRef: a.sourceRef || null })),
-      ownerFeedbackIds: feedback.map((f) => f.id).filter(Boolean)
+      ownerFeedbackIds: feedback.map((f) => f.id).filter(Boolean),
+      evaluationFailureIds: evaluation.evidenceIds
     },
     failures: {
       signatures: sortedObject(failures),
@@ -178,6 +216,11 @@ export function aggregateEvidence({ runEvidence = [], attemptEvidence = [], owne
     owner: {
       verdicts: sortedObject(ownerVerdicts),
       classificationClaims: sortedObject(classifications)
+    },
+    evaluation: {
+      totalEvidence: evaluation.totalEvidence,
+      unclassifiedEvidence: evaluation.unclassifiedEvidence,
+      clusters: evaluation.clusters
     },
     economics: {
       costUsd,

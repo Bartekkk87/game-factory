@@ -41,6 +41,8 @@ jobs:
         run: node factory/src/evaluation/test-corpus-case-execution.mjs
       - name: Prove Golden Corpus S2 baseline and metric semantics
         run: node factory/src/evaluation/test-corpus-s2.mjs
+      - name: Prove Golden Corpus S3 analysis-only evaluation failure intake
+        run: node factory/src/evaluation/test-evaluation-failure-intake.mjs
       - name: Prove control kernel budgets and release gate
         run: node factory/src/control/test-control.mjs
       - name: Prove model/provider router and capability gates
@@ -73,8 +75,44 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Run Golden Corpus S2 evaluation and quality/delta report
         run: |
+          set +e
           node factory/src/evaluation/run-corpus.mjs --out evaluation/results/S2-latest.json
-          node -e "const r=require('./evaluation/results/S2-latest.json'); console.log('S2 summary', JSON.stringify({commit:r.evaluatedCommitSha,cases:r.metrics.totalCases,passRate:r.metrics.expectedOutcomePassRate,criticalFalsePasses:r.metrics.criticalFalsePassCount,delta:r.delta.expectedOutcomePassRateDelta}))"
+          S2_STATUS=$?
+          set -e
+          if [ -f evaluation/results/S2-latest.json ]; then
+            node factory/src/evaluation/intake-failures.mjs \
+              --report evaluation/results/S2-latest.json \
+              --observation-id "github-${{ github.run_id }}-attempt-${{ github.run_attempt }}" \
+              | tee evaluation/results/S3-intake-latest.json
+            node -e "const r=require('./evaluation/results/S2-latest.json'); console.log('S2 summary', JSON.stringify({commit:r.evaluatedCommitSha,cases:r.metrics.totalCases,passRate:r.metrics.expectedOutcomePassRate,criticalFalsePasses:r.metrics.criticalFalsePassCount,delta:r.delta.expectedOutcomePassRateDelta}))"
+          else
+            echo "S2 report was not produced; no case-level evaluation failure was admitted to S3" >&2
+          fi
+          exit "$S2_STATUS"
+      - name: Stage current S3 learning artifacts
+        if: always()
+        run: |
+          mkdir -p evaluation/artifacts/S3-current
+          git ls-files --others --exclude-standard -- \
+            learning/evidence/evaluation-failures \
+            learning/aggregates \
+            learning/triggers \
+            learning/analysis \
+            learning/candidates \
+            learning/orchestration \
+            | while IFS= read -r FILE; do
+                mkdir -p "evaluation/artifacts/S3-current/$(dirname "$FILE")"
+                cp "$FILE" "evaluation/artifacts/S3-current/$FILE"
+              done
+      - name: Preserve S2/S3 evaluation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: golden-corpus-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            evaluation/results/
+            evaluation/artifacts/S3-current/
+          if-no-files-found: warn
       - name: Prove P0 action reachability repair
         run: node factory/src/verify/test-action-reachability.mjs
       - name: Prove independent terminal proof scenarios
