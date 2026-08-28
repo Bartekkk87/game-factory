@@ -65,7 +65,7 @@ export function promoteCandidate(id,{approvedBy,approvalKind,promotionRef,activa
 export function deactivateCandidate(id,{by,reason,rollbackOf=null,at=null}) {
   const c=assertCandidate(readJson(candidatePath(id),null)); const when=at||new Date().toISOString();
   const next={...c,active:false,deactivatedAt:when,deactivatedBy:by||null,rollbackOf:rollbackOf||c.rollbackOf||null,reversalReason:reason||null}; writeJson(candidatePath(id),next);
-  const m=loadMemory(); m.lessons=m.lessons.map(l=>l.id===id?{...l,active:false,deactivatedAt:when,deactivatedBy:by||null,rollbackOf:rollbackOf||c.rollbackOf||null,reversalReason:reason||null}:l); saveMemory(m); return next;
+  const m=loadMemory(); m.lessons=m.lessons.map(l=>l.id===id?{...l,active:false,deactivatedAt:when,reversalReason:reason||null}:l); saveMemory(m); return next;
 }
 
 function fileSha256(file) {
