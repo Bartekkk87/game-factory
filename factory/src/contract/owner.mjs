@@ -47,12 +47,18 @@ function findSection(sections, patterns) {
 function requirementList(prefix, items, mode) {
   return items.map((item, index) => {
     const text = typeof item === 'string' ? item : item.text;
+    const contextHeading = typeof item === 'string' ? null : (item.contextHeading || null);
     const provenance = typeof item === 'string'
       ? { mode, itemIndex: index }
-      : { mode, itemIndex: item.fragmentIndex ?? index };
+      : {
+          mode,
+          itemIndex: item.fragmentIndex ?? index,
+          ...(contextHeading ? { contextHeading } : {})
+        };
     return {
       id: `${prefix}-${String(index + 1).padStart(2, '0')}`,
       text,
+      ...(contextHeading ? { contextHeading } : {}),
       provenance,
       immutable: true
     };
@@ -71,13 +77,18 @@ const DIRECT_BUILD_REQUEST = /^\s*(?:please\s+)?(?:build|create|make|produce|dev
 
 function freeformFragments(rawIdea) {
   const fragments = [];
+  let contextHeading = null;
   for (const rawLine of String(rawIdea || '').split(/\r?\n/)) {
-    if (/^\s*#{1,6}\s+/.test(rawLine)) continue;
+    const heading = rawLine.match(/^\s*#{1,6}\s+(.+?)\s*$/);
+    if (heading) {
+      contextHeading = heading[1].trim();
+      continue;
+    }
     const line = rawLine.replace(/^\s*[-*+]\s+/, '').trim();
     if (!line) continue;
     for (const part of line.split(/(?<=[.!?])\s+|;\s*/)) {
       const text = part.trim();
-      if (text) fragments.push({ text, fragmentIndex: fragments.length });
+      if (text) fragments.push({ text, fragmentIndex: fragments.length, contextHeading });
     }
   }
   return fragments;
@@ -87,14 +98,16 @@ function decomposeFreeform(rawIdea) {
   const mustHaves = [];
   const noGos = [];
   const unknowns = [];
+  let headingContextPreserved = false;
   for (const fragment of freeformFragments(rawIdea)) {
+    if (fragment.contextHeading) headingContextPreserved = true;
     if (AMBIGUITY.test(fragment.text)) unknowns.push(fragment);
     else if (NO_GO.test(fragment.text)) noGos.push(fragment);
     else if (CONTEXT_ONLY.test(fragment.text)) unknowns.push(fragment);
     else if (EXPLICIT_OBLIGATION.test(fragment.text) || DIRECT_BUILD_REQUEST.test(fragment.text)) mustHaves.push(fragment);
     else unknowns.push(fragment);
   }
-  return { mustHaves, noGos, unknowns };
+  return { mustHaves, noGos, unknowns, headingContextPreserved };
 }
 
 export function createOwnerContract({ idea = '', source = 'unknown' } = {}) {
@@ -115,7 +128,9 @@ export function createOwnerContract({ idea = '', source = 'unknown' } = {}) {
     mustHaveItems = decomposed.mustHaves;
     noGoItems = decomposed.noGos;
     unknownItems = decomposed.unknowns;
-    decompositionMode = 'deterministic-freeform-v2';
+    decompositionMode = decomposed.headingContextPreserved
+      ? 'deterministic-freeform-v3-heading-context'
+      : 'deterministic-freeform-v2';
   }
 
   if (!rawIdea) {
@@ -129,7 +144,8 @@ export function createOwnerContract({ idea = '', source = 'unknown' } = {}) {
     ownerBriefSha256: crypto.createHash('sha256').update(originalBrief).digest('hex'),
     decomposition: {
       version: decompositionMode,
-      ambiguitiesPreservedAsUnknown: true
+      ambiguitiesPreservedAsUnknown: true,
+      semanticHeadingContextPreserved: decompositionMode === 'deterministic-freeform-v3-heading-context'
     },
     mustHaves: requirementList('MH', mustHaveItems, decompositionMode),
     noGos: requirementList('NG', noGoItems, decompositionMode),
