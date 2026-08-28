@@ -53,7 +53,7 @@
 
   function frame(now) {
     requestAnimationFrame(frame);
-    if (state === 'playing' && playStartedAt !== null && now - playStartedAt >= 1800) {
+    if (state === 'playing' && playStartedAt !== null && now - playStartedAt >= 2600) {
       state = 'won';
       score += 1000;
     }
