@@ -145,7 +145,9 @@ export function createOwnerContract({ idea = '', source = 'unknown' } = {}) {
     decomposition: {
       version: decompositionMode,
       ambiguitiesPreservedAsUnknown: true,
-      semanticHeadingContextPreserved: decompositionMode === 'deterministic-freeform-v3-heading-context'
+      ...(decompositionMode === 'deterministic-freeform-v3-heading-context'
+        ? { semanticHeadingContextPreserved: true }
+        : {})
     },
     mustHaves: requirementList('MH', mustHaveItems, decompositionMode),
     noGos: requirementList('NG', noGoItems, decompositionMode),
