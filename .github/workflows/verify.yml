@@ -12,6 +12,7 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/**'
+      - '.github/CODEOWNERS'
   workflow_dispatch:
 
 permissions:
@@ -33,6 +34,20 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Check all Node modules
         run: find factory/src -name '*.mjs' -print0 | xargs -0 -n1 node --check
+      - name: Prove zero-valued operational limit semantics
+        run: node factory/src/test-config-limits.mjs
+      - name: Prove workflow protected-path and staged-evidence commit policy
+        run: node factory/src/control/test-staged-commit-policy.mjs
+      - name: Prove release gate uses only deterministic authoritative criteria
+        run: node factory/src/control/test-release-gate-advisory.mjs
+      - name: Prove every model registry request contract
+        run: node factory/src/llm/test-request-contract.mjs
+      - name: Prove transport retry preserves billing uncertainty fail-closed
+        run: node factory/src/llm/test-transport-policy.mjs
+      - name: Prove generated-page tag and CSP isolation
+        run: node factory/src/publish/test-assemble-safety.mjs
+      - name: Prove audit-v2 flat-frame and network verifier hardening
+        run: node factory/src/verify/test-audit-v2-hardening.mjs
       - name: Prove Golden Corpus S0 registry and coverage baseline
         run: node factory/src/evaluation/test-corpus-registry.mjs
       - name: Prove Golden Corpus S1 manifest and bounded sibling provenance
