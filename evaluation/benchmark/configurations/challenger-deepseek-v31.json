@@ -10,6 +10,7 @@
   "verifier": {"refs":[{"path":"factory/src/verify/contract.mjs","gitBlobSha":"e3f7cb671cabcd306d19dff67195fa4e02bcddda"}]},
   "retry": {"refs":[{"path":"factory/src/control/repair-policy.mjs","gitBlobSha":"ba8550564204f99c552d7c457d7ca70fd7325a33"}],"maxAttempts":4},
   "escalation": {"refs":[{"path":"factory/src/control/release-gate.mjs","gitBlobSha":"3b38626d5bb97f57c9e983a2c7bea2b734dedac6"}],"maxEscalations":1,"authority":"human-owner"},
+  "sampling": {"profile":"engineer-v1","seed":null,"operations":{"build":{"temperature":0.3,"maxOutputTokens":12000,"jsonMode":true},"repair":{"temperature":0.3,"maxOutputTokens":12000,"jsonMode":true},"rebuild":{"temperature":0.6,"maxOutputTokens":12000,"jsonMode":true},"polish":{"temperature":0.3,"maxOutputTokens":12000,"jsonMode":true}}},
   "trialPlan": {"trialsPerCase":3,"identityPolicy":"explicit runId + caseId + trial index"},
-  "configurationSha256": "4e710dc5aff2381879dc2e1b777aeecaf98f64f8cd91f681aeb2f43df633563a"
+  "configurationSha256": "fc4d8a8224eb97d6f1689fcf10f740a178dfb6d0b454ecdb577f98e6d7ba2aca"
 }
