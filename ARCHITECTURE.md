@@ -17,6 +17,7 @@ Stand: **28.08.2026 — Factory Foundation + Controlled Improvement + Golden Cor
 9. **Keine neue Kontrollkomponente ohne reproduzierten Failure Mode.**
 10. **Kein Paid Game- oder model-backed Benchmark-Run ohne separate Owner-Freigabe.**
 11. **Learning generalisiert Regeln, nicht Einzelfallnamen.**
+12. **Code Authority und Runtime State sind getrennt.** `main` ist autoritativ; `runtime-state` ist durable, aber nicht autoritativ.
 
 Authority Order:
 
@@ -48,7 +49,7 @@ L2 MODEL / PROVIDER
    Role/Operation Router -> Model Registry -> Request Contract -> Provider Registry -> Adapter -> Credential Lane
 
 L1 CONTROL KERNEL
-   GitHub Actions -> SHA binding -> budgets -> gates -> durable runs/evidence
+   protected main authority -> GitHub Actions -> runtime-state evidence -> SHA binding -> budgets -> gates
 ```
 
 ## 3. Production Factory und Release Authority
@@ -134,16 +135,35 @@ Prompt-Lesson-Promotion akzeptiert nicht mehr nur die Behauptung `approvalKind=h
 
 Direktes Erzeugen aktiver Lessons über `memory/store.mjs` ist entfernt.
 
-### Git-seitige Protected-Path-Grenze
+### Git Authority / Runtime State
 
-Production- und Review-Workflows:
+Die Git-seitige Authority ist zweigeteilt:
 
-- verwenden explizite Commit-Allow-Lists statt pauschalem `git add -A`;
-- prüfen vor Commit, dass kein Protected Path verändert wurde;
-- prüfen staged Evidence auf bekannte Secret-Formate;
-- besitzen `CODEOWNERS` für geschützte Pfade.
+- `main` = autoritativer Code-, Prompt-, Skill-, Verifier-, Control- und Policy-Stand;
+- `runtime-state` = nicht-autoritative durable Runs, Drafts, Products, Archive, Memory, Learning-Evidence und Evaluation-Resultate.
 
-**Wichtig:** Diese Code-seitige Schranke ersetzt keine GitHub-Branch-Protection. Solange `main` repository-seitig nicht protected ist und Pflichtreview ohne Actions-Bypass erzwingt, bleibt C-3 administrativ offen.
+Production und Review:
+
+1. checken explizit `main` aus;
+2. prüfen, dass die seit dem Merge-Base eigenen Änderungen von `runtime-state` ausschließlich in erlaubten State-Pfaden liegen;
+3. mergen den erlaubten State lokal in den aktuellen `main`-Tree;
+4. prüfen anschließend, dass der kombinierte Tree gegenüber `main` ausschließlich in State-Pfaden abweicht;
+5. führen Production/Review mit dem autoritativen Code aus `main` aus;
+6. stage'n nur explizit erlaubte Runtime-/Evidence-Pfade;
+7. prüfen staged Evidence auf bekannte Secret-Formate;
+8. pushen ausschließlich `HEAD:runtime-state`.
+
+Die erlaubten State-Pfade sind:
+
+`runs/`, `drafts/`, `products/`, `archive/`, `memory/`, `learning/`, `evaluation/results/`.
+
+Production und Review teilen die Concurrency-Gruppe `game-factory-runtime-state`, sodass sie denselben State-Branch nicht gleichzeitig fortschreiben.
+
+GitHub Pages folgt derselben Trust-Richtung: Code wird aus `main` ausgeführt; `runtime-state` wird nur nach Branch-/Tree-Policy als read-only Gallery-State zugeladen.
+
+Zusätzlich gelten Runtime-Protected-Path-Check und `CODEOWNERS` als Defense in Depth.
+
+**Repository-Admin-Boundary:** Der Code-Split beseitigt die Notwendigkeit von Bot-Pushes auf `main`, ersetzt aber keine Branch Protection. C-3 ist erst vollständig geschlossen, wenn GitHub `main` tatsächlich als protected branch/ruleset mit Pflichtreview und ohne Actions-Bypass erzwingt.
 
 ## 7. Real Learning Proof — Lumen Current
 
