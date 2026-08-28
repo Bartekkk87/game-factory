@@ -32,7 +32,7 @@ function normalizeLesson(lesson) {
     && lesson.text.trim().length > 0
     && lesson.text.length <= MAX_LESSON_DIRECTIVE_CHARS
     && typeof lesson.role === 'string'
-    && typeof lesson.scope === 'string'
+    && (typeof lesson.scope === 'string' || lesson.scope == null)
     && Array.isArray(lesson.sourceRunIds)
     && Array.isArray(lesson.ownerFeedbackIds)
     && typeof lesson.promotionRef === 'string'
@@ -42,6 +42,7 @@ function normalizeLesson(lesson) {
     return {
       ...lesson,
       schemaVersion: LESSON_SCHEMA,
+      scope: String(lesson.scope || 'legacy-governed-prompt'),
       directive: lesson.text
     };
   }
