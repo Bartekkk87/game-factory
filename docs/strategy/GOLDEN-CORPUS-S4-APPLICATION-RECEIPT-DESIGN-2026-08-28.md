@@ -1,7 +1,7 @@
 # Golden Factory Evaluation Corpus — S4 Application Receipt Design
 
 Date: 28.08.2026  
-Status: S4 design only; implementation follows only inside the existing Learning lifecycle  
+Status: S4 design first; implementation remains inside the existing Learning lifecycle  
 Base: `main` `e7b406204460e52c0cd751a5f0999dfa306a8eed` (S3 code parent `277a509f77055237019d354a25452e7d3ede346a`)
 
 ## Decision
@@ -51,7 +51,7 @@ Logical schema `learning-application-receipt-v1`:
 - merged commit SHA;
 - accountable human approval reference;
 - canonical validation artifact ref + SHA-256;
-- exact additional regression-evidence refs + SHA-256;
+- exact post-merge regression-evidence refs + SHA-256 + Candidate/commit/PASS binding;
 - exact Golden Corpus report ref + SHA-256;
 - corpus evaluated commit SHA and PASS result;
 - `appliedAt`;
@@ -77,7 +77,15 @@ The canonical validation artifact is not caller-selected. It is derived as:
 
 It must exist, identify the same Candidate, have `outcome=validated-inactive`, and contain only passing regression results. Its exact bytes are SHA-bound in the receipt.
 
-Additional regression evidence is represented by one or more repo-relative JSON evidence refs supplied with SHA-256. S4 validates presence and byte hash; it does not execute or authorize a repair.
+Each additional post-merge regression evidence record uses schema `learning-application-regression-evidence-v1` and must contain:
+
+- the same `candidateId`;
+- `evaluatedCommitSha` equal to the merged implementation commit;
+- a non-empty evidence `kind`;
+- an accountable `sourceRef` such as the Full Verifier run/reference;
+- exact `outcome=PASS`.
+
+The evidence JSON itself is repo-relative and SHA-256 bound. Presence or a hash alone is insufficient: a different Candidate, different commit or non-PASS outcome fails closed. S4 validates this evidence; it does not execute or authorize a repair.
 
 ## Corpus proof
 
@@ -119,16 +127,17 @@ S4 is not acceptable unless deterministic tests prove all of the following:
 11. malformed, unknown or non-ancestor merge commit -> reject;
 12. missing regression evidence -> reject;
 13. missing evidence file or evidence SHA mismatch -> reject;
-14. corpus report evaluated against a different commit -> reject;
-15. incompatible corpus baseline -> reject;
-16. corpus regression, expected mismatch or critical false PASS -> reject;
-17. exact duplicate application -> idempotent and no rewrite;
-18. conflicting second application for the same Candidate -> reject and preserve the original receipt;
-19. missing superseded/reversed prior receipt -> reject;
-20. valid supersession/reversal reference -> new receipt may be created while the prior receipt remains byte-identical;
-21. successful receipt creation leaves Candidate JSON byte-identical and leaves active memory byte-identical;
-22. existing `promoteCandidate()` protected/prompt behavior remains unchanged;
-23. Full Verifier remains green.
+14. wrong regression-evidence schema, Candidate, merge commit, source or non-PASS outcome -> reject;
+15. corpus report evaluated against a different commit -> reject;
+16. incompatible corpus baseline -> reject;
+17. corpus regression, expected mismatch or critical false PASS -> reject;
+18. exact duplicate application -> idempotent and no rewrite;
+19. conflicting second application for the same Candidate -> reject and preserve the original receipt;
+20. missing superseded/reversed prior receipt -> reject;
+21. valid supersession/reversal reference -> new receipt may be created while the prior receipt remains byte-identical;
+22. successful receipt creation leaves Candidate JSON byte-identical and leaves active memory byte-identical;
+23. existing `promoteCandidate()` protected/prompt behavior remains unchanged;
+24. Full Verifier remains green.
 
 ## Out of scope / hard boundaries
 
