@@ -3,7 +3,7 @@ import { chat } from '../llm/client.mjs';
 import { extractJson } from '../llm/json.mjs';
 import { assembleSystemPrompt } from '../util/skills.mjs';
 import { lessonsFor } from '../memory/store.mjs';
-import { PATHS } from '../config.mjs';
+import { PATHS, LIMITS } from '../config.mjs';
 import { ownerRequirementIds } from '../contract/owner.mjs';
 import { verifierActionContract } from '../verify/action-policy.mjs';
 
@@ -108,7 +108,7 @@ export async function buildGame({ gdd, ownerIdea = '', ownerContract }) {
     '=== GAME DESIGN BRIEFING ===', JSON.stringify(gdd, null, 2), '',
     '=== MICRO-ENGINE SOURCE (injected automatically before your js - do NOT repeat it) ===', engineSource()
   ].join('\n');
-  const { text } = await chat({ role: 'engineer', operation: 'build', system: systemPrompt(), user, json: true, temperature: 0.3, maxTokens: 12000 });
+  const { text } = await chat({ role: 'engineer', operation: 'build', system: systemPrompt(), user, json: true, temperature: 0.3, maxTokens: LIMITS.engineerMaxTokens });
   return validateDesign(extractJson(text));
 }
 
@@ -126,7 +126,7 @@ export async function rebuildGame({ gdd, ownerIdea = '', ownerContract, failureH
     '=== GAME DESIGN BRIEFING ===', JSON.stringify(gdd, null, 2), '',
     '=== MICRO-ENGINE SOURCE ===', engineSource()
   ].join('\n');
-  const { text } = await chat({ role: 'engineer', operation: 'rebuild', system: systemPrompt(), user, json: true, temperature: 0.6, maxTokens: 12000 });
+  const { text } = await chat({ role: 'engineer', operation: 'rebuild', system: systemPrompt(), user, json: true, temperature: 0.6, maxTokens: LIMITS.engineerMaxTokens });
   return validateDesign(extractJson(text));
 }
 
@@ -144,7 +144,7 @@ export async function repairGame({ gdd, design, failureSummary, ownerIdea = '', 
     '=== PREVIOUS ATTEMPT (json with title/css/html/js) ===', JSON.stringify(design, null, 2), '',
     '=== MICRO-ENGINE SOURCE ===', engineSource()
   ].join('\n');
-  const { text } = await chat({ role: 'engineer', operation: 'repair', system: systemPrompt(), user, json: true, temperature: 0.3, maxTokens: 12000 });
+  const { text } = await chat({ role: 'engineer', operation: 'repair', system: systemPrompt(), user, json: true, temperature: 0.3, maxTokens: LIMITS.engineerMaxTokens });
   return validateDesign(extractJson(text));
 }
 
@@ -164,6 +164,6 @@ export async function polishGame({ gdd, design, playtest, ownerIdea = '', ownerC
     '=== CURRENT VERIFIED IMPLEMENTATION (json with title/css/html/js) ===', JSON.stringify(design, null, 2), '',
     '=== MICRO-ENGINE SOURCE ===', engineSource()
   ].join('\n');
-  const { text } = await chat({ role: 'engineer', operation: 'polish', system: systemPrompt(), user, json: true, temperature: 0.3, maxTokens: 12000 });
+  const { text } = await chat({ role: 'engineer', operation: 'polish', system: systemPrompt(), user, json: true, temperature: 0.3, maxTokens: LIMITS.engineerMaxTokens });
   return validateDesign(extractJson(text));
 }
