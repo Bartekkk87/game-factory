@@ -20,6 +20,11 @@ evidence record, not project-game architecture authority — the canonical
 as superseding them; it evaluates whether their implementation in PR #64 can be trusted, not
 their design.
 
+The audit document carries its own revision log (`## 0. Erratum`) rather than being replaced on
+correction: two post-publication review passes adjusted severity on secondary findings and
+withdrew an unauthoritative AC-PG-numbered scorecard in favor of qualitative control categories.
+Neither pass changed the NO-GO verdict or the three P0 findings.
+
 ## Current Product experiment
 
 `LUMEN-CURRENT-A-B-CANARY-PLAN-2026-08-29.md` remains the Owner-authorized experiment record for the Lumen Current controlled model comparison. It freezes the canonical Owner brief and comparison controls. Later evidence must not silently change those controls.
