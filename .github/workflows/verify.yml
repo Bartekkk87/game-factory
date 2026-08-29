@@ -1,4 +1,4 @@
-name: Verifier Selftest
+name: Branch Verifier Selftest
 
 on:
   push:
@@ -26,7 +26,7 @@ permissions:
   contents: read
 
 jobs:
-  selftest:
+  branch-selftest:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
