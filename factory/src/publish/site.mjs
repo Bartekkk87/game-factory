@@ -1,3 +1,4 @@
+// Pages gallery builder. This comment also records the 2026-08-29 benchmark-preview refresh; runtime behavior is unchanged.
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, PATHS } from '../config.mjs';
