@@ -3,6 +3,7 @@
 Evidence-driven Game Factory für Web-Games auf GitHub. Die Factory führt Owner-Idee, Build, deterministische Verifikation, Repair/Polish, Release Gate, Evaluation, Controlled Improvement und Owner Review über durable Git-Evidence zusammen.
 
 > Architektur: [ARCHITECTURE.md](ARCHITECTURE.md)  
+> Project Game Mode v0.1: [docs/strategy/PROJECT-GAME-MODE-V0.1-ARCHITECTURE.md](docs/strategy/PROJECT-GAME-MODE-V0.1-ARCHITECTURE.md)
 > Aktueller Gesamtstand: [docs/strategy/PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md](docs/strategy/PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md)  
 > Historischer S0–S5 Closure Checkpoint: [docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md](docs/strategy/PROJECT-PROGRESS-SNAPSHOT-S0-S5-CLOSED-2026-08-28.md)  
 > Kanonische Learning-Architektur mit realem Lumen-Beispiel: [docs/strategy/LEARNING-ARCHITECTURE-EVIDENCE-TO-APPLIED-CHANGE-2026-08-28.md](docs/strategy/LEARNING-ARCHITECTURE-EVIDENCE-TO-APPLIED-CHANGE-2026-08-28.md)
@@ -18,6 +19,8 @@ Damit ist praktisch belegt:
 `real Production failure -> durable evidence -> deterministic root cause -> protected-layer Candidate -> validation/regression -> validated inactive -> human merge -> post-merge regression -> APPLIED-CLOSED`
 
 Der noch ausstehende Product-Meilenstein bleibt Issue `#17`: ein späterer spielbarer unabhängiger Canary mit hands-on Owner ACCEPT/REJECT. **Ein weiterer Canary wird jedoch erst nach Abschluss der verbleibenden Architecture-Audit-Tracks in Auftrag gegeben.**
+
+Parallel zum unveränderten Micro-Game-Pfad enthält die aktuelle Feature-Branch-Arbeit eine zero-paid **Project Game Foundation v0.1**: persistente Multi-File-Workspaces, immutable Project-/Task-Contracts, bounded Context, exakt gescopte File Operations, verification-gated Baseline-Transaktionen, getrenntes Project Memory, Save-Schema-/Web-Adapter-Contracts und einen realen Blank-Screen-negativen Browser-Proof. Sie ist noch kein autonomer Project Runner und baut noch keinen Canary.
 
 ## Production Flow
 

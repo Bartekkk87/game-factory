@@ -3,6 +3,10 @@
   "defaultUnlistedStatus": "historical-non-authoritative",
   "authorityOrder": [
     "ARCHITECTURE.md",
+    "docs/strategy/PROJECT-GAME-MODE-V0.1-ARCHITECTURE.md",
+    "docs/strategy/PROJECT-GAME-MODE-V0.1-IMPLEMENTATION-CATALOG.md",
+    "docs/strategy/PROJECT-GAME-MODE-V0.1-FALSIFICATION.md",
+    "docs/strategy/PROJECT-GAME-MODE-V0.1-HANDOFF.md",
     "docs/strategy/INDEPENDENT-REAUDIT-REMEDIATION-CLOSURE-2026-08-29.md",
     "docs/strategy/PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md"
   ],
@@ -10,6 +14,30 @@
     {
       "path": "ARCHITECTURE.md",
       "role": "architecture",
+      "status": "canonical",
+      "supersedes": []
+    },
+    {
+      "path": "docs/strategy/PROJECT-GAME-MODE-V0.1-ARCHITECTURE.md",
+      "role": "project-game-v0.1-architecture",
+      "status": "canonical",
+      "supersedes": []
+    },
+    {
+      "path": "docs/strategy/PROJECT-GAME-MODE-V0.1-IMPLEMENTATION-CATALOG.md",
+      "role": "project-game-v0.1-implementation-catalog",
+      "status": "canonical",
+      "supersedes": []
+    },
+    {
+      "path": "docs/strategy/PROJECT-GAME-MODE-V0.1-FALSIFICATION.md",
+      "role": "project-game-v0.1-falsification",
+      "status": "canonical",
+      "supersedes": []
+    },
+    {
+      "path": "docs/strategy/PROJECT-GAME-MODE-V0.1-HANDOFF.md",
+      "role": "project-game-v0.1-handoff",
       "status": "canonical",
       "supersedes": []
     },

@@ -403,3 +403,25 @@ Nicht gerechtfertigt:
 - Behauptung, dass ein unabhängiger externer Audit bereits bestanden wurde.
 
 Der nächste Audit soll diese interne Closure ausdrücklich zu widerlegen versuchen.
+
+## 19. Project Game Mode v0.1 — parallele Foundation
+
+Der bestehende Micro-Game-Pfad bleibt unverändert autoritativ für one-shot Spiele. Project Game Mode ersetzt ihn nicht, sondern ergänzt eine getrennte Ausführungsschicht für persistente Multi-File-Projekte:
+
+`Project/Task Contract -> bounded Context -> scoped Operations in Staging -> hierarchical Verification -> atomic verified Baseline -> protected Git PR`
+
+Binding Grenzen:
+
+- Projektquellcode wird durch Git und den protected-main PR-Pfad autoritativ, niemals durch `runtime-state`.
+- normale Tasks dürfen `PROJECT.json`, `ROADMAP.json`, `ARCHITECTURE.md`, `.factory/**`, Build Output oder geerbte Regression-Fixtures nicht verändern;
+- Project Memory bleibt projektlokal und wird nicht automatisch zu Factory Learning;
+- ein Project PASS benötigt deterministische Evidence; LLM-Urteile ersetzen weder Invariants noch Unit-/Integration-/Regression-/Browser-Checks;
+- Web ist der erste Runtime Adapter. Owner Authority, Budget, Evidence, Learning und Task Governance bleiben runtime-unabhängig;
+- kein autonomer Milestone-Lauf und kein Paid Project Run ist durch die Foundation autorisiert.
+
+Die scoped Architektur, Falsifikation, Implementierungsgrenze und der nächste Handoff sind kanonisch dokumentiert in:
+
+- `docs/strategy/PROJECT-GAME-MODE-V0.1-ARCHITECTURE.md`;
+- `docs/strategy/PROJECT-GAME-MODE-V0.1-IMPLEMENTATION-CATALOG.md`;
+- `docs/strategy/PROJECT-GAME-MODE-V0.1-FALSIFICATION.md`;
+- `docs/strategy/PROJECT-GAME-MODE-V0.1-HANDOFF.md`.
