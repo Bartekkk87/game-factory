@@ -116,7 +116,12 @@ export function assertStagedCommitPolicy(mode) {
   const staged = gitLines(['diff', '--cached', '--name-only', '--diff-filter=ACMRD']);
   const disallowed = disallowedStagedPaths(staged, mode);
   if (disallowed.length) throw new Error(`staged paths outside ${mode} allowlist: ${disallowed.join(', ')}`);
-  const binary = forbiddenBinaryStatePaths(staged);
+
+  // Binary evidence may never be added, copied, modified or renamed into durable
+  // runtime-state. Deletions are intentionally allowed so legacy tracked binary
+  // evidence can be purged and the state branch can converge to the policy.
+  const stagedBinaryWrites = gitLines(['diff', '--cached', '--name-only', '--diff-filter=ACMR']);
+  const binary = forbiddenBinaryStatePaths(stagedBinaryWrites);
   if (binary.length) {
     throw new Error(`binary evidence must use GitHub Actions artifact storage, not runtime-state: ${binary.join(', ')}`);
   }

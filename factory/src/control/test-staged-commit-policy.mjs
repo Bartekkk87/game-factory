@@ -87,6 +87,25 @@ for (const name of ['produce.yml', 'review.yml']) {
   assert.deepEqual(pushes, ['git push origin HEAD:runtime-state'], `${name}: runtime bot may only push runtime-state`);
 }
 
+const produce = workflow('produce.yml');
+assert.match(
+  produce,
+  /git diff --name-only "\$GITHUB_SHA\^1" "\$GITHUB_SHA" -- 'ideas\/\*\.md'/,
+  'produce push trigger must resolve idea changes against merge commit first parent'
+);
+
+const commitPolicySource = fs.readFileSync(path.join(root, 'factory/src/control/staged-commit-policy.mjs'), 'utf8');
+assert.match(
+  commitPolicySource,
+  /--diff-filter=ACMRD/,
+  'staged allowlist must still inspect additions, copies, modifications, renames and deletions'
+);
+assert.match(
+  commitPolicySource,
+  /--diff-filter=ACMR/,
+  'binary evidence gate must reject durable binary writes while excluding deletion-only cleanup'
+);
+
 const pages = workflow('pages.yml');
 assert.match(pages, /branches: \[main, runtime-state\]/, 'pages must react to authoritative code and runtime-state changes');
 assert.match(pages, /ref: main/, 'pages must execute authoritative code from main');

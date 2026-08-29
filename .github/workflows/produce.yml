@@ -78,7 +78,7 @@ jobs:
           if [ -n "$MANUAL_IDEA" ]; then
             printf '%s\n' "$MANUAL_IDEA" > /tmp/idea.txt
           elif [ "$GITHUB_EVENT_NAME" = "push" ]; then
-            IDEA_FILE=$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" -- 'ideas/*.md' | head -n1)
+            IDEA_FILE=$(git diff --name-only "$GITHUB_SHA^1" "$GITHUB_SHA" -- 'ideas/*.md' | head -n1)
             test -n "$IDEA_FILE" || { echo "Push trigger did not contain an idea file" >&2; exit 1; }
             cp "$IDEA_FILE" /tmp/idea.txt
           else
