@@ -35,8 +35,14 @@ jobs:
             --ref main \
             -f provider=openrouter \
             -f model='nvidia/nemotron-3.5-lightning:free' \
+            -f director_provider=openrouter \
+            -f director_model='nvidia/nemotron-3.5-lightning:free' \
+            -f engineer_provider=openrouter \
+            -f engineer_model='nvidia/nemotron-3.5-lightning:free' \
             -f playtester_provider=openrouter \
             -f playtester_model='nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free' \
+            -f auditor_provider=openrouter \
+            -f auditor_model='nvidia/nemotron-3.5-lightning:free' \
             -f budget_usd=10 \
             -f director_max_tokens=32768 \
             -f engineer_max_tokens=65536 \
