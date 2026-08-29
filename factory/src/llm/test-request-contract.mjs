@@ -50,7 +50,49 @@ for (const [key, model] of entries) {
   } else {
     assert.equal(Object.hasOwn(body, 'response_format'), false, `${key} emitted unsupported response_format`);
   }
+
+  if (model.requestShape.reasoningEffort) {
+    assert.deepEqual(body.reasoning, {
+      effort: model.requestShape.reasoningEffort,
+      ...(model.requestShape.reasoningExclude === true ? { exclude: true } : {})
+    }, `${key} reasoning request contract mismatch`);
+  } else {
+    assert.equal(Object.hasOwn(body, 'reasoning'), false, `${key} emitted unexpected reasoning contract`);
+  }
+
+  if (model.requestShape.providerSort) {
+    assert.equal(model.provider, 'openrouter', `${key} provider routing contract must be OpenRouter-only`);
+    assert.deepEqual(body.provider, {
+      sort: model.requestShape.providerSort,
+      ...(model.requestShape.providerRequireParameters === true ? { require_parameters: true } : {})
+    }, `${key} OpenRouter provider routing contract mismatch`);
+  } else {
+    assert.equal(Object.hasOwn(body, 'provider'), false, `${key} emitted unexpected provider routing contract`);
+  }
 }
+
+const glm = registry['openrouter:z-ai/glm-5.3-flash'];
+const glmRequest = buildOpenAiCompatibleChatRequest({
+  route: {
+    provider: {
+      id: 'openrouter',
+      apiKey: 'test-key',
+      baseUrl: 'https://openrouter.ai/api/v1',
+      chatPath: '/chat/completions',
+      openRouterHeaders: true
+    },
+    model: glm
+  },
+  system: 'system',
+  user: 'user',
+  json: true,
+  temperature: 0.3,
+  maxTokens: 12000
+});
+const glmBody = JSON.parse(glmRequest.body);
+assert.deepEqual(glmBody.reasoning, { effort: 'low', exclude: true });
+assert.deepEqual(glmBody.provider, { sort: 'throughput', require_parameters: true });
+assert.deepEqual(glmBody.response_format, { type: 'json_object' });
 
 const fixtureModel = structuredClone(entries[0][1]);
 delete fixtureModel.requestShape;
