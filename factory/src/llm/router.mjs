@@ -11,7 +11,7 @@ const ROLE_DEFAULTS = Object.freeze({
 const PROVIDER_DEFAULT_MODELS = Object.freeze({
   openai: 'gpt-5.6-terra',
   deepseek: 'deepseek-v4-flash',
-  openrouter: 'deepseek/deepseek-chat-v3.1',
+  openrouter: 'z-ai/glm-5.3-flash',
   googleai: 'gemini-1.5-flash',
   huggingface: 'meta-llama/Llama-3.3-70B-Instruct'
 });

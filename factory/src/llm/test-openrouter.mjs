@@ -50,6 +50,13 @@ try {
   assert.equal(challenger.productionDefault, false);
   assert.equal(challenger.benchmarkStatus, 'challenger');
   assert.equal(challenger.pricing.source, 'openrouter-official-2026-08-27');
+  const glm = getModelRecord('openrouter', 'z-ai/glm-5.3-flash');
+  assert.equal(glm.productionDefault, false);
+  assert.equal(glm.benchmarkStatus, 'challenger');
+  assert.equal(glm.capabilities.contextWindow, 1310720);
+  assert.equal(glm.capabilities.maxOutputTokens, 131072);
+  assert.equal(glm.pricing.inputUsdPerM, 0.15);
+  assert.equal(glm.pricing.outputUsdPerM, 0.5);
   assert.throws(() => getModelRecord('openrouter', 'definitely-unknown'), UnknownModelError);
 
   process.env.OPENROUTER_PRODUCTION = 'openrouter-production-fixture';
@@ -81,7 +88,7 @@ try {
   assert.equal(route.provider.apiKey, 'openrouter-benchmark-fixture');
 
   delete process.env.GF_MODEL_ENGINEER;
-  assert.equal(resolveRoleRoute({ role: 'engineer', operation: 'build' }).model.id, 'deepseek/deepseek-chat-v3.1');
+  assert.equal(resolveRoleRoute({ role: 'engineer', operation: 'build' }).model.id, 'z-ai/glm-5.3-flash');
 
   const workflow = fs.readFileSync('.github/workflows/produce.yml', 'utf8');
   assert.match(workflow, /OPENAI_PRODUCTION:\s*\$\{\{\s*secrets\.OPENAI_PRODUCTION\s*\}\}/);

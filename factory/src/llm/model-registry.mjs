@@ -197,6 +197,34 @@ const BUILTIN_MODELS = Object.freeze({
     capabilities: { jsonObject: true, structuredOutputs: true, reasoning: true, contextWindow: 163840, maxOutputTokens: 32768, promptCaching: true },
     requestShape: { contractSource: 'openrouter-compatible-default-unverified' },
     pricing: { inputUsdPerM: 0.25, cachedInputUsdPerM: 0.13, outputUsdPerM: 0.95, source: 'openrouter-official-2026-08-27' }
+  }),
+  'openrouter:z-ai/glm-5.3-flash': model({
+    provider: 'openrouter',
+    id: 'z-ai/glm-5.3-flash',
+    versionLabel: 'GLM-5.3-Flash',
+    aliasKind: 'stable-id',
+    benchmarkStatus: 'challenger',
+    capabilities: {
+      vision: true,
+      jsonObject: true,
+      structuredOutputs: false,
+      reasoning: false,
+      contextWindow: 1310720,
+      maxOutputTokens: 131072,
+      promptCaching: true
+    },
+    requestShape: {
+      tokenParam: 'max_tokens',
+      temperature: 'free',
+      jsonMode: 'response_format',
+      contractSource: 'openrouter-official-2026-08-29'
+    },
+    pricing: {
+      inputUsdPerM: 0.15,
+      cachedInputUsdPerM: 0.03,
+      outputUsdPerM: 0.50,
+      source: 'openrouter-official-list-price-2026-08-29'
+    }
   })
 });
 
