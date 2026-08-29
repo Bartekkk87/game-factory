@@ -36,7 +36,9 @@ so the revision history stays visible rather than silently overwritten.
    is not reachable through the documented commit flow today. This is now stated explicitly.
    The other two parts of P1-2 — `gitCommitSha` defaults to `null` and is never populated or
    checked by the normal flow, and `treeSha256` is never re-verified against the actual tree on
-   load — remain, are reachable through the normal flow, and keep the finding at P1.
+   load — remain, are reachable through the normal flow, and keep the finding at P1. **Further
+   revised in the second pass below (entry 9) to P2-7** — a real `treeSha256` staleness check
+   does exist and was not fully credited here; see entry 9 for the precise scope.
 3. **P2-3 (browser-proof false FAIL) is downgraded to P3 and re-attributed.** CI job logs for
    the audited head (run `33271453720`, step *"Prove verifier accepts good and rejects bad
    products"*, `19:44:37–19:46:37`) show the PR's own browser-proof selftest — which includes
@@ -86,6 +88,56 @@ review. What changed is severity calibration on three secondary findings and com
 CI-evidence attribution — exactly the kind of gap an adversarial audit should have caught in
 itself, and did not until asked to re-check.
 
+### Second pass (same day) — after a further independent review of this corrected document
+
+The correction above was itself reviewed. Two more real defects surfaced, alongside confirmation
+that the first-pass correction "is deutlich belastbarer" and the NO-GO verdict "technisch
+gerechtfertigt". Corrected here:
+
+8. **The AC-PG-001…020 scorecard in §8 is withdrawn as a numbered, summed grading.** A second
+   independent reconstruction of the same disputed IDs from the implementation catalog's
+   attribution text produced materially different readings for `AC-PG-003`, `-009`, `-019`, and
+   `-020` than the first reconstruction did — and on review, several of the alternate readings
+   track the catalog's own phrasing more closely (e.g. `AC-PG-009` sits under the Project State
+   component, whose stated responsibility text is closer to a capability-registry reading than
+   the reading first used). Two good-faith reconstructions from the same source material
+   disagreeing this much is the proof that neither is authoritative. §8 is rewritten as a
+   qualitative table of audit-derived control categories with no AC-PG numbering and no combined
+   score. See the revised §8 and P3-1 for the full reasoning.
+9. **P1-2 is downgraded to P2-7.** The prior text characterized `treeSha256` as effectively
+   unchecked on the normal path. That was not fully accurate:
+   `commitVerifiedTransaction()` line 90 does compare the existing state's
+   `baseline.treeSha256` against the freshly captured `patchEvidence.baselineBefore` and aborts
+   on mismatch — a real check, and exactly the one P0-3 shows being defeated by a `null`
+   baseline. The finding is narrowed to what survives that concession: the check guards
+   staleness *within one task's prepare→commit window*, not tree integrity independently
+   verified at any later point (a later `loadProjectState()` call never recomputes and compares
+   against the actual workspace). On `gitCommitSha`: conceded that defaulting it to `null` at
+   local-commit time is architecturally reasonable, since no PR/merge SHA exists yet at that
+   point — the finding is narrowly that no later step in this PR ever performs that binding
+   either, which the falsification document's own residual-risk column already flags as future
+   work rather than something presented as solved. Downgraded to P2 because no currently
+   reachable path in this PR turns either gap into a demonstrated break beyond what P0-3 already
+   covers. See the revised finding (renumbered **P2-7**).
+10. **Remediation guidance strengthened.** §13 (Recommended next action) did not previously say
+    what "closed" means for the three P0s. It now states explicitly: each of the three embedded
+    Appendix reproductions must become an executable negative regression test — failing
+    pre-fix, passing post-fix, running in CI — before any P0 is treated as closed. A narrative
+    fix demonstrated by one manual re-run is not sufficient; that gap in what counts as proof is
+    exactly what P0-1 is about.
+11. **A factual inconsistency is fixed.** §2 stated the audit branch's deliverable "contains
+    this document only." By the time of the first correction pass, the branch also modified
+    `docs/strategy/INDEX.md` (to register this document inside `verify.yml`'s path filter — see
+    entry 6 above) and, as of this pass, no longer references the ephemeral scratchpad path for
+    reproductions (entry 5 in the appendix already fixed the appendix's own copy of this; §2's
+    summary line had not been updated to match).
+
+The NO-GO verdict and all three P0 findings are unchanged by this second pass. P1-3 is
+unchanged. What changed: the audit no longer claims a numbered acceptance-test scorecard it
+cannot actually stand behind, P1-2 is now bounded to what the code demonstrably does not do
+rather than what it does with a caveat, and remediation is now explicitly bound to executable
+regression tests rather than a narrative claim of a fix.
+
 ---
 
 ## 1. Commit identity
@@ -132,9 +184,12 @@ Also reviewed: the diffs to the five pre-existing modules the PR touches
 
 Audit rules honoured: no change to `main`; PR #64 not merged; no paid/provider/production run;
 no learning promotion; no gate weakened; no historical evidence file modified; no defect
-silently repaired. All adversarial reproductions live in an isolated worktree
-(`scratchpad/pr64/audit-harness/`) and are **not** part of this branch's deliverable, which
-contains this document only.
+silently repaired. Adversarial reproductions were run in an isolated worktree outside this
+branch and are now embedded verbatim in the Appendix rather than left as a session-local path
+reference (§0 erratum, entry 5). **Correction (§0 erratum, second pass, entry 11):** this
+branch's own deliverable is this document plus one small addition to
+`docs/strategy/INDEX.md` registering it — not "this document only" as an earlier version of
+this paragraph claimed. No other file changed; no productive code was added to the branch.
 
 ---
 
@@ -400,31 +455,52 @@ argument if it ever became exploitable.
 
 ---
 
-### P1-2 — Project State's `gitCommitSha` and `treeSha256` are never enforced on the normal path
+### P2-7 — Project State's `gitCommitSha` binding is missing and `treeSha256` re-verification is
+narrower than it first appears (downgraded from P1 to P2 on second-pass correction; see §0
+erratum entry 7)
 
-**Severity: P1 (narrowed on post-review correction — see Section 0 erratum). Affected:
-`project-state.mjs` → `validateProjectState()`, `writeProjectStateAtomic()`,
-`nextVerifiedState()`.**
+**Severity: P2 (downgraded from P1 — see §0 erratum entry 7). Affected: `project-state.mjs` →
+`validateProjectState()`, `nextVerifiedState()`; `transaction.mjs` line 90.**
 
-Two gaps, both reachable through the documented `commitVerifiedTransaction()` flow, not just
-through direct low-level API calls:
+**Correction:** the prior severity treated `treeSha256` as effectively unchecked anywhere on
+the normal path. That overstated it. `commitVerifiedTransaction()` line 90 does compare the
+existing state's `baseline.treeSha256` against `transaction.patchEvidence.baselineBefore`
+(the tree captured from staging just before the patch was applied) and aborts on mismatch —
+this is a real check, and it is what P0-3 shows being defeated when `baseline` is `null`. The
+concession requested is fair: given that check exists, calling `treeSha256` "never enforced"
+overreached.
 
-- **`gitCommitSha` may be `null`.** `nextVerifiedState()` defaults it to `null`;
-  `commitVerifiedTransaction()` never supplies one; `validateProjectState()` never requires one.
-  A state can therefore present a fully "verified" baseline with no Git commit and no PR behind
-  it — precisely the second-source-of-truth the falsification document claims to have closed.
-  The document's own residual-risk column admits "Future workflow must bind PR head and
-  evidence exactly"; that binding does not exist in code, so the claim "state alone authorizes
-  nothing" describes an intended future property, not a mechanism enforced today.
-- **`treeSha256` is never re-checked against the tree on load.** A baseline claiming
-  `aaaa…` was accepted by `validateProjectState()` against a workspace whose actual tree SHA was
-  `d3700b0c…`; nothing recomputes it. `loadProjectState()` in the normal commit flow does not
-  either.
+What the check does **not** do — and this is the part of the finding that survives — is verify
+tree *integrity* against an independent source. Both sides of the comparison derive from the
+same staging copy within the same task's prepare→commit window; nothing recomputes
+`captureProjectTree()` against the actual committed workspace at any later, independent point
+(a subsequent `loadProjectState()` call, a periodic audit, a next task's prepare) and compares
+it to the stored `baseline.treeSha256`. So the check that exists guards *staleness within one
+task's lifecycle*, not *tree integrity over the project's lifetime*. Whether that residual gap
+matters in practice depends entirely on whether anything other than this Foundation's own
+transaction path can ever touch the committed workspace — true today (nothing does), but a
+question that stays open once a PG-A0 runner or any other future write path exists.
+
+On `gitCommitSha`: the concession here is also fair. `nextVerifiedState()` defaulting it to
+`null` at local-commit time is architecturally reasonable — the PR's own commit and any GitHub
+PR/merge SHA genuinely do not exist yet at the point a local transaction commits, so a local
+process cannot bind to a future value. The finding is narrower than "this violates the claim
+today": it is that **no later step in this PR ever performs that binding either.** The
+falsification document's own residual-risk column already says as much — "Future workflow must
+bind PR head and evidence exactly" — describing a known gap, not a design decision presented as
+closed. The audit's disagreement with the PR is only about how that gap should be weighed: as
+long as nothing closes it, a Project State baseline can claim to be "verified" indefinitely with
+no Git commit ever having existed behind it, which is exactly the second-source-of-truth risk
+Issue #62 and the falsification document both name as the thing to avoid. Downgraded to P2
+because no currently-reachable path in this PR turns that into a demonstrated break beyond what
+P0-3 already covers, and because the gap is honestly disclosed as future work rather than
+misrepresented as solved.
 
 `baselineHistory` entries are not validated at all (only `state.baseline` is). Missing state
 file is not an error by default (`loadProjectState(..., { create: true })`), which — as shown
 in P0-3 — disables the only drift guard; an old state can be silently combined with a new
-source tree.
+source tree. That specific failure mode is already counted under P0-3 and is not double-counted
+here.
 
 **Correction:** the original text also demonstrated a third gap — "the project-identity check
 is self-referential" — by calling `writeProjectStateAtomic()` directly with project `alpha`'s
@@ -619,9 +695,14 @@ kontrolliert relevant". On the evidence: **controlled-incomplete**, with no drif
 
 `AC-PG-*` identifiers appear only in the right-hand column of
 `PROJECT-GAME-MODE-V0.1-IMPLEMENTATION-CATALOG.md`. No file in the repository defines them.
-`AC-PG-001` is not referenced at all. The grading in section 8 therefore uses a mapping I
-reconstructed from Issue #62's ten required capabilities plus the catalog's own component
-attributions; that mapping is my assumption, not the PR's, and is stated as such.
+`AC-PG-001` is not referenced at all. **Correction (second pass, see §0 erratum entry 8):** an
+earlier version of this document graded these IDs individually against a reconstructed mapping
+and reported a summed PASS/FAIL/UNPROVEN score in section 8. A second independent
+reconstruction attempt from the same catalog text produced materially different readings for
+several IDs. Section 8 now reports the same substance by control category instead, with no
+claim to represent the specific numbered IDs and no combined score. This finding stands
+unchanged as the reason why: the identifiers are used as if they were a stable, canonical
+acceptance-test suite, but no such suite is defined anywhere the catalog points to.
 
 ### P3-2 — Micro-Game verifier now depends on the Project browser proof
 
@@ -651,7 +732,7 @@ touching only those documents produces no Branch Verifier run; the trusted gate 
 | "staging transaction, fail-closed abort and crash rollback journal" | **Refuted.** Journal is unvalidated and enables out-of-tree deletion and foreign-baseline install (P0-2) |
 | "Crash produces mixed old/new project → journaled whole-directory swap" | **Refuted.** Two concurrent tasks destroy the project and report success (P0-3) |
 | "atomic verified baseline" | **Refuted.** Promotion is neither isolated nor guarded when baseline is null (P0-3) |
-| "Project State … state alone authorizes nothing" | **Refuted as an enforced property, on the normal commit flow.** `gitCommitSha` defaults to null and is never populated or checked; tree SHA is never re-checked on load (P1-2) |
+| "Project State … state alone authorizes nothing" | **Partially refuted, at reduced severity** (§0 erratum, second pass). `gitCommitSha` defaults to null and no later step ever binds it; tree SHA is checked only for staleness within one task's lifecycle, not independently re-verified later (P2-7) |
 | "`.factory/**` and project authority files are reserved" | **Not refuted on reconsideration** (§0 erratum). The reserved-path predicate is case-sensitive, but the mandatory tree-diff appears to catch the resulting case-collision before promotion — analysis, not an executed reproduction (P3-4) |
 | "editable source is distinct from reproducible build output" | **Partially refuted.** Hardcoded `'build'` disagrees with `manifest.layout.buildDir` (P2-1) |
 | "Deploy success proves playability … blank fixture fails" | **Partially refuted, on the class of defects the negative fixture models.** Blank fixture fails; the detector misses most of the required adversarial list (P2-4). The favicon false-FAIL (P3-5) was not confirmed against CI's real browser and is downgraded — see §0 erratum |
@@ -660,8 +741,9 @@ touching only those documents produces no Branch Verifier run; the trusted gate 
 ## 6. Assumptions not refuted, but unproven
 
 - **No second source of truth in practice.** No code path today writes project source to
-  `runtime-state`; the separation holds. But it holds by absence of integration, and P1-2
-  removes the enforcement that would keep it holding.
+  `runtime-state`; the separation holds. But it holds by absence of integration, and P2-7
+  identifies the specific enforcement (Git-commit binding, independent tree re-verification)
+  that would be needed to keep it holding once other write paths exist.
 - **Project Memory / Factory Learning separation.** No connecting code path exists. Unproven
   as an enforced boundary; true as a current fact.
 - **No paid model runs.** Confirmed by inspection: no LLM call under `factory/src/project/`.
@@ -707,38 +789,47 @@ A file-vs-directory conflict (ADD `src/a/b.js` where `src/a` is a file) throws `
 mid-loop, leaving earlier operations applied. Harmless in staging; not harmless if
 `applyPatchToStaging` is ever called against a live root, which its signature permits.
 
-## 8. AC-PG-001 … AC-PG-020
+## 8. Audit-derived control categories (not an AC-PG-001…020 scorecard)
 
-Mapping reconstructed from Issue #62 and the implementation catalog (see P3-1 — these are not
-defined in the repository, so this grading rests on my reconstruction).
+**Correction (second pass, see §0 erratum entry 8):** the first two versions of this document
+presented a 20-row table numbered `AC-PG-001` … `AC-PG-020` with a definitive PASS/FAIL/UNPROVEN
+count. That framing is withdrawn. `AC-PG-*` identifiers are not defined anywhere in the
+repository — they appear only as bare IDs in the implementation catalog's attribution column,
+several of them (e.g. `AC-PG-019`) attributed to **more than one** component with no text
+saying what the ID itself means. A second, independent attempt to reconstruct the same 20
+IDs from that same catalog table produced materially different readings for at least four of
+them (`AC-PG-003`, `-009`, `-019`, `-020`) — and, on review, the alternate readings track the
+catalog's own attribution phrasing more faithfully than my first reconstruction did (e.g.
+`AC-PG-009` sits under the Project State component, whose stated responsibility is "atomic
+local state file **and verified capability/regression history**" — closer to a capability-
+registry reading than to a memory/learning-separation reading I did not independently arrive
+at either). Two independent good-faith reconstructions from the same source materials
+disagreeing this much is itself the proof that no reconstruction here is authoritative. A
+numbered acceptance scorecard implies a precision this document cannot supply, and presenting
+one — even hedged as reconstructed — invites exactly the disagreement above.
 
-| AC | Subject | Result |
+What follows instead is a qualitative statement of the same territory, organized by control
+category rather than by disputed ID, with no combined score:
+
+| Category | What was tested | Result |
 |---|---|---|
-| AC-PG-001 | Project Mode coexists with Micro Game path | **PASS** |
-| AC-PG-002 | Persistent multi-file workspace + manifest | **PASS** |
-| AC-PG-003 | Durable immutable Vision→Task hierarchy | **FAIL** (P2-2 undeclared fields; P2-5 no milestone authority) |
-| AC-PG-004 | Exact scoped ADD/MODIFY/DELETE | **PASS**, with a case-sensitive predicate whose exploitability is unproven and likely closed by the tree-diff safety net (P3-4, §0 erratum) |
-| AC-PG-005 | Protected paths honoured | **PASS**, same caveat as AC-PG-004 (P3-4) |
-| AC-PG-006 | Deterministic tree SHA, no undeclared side effects | **PASS** with caveat (P2-1 build-dir mismatch; locale sort unproven) |
-| AC-PG-007 | Project state authority, no second truth | **FAIL** on the normal commit flow: `gitCommitSha` unpopulated, tree SHA unchecked on load (P1-2) |
-| AC-PG-008 | Bounded context selection | **PASS** for boundedness; **FAIL** for relevance/drift (P2-6) |
-| AC-PG-009 | Verified capability registry | **FAIL** (caller-supplied, unenforced — P1-3) |
-| AC-PG-010 | Hierarchical verification L1–L10 | **FAIL** (P0-1) |
-| AC-PG-011 | Inherited regression protection | **FAIL** (P1-3) |
-| AC-PG-012 | Versioned save schema, migrations, corrupt behaviour | **UNPROVEN** (declared, not executable — §6) |
-| AC-PG-013 | save→reload→load equivalence | **UNPROVEN** (no adapter, no browser reload proof) |
-| AC-PG-014 | Editable source vs reproducible build separation | **PASS** with caveat (P2-1) |
-| AC-PG-015 | Web Runtime Adapter, engine-neutral control plane | **PASS** |
-| AC-PG-016 | Real browser boot/playability proof | **FAIL**, on detection breadth (P2-4 misses most of the required #63-class list; Chromium-only). The favicon false-FAIL (P3-5) did not reproduce on CI's real browser and is not counted against this — see §0 erratum |
-| AC-PG-017 | Atomic verified baseline promotion | **FAIL** (P0-3) |
-| AC-PG-018 | Crash recovery / rollback | **FAIL** (P0-2) |
-| AC-PG-019 | Independent verification evidence | **FAIL** (P0-1) |
-| AC-PG-020 | Fail-closed abort, no partial promotion | **FAIL** (P0-3) |
+| Coexistence with Micro Game path | Additive edits, no gate weakened | Holds |
+| Persistent multi-file workspace, manifest, source/build separation | Workspace creation, custom layouts | Holds, with a hardcoded `'build'` exclude that disagrees with a custom `manifest.layout.buildDir` (P2-1) |
+| Task/manifest contract immutability | Hash coverage, field rejection | Undeclared extra fields survive on disk outside the hash (P2-2); no milestone/ADR authority exists yet (P2-5) |
+| Scoped ADD/MODIFY/DELETE, protected paths | Path traversal, symlinks, case collisions, before/after SHA | Holds; the reserved-path predicate is case-sensitive but the mandatory tree-diff likely closes the resulting gap — unproven on an actual case-insensitive filesystem (P3-4) |
+| Deterministic tree evidence, no undeclared side effects | Full before/after tree comparison | Holds |
+| Project state authority, no second source of truth | Direct code trace of the commit and load paths | Partially holds: `gitCommitSha` is never populated by any step; a real `treeSha256` staleness check exists but only within one task's prepare→commit window, not as independent re-verification later (P2-7, downgraded from P1 — §0 erratum second pass) |
+| Bounded, relevant context selection | Selection bounds, dependency-graph staleness | Bounded; relevance is not — a hand-maintained, immutable `moduleGraph`/`testMap` can silently omit real dependencies (P2-6) |
+| Verified-capability and regression registry | Registration path, semantic binding | Registerable but not enforced: caller-supplied, semantically unconstrained, last-write-wins (P1-3) |
+| Hierarchical verification (L1–L10) | Whether declared checks are executed | **Does not hold.** No check is ever executed; grading accepts caller-supplied result objects (P0-1) |
+| Save schema versioning, migration, corrupt-save behaviour | Contract shape vs. executable mechanism | Contract only; `migrations` is an unexecuted string list, `corruptSaveBehavior` unimplemented (§6) |
+| save→reload→load equivalence | Bridge implementation, browser reload proof | Not demonstrated — no host adapter ships in this PR (§6) |
+| Web Runtime Adapter, browser boot/playability proof | Positive and negative fixtures, adversarial list | Blank fixture correctly fails; most of the required adversarial list (ready-marker races, transparent canvas, post-interaction errors, WebKit) is undetected by construction (P2-4) |
+| Atomic verified baseline promotion, crash recovery | Prepare/commit/abort, concurrent transactions, crafted journals | **Does not hold.** Two ordinary concurrent tasks destroy the project and report success (P0-3); a crafted journal deletes outside the workspace and installs a foreign baseline (P0-2) |
+| Independent verification evidence | Producer/verifier distinctness, evidence artifact binding | **Does not hold** — collapses into P0-1 |
 
-**Totals (corrected, see §0 erratum): 7 PASS, 11 FAIL, 2 UNPROVEN.** (Originally reported as
-6 PASS / 11 FAIL / 2 UNPROVEN / 1 platform-conditional; AC-PG-004 and AC-PG-005 moved cleanly
-to PASS following the P3-4 downgrade, so the "platform-conditional" bucket is now empty rather
-than removed — the combined PASS-plus-conditional count of 7 is unchanged.)
+The three P0s and P1-3 are the load-bearing failures in this table regardless of how any of
+the disputed individual IDs are read. Nothing in this correction changes that.
 
 ## 9. Micro-Game regression status
 
@@ -848,10 +939,19 @@ and they are concentrated in three files.
 
 **Exactly one:** close **P0-1** first — make `evaluateVerificationResults()` grade only results
 produced by a runner the control plane itself invoked, with `evidenceSha256` re-hashed from a
-persisted artifact at grading time. It is the single load-bearing defect: P1-3 and the AC-PG-010/011/019
-failures collapse into it, and until verification actually executes, no other fix in this PR can
-be meaningfully tested. P0-2 and P0-3 are then closed together as one transaction-hardening
-change (journal path derivation + project lock + `create: false` state load) before re-audit.
+persisted artifact at grading time. It is the single load-bearing defect: P1-3 and the
+"hierarchical verification" and "independent verification evidence" rows of §8 collapse into
+it, and until verification actually executes, no other fix in this PR can be meaningfully
+tested. P0-2 and P0-3 are then closed together as one transaction-hardening change (journal
+path derivation + project lock + `create: false` state load) before re-audit.
+
+**Correction (second pass, see §0 erratum entry 8):** remediation for the three P0s is not
+complete when the narrative fix is made. Each of the three embedded reproductions in the
+Appendix must become an executable negative regression test — failing against the pre-fix code,
+passing against the fix, and running in CI (`verify.yml` or the Project Foundation selftest) —
+before any of P0-1/P0-2/P0-3 is treated as closed. A fix demonstrated only by re-running the
+same manual script once is not sufficient; the whole point of P0-1 is that a one-time manual
+demonstration is exactly what this Foundation currently accepts as proof.
 
 ---
 
@@ -1026,7 +1126,7 @@ Expected: task A refuses to commit (staging gone / baseline drift), project inta
 
 | Finding | Support |
 |---|---|
-| P1-2 (gitCommitSha/treeSha256) | `validateProjectState()`/`nextVerifiedState()` code trace in the finding text above; reproducible by inspection — no script needed beyond calling `nextVerifiedState()` and observing `gitCommitSha: null` |
+| P2-7 (gitCommitSha/treeSha256, downgraded from P1) | `validateProjectState()`/`nextVerifiedState()`/`transaction.mjs` line 90 code trace in the finding text above; reproducible by inspection — no script needed beyond calling `nextVerifiedState()` and observing `gitCommitSha: null`, and reading the staleness check's two operands |
 | P2-1 (build-dir exclusion mismatch) | `captureProjectTree()` default-excludes vs. `manifest.layout.buildDir`, shown by inspecting `file-state.mjs` against a manifest created with a custom `buildDir` — reproduced identically to the PR's own `test-foundation.mjs` custom-layout project |
 | P2-2 (undeclared contract fields survive on disk) | `validateProjectManifest()` code trace; reproducible by writing a `PROJECT.json` with an extra top-level key and calling `loadProjectManifest()` |
 | P3-4 (case-sensitive reserved paths) | `isReservedProjectPath()` code trace; reproducible with the literal calls shown in that finding |
