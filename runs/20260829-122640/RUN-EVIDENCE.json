@@ -1,0 +1,166 @@
+{
+  "schema": "game-factory.run-evidence/v1",
+  "generatedAt": "2026-08-29T12:32:40.479Z",
+  "run": {
+    "id": "20260829-122640",
+    "status": "failed",
+    "reason": "director_transport_timeout",
+    "source": "ideas-folder",
+    "candidateSha": null
+  },
+  "gates": {
+    "technical": {
+      "pass": false,
+      "checks": null
+    },
+    "productFidelity": {
+      "pass": false,
+      "status": "pending-verification",
+      "criteria": null
+    },
+    "experience": {
+      "pass": false,
+      "advisory": true,
+      "authoritative": false,
+      "score": 0,
+      "threshold": 6.5,
+      "scores": null,
+      "critique": []
+    },
+    "budget": {
+      "pass": false,
+      "authoritative": true,
+      "spentUsd": 0,
+      "budgetUsd": 10
+    },
+    "release": {
+      "pass": false,
+      "rule": "Technical PASS + Product Fidelity PASS + Budget PASS",
+      "reasons": [
+        "technical_not_passed",
+        "product_fidelity_not_passed",
+        "budget_not_passed"
+      ]
+    }
+  },
+  "costs": {
+    "schema": "game-factory.cost-ledger/v2",
+    "runId": "20260829-122640",
+    "budgetUsd": 10,
+    "costUsd": 0,
+    "spentUsd": 0,
+    "reservedUsd": 0,
+    "remainingUsd": 10,
+    "tokens": 0,
+    "tokenBreakdown": {
+      "inputTokens": 0,
+      "cachedInputTokens": 0,
+      "outputTokens": 0,
+      "totalTokens": 0
+    },
+    "accountingComplete": false,
+    "pass": false,
+    "stageBudgets": {
+      "repair": {
+        "maxCalls": 6,
+        "maxUsd": 4,
+        "calls": 0,
+        "spentUsd": 0,
+        "remainingUsd": 4
+      },
+      "polish": {
+        "maxCalls": 3,
+        "maxUsd": 3,
+        "calls": 0,
+        "spentUsd": 0,
+        "remainingUsd": 3
+      },
+      "freshRebuild": {
+        "maxCalls": 1,
+        "maxUsd": 4,
+        "calls": 0,
+        "spentUsd": 0,
+        "remainingUsd": 4
+      }
+    },
+    "byRole": {
+      "director": {
+        "costUsd": 0,
+        "attempts": 1,
+        "inputTokens": 0,
+        "cachedInputTokens": 0,
+        "outputTokens": 0
+      }
+    },
+    "byModel": {
+      "nvidia/nemotron-3.5-lightning:free": {
+        "costUsd": 0,
+        "attempts": 1,
+        "inputTokens": 0,
+        "cachedInputTokens": 0,
+        "outputTokens": 0
+      }
+    },
+    "byOperation": {
+      "director": {
+        "costUsd": 0,
+        "attempts": 1,
+        "inputTokens": 0,
+        "cachedInputTokens": 0,
+        "outputTokens": 0
+      }
+    },
+    "attempts": [
+      {
+        "id": "llm-attempt-1",
+        "logicalCallId": "call-1",
+        "role": "director",
+        "operation": "director",
+        "scope": null,
+        "provider": "openrouter",
+        "model": "nvidia/nemotron-3.5-lightning:free",
+        "modelVersion": "NVIDIA Nemotron 3.5 Lightning Free",
+        "modelAliasKind": "stable-id",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 0,
+          "cachedInputUsdPerM": 0,
+          "outputUsdPerM": 0,
+          "source": "openrouter-official-free-endpoint-2026-08-29"
+        },
+        "estimatedInputTokens": 22316,
+        "maxOutputTokens": 32768,
+        "reservedUsd": 0,
+        "costUsd": 0,
+        "status": "billing-uncertain",
+        "startedAt": "2026-08-29T12:26:40.474Z",
+        "costSource": "conservative-reservation-uncertain-transport",
+        "error": "Request timed out after 360000ms",
+        "endedAt": "2026-08-29T12:32:40.478Z",
+        "modelCalculatedCostUsd": null,
+        "providerReportedCostUsd": null
+      }
+    ],
+    "violations": [
+      {
+        "reason": "billing_uncertain",
+        "at": "2026-08-29T12:32:40.478Z",
+        "attemptId": "llm-attempt-1",
+        "role": "director",
+        "model": "nvidia/nemotron-3.5-lightning:free",
+        "chargedUsd": 0
+      }
+    ]
+  },
+  "counters": {
+    "attempts": 0,
+    "repairCalls": 0,
+    "polishRounds": 0,
+    "freshRebuilds": 0
+  },
+  "audit": null,
+  "artifacts": {
+    "ownerContract": "owner-contract.json"
+  }
+}

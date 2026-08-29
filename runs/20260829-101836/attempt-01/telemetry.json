@@ -1,0 +1,6600 @@
+{
+  "seed": 1207618270,
+  "inputSequence": {
+    "mode": "active",
+    "seed": 1207618270,
+    "startImpulse": [
+      "Enter",
+      "pointer@640,400"
+    ],
+    "actionPolicyMode": "bounded-deterministic-directional-sweeps",
+    "resolvedDirectionalSweeps": [
+      {
+        "direction": "right",
+        "keys": [
+          "ArrowRight",
+          "KeyD"
+        ]
+      },
+      {
+        "direction": "down",
+        "keys": [
+          "ArrowDown",
+          "KeyS"
+        ]
+      },
+      {
+        "direction": "left",
+        "keys": [
+          "ArrowLeft",
+          "KeyA"
+        ]
+      },
+      {
+        "direction": "up",
+        "keys": [
+          "ArrowUp",
+          "KeyW"
+        ]
+      }
+    ],
+    "keys": [
+      "ArrowRight",
+      "KeyD",
+      "ArrowDown",
+      "KeyS",
+      "ArrowLeft",
+      "KeyA",
+      "ArrowUp",
+      "KeyW",
+      "Space",
+      "Enter"
+    ],
+    "pointerPath": [
+      [
+        420,
+        300
+      ],
+      [
+        640,
+        280
+      ],
+      [
+        820,
+        360
+      ],
+      [
+        700,
+        480
+      ],
+      [
+        480,
+        460
+      ],
+      [
+        560,
+        350
+      ]
+    ],
+    "keyEveryMs": null,
+    "keyHoldMs": 3200,
+    "movementSegmentMs": 3200,
+    "movementGapMs": 160,
+    "actionEveryMs": 750,
+    "pointerEveryMs": 450,
+    "clickEveryMs": 1300,
+    "terminalSafe": true
+  },
+  "timeline": [
+    {
+      "phase": "start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 62,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": [],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 444.98,
+                "top": 493.5,
+                "right": 515.02,
+                "bottom": 506.5,
+                "width": 70.04,
+                "height": 13
+              },
+              "labels": [
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 70,
+          "recentTextDraws": 3,
+          "hudTextDraws": 1
+        }
+      }
+    },
+    {
+      "phase": "early",
+      "atMs": 1200,
+      "snapshot": {
+        "state": "playing",
+        "score": 100,
+        "best": 100,
+        "fps": 60,
+        "time": 1.1665999999999999,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "run_restarted",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "runCount": 1,
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 2,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 3,
+            "type": "player_moved",
+            "time": 0.017,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 4,
+            "type": "player_moved",
+            "time": 0.267,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 522,
+              "before": 457,
+              "after": 522
+            }
+          },
+          {
+            "seq": 5,
+            "type": "player_moved",
+            "time": 0.533,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 598,
+              "before": 524,
+              "after": 598
+            }
+          },
+          {
+            "seq": 6,
+            "type": "player_moved",
+            "time": 0.783,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 673,
+              "before": 598,
+              "after": 673
+            }
+          },
+          {
+            "seq": 7,
+            "type": "pressure_escalated",
+            "time": 0.8,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "hazardSpeed": 1,
+              "before": 1,
+              "after": 1
+            }
+          },
+          {
+            "seq": 8,
+            "type": "score_changed",
+            "time": 0.8,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 9,
+            "type": "player_moved",
+            "time": 1.05,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 752,
+              "before": 677,
+              "after": 752
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 9.26,
+                "top": 15.32,
+                "right": 177.26,
+                "bottom": 55.32,
+                "width": 168,
+                "height": 40
+              },
+              "labels": [
+                "NODES"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 693.26,
+                "top": 15.32,
+                "right": 937.26,
+                "bottom": 55.32,
+                "width": 244,
+                "height": 40
+              },
+              "labels": [
+                "STABILITY",
+                "BEST 100"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 444.51,
+                "top": 31.5,
+                "right": 515.49,
+                "bottom": 56.5,
+                "width": 70.98,
+                "height": 25
+              },
+              "labels": [
+                "100"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 168,
+          "recentTextDraws": 14,
+          "hudTextDraws": 14
+        }
+      }
+    },
+    {
+      "phase": "mid",
+      "atMs": 3500,
+      "snapshot": {
+        "state": "playing",
+        "score": 100,
+        "best": 100,
+        "fps": 60,
+        "time": 3.466599999999997,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "run_restarted",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "runCount": 1,
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 2,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 3,
+            "type": "player_moved",
+            "time": 0.017,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 4,
+            "type": "player_moved",
+            "time": 0.267,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 522,
+              "before": 457,
+              "after": 522
+            }
+          },
+          {
+            "seq": 5,
+            "type": "player_moved",
+            "time": 0.533,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 598,
+              "before": 524,
+              "after": 598
+            }
+          },
+          {
+            "seq": 6,
+            "type": "player_moved",
+            "time": 0.783,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 673,
+              "before": 598,
+              "after": 673
+            }
+          },
+          {
+            "seq": 7,
+            "type": "pressure_escalated",
+            "time": 0.8,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "hazardSpeed": 1,
+              "before": 1,
+              "after": 1
+            }
+          },
+          {
+            "seq": 8,
+            "type": "score_changed",
+            "time": 0.8,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 9,
+            "type": "player_moved",
+            "time": 1.05,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 752,
+              "before": 677,
+              "after": 752
+            }
+          },
+          {
+            "seq": 10,
+            "type": "player_moved",
+            "time": 1.317,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 832,
+              "before": 757,
+              "after": 832
+            }
+          },
+          {
+            "seq": 11,
+            "type": "player_moved",
+            "time": 1.567,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 907,
+              "before": 832,
+              "after": 907
+            }
+          },
+          {
+            "seq": 12,
+            "type": "player_moved",
+            "time": 1.817,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 13,
+            "type": "player_moved",
+            "time": 2.083,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 14,
+            "type": "player_moved",
+            "time": 2.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 15,
+            "type": "player_moved",
+            "time": 2.6,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 16,
+            "type": "player_moved",
+            "time": 2.85,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 17,
+            "type": "player_moved",
+            "time": 3.1,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 18,
+            "type": "player_moved",
+            "time": 3.367,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 918,
+              "after": 934
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 16,
+                "top": 14,
+                "right": 184,
+                "bottom": 54,
+                "width": 168,
+                "height": 40
+              },
+              "labels": [
+                "NODES"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 700,
+                "top": 14,
+                "right": 944,
+                "bottom": 54,
+                "width": 244,
+                "height": 40
+              },
+              "labels": [
+                "STABILITY",
+                "BEST 100"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 444.51,
+                "top": 31.5,
+                "right": 515.49,
+                "bottom": 56.5,
+                "width": 70.98,
+                "height": 25
+              },
+              "labels": [
+                "100"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 168,
+          "recentTextDraws": 4,
+          "hudTextDraws": 4
+        }
+      }
+    },
+    {
+      "phase": "end",
+      "atMs": 12000,
+      "snapshot": {
+        "state": "playing",
+        "score": 200,
+        "best": 200,
+        "fps": 60,
+        "time": 11.749599999999978,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "run_restarted",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "runCount": 1,
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 2,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 3,
+            "type": "player_moved",
+            "time": 0.017,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 4,
+            "type": "player_moved",
+            "time": 0.267,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 522,
+              "before": 457,
+              "after": 522
+            }
+          },
+          {
+            "seq": 5,
+            "type": "player_moved",
+            "time": 0.533,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 598,
+              "before": 524,
+              "after": 598
+            }
+          },
+          {
+            "seq": 6,
+            "type": "player_moved",
+            "time": 0.783,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 673,
+              "before": 598,
+              "after": 673
+            }
+          },
+          {
+            "seq": 7,
+            "type": "pressure_escalated",
+            "time": 0.8,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "hazardSpeed": 1,
+              "before": 1,
+              "after": 1
+            }
+          },
+          {
+            "seq": 8,
+            "type": "score_changed",
+            "time": 0.8,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 9,
+            "type": "player_moved",
+            "time": 1.05,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 752,
+              "before": 677,
+              "after": 752
+            }
+          },
+          {
+            "seq": 10,
+            "type": "player_moved",
+            "time": 1.317,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 832,
+              "before": 757,
+              "after": 832
+            }
+          },
+          {
+            "seq": 11,
+            "type": "player_moved",
+            "time": 1.567,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 907,
+              "before": 832,
+              "after": 907
+            }
+          },
+          {
+            "seq": 12,
+            "type": "player_moved",
+            "time": 1.817,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 13,
+            "type": "player_moved",
+            "time": 2.083,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 14,
+            "type": "player_moved",
+            "time": 2.333,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 15,
+            "type": "player_moved",
+            "time": 2.6,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 16,
+            "type": "player_moved",
+            "time": 2.85,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 17,
+            "type": "player_moved",
+            "time": 3.1,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 18,
+            "type": "player_moved",
+            "time": 3.367,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 918,
+              "after": 934
+            }
+          },
+          {
+            "seq": 19,
+            "type": "player_moved",
+            "time": 3.633,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 932,
+              "after": 934
+            }
+          },
+          {
+            "seq": 20,
+            "type": "player_moved",
+            "time": 3.883,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 21,
+            "type": "player_moved",
+            "time": 4.133,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 22,
+            "type": "player_moved",
+            "time": 4.4,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 23,
+            "type": "player_moved",
+            "time": 4.667,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 24,
+            "type": "player_moved",
+            "time": 4.917,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 25,
+            "type": "player_moved",
+            "time": 5.183,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 26,
+            "type": "player_moved",
+            "time": 5.433,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 27,
+            "type": "player_moved",
+            "time": 5.7,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 28,
+            "type": "player_moved",
+            "time": 5.95,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 29,
+            "type": "player_moved",
+            "time": 6.2,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 30,
+            "type": "player_moved",
+            "time": 6.467,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 31,
+            "type": "player_moved",
+            "time": 6.733,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 32,
+            "type": "player_moved",
+            "time": 7,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 888,
+              "before": 954,
+              "after": 888
+            }
+          },
+          {
+            "seq": 33,
+            "type": "player_moved",
+            "time": 7.25,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 816,
+              "before": 890,
+              "after": 816
+            }
+          },
+          {
+            "seq": 34,
+            "type": "pressure_escalated",
+            "time": 7.483,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "hazardSpeed": 1.35,
+              "before": 1,
+              "after": 1.35
+            }
+          },
+          {
+            "seq": 35,
+            "type": "score_changed",
+            "time": 7.483,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "before": 100,
+              "after": 200,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 36,
+            "type": "player_moved",
+            "time": 7.516,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 736,
+              "before": 811,
+              "after": 736
+            }
+          },
+          {
+            "seq": 37,
+            "type": "player_moved",
+            "time": 7.766,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 661,
+              "before": 736,
+              "after": 661
+            }
+          },
+          {
+            "seq": 38,
+            "type": "player_moved",
+            "time": 8.016,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 586,
+              "before": 661,
+              "after": 586
+            }
+          },
+          {
+            "seq": 39,
+            "type": "player_moved",
+            "time": 8.266,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 511,
+              "before": 586,
+              "after": 511
+            }
+          },
+          {
+            "seq": 40,
+            "type": "player_moved",
+            "time": 8.533,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 432,
+              "before": 507,
+              "after": 432
+            }
+          },
+          {
+            "seq": 41,
+            "type": "player_moved",
+            "time": 8.783,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 356,
+              "before": 431,
+              "after": 356
+            }
+          },
+          {
+            "seq": 42,
+            "type": "player_moved",
+            "time": 9.033,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 281,
+              "before": 356,
+              "after": 281
+            }
+          },
+          {
+            "seq": 43,
+            "type": "player_moved",
+            "time": 9.3,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 201,
+              "before": 276,
+              "after": 201
+            }
+          },
+          {
+            "seq": 44,
+            "type": "player_moved",
+            "time": 9.55,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 126,
+              "before": 201,
+              "after": 126
+            }
+          },
+          {
+            "seq": 45,
+            "type": "player_moved",
+            "time": 9.816,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 46,
+              "before": 121,
+              "after": 46
+            }
+          },
+          {
+            "seq": 46,
+            "type": "player_moved",
+            "time": 10.083,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 38,
+              "after": 26
+            }
+          },
+          {
+            "seq": 47,
+            "type": "player_moved",
+            "time": 10.333,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 27,
+              "after": 26
+            }
+          },
+          {
+            "seq": 48,
+            "type": "player_moved",
+            "time": 10.6,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 49,
+            "type": "player_moved",
+            "time": 10.85,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 50,
+            "type": "player_moved",
+            "time": 11.116,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 51,
+            "type": "player_moved",
+            "time": 11.383,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 52,
+            "type": "player_moved",
+            "time": 11.633,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 16,
+                "top": 14,
+                "right": 184,
+                "bottom": 54,
+                "width": 168,
+                "height": 40
+              },
+              "labels": [
+                "NODES"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 700,
+                "top": 14,
+                "right": 944,
+                "bottom": 54,
+                "width": 244,
+                "height": 40
+              },
+              "labels": [
+                "STABILITY",
+                "BEST 200"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 444.51,
+                "top": 31.5,
+                "right": 515.49,
+                "bottom": 56.5,
+                "width": 70.98,
+                "height": 25
+              },
+              "labels": [
+                "200"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 168,
+          "recentTextDraws": 24,
+          "hudTextDraws": 24
+        }
+      }
+    },
+    {
+      "phase": "success-proof:start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 63,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": [],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 444.98,
+                "top": 493.5,
+                "right": 515.02,
+                "bottom": 506.5,
+                "width": 70.04,
+                "height": 13
+              },
+              "labels": [
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 70,
+          "recentTextDraws": 3,
+          "hudTextDraws": 1
+        }
+      },
+      "scenarioId": "success-proof"
+    },
+    {
+      "phase": "success-proof:end",
+      "atMs": 80000,
+      "snapshot": {
+        "state": "gameover",
+        "score": 200,
+        "best": 200,
+        "fps": 60,
+        "time": 22.115699999999773,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "run_restarted",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "runCount": 1,
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 2,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 3,
+            "type": "player_moved",
+            "time": 0.017,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 4,
+            "type": "player_moved",
+            "time": 0.283,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 522,
+              "before": 457,
+              "after": 522
+            }
+          },
+          {
+            "seq": 5,
+            "type": "player_moved",
+            "time": 0.533,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 593,
+              "before": 519,
+              "after": 593
+            }
+          },
+          {
+            "seq": 6,
+            "type": "player_moved",
+            "time": 0.783,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 668,
+              "before": 593,
+              "after": 668
+            }
+          },
+          {
+            "seq": 7,
+            "type": "pressure_escalated",
+            "time": 0.817,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "hazardSpeed": 1,
+              "before": 1,
+              "after": 1
+            }
+          },
+          {
+            "seq": 8,
+            "type": "score_changed",
+            "time": 0.817,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 9,
+            "type": "player_moved",
+            "time": 1.033,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 743,
+              "before": 668,
+              "after": 743
+            }
+          },
+          {
+            "seq": 10,
+            "type": "player_moved",
+            "time": 1.283,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 818,
+              "before": 743,
+              "after": 818
+            }
+          },
+          {
+            "seq": 11,
+            "type": "player_moved",
+            "time": 1.533,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 893,
+              "before": 818,
+              "after": 893
+            }
+          },
+          {
+            "seq": 12,
+            "type": "player_moved",
+            "time": 1.8,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 13,
+            "type": "player_moved",
+            "time": 2.05,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 14,
+            "type": "player_moved",
+            "time": 2.317,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 15,
+            "type": "player_moved",
+            "time": 2.567,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 16,
+            "type": "player_moved",
+            "time": 2.817,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 17,
+            "type": "player_moved",
+            "time": 3.083,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 18,
+            "type": "player_moved",
+            "time": 3.35,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 913,
+              "after": 934
+            }
+          },
+          {
+            "seq": 19,
+            "type": "player_moved",
+            "time": 3.6,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 932,
+              "after": 934
+            }
+          },
+          {
+            "seq": 20,
+            "type": "player_moved",
+            "time": 3.85,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 21,
+            "type": "player_moved",
+            "time": 4.1,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 22,
+            "type": "player_moved",
+            "time": 4.35,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 23,
+            "type": "player_moved",
+            "time": 4.617,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 24,
+            "type": "player_moved",
+            "time": 4.883,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 25,
+            "type": "player_moved",
+            "time": 5.133,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 26,
+            "type": "player_moved",
+            "time": 5.383,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 27,
+            "type": "player_moved",
+            "time": 5.65,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 28,
+            "type": "player_moved",
+            "time": 5.917,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 29,
+            "type": "player_moved",
+            "time": 6.183,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 30,
+            "type": "player_moved",
+            "time": 6.433,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 31,
+            "type": "player_moved",
+            "time": 6.7,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 32,
+            "type": "player_moved",
+            "time": 6.95,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 901,
+              "before": 962,
+              "after": 901
+            }
+          },
+          {
+            "seq": 33,
+            "type": "player_moved",
+            "time": 7.217,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 826,
+              "before": 900,
+              "after": 826
+            }
+          },
+          {
+            "seq": 34,
+            "type": "player_moved",
+            "time": 7.483,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 746,
+              "before": 821,
+              "after": 746
+            }
+          },
+          {
+            "seq": 35,
+            "type": "pressure_escalated",
+            "time": 7.5,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "hazardSpeed": 1.35,
+              "before": 1,
+              "after": 1.35
+            }
+          },
+          {
+            "seq": 36,
+            "type": "score_changed",
+            "time": 7.5,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "before": 100,
+              "after": 200,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 37,
+            "type": "player_moved",
+            "time": 7.75,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 667,
+              "before": 742,
+              "after": 667
+            }
+          },
+          {
+            "seq": 38,
+            "type": "player_moved",
+            "time": 8.016,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 587,
+              "before": 662,
+              "after": 587
+            }
+          },
+          {
+            "seq": 39,
+            "type": "player_moved",
+            "time": 8.266,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 512,
+              "before": 587,
+              "after": 512
+            }
+          },
+          {
+            "seq": 40,
+            "type": "player_moved",
+            "time": 8.516,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 437,
+              "before": 512,
+              "after": 437
+            }
+          },
+          {
+            "seq": 41,
+            "type": "player_moved",
+            "time": 8.783,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 357,
+              "before": 432,
+              "after": 357
+            }
+          },
+          {
+            "seq": 42,
+            "type": "player_moved",
+            "time": 9.05,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 277,
+              "before": 352,
+              "after": 277
+            }
+          },
+          {
+            "seq": 43,
+            "type": "player_moved",
+            "time": 9.3,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 202,
+              "before": 277,
+              "after": 202
+            }
+          },
+          {
+            "seq": 44,
+            "type": "player_moved",
+            "time": 9.55,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 127,
+              "before": 202,
+              "after": 127
+            }
+          },
+          {
+            "seq": 45,
+            "type": "player_moved",
+            "time": 9.8,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 52,
+              "before": 127,
+              "after": 52
+            }
+          },
+          {
+            "seq": 46,
+            "type": "player_moved",
+            "time": 10.066,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 39,
+              "after": 26
+            }
+          },
+          {
+            "seq": 47,
+            "type": "player_moved",
+            "time": 10.333,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 27,
+              "after": 26
+            }
+          },
+          {
+            "seq": 48,
+            "type": "player_moved",
+            "time": 10.583,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 49,
+            "type": "player_moved",
+            "time": 10.833,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 50,
+            "type": "player_moved",
+            "time": 11.083,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 51,
+            "type": "player_moved",
+            "time": 11.333,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 52,
+            "type": "player_moved",
+            "time": 11.599,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 53,
+            "type": "player_moved",
+            "time": 11.849,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 54,
+            "type": "player_moved",
+            "time": 12.116,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 55,
+            "type": "player_moved",
+            "time": 12.366,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 56,
+            "type": "player_moved",
+            "time": 12.633,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 57,
+            "type": "player_moved",
+            "time": 12.899,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 58,
+            "type": "player_moved",
+            "time": 13.149,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 59,
+            "type": "player_moved",
+            "time": 13.416,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 34,
+              "before": -4,
+              "after": 34
+            }
+          },
+          {
+            "seq": 60,
+            "type": "player_moved",
+            "time": 13.666,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 95,
+              "before": 25,
+              "after": 95
+            }
+          },
+          {
+            "seq": 61,
+            "type": "player_moved",
+            "time": 13.916,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 169,
+              "before": 94,
+              "after": 169
+            }
+          },
+          {
+            "seq": 62,
+            "type": "player_moved",
+            "time": 14.183,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 248,
+              "before": 174,
+              "after": 248
+            }
+          },
+          {
+            "seq": 63,
+            "type": "player_moved",
+            "time": 14.433,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 323,
+              "before": 248,
+              "after": 323
+            }
+          },
+          {
+            "seq": 64,
+            "type": "player_moved",
+            "time": 14.683,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 398,
+              "before": 323,
+              "after": 398
+            }
+          },
+          {
+            "seq": 65,
+            "type": "player_moved",
+            "time": 14.933,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 473,
+              "before": 398,
+              "after": 473
+            }
+          },
+          {
+            "seq": 66,
+            "type": "player_moved",
+            "time": 15.199,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 553,
+              "before": 478,
+              "after": 553
+            }
+          },
+          {
+            "seq": 67,
+            "type": "player_moved",
+            "time": 15.466,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 633,
+              "before": 558,
+              "after": 633
+            }
+          },
+          {
+            "seq": 68,
+            "type": "player_moved",
+            "time": 15.733,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 713,
+              "before": 638,
+              "after": 713
+            }
+          },
+          {
+            "seq": 69,
+            "type": "player_moved",
+            "time": 15.983,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 788,
+              "before": 713,
+              "after": 788
+            }
+          },
+          {
+            "seq": 70,
+            "type": "player_moved",
+            "time": 16.233,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 863,
+              "before": 788,
+              "after": 863
+            }
+          },
+          {
+            "seq": 71,
+            "type": "player_moved",
+            "time": 16.483,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 878,
+              "after": 934
+            }
+          },
+          {
+            "seq": 72,
+            "type": "player_moved",
+            "time": 16.749,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 928,
+              "after": 934
+            }
+          },
+          {
+            "seq": 73,
+            "type": "player_moved",
+            "time": 17.016,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 933,
+              "after": 934
+            }
+          },
+          {
+            "seq": 74,
+            "type": "player_moved",
+            "time": 17.283,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 75,
+            "type": "player_moved",
+            "time": 17.533,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 76,
+            "type": "player_moved",
+            "time": 17.799,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 77,
+            "type": "player_moved",
+            "time": 18.066,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 78,
+            "type": "player_moved",
+            "time": 18.333,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 79,
+            "type": "player_moved",
+            "time": 18.599,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 80,
+            "type": "player_moved",
+            "time": 18.866,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 81,
+            "type": "player_moved",
+            "time": 19.132,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 82,
+            "type": "player_moved",
+            "time": 19.399,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 83,
+            "type": "player_moved",
+            "time": 19.666,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 84,
+            "type": "player_moved",
+            "time": 19.916,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 85,
+            "type": "player_moved",
+            "time": 20.183,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 905,
+              "before": 964,
+              "after": 905
+            }
+          },
+          {
+            "seq": 86,
+            "type": "player_moved",
+            "time": 20.449,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 831,
+              "before": 904,
+              "after": 831
+            }
+          },
+          {
+            "seq": 87,
+            "type": "player_moved",
+            "time": 20.716,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 751,
+              "before": 826,
+              "after": 751
+            }
+          },
+          {
+            "seq": 88,
+            "type": "player_moved",
+            "time": 20.982,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 672,
+              "before": 747,
+              "after": 672
+            }
+          },
+          {
+            "seq": 89,
+            "type": "player_moved",
+            "time": 21.249,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 592,
+              "before": 667,
+              "after": 592
+            }
+          },
+          {
+            "seq": 90,
+            "type": "player_moved",
+            "time": 21.516,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 512,
+              "before": 587,
+              "after": 512
+            }
+          },
+          {
+            "seq": 91,
+            "type": "player_moved",
+            "time": 21.782,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 432,
+              "before": 507,
+              "after": 432
+            }
+          },
+          {
+            "seq": 92,
+            "type": "player_moved",
+            "time": 22.049,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 352,
+              "before": 427,
+              "after": 352
+            }
+          },
+          {
+            "seq": 93,
+            "type": "state_reached",
+            "time": 22.116,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "state": "failure"
+            }
+          },
+          {
+            "seq": 94,
+            "type": "game_over",
+            "time": 22.116,
+            "state": "gameover",
+            "score": 200,
+            "data": {
+              "from": "playing",
+              "to": "gameover"
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 16,
+                "top": 14,
+                "right": 184,
+                "bottom": 54,
+                "width": 168,
+                "height": 40
+              },
+              "labels": [
+                "NODES"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 700,
+                "top": 14,
+                "right": 944,
+                "bottom": 54,
+                "width": 244,
+                "height": 40
+              },
+              "labels": [
+                "STABILITY"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 225,
+          "recentTextDraws": 6,
+          "hudTextDraws": 2
+        }
+      },
+      "scenarioId": "success-proof"
+    },
+    {
+      "phase": "success-proof:post_restart",
+      "atMs": 80450,
+      "snapshot": {
+        "state": "playing",
+        "score": 0,
+        "best": 200,
+        "fps": 60,
+        "time": 0.46670000000001177,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "run_restarted",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "runCount": 1,
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 2,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 3,
+            "type": "player_moved",
+            "time": 0.017,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 4,
+            "type": "player_moved",
+            "time": 0.283,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 522,
+              "before": 457,
+              "after": 522
+            }
+          },
+          {
+            "seq": 5,
+            "type": "player_moved",
+            "time": 0.533,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 593,
+              "before": 519,
+              "after": 593
+            }
+          },
+          {
+            "seq": 6,
+            "type": "player_moved",
+            "time": 0.783,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 668,
+              "before": 593,
+              "after": 668
+            }
+          },
+          {
+            "seq": 7,
+            "type": "pressure_escalated",
+            "time": 0.817,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "hazardSpeed": 1,
+              "before": 1,
+              "after": 1
+            }
+          },
+          {
+            "seq": 8,
+            "type": "score_changed",
+            "time": 0.817,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 9,
+            "type": "player_moved",
+            "time": 1.033,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 743,
+              "before": 668,
+              "after": 743
+            }
+          },
+          {
+            "seq": 10,
+            "type": "player_moved",
+            "time": 1.283,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 818,
+              "before": 743,
+              "after": 818
+            }
+          },
+          {
+            "seq": 11,
+            "type": "player_moved",
+            "time": 1.533,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 893,
+              "before": 818,
+              "after": 893
+            }
+          },
+          {
+            "seq": 12,
+            "type": "player_moved",
+            "time": 1.8,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 13,
+            "type": "player_moved",
+            "time": 2.05,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 14,
+            "type": "player_moved",
+            "time": 2.317,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 15,
+            "type": "player_moved",
+            "time": 2.567,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 16,
+            "type": "player_moved",
+            "time": 2.817,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 17,
+            "type": "player_moved",
+            "time": 3.083,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 859,
+              "after": 934
+            }
+          },
+          {
+            "seq": 18,
+            "type": "player_moved",
+            "time": 3.35,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 913,
+              "after": 934
+            }
+          },
+          {
+            "seq": 19,
+            "type": "player_moved",
+            "time": 3.6,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 932,
+              "after": 934
+            }
+          },
+          {
+            "seq": 20,
+            "type": "player_moved",
+            "time": 3.85,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 21,
+            "type": "player_moved",
+            "time": 4.1,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 22,
+            "type": "player_moved",
+            "time": 4.35,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 23,
+            "type": "player_moved",
+            "time": 4.617,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 24,
+            "type": "player_moved",
+            "time": 4.883,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 25,
+            "type": "player_moved",
+            "time": 5.133,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 26,
+            "type": "player_moved",
+            "time": 5.383,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 27,
+            "type": "player_moved",
+            "time": 5.65,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 28,
+            "type": "player_moved",
+            "time": 5.917,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 29,
+            "type": "player_moved",
+            "time": 6.183,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 30,
+            "type": "player_moved",
+            "time": 6.433,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 31,
+            "type": "player_moved",
+            "time": 6.7,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 32,
+            "type": "player_moved",
+            "time": 6.95,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 901,
+              "before": 962,
+              "after": 901
+            }
+          },
+          {
+            "seq": 33,
+            "type": "player_moved",
+            "time": 7.217,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 826,
+              "before": 900,
+              "after": 826
+            }
+          },
+          {
+            "seq": 34,
+            "type": "player_moved",
+            "time": 7.483,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "playerX": 746,
+              "before": 821,
+              "after": 746
+            }
+          },
+          {
+            "seq": 35,
+            "type": "pressure_escalated",
+            "time": 7.5,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "hazardSpeed": 1.35,
+              "before": 1,
+              "after": 1.35
+            }
+          },
+          {
+            "seq": 36,
+            "type": "score_changed",
+            "time": 7.5,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "before": 100,
+              "after": 200,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 37,
+            "type": "player_moved",
+            "time": 7.75,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 667,
+              "before": 742,
+              "after": 667
+            }
+          },
+          {
+            "seq": 38,
+            "type": "player_moved",
+            "time": 8.016,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 587,
+              "before": 662,
+              "after": 587
+            }
+          },
+          {
+            "seq": 39,
+            "type": "player_moved",
+            "time": 8.266,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 512,
+              "before": 587,
+              "after": 512
+            }
+          },
+          {
+            "seq": 40,
+            "type": "player_moved",
+            "time": 8.516,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 437,
+              "before": 512,
+              "after": 437
+            }
+          },
+          {
+            "seq": 41,
+            "type": "player_moved",
+            "time": 8.783,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 357,
+              "before": 432,
+              "after": 357
+            }
+          },
+          {
+            "seq": 42,
+            "type": "player_moved",
+            "time": 9.05,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 277,
+              "before": 352,
+              "after": 277
+            }
+          },
+          {
+            "seq": 43,
+            "type": "player_moved",
+            "time": 9.3,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 202,
+              "before": 277,
+              "after": 202
+            }
+          },
+          {
+            "seq": 44,
+            "type": "player_moved",
+            "time": 9.55,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 127,
+              "before": 202,
+              "after": 127
+            }
+          },
+          {
+            "seq": 45,
+            "type": "player_moved",
+            "time": 9.8,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 52,
+              "before": 127,
+              "after": 52
+            }
+          },
+          {
+            "seq": 46,
+            "type": "player_moved",
+            "time": 10.066,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 39,
+              "after": 26
+            }
+          },
+          {
+            "seq": 47,
+            "type": "player_moved",
+            "time": 10.333,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 27,
+              "after": 26
+            }
+          },
+          {
+            "seq": 48,
+            "type": "player_moved",
+            "time": 10.583,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 49,
+            "type": "player_moved",
+            "time": 10.833,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 50,
+            "type": "player_moved",
+            "time": 11.083,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 51,
+            "type": "player_moved",
+            "time": 11.333,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 52,
+            "type": "player_moved",
+            "time": 11.599,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 53,
+            "type": "player_moved",
+            "time": 11.849,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 54,
+            "type": "player_moved",
+            "time": 12.116,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 55,
+            "type": "player_moved",
+            "time": 12.366,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 56,
+            "type": "player_moved",
+            "time": 12.633,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 57,
+            "type": "player_moved",
+            "time": 12.899,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 58,
+            "type": "player_moved",
+            "time": 13.149,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 26,
+              "before": 26,
+              "after": 26
+            }
+          },
+          {
+            "seq": 59,
+            "type": "player_moved",
+            "time": 13.416,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 34,
+              "before": -4,
+              "after": 34
+            }
+          },
+          {
+            "seq": 60,
+            "type": "player_moved",
+            "time": 13.666,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 95,
+              "before": 25,
+              "after": 95
+            }
+          },
+          {
+            "seq": 61,
+            "type": "player_moved",
+            "time": 13.916,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 169,
+              "before": 94,
+              "after": 169
+            }
+          },
+          {
+            "seq": 62,
+            "type": "player_moved",
+            "time": 14.183,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 248,
+              "before": 174,
+              "after": 248
+            }
+          },
+          {
+            "seq": 63,
+            "type": "player_moved",
+            "time": 14.433,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 323,
+              "before": 248,
+              "after": 323
+            }
+          },
+          {
+            "seq": 64,
+            "type": "player_moved",
+            "time": 14.683,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 398,
+              "before": 323,
+              "after": 398
+            }
+          },
+          {
+            "seq": 65,
+            "type": "player_moved",
+            "time": 14.933,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 473,
+              "before": 398,
+              "after": 473
+            }
+          },
+          {
+            "seq": 66,
+            "type": "player_moved",
+            "time": 15.199,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 553,
+              "before": 478,
+              "after": 553
+            }
+          },
+          {
+            "seq": 67,
+            "type": "player_moved",
+            "time": 15.466,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 633,
+              "before": 558,
+              "after": 633
+            }
+          },
+          {
+            "seq": 68,
+            "type": "player_moved",
+            "time": 15.733,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 713,
+              "before": 638,
+              "after": 713
+            }
+          },
+          {
+            "seq": 69,
+            "type": "player_moved",
+            "time": 15.983,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 788,
+              "before": 713,
+              "after": 788
+            }
+          },
+          {
+            "seq": 70,
+            "type": "player_moved",
+            "time": 16.233,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 863,
+              "before": 788,
+              "after": 863
+            }
+          },
+          {
+            "seq": 71,
+            "type": "player_moved",
+            "time": 16.483,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 878,
+              "after": 934
+            }
+          },
+          {
+            "seq": 72,
+            "type": "player_moved",
+            "time": 16.749,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 928,
+              "after": 934
+            }
+          },
+          {
+            "seq": 73,
+            "type": "player_moved",
+            "time": 17.016,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 933,
+              "after": 934
+            }
+          },
+          {
+            "seq": 74,
+            "type": "player_moved",
+            "time": 17.283,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 75,
+            "type": "player_moved",
+            "time": 17.533,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 76,
+            "type": "player_moved",
+            "time": 17.799,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 77,
+            "type": "player_moved",
+            "time": 18.066,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 78,
+            "type": "player_moved",
+            "time": 18.333,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 79,
+            "type": "player_moved",
+            "time": 18.599,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 80,
+            "type": "player_moved",
+            "time": 18.866,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 81,
+            "type": "player_moved",
+            "time": 19.132,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 82,
+            "type": "player_moved",
+            "time": 19.399,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 83,
+            "type": "player_moved",
+            "time": 19.666,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 84,
+            "type": "player_moved",
+            "time": 19.916,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 934,
+              "before": 934,
+              "after": 934
+            }
+          },
+          {
+            "seq": 85,
+            "type": "player_moved",
+            "time": 20.183,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 905,
+              "before": 964,
+              "after": 905
+            }
+          },
+          {
+            "seq": 86,
+            "type": "player_moved",
+            "time": 20.449,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 831,
+              "before": 904,
+              "after": 831
+            }
+          },
+          {
+            "seq": 87,
+            "type": "player_moved",
+            "time": 20.716,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 751,
+              "before": 826,
+              "after": 751
+            }
+          },
+          {
+            "seq": 88,
+            "type": "player_moved",
+            "time": 20.982,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 672,
+              "before": 747,
+              "after": 672
+            }
+          },
+          {
+            "seq": 89,
+            "type": "player_moved",
+            "time": 21.249,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 592,
+              "before": 667,
+              "after": 592
+            }
+          },
+          {
+            "seq": 90,
+            "type": "player_moved",
+            "time": 21.516,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 512,
+              "before": 587,
+              "after": 512
+            }
+          },
+          {
+            "seq": 91,
+            "type": "player_moved",
+            "time": 21.782,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 432,
+              "before": 507,
+              "after": 432
+            }
+          },
+          {
+            "seq": 92,
+            "type": "player_moved",
+            "time": 22.049,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "playerX": 352,
+              "before": 427,
+              "after": 352
+            }
+          },
+          {
+            "seq": 93,
+            "type": "state_reached",
+            "time": 22.116,
+            "state": "playing",
+            "score": 200,
+            "data": {
+              "state": "failure"
+            }
+          },
+          {
+            "seq": 94,
+            "type": "game_over",
+            "time": 22.116,
+            "state": "gameover",
+            "score": 200,
+            "data": {
+              "from": "playing",
+              "to": "gameover"
+            }
+          },
+          {
+            "seq": 95,
+            "type": "run_restarted",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "runCount": 2,
+              "before": 1,
+              "after": 2
+            }
+          },
+          {
+            "seq": 96,
+            "type": "player_moved",
+            "time": 0.017,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 97,
+            "type": "player_moved",
+            "time": 0.283,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 16,
+                "top": 14,
+                "right": 184,
+                "bottom": 54,
+                "width": 168,
+                "height": 40
+              },
+              "labels": [
+                "NODES"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 700,
+                "top": 14,
+                "right": 944,
+                "bottom": 54,
+                "width": 244,
+                "height": 40
+              },
+              "labels": [
+                "STABILITY",
+                "BEST 200"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 468.17,
+                "top": 31.5,
+                "right": 491.83,
+                "bottom": 56.5,
+                "width": 23.66,
+                "height": 25
+              },
+              "labels": [
+                "0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 180,
+          "recentTextDraws": 4,
+          "hudTextDraws": 4
+        }
+      },
+      "scenarioId": "success-proof"
+    },
+    {
+      "phase": "failure-proof:start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 63,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": [],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 444.98,
+                "top": 493.5,
+                "right": 515.02,
+                "bottom": 506.5,
+                "width": 70.04,
+                "height": 13
+              },
+              "labels": [
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 70,
+          "recentTextDraws": 3,
+          "hudTextDraws": 1
+        }
+      },
+      "scenarioId": "failure-proof"
+    },
+    {
+      "phase": "failure-proof:terminal",
+      "atMs": 26704,
+      "snapshot": {
+        "state": "gameover",
+        "score": 0,
+        "best": 0,
+        "fps": 60,
+        "time": 26.315099999999646,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "run_restarted",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "runCount": 1,
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 2,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 3,
+            "type": "player_moved",
+            "time": 0.017,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 4,
+            "type": "player_moved",
+            "time": 0.267,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 5,
+            "type": "player_moved",
+            "time": 0.517,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 6,
+            "type": "player_moved",
+            "time": 0.783,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 7,
+            "type": "player_moved",
+            "time": 1.033,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 8,
+            "type": "player_moved",
+            "time": 1.3,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 9,
+            "type": "player_moved",
+            "time": 1.567,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 10,
+            "type": "player_moved",
+            "time": 1.817,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 11,
+            "type": "player_moved",
+            "time": 2.083,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 12,
+            "type": "player_moved",
+            "time": 2.35,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 13,
+            "type": "player_moved",
+            "time": 2.6,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 14,
+            "type": "player_moved",
+            "time": 2.85,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 15,
+            "type": "player_moved",
+            "time": 3.1,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 16,
+            "type": "player_moved",
+            "time": 3.366,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 17,
+            "type": "player_moved",
+            "time": 3.616,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 18,
+            "type": "player_moved",
+            "time": 3.883,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 19,
+            "type": "player_moved",
+            "time": 4.133,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 20,
+            "type": "player_moved",
+            "time": 4.4,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 21,
+            "type": "player_moved",
+            "time": 4.65,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 22,
+            "type": "player_moved",
+            "time": 4.9,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 23,
+            "type": "player_moved",
+            "time": 5.166,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 24,
+            "type": "player_moved",
+            "time": 5.416,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 25,
+            "type": "player_moved",
+            "time": 5.666,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 26,
+            "type": "player_moved",
+            "time": 5.916,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 27,
+            "type": "player_moved",
+            "time": 6.166,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 28,
+            "type": "player_moved",
+            "time": 6.416,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 29,
+            "type": "player_moved",
+            "time": 6.683,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 30,
+            "type": "player_moved",
+            "time": 6.933,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 31,
+            "type": "player_moved",
+            "time": 7.183,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 32,
+            "type": "player_moved",
+            "time": 7.433,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 33,
+            "type": "player_moved",
+            "time": 7.7,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 34,
+            "type": "player_moved",
+            "time": 7.95,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 35,
+            "type": "player_moved",
+            "time": 8.216,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 36,
+            "type": "player_moved",
+            "time": 8.466,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 37,
+            "type": "player_moved",
+            "time": 8.716,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 38,
+            "type": "player_moved",
+            "time": 8.966,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 39,
+            "type": "player_moved",
+            "time": 9.233,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 40,
+            "type": "player_moved",
+            "time": 9.483,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 41,
+            "type": "player_moved",
+            "time": 9.733,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 42,
+            "type": "player_moved",
+            "time": 10,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 43,
+            "type": "player_moved",
+            "time": 10.266,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 44,
+            "type": "player_moved",
+            "time": 10.533,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 45,
+            "type": "player_moved",
+            "time": 10.783,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 46,
+            "type": "player_moved",
+            "time": 11.033,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 47,
+            "type": "player_moved",
+            "time": 11.299,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 48,
+            "type": "player_moved",
+            "time": 11.566,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 49,
+            "type": "player_moved",
+            "time": 11.816,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 50,
+            "type": "player_moved",
+            "time": 12.066,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 51,
+            "type": "player_moved",
+            "time": 12.333,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 52,
+            "type": "player_moved",
+            "time": 12.583,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 53,
+            "type": "player_moved",
+            "time": 12.849,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 54,
+            "type": "player_moved",
+            "time": 13.116,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 55,
+            "type": "player_moved",
+            "time": 13.366,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 56,
+            "type": "player_moved",
+            "time": 13.633,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 57,
+            "type": "player_moved",
+            "time": 13.883,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 58,
+            "type": "player_moved",
+            "time": 14.149,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 59,
+            "type": "player_moved",
+            "time": 14.399,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 60,
+            "type": "player_moved",
+            "time": 14.649,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 61,
+            "type": "player_moved",
+            "time": 14.899,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 62,
+            "type": "player_moved",
+            "time": 15.166,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 63,
+            "type": "player_moved",
+            "time": 15.433,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 64,
+            "type": "player_moved",
+            "time": 15.699,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 65,
+            "type": "player_moved",
+            "time": 15.966,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 66,
+            "type": "player_moved",
+            "time": 16.233,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 67,
+            "type": "player_moved",
+            "time": 16.483,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 68,
+            "type": "player_moved",
+            "time": 16.749,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 69,
+            "type": "player_moved",
+            "time": 16.999,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 70,
+            "type": "player_moved",
+            "time": 17.249,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 71,
+            "type": "player_moved",
+            "time": 17.499,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 72,
+            "type": "player_moved",
+            "time": 17.766,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 73,
+            "type": "player_moved",
+            "time": 18.032,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 74,
+            "type": "player_moved",
+            "time": 18.299,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 75,
+            "type": "player_moved",
+            "time": 18.566,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 76,
+            "type": "player_moved",
+            "time": 18.832,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 77,
+            "type": "player_moved",
+            "time": 19.099,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 78,
+            "type": "player_moved",
+            "time": 19.366,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 79,
+            "type": "player_moved",
+            "time": 19.632,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 80,
+            "type": "player_moved",
+            "time": 19.899,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 81,
+            "type": "player_moved",
+            "time": 20.166,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 82,
+            "type": "player_moved",
+            "time": 20.432,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 83,
+            "type": "player_moved",
+            "time": 20.682,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 84,
+            "type": "player_moved",
+            "time": 20.949,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 85,
+            "type": "player_moved",
+            "time": 21.199,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 86,
+            "type": "player_moved",
+            "time": 21.466,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 87,
+            "type": "player_moved",
+            "time": 21.716,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 88,
+            "type": "player_moved",
+            "time": 21.966,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 89,
+            "type": "player_moved",
+            "time": 22.232,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 90,
+            "type": "player_moved",
+            "time": 22.482,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 91,
+            "type": "player_moved",
+            "time": 22.749,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 92,
+            "type": "player_moved",
+            "time": 23.015,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 93,
+            "type": "player_moved",
+            "time": 23.282,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 94,
+            "type": "player_moved",
+            "time": 23.549,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 95,
+            "type": "player_moved",
+            "time": 23.815,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 96,
+            "type": "player_moved",
+            "time": 24.082,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 97,
+            "type": "player_moved",
+            "time": 24.332,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 98,
+            "type": "player_moved",
+            "time": 24.582,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 99,
+            "type": "player_moved",
+            "time": 24.849,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 100,
+            "type": "player_moved",
+            "time": 25.115,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 101,
+            "type": "player_moved",
+            "time": 25.382,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 102,
+            "type": "player_moved",
+            "time": 25.632,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 103,
+            "type": "player_moved",
+            "time": 25.899,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 104,
+            "type": "player_moved",
+            "time": 26.149,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 105,
+            "type": "state_reached",
+            "time": 26.315,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "state": "failure"
+            }
+          },
+          {
+            "seq": 106,
+            "type": "game_over",
+            "time": 26.315,
+            "state": "gameover",
+            "score": 0,
+            "data": {
+              "from": "playing",
+              "to": "gameover"
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 16,
+                "top": 14,
+                "right": 184,
+                "bottom": 54,
+                "width": 168,
+                "height": 40
+              },
+              "labels": [
+                "NODES"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 700,
+                "top": 14,
+                "right": 944,
+                "bottom": 54,
+                "width": 244,
+                "height": 40
+              },
+              "labels": [
+                "STABILITY",
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 468.17,
+                "top": 31.5,
+                "right": 491.83,
+                "bottom": 56.5,
+                "width": 23.66,
+                "height": 25
+              },
+              "labels": [
+                "0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 174,
+          "recentTextDraws": 20,
+          "hudTextDraws": 16
+        }
+      },
+      "scenarioId": "failure-proof"
+    },
+    {
+      "phase": "failure-proof:post_restart",
+      "atMs": 27614,
+      "snapshot": {
+        "state": "playing",
+        "score": 0,
+        "best": 0,
+        "fps": 60,
+        "time": 0.4499000000000014,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "run_restarted",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "runCount": 1,
+              "before": 0,
+              "after": 1
+            }
+          },
+          {
+            "seq": 2,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 3,
+            "type": "player_moved",
+            "time": 0.017,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 4,
+            "type": "player_moved",
+            "time": 0.267,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 5,
+            "type": "player_moved",
+            "time": 0.517,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 6,
+            "type": "player_moved",
+            "time": 0.783,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 7,
+            "type": "player_moved",
+            "time": 1.033,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 8,
+            "type": "player_moved",
+            "time": 1.3,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 9,
+            "type": "player_moved",
+            "time": 1.567,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 10,
+            "type": "player_moved",
+            "time": 1.817,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 11,
+            "type": "player_moved",
+            "time": 2.083,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 12,
+            "type": "player_moved",
+            "time": 2.35,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 13,
+            "type": "player_moved",
+            "time": 2.6,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 14,
+            "type": "player_moved",
+            "time": 2.85,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 15,
+            "type": "player_moved",
+            "time": 3.1,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 16,
+            "type": "player_moved",
+            "time": 3.366,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 17,
+            "type": "player_moved",
+            "time": 3.616,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 18,
+            "type": "player_moved",
+            "time": 3.883,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 19,
+            "type": "player_moved",
+            "time": 4.133,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 20,
+            "type": "player_moved",
+            "time": 4.4,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 21,
+            "type": "player_moved",
+            "time": 4.65,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 22,
+            "type": "player_moved",
+            "time": 4.9,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 23,
+            "type": "player_moved",
+            "time": 5.166,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 24,
+            "type": "player_moved",
+            "time": 5.416,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 25,
+            "type": "player_moved",
+            "time": 5.666,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 26,
+            "type": "player_moved",
+            "time": 5.916,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 27,
+            "type": "player_moved",
+            "time": 6.166,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 28,
+            "type": "player_moved",
+            "time": 6.416,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 29,
+            "type": "player_moved",
+            "time": 6.683,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 30,
+            "type": "player_moved",
+            "time": 6.933,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 31,
+            "type": "player_moved",
+            "time": 7.183,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 32,
+            "type": "player_moved",
+            "time": 7.433,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 33,
+            "type": "player_moved",
+            "time": 7.7,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 34,
+            "type": "player_moved",
+            "time": 7.95,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 35,
+            "type": "player_moved",
+            "time": 8.216,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 36,
+            "type": "player_moved",
+            "time": 8.466,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 37,
+            "type": "player_moved",
+            "time": 8.716,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 38,
+            "type": "player_moved",
+            "time": 8.966,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 39,
+            "type": "player_moved",
+            "time": 9.233,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 40,
+            "type": "player_moved",
+            "time": 9.483,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 41,
+            "type": "player_moved",
+            "time": 9.733,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 42,
+            "type": "player_moved",
+            "time": 10,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 43,
+            "type": "player_moved",
+            "time": 10.266,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 44,
+            "type": "player_moved",
+            "time": 10.533,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 45,
+            "type": "player_moved",
+            "time": 10.783,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 46,
+            "type": "player_moved",
+            "time": 11.033,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 47,
+            "type": "player_moved",
+            "time": 11.299,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 48,
+            "type": "player_moved",
+            "time": 11.566,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 49,
+            "type": "player_moved",
+            "time": 11.816,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 50,
+            "type": "player_moved",
+            "time": 12.066,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 51,
+            "type": "player_moved",
+            "time": 12.333,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 52,
+            "type": "player_moved",
+            "time": 12.583,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 53,
+            "type": "player_moved",
+            "time": 12.849,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 54,
+            "type": "player_moved",
+            "time": 13.116,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 55,
+            "type": "player_moved",
+            "time": 13.366,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 56,
+            "type": "player_moved",
+            "time": 13.633,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 57,
+            "type": "player_moved",
+            "time": 13.883,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 58,
+            "type": "player_moved",
+            "time": 14.149,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 59,
+            "type": "player_moved",
+            "time": 14.399,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 60,
+            "type": "player_moved",
+            "time": 14.649,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 61,
+            "type": "player_moved",
+            "time": 14.899,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 62,
+            "type": "player_moved",
+            "time": 15.166,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 63,
+            "type": "player_moved",
+            "time": 15.433,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 64,
+            "type": "player_moved",
+            "time": 15.699,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 65,
+            "type": "player_moved",
+            "time": 15.966,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 66,
+            "type": "player_moved",
+            "time": 16.233,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 67,
+            "type": "player_moved",
+            "time": 16.483,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 68,
+            "type": "player_moved",
+            "time": 16.749,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 69,
+            "type": "player_moved",
+            "time": 16.999,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 70,
+            "type": "player_moved",
+            "time": 17.249,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 71,
+            "type": "player_moved",
+            "time": 17.499,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 72,
+            "type": "player_moved",
+            "time": 17.766,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 73,
+            "type": "player_moved",
+            "time": 18.032,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 74,
+            "type": "player_moved",
+            "time": 18.299,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 75,
+            "type": "player_moved",
+            "time": 18.566,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 76,
+            "type": "player_moved",
+            "time": 18.832,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 77,
+            "type": "player_moved",
+            "time": 19.099,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 78,
+            "type": "player_moved",
+            "time": 19.366,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 79,
+            "type": "player_moved",
+            "time": 19.632,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 80,
+            "type": "player_moved",
+            "time": 19.899,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 81,
+            "type": "player_moved",
+            "time": 20.166,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 82,
+            "type": "player_moved",
+            "time": 20.432,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 83,
+            "type": "player_moved",
+            "time": 20.682,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 84,
+            "type": "player_moved",
+            "time": 20.949,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 85,
+            "type": "player_moved",
+            "time": 21.199,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 86,
+            "type": "player_moved",
+            "time": 21.466,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 87,
+            "type": "player_moved",
+            "time": 21.716,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 88,
+            "type": "player_moved",
+            "time": 21.966,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 89,
+            "type": "player_moved",
+            "time": 22.232,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 90,
+            "type": "player_moved",
+            "time": 22.482,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 91,
+            "type": "player_moved",
+            "time": 22.749,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 92,
+            "type": "player_moved",
+            "time": 23.015,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 93,
+            "type": "player_moved",
+            "time": 23.282,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 94,
+            "type": "player_moved",
+            "time": 23.549,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 95,
+            "type": "player_moved",
+            "time": 23.815,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 96,
+            "type": "player_moved",
+            "time": 24.082,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 97,
+            "type": "player_moved",
+            "time": 24.332,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 98,
+            "type": "player_moved",
+            "time": 24.582,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 99,
+            "type": "player_moved",
+            "time": 24.849,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 100,
+            "type": "player_moved",
+            "time": 25.115,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 101,
+            "type": "player_moved",
+            "time": 25.382,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 102,
+            "type": "player_moved",
+            "time": 25.632,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 103,
+            "type": "player_moved",
+            "time": 25.899,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 104,
+            "type": "player_moved",
+            "time": 26.149,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 105,
+            "type": "state_reached",
+            "time": 26.315,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "state": "failure"
+            }
+          },
+          {
+            "seq": 106,
+            "type": "game_over",
+            "time": 26.315,
+            "state": "gameover",
+            "score": 0,
+            "data": {
+              "from": "playing",
+              "to": "gameover"
+            }
+          },
+          {
+            "seq": 107,
+            "type": "run_restarted",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "runCount": 2,
+              "before": 1,
+              "after": 2
+            }
+          },
+          {
+            "seq": 108,
+            "type": "player_moved",
+            "time": 0.017,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          },
+          {
+            "seq": 109,
+            "type": "player_moved",
+            "time": 0.267,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "playerX": 480,
+              "before": 480,
+              "after": 480
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 16.54,
+                "top": 6.52,
+                "right": 184.54,
+                "bottom": 46.52,
+                "width": 168,
+                "height": 40
+              },
+              "labels": [
+                "NODES"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 700.54,
+                "top": 6.52,
+                "right": 944.54,
+                "bottom": 46.52,
+                "width": 244,
+                "height": 40
+              },
+              "labels": [
+                "STABILITY"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 804.72,
+                "top": 21.9,
+                "right": 934.39,
+                "bottom": 37.9,
+                "width": 129.67,
+                "height": 16
+              },
+              "labels": [
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillRect+text"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 468.17,
+                "top": 31.5,
+                "right": 491.83,
+                "bottom": 56.5,
+                "width": 23.66,
+                "height": 25
+              },
+              "labels": [
+                "0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [
+            {
+              "type": "overlap",
+              "regionA": "HUD-02",
+              "regionB": "HUD-03",
+              "intersection": {
+                "left": 804.72,
+                "top": 21.9,
+                "right": 934.39,
+                "bottom": 37.9,
+                "width": 129.67,
+                "height": 16
+              }
+            }
+          ],
+          "recentDrawCalls": 168,
+          "recentTextDraws": 28,
+          "hudTextDraws": 28
+        }
+      },
+      "scenarioId": "failure-proof"
+    }
+  ]
+}
