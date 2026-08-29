@@ -1,0 +1,38 @@
+name: Dispatch Lumen GLM B3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'evaluation/triggers/lumen-current-glm-b3-go.md'
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Verify frozen Lumen brief remains the latest idea
+        run: |
+          LATEST=$(git log -1 --format= --name-only -- 'ideas/*.md' | head -n1)
+          test "$LATEST" = "ideas/lumen-current-openai-reference-retry-2026-08-29.md" || {
+            echo "Refusing B3 dispatch: latest idea is $LATEST" >&2
+            exit 1
+          }
+
+      - name: Dispatch configured OpenRouter challenger
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run produce.yml \
+            --ref main \
+            -f provider=openrouter \
+            -f budget_usd=10 \
+            -f idea=''
