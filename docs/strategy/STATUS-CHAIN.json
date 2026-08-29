@@ -3,8 +3,7 @@
   "defaultUnlistedStatus": "historical-non-authoritative",
   "authorityOrder": [
     "ARCHITECTURE.md",
-    "docs/strategy/ARCHITECTURE-FINALIZATION-TRACK-2026-08-29.md",
-    "docs/strategy/ARCHITECTURE-AUDIT-V2-HARDENING-2026-08-28.md",
+    "docs/strategy/ARCHITECTURE-AUDIT-V2-FINAL-RECONCILIATION-2026-08-29.md",
     "docs/strategy/PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md"
   ],
   "documents": [
@@ -15,15 +14,26 @@
       "supersedes": []
     },
     {
+      "path": "docs/strategy/ARCHITECTURE-AUDIT-V2-FINAL-RECONCILIATION-2026-08-29.md",
+      "role": "architecture-audit-final-reconciliation",
+      "status": "canonical",
+      "supersedes": [
+        "docs/strategy/ARCHITECTURE-FINALIZATION-TRACK-2026-08-29.md",
+        "docs/strategy/ARCHITECTURE-AUDIT-V2-HARDENING-2026-08-28.md"
+      ]
+    },
+    {
       "path": "docs/strategy/ARCHITECTURE-FINALIZATION-TRACK-2026-08-29.md",
       "role": "architecture-finalization",
-      "status": "active-track",
+      "status": "superseded",
+      "supersededBy": "docs/strategy/ARCHITECTURE-AUDIT-V2-FINAL-RECONCILIATION-2026-08-29.md",
       "supersedes": []
     },
     {
       "path": "docs/strategy/ARCHITECTURE-AUDIT-V2-HARDENING-2026-08-28.md",
       "role": "audit-hardening-evidence",
-      "status": "active-evidence",
+      "status": "superseded",
+      "supersededBy": "docs/strategy/ARCHITECTURE-AUDIT-V2-FINAL-RECONCILIATION-2026-08-29.md",
       "supersedes": []
     },
     {
