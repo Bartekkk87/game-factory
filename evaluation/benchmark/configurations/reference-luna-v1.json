@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "evaluatedCommitSha": "856e82c5bdda0ecddadeb3d1bec949d9abd75585",
   "executionClass": "model-backed",
-  "model": {"provider":"openai","id":"gpt-5.6-luna","versionLabel":"gpt-5.6-luna","registryRef":{"path":"factory/src/llm/model-registry.mjs","gitBlobSha":"de1232e69afdc373de961aaf401e25a4f5dd8c37"}},
+  "model": {"provider":"openai","id":"gpt-5.6-luna","versionLabel":"gpt-5.6-luna","registryRef":{"path":"factory/src/llm/model-registry.mjs","gitBlobSha":"dc3ea9da99040d7ac9524084d663eaed0c2d97ea"}},
   "promptSkill": {"prompts":[{"path":"factory/prompts/engineer.md","gitBlobSha":"095273efa658419c42ac6dffc77d9161e4c54537"}],"skills":[{"path":"skills/engineering.md","gitBlobSha":"44ec2658785a190369ea572a468d6deb82db7161"}]},
   "contextContract": {"refs":[{"path":"factory/src/contract/owner.mjs","gitBlobSha":"454c3d231d1cfad42ca9a9f93054b4788e909dc9"}],"visibilityPolicy":"worker-visible-context-only; evaluator oracle excluded"},
   "verifier": {"refs":[{"path":"factory/src/verify/contract.mjs","gitBlobSha":"e3f7cb671cabcd306d19dff67195fa4e02bcddda"}]},
@@ -12,5 +12,5 @@
   "escalation": {"refs":[{"path":"factory/src/control/release-gate.mjs","gitBlobSha":"3b38626d5bb97f57c9e983a2c7bea2b734dedac6"}],"maxEscalations":1,"authority":"human-owner"},
   "sampling": {"profile":"engineer-v1","seed":null,"operations":{"build":{"temperature":null,"maxOutputTokens":12000,"jsonMode":true},"repair":{"temperature":null,"maxOutputTokens":12000,"jsonMode":true},"rebuild":{"temperature":null,"maxOutputTokens":12000,"jsonMode":true},"polish":{"temperature":null,"maxOutputTokens":12000,"jsonMode":true}}},
   "trialPlan": {"trialsPerCase":3,"identityPolicy":"explicit runId + caseId + trial index"},
-  "configurationSha256": "e93d33c57f3314f587132a5ec6866405a168e569a838ed7186d1cc5b921d66b6"
+  "configurationSha256": "9a69f1a449b5f9fc1f61c03969761bf497ebb6e52277e76906ea0bf19da5747d"
 }
