@@ -1,0 +1,4377 @@
+{
+  "seed": 1207618270,
+  "inputSequence": {
+    "mode": "active",
+    "seed": 1207618270,
+    "startImpulse": [
+      "Enter",
+      "pointer@640,400"
+    ],
+    "actionPolicyMode": "bounded-deterministic-directional-sweeps",
+    "resolvedDirectionalSweeps": [
+      {
+        "direction": "right",
+        "keys": [
+          "ArrowRight",
+          "KeyD"
+        ]
+      },
+      {
+        "direction": "down",
+        "keys": [
+          "ArrowDown",
+          "KeyS"
+        ]
+      },
+      {
+        "direction": "left",
+        "keys": [
+          "ArrowLeft",
+          "KeyA"
+        ]
+      },
+      {
+        "direction": "up",
+        "keys": [
+          "ArrowUp",
+          "KeyW"
+        ]
+      }
+    ],
+    "keys": [
+      "ArrowRight",
+      "KeyD",
+      "ArrowDown",
+      "KeyS",
+      "ArrowLeft",
+      "KeyA",
+      "ArrowUp",
+      "KeyW",
+      "Space",
+      "Enter"
+    ],
+    "pointerPath": [
+      [
+        420,
+        300
+      ],
+      [
+        640,
+        280
+      ],
+      [
+        820,
+        360
+      ],
+      [
+        700,
+        480
+      ],
+      [
+        480,
+        460
+      ],
+      [
+        560,
+        350
+      ]
+    ],
+    "keyEveryMs": null,
+    "keyHoldMs": 3200,
+    "movementSegmentMs": 3200,
+    "movementGapMs": 160,
+    "actionEveryMs": 750,
+    "pointerEveryMs": 450,
+    "clickEveryMs": 1300,
+    "terminalSafe": true
+  },
+  "timeline": [
+    {
+      "phase": "start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 64,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": [],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 444.98,
+                "top": 493.5,
+                "right": 515.02,
+                "bottom": 506.5,
+                "width": 70.04,
+                "height": 13
+              },
+              "labels": [
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 70,
+          "recentTextDraws": 3,
+          "hudTextDraws": 1
+        }
+      }
+    },
+    {
+      "phase": "early",
+      "atMs": 1200,
+      "snapshot": {
+        "state": "playing",
+        "score": 0,
+        "best": 0,
+        "fps": 60,
+        "time": 1.2666000000000004,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 18,
+                "top": 15,
+                "right": 228,
+                "bottom": 62,
+                "width": 210,
+                "height": 47
+              },
+              "labels": [
+                "SIGNALS",
+                "0 / 3"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 748,
+                "top": 15,
+                "right": 942,
+                "bottom": 62,
+                "width": 194,
+                "height": 47
+              },
+              "labels": [
+                "SCORE",
+                "000",
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 468.17,
+                "top": 31.5,
+                "right": 491.83,
+                "bottom": 56.5,
+                "width": 23.66,
+                "height": 25
+              },
+              "labels": [
+                "0"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 345.06,
+                "top": 76,
+                "right": 614.94,
+                "bottom": 88,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 731.36,
+                "top": 193.5,
+                "right": 828.64,
+                "bottom": 202.5,
+                "width": 97.28,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-06",
+              "bounds": {
+                "left": 286,
+                "top": 490,
+                "right": 674,
+                "bottom": 526,
+                "width": 388,
+                "height": 36
+              },
+              "labels": [
+                "STORM PRESSURE",
+                "2%"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 315,
+          "recentTextDraws": 10,
+          "hudTextDraws": 10
+        }
+      }
+    },
+    {
+      "phase": "mid",
+      "atMs": 3500,
+      "snapshot": {
+        "state": "playing",
+        "score": 100,
+        "best": 100,
+        "fps": 60,
+        "time": 3.4663999999999993,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 1.433,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 3,
+            "type": "signal_node_activated",
+            "time": 1.433,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "nodeProgressBefore": 0,
+              "nodeProgressAfter": 1,
+              "scoreAward": 100
+            }
+          },
+          {
+            "seq": 4,
+            "type": "pressure_escalated",
+            "time": 1.433,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "hazardSpeedBefore": 35,
+              "hazardSpeedAfter": 53
+            }
+          },
+          {
+            "seq": 5,
+            "type": "movement_and_resonance_input",
+            "time": 1.483,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 792,
+              "y": 270,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 6,
+            "type": "movement_and_resonance_input",
+            "time": 2.233,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 918,
+              "y": 270,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 7,
+            "type": "movement_and_resonance_input",
+            "time": 2.583,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 918,
+              "y": 270,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 8,
+            "type": "movement_and_resonance_input",
+            "time": 2.983,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 918,
+              "y": 270,
+              "resonance": 1
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 18,
+                "top": 15,
+                "right": 228,
+                "bottom": 62,
+                "width": 210,
+                "height": 47
+              },
+              "labels": [
+                "SIGNALS",
+                "1 / 3"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 748,
+                "top": 15,
+                "right": 942,
+                "bottom": 62,
+                "width": 194,
+                "height": 47
+              },
+              "labels": [
+                "SCORE",
+                "100",
+                "BEST 100"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 444.51,
+                "top": 31.5,
+                "right": 515.49,
+                "bottom": 56.5,
+                "width": 70.98,
+                "height": 25
+              },
+              "labels": [
+                "100"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 345.06,
+                "top": 76,
+                "right": 614.94,
+                "bottom": 88,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 801.36,
+                "top": 353.5,
+                "right": 898.64,
+                "bottom": 362.5,
+                "width": 97.28,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-06",
+              "bounds": {
+                "left": 286,
+                "top": 490,
+                "right": 674,
+                "bottom": 526,
+                "width": 388,
+                "height": 36
+              },
+              "labels": [
+                "STORM PRESSURE",
+                "3%",
+                "4%"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 315,
+          "recentTextDraws": 11,
+          "hudTextDraws": 11
+        }
+      }
+    },
+    {
+      "phase": "end",
+      "atMs": 12000,
+      "snapshot": {
+        "state": "won",
+        "score": 600,
+        "best": 600,
+        "fps": 60,
+        "time": 8.88270000000003,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 1.433,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 3,
+            "type": "signal_node_activated",
+            "time": 1.433,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "nodeProgressBefore": 0,
+              "nodeProgressAfter": 1,
+              "scoreAward": 100
+            }
+          },
+          {
+            "seq": 4,
+            "type": "pressure_escalated",
+            "time": 1.433,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "hazardSpeedBefore": 35,
+              "hazardSpeedAfter": 53
+            }
+          },
+          {
+            "seq": 5,
+            "type": "movement_and_resonance_input",
+            "time": 1.483,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 792,
+              "y": 270,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 6,
+            "type": "movement_and_resonance_input",
+            "time": 2.233,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 918,
+              "y": 270,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 7,
+            "type": "movement_and_resonance_input",
+            "time": 2.583,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 918,
+              "y": 270,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 8,
+            "type": "movement_and_resonance_input",
+            "time": 2.983,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 918,
+              "y": 270,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 9,
+            "type": "movement_and_resonance_input",
+            "time": 3.733,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 918,
+              "y": 347,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 10,
+            "type": "score_changed",
+            "time": 3.733,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "before": 100,
+              "after": 300,
+              "delta": 200
+            }
+          },
+          {
+            "seq": 11,
+            "type": "signal_node_activated",
+            "time": 3.733,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "nodeProgressBefore": 1,
+              "nodeProgressAfter": 2,
+              "scoreAward": 200
+            }
+          },
+          {
+            "seq": 12,
+            "type": "pressure_escalated",
+            "time": 3.733,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "hazardSpeedBefore": 53,
+              "hazardSpeedAfter": 71
+            }
+          },
+          {
+            "seq": 13,
+            "type": "movement_and_resonance_input",
+            "time": 3.783,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 358,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 14,
+            "type": "movement_and_resonance_input",
+            "time": 4.383,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 490,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 15,
+            "type": "movement_and_resonance_input",
+            "time": 5.083,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 16,
+            "type": "movement_and_resonance_input",
+            "time": 5.133,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 17,
+            "type": "movement_and_resonance_input",
+            "time": 5.883,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 18,
+            "type": "movement_and_resonance_input",
+            "time": 6.383,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 19,
+            "type": "movement_and_resonance_input",
+            "time": 6.633,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 20,
+            "type": "movement_and_resonance_input",
+            "time": 7.383,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 757,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 21,
+            "type": "movement_and_resonance_input",
+            "time": 7.683,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 691,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 22,
+            "type": "movement_and_resonance_input",
+            "time": 8.133,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 592,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 23,
+            "type": "movement_and_resonance_input",
+            "time": 8.883,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 427,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 24,
+            "type": "score_changed",
+            "time": 8.883,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "before": 300,
+              "after": 600,
+              "delta": 300
+            }
+          },
+          {
+            "seq": 25,
+            "type": "signal_node_activated",
+            "time": 8.883,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "nodeProgressBefore": 2,
+              "nodeProgressAfter": 3,
+              "scoreAward": 300
+            }
+          },
+          {
+            "seq": 26,
+            "type": "pressure_escalated",
+            "time": 8.883,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "hazardSpeedBefore": 71,
+              "hazardSpeedAfter": 89
+            }
+          },
+          {
+            "seq": 27,
+            "type": "game_won",
+            "time": 8.883,
+            "state": "won",
+            "score": 600,
+            "data": {
+              "from": "playing",
+              "to": "won"
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 18,
+                "top": 15,
+                "right": 228,
+                "bottom": 62,
+                "width": 210,
+                "height": 47
+              },
+              "labels": [
+                "SIGNALS",
+                "3 / 3"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 748,
+                "top": 15,
+                "right": 942,
+                "bottom": 62,
+                "width": 194,
+                "height": 47
+              },
+              "labels": [
+                "SCORE",
+                "600"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 345.06,
+                "top": 76,
+                "right": 614.94,
+                "bottom": 88,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 286,
+                "top": 490,
+                "right": 674,
+                "bottom": 526,
+                "width": 388,
+                "height": 36
+              },
+              "labels": [
+                "STORM PRESSURE",
+                "6%"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 345,
+          "recentTextDraws": 11,
+          "hudTextDraws": 7
+        }
+      }
+    },
+    {
+      "phase": "success-proof:start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 62,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": [],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 444.98,
+                "top": 493.5,
+                "right": 515.02,
+                "bottom": 506.5,
+                "width": 70.04,
+                "height": 13
+              },
+              "labels": [
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 70,
+          "recentTextDraws": 3,
+          "hudTextDraws": 1
+        }
+      },
+      "scenarioId": "success-proof"
+    },
+    {
+      "phase": "success-proof:terminal",
+      "atMs": 9043,
+      "snapshot": {
+        "state": "won",
+        "score": 600,
+        "best": 600,
+        "fps": 60,
+        "time": 8.883000000000028,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 1.383,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 3,
+            "type": "signal_node_activated",
+            "time": 1.383,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "nodeProgressBefore": 0,
+              "nodeProgressAfter": 1,
+              "scoreAward": 100
+            }
+          },
+          {
+            "seq": 4,
+            "type": "pressure_escalated",
+            "time": 1.383,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "hazardSpeedBefore": 35,
+              "hazardSpeedAfter": 53
+            }
+          },
+          {
+            "seq": 5,
+            "type": "movement_and_resonance_input",
+            "time": 1.483,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 792,
+              "y": 270,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 6,
+            "type": "movement_and_resonance_input",
+            "time": 2.233,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 918,
+              "y": 270,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 7,
+            "type": "movement_and_resonance_input",
+            "time": 2.583,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 918,
+              "y": 270,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 8,
+            "type": "movement_and_resonance_input",
+            "time": 2.983,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 918,
+              "y": 270,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 9,
+            "type": "movement_and_resonance_input",
+            "time": 3.733,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 918,
+              "y": 354,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 10,
+            "type": "score_changed",
+            "time": 3.733,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "before": 100,
+              "after": 300,
+              "delta": 200
+            }
+          },
+          {
+            "seq": 11,
+            "type": "signal_node_activated",
+            "time": 3.733,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "nodeProgressBefore": 1,
+              "nodeProgressAfter": 2,
+              "scoreAward": 200
+            }
+          },
+          {
+            "seq": 12,
+            "type": "pressure_escalated",
+            "time": 3.733,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "hazardSpeedBefore": 53,
+              "hazardSpeedAfter": 71
+            }
+          },
+          {
+            "seq": 13,
+            "type": "movement_and_resonance_input",
+            "time": 3.783,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 365,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 14,
+            "type": "movement_and_resonance_input",
+            "time": 4.383,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 497,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 15,
+            "type": "movement_and_resonance_input",
+            "time": 5.083,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 16,
+            "type": "movement_and_resonance_input",
+            "time": 5.133,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 17,
+            "type": "movement_and_resonance_input",
+            "time": 5.883,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 18,
+            "type": "movement_and_resonance_input",
+            "time": 6.383,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 19,
+            "type": "movement_and_resonance_input",
+            "time": 6.633,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 20,
+            "type": "movement_and_resonance_input",
+            "time": 7.383,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 760,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 21,
+            "type": "movement_and_resonance_input",
+            "time": 7.683,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 694,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 22,
+            "type": "movement_and_resonance_input",
+            "time": 8.133,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 595,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 23,
+            "type": "movement_and_resonance_input",
+            "time": 8.883,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 430,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 24,
+            "type": "score_changed",
+            "time": 8.883,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "before": 300,
+              "after": 600,
+              "delta": 300
+            }
+          },
+          {
+            "seq": 25,
+            "type": "signal_node_activated",
+            "time": 8.883,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "nodeProgressBefore": 2,
+              "nodeProgressAfter": 3,
+              "scoreAward": 300
+            }
+          },
+          {
+            "seq": 26,
+            "type": "pressure_escalated",
+            "time": 8.883,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "hazardSpeedBefore": 71,
+              "hazardSpeedAfter": 89
+            }
+          },
+          {
+            "seq": 27,
+            "type": "game_won",
+            "time": 8.883,
+            "state": "won",
+            "score": 600,
+            "data": {
+              "from": "playing",
+              "to": "won"
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 18,
+                "top": 15,
+                "right": 228,
+                "bottom": 62,
+                "width": 210,
+                "height": 47
+              },
+              "labels": [
+                "SIGNALS",
+                "2 / 3",
+                "3 / 3"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 748,
+                "top": 15,
+                "right": 942,
+                "bottom": 62,
+                "width": 194,
+                "height": 47
+              },
+              "labels": [
+                "SCORE",
+                "300",
+                "BEST 300",
+                "600"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 444.51,
+                "top": 31.5,
+                "right": 515.49,
+                "bottom": 56.5,
+                "width": 70.98,
+                "height": 25
+              },
+              "labels": [
+                "300"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 350.13,
+                "top": 74.49,
+                "right": 620.02,
+                "bottom": 86.49,
+                "width": 269.89,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 345.52,
+                "top": 74.71,
+                "right": 615.4,
+                "bottom": 86.71,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-06",
+              "bounds": {
+                "left": 345.06,
+                "top": 76,
+                "right": 614.94,
+                "bottom": 88,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-07",
+              "bounds": {
+                "left": 346.36,
+                "top": 403.5,
+                "right": 443.64,
+                "bottom": 412.5,
+                "width": 97.28,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-08",
+              "bounds": {
+                "left": 286,
+                "top": 490,
+                "right": 674,
+                "bottom": 526,
+                "width": 388,
+                "height": 36
+              },
+              "labels": [
+                "STORM PRESSURE",
+                "11%",
+                "6%"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            }
+          ],
+          "issues": [
+            {
+              "type": "overlap",
+              "regionA": "HUD-04",
+              "regionB": "HUD-05",
+              "intersection": {
+                "left": 350.13,
+                "top": 74.71,
+                "right": 615.4,
+                "bottom": 86.49,
+                "width": 265.27,
+                "height": 11.78
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-04",
+              "regionB": "HUD-06",
+              "intersection": {
+                "left": 350.13,
+                "top": 76,
+                "right": 614.94,
+                "bottom": 86.49,
+                "width": 264.81,
+                "height": 10.49
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-06",
+              "intersection": {
+                "left": 345.52,
+                "top": 76,
+                "right": 614.94,
+                "bottom": 86.71,
+                "width": 269.42,
+                "height": 10.71
+              }
+            }
+          ],
+          "recentDrawCalls": 300,
+          "recentTextDraws": 28,
+          "hudTextDraws": 24
+        }
+      },
+      "scenarioId": "success-proof"
+    },
+    {
+      "phase": "success-proof:post_restart",
+      "atMs": 9948,
+      "snapshot": {
+        "state": "playing",
+        "score": 0,
+        "best": 600,
+        "fps": 60,
+        "time": 0.33340000000000153,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "score_changed",
+            "time": 1.383,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "before": 0,
+              "after": 100,
+              "delta": 100
+            }
+          },
+          {
+            "seq": 3,
+            "type": "signal_node_activated",
+            "time": 1.383,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "nodeProgressBefore": 0,
+              "nodeProgressAfter": 1,
+              "scoreAward": 100
+            }
+          },
+          {
+            "seq": 4,
+            "type": "pressure_escalated",
+            "time": 1.383,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "hazardSpeedBefore": 35,
+              "hazardSpeedAfter": 53
+            }
+          },
+          {
+            "seq": 5,
+            "type": "movement_and_resonance_input",
+            "time": 1.483,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 792,
+              "y": 270,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 6,
+            "type": "movement_and_resonance_input",
+            "time": 2.233,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 918,
+              "y": 270,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 7,
+            "type": "movement_and_resonance_input",
+            "time": 2.583,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 918,
+              "y": 270,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 8,
+            "type": "movement_and_resonance_input",
+            "time": 2.983,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 918,
+              "y": 270,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 9,
+            "type": "movement_and_resonance_input",
+            "time": 3.733,
+            "state": "playing",
+            "score": 100,
+            "data": {
+              "x": 918,
+              "y": 354,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 10,
+            "type": "score_changed",
+            "time": 3.733,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "before": 100,
+              "after": 300,
+              "delta": 200
+            }
+          },
+          {
+            "seq": 11,
+            "type": "signal_node_activated",
+            "time": 3.733,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "nodeProgressBefore": 1,
+              "nodeProgressAfter": 2,
+              "scoreAward": 200
+            }
+          },
+          {
+            "seq": 12,
+            "type": "pressure_escalated",
+            "time": 3.733,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "hazardSpeedBefore": 53,
+              "hazardSpeedAfter": 71
+            }
+          },
+          {
+            "seq": 13,
+            "type": "movement_and_resonance_input",
+            "time": 3.783,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 365,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 14,
+            "type": "movement_and_resonance_input",
+            "time": 4.383,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 497,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 15,
+            "type": "movement_and_resonance_input",
+            "time": 5.083,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 16,
+            "type": "movement_and_resonance_input",
+            "time": 5.133,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 17,
+            "type": "movement_and_resonance_input",
+            "time": 5.883,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 18,
+            "type": "movement_and_resonance_input",
+            "time": 6.383,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 19,
+            "type": "movement_and_resonance_input",
+            "time": 6.633,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 918,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 20,
+            "type": "movement_and_resonance_input",
+            "time": 7.383,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 760,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 21,
+            "type": "movement_and_resonance_input",
+            "time": 7.683,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 694,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 22,
+            "type": "movement_and_resonance_input",
+            "time": 8.133,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 595,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 23,
+            "type": "movement_and_resonance_input",
+            "time": 8.883,
+            "state": "playing",
+            "score": 300,
+            "data": {
+              "x": 430,
+              "y": 498,
+              "resonance": 1
+            }
+          },
+          {
+            "seq": 24,
+            "type": "score_changed",
+            "time": 8.883,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "before": 300,
+              "after": 600,
+              "delta": 300
+            }
+          },
+          {
+            "seq": 25,
+            "type": "signal_node_activated",
+            "time": 8.883,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "nodeProgressBefore": 2,
+              "nodeProgressAfter": 3,
+              "scoreAward": 300
+            }
+          },
+          {
+            "seq": 26,
+            "type": "pressure_escalated",
+            "time": 8.883,
+            "state": "playing",
+            "score": 600,
+            "data": {
+              "hazardSpeedBefore": 71,
+              "hazardSpeedAfter": 89
+            }
+          },
+          {
+            "seq": 27,
+            "type": "game_won",
+            "time": 8.883,
+            "state": "won",
+            "score": 600,
+            "data": {
+              "from": "playing",
+              "to": "won"
+            }
+          },
+          {
+            "seq": 28,
+            "type": "fresh_run_started",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "nodeProgress": 0
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 18,
+                "top": 15,
+                "right": 228,
+                "bottom": 62,
+                "width": 210,
+                "height": 47
+              },
+              "labels": [
+                "SIGNALS",
+                "0 / 3"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 748,
+                "top": 15,
+                "right": 942,
+                "bottom": 62,
+                "width": 194,
+                "height": 47
+              },
+              "labels": [
+                "SCORE",
+                "000",
+                "BEST 600"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 468.17,
+                "top": 31.5,
+                "right": 491.83,
+                "bottom": 56.5,
+                "width": 23.66,
+                "height": 25
+              },
+              "labels": [
+                "0"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 345.06,
+                "top": 76,
+                "right": 614.94,
+                "bottom": 88,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 731.36,
+                "top": 193.5,
+                "right": 828.64,
+                "bottom": 202.5,
+                "width": 97.28,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-06",
+              "bounds": {
+                "left": 286,
+                "top": 490,
+                "right": 674,
+                "bottom": 526,
+                "width": 388,
+                "height": 36
+              },
+              "labels": [
+                "STORM PRESSURE",
+                "1%"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 294,
+          "recentTextDraws": 10,
+          "hudTextDraws": 10
+        }
+      },
+      "scenarioId": "success-proof"
+    },
+    {
+      "phase": "failure-proof:start",
+      "atMs": 0,
+      "snapshot": {
+        "state": "title",
+        "score": 0,
+        "best": 0,
+        "fps": 62,
+        "time": 0,
+        "flags": [],
+        "errors": [],
+        "events": [],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 444.98,
+                "top": 493.5,
+                "right": 515.02,
+                "bottom": 506.5,
+                "width": 70.04,
+                "height": 13
+              },
+              "labels": [
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillText"
+            }
+          ],
+          "issues": [],
+          "recentDrawCalls": 70,
+          "recentTextDraws": 3,
+          "hudTextDraws": 1
+        }
+      },
+      "scenarioId": "failure-proof"
+    },
+    {
+      "phase": "failure-proof:terminal",
+      "atMs": 74964,
+      "snapshot": {
+        "state": "gameover",
+        "score": 0,
+        "best": 0,
+        "fps": 60,
+        "time": 75.01370000000402,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "game_over",
+            "time": 75.014,
+            "state": "gameover",
+            "score": 0,
+            "data": {
+              "from": "playing",
+              "to": "gameover"
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 21.23,
+                "top": 23.07,
+                "right": 231.23,
+                "bottom": 70.07,
+                "width": 210,
+                "height": 47
+              },
+              "labels": [
+                "SIGNALS",
+                "0 / 3"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 751.23,
+                "top": 23.07,
+                "right": 945.23,
+                "bottom": 70.07,
+                "width": 194,
+                "height": 47
+              },
+              "labels": [
+                "SCORE",
+                "000",
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 399.06,
+                "top": 38.13,
+                "right": 529.06,
+                "bottom": 148.13,
+                "width": 130,
+                "height": 110
+              },
+              "labels": [
+                "0"
+              ],
+              "geometrySource": "canvas-fillRect+text"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 345.06,
+                "top": 76,
+                "right": 614.94,
+                "bottom": 88,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 348.28,
+                "top": 84.07,
+                "right": 618.17,
+                "bottom": 96.07,
+                "width": 269.89,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-06",
+              "bounds": {
+                "left": 731.36,
+                "top": 193.5,
+                "right": 828.64,
+                "bottom": 202.5,
+                "width": 97.28,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-07",
+              "bounds": {
+                "left": 734.59,
+                "top": 201.57,
+                "right": 831.86,
+                "bottom": 210.57,
+                "width": 97.27,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-08",
+              "bounds": {
+                "left": 286,
+                "top": 490,
+                "right": 674,
+                "bottom": 526,
+                "width": 388,
+                "height": 36
+              },
+              "labels": [
+                "STORM PRESSURE",
+                "100%"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-09",
+              "bounds": {
+                "left": 300,
+                "top": 510,
+                "right": 649.47,
+                "bottom": 518,
+                "width": 349.47,
+                "height": 8
+              },
+              "labels": [
+                "STORM PRESSURE"
+              ],
+              "geometrySource": "canvas-fillRect+text"
+            }
+          ],
+          "issues": [
+            {
+              "type": "overlap",
+              "regionA": "HUD-03",
+              "regionB": "HUD-04",
+              "intersection": {
+                "left": 399.06,
+                "top": 76,
+                "right": 529.06,
+                "bottom": 88,
+                "width": 130,
+                "height": 12
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-03",
+              "regionB": "HUD-05",
+              "intersection": {
+                "left": 399.06,
+                "top": 84.07,
+                "right": 529.06,
+                "bottom": 96.07,
+                "width": 130,
+                "height": 12
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-04",
+              "regionB": "HUD-05",
+              "intersection": {
+                "left": 348.28,
+                "top": 84.07,
+                "right": 614.94,
+                "bottom": 88,
+                "width": 266.66,
+                "height": 3.93
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-08",
+              "regionB": "HUD-09",
+              "intersection": {
+                "left": 300,
+                "top": 510,
+                "right": 649.47,
+                "bottom": 518,
+                "width": 349.47,
+                "height": 8
+              }
+            }
+          ],
+          "recentDrawCalls": 298,
+          "recentTextDraws": 22,
+          "hudTextDraws": 18
+        }
+      },
+      "scenarioId": "failure-proof"
+    },
+    {
+      "phase": "failure-proof:post_restart",
+      "atMs": 75867,
+      "snapshot": {
+        "state": "playing",
+        "score": 0,
+        "best": 0,
+        "fps": 60,
+        "time": 0.4500000000000001,
+        "flags": [],
+        "errors": [],
+        "events": [
+          {
+            "seq": 1,
+            "type": "state_changed",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "from": "title",
+              "to": "playing",
+              "scene": "play"
+            }
+          },
+          {
+            "seq": 2,
+            "type": "game_over",
+            "time": 75.014,
+            "state": "gameover",
+            "score": 0,
+            "data": {
+              "from": "playing",
+              "to": "gameover"
+            }
+          },
+          {
+            "seq": 3,
+            "type": "fresh_run_started",
+            "time": 0,
+            "state": "playing",
+            "score": 0,
+            "data": {
+              "nodeProgress": 0
+            }
+          }
+        ],
+        "layout": {
+          "source": "playwright-canvas-draw-observation-v1",
+          "canvas": {
+            "domId": "game",
+            "logicalWidth": 960,
+            "logicalHeight": 540,
+            "intrinsicWidth": 960,
+            "intrinsicHeight": 540,
+            "logicalIntrinsicMatch": true
+          },
+          "regions": [
+            {
+              "id": "HUD-01",
+              "bounds": {
+                "left": 23.22,
+                "top": 7.58,
+                "right": 233.22,
+                "bottom": 54.58,
+                "width": 210,
+                "height": 47
+              },
+              "labels": [
+                "SIGNALS",
+                "0 / 3"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-02",
+              "bounds": {
+                "left": 753.22,
+                "top": 7.58,
+                "right": 947.22,
+                "bottom": 54.58,
+                "width": 194,
+                "height": 47
+              },
+              "labels": [
+                "SCORE",
+                "000",
+                "BEST 0"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-03",
+              "bounds": {
+                "left": 21.84,
+                "top": 23.08,
+                "right": 231.84,
+                "bottom": 70.08,
+                "width": 210,
+                "height": 47
+              },
+              "labels": [
+                "0 / 3"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-04",
+              "bounds": {
+                "left": 468.17,
+                "top": 31.5,
+                "right": 491.83,
+                "bottom": 56.5,
+                "width": 23.66,
+                "height": 25
+              },
+              "labels": [
+                "0"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-05",
+              "bounds": {
+                "left": 350.28,
+                "top": 68.58,
+                "right": 620.17,
+                "bottom": 80.58,
+                "width": 269.89,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-06",
+              "bounds": {
+                "left": 352.18,
+                "top": 69.75,
+                "right": 622.07,
+                "bottom": 81.75,
+                "width": 269.89,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-07",
+              "bounds": {
+                "left": 342.68,
+                "top": 70.15,
+                "right": 612.56,
+                "bottom": 82.15,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-08",
+              "bounds": {
+                "left": 346.15,
+                "top": 73.92,
+                "right": 616.03,
+                "bottom": 85.92,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-09",
+              "bounds": {
+                "left": 352.43,
+                "top": 74.06,
+                "right": 622.31,
+                "bottom": 86.06,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-10",
+              "bounds": {
+                "left": 337.98,
+                "top": 74.45,
+                "right": 607.87,
+                "bottom": 86.45,
+                "width": 269.89,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-11",
+              "bounds": {
+                "left": 346.51,
+                "top": 75.6,
+                "right": 616.39,
+                "bottom": 87.6,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-12",
+              "bounds": {
+                "left": 340.99,
+                "top": 75.99,
+                "right": 610.87,
+                "bottom": 87.99,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-13",
+              "bounds": {
+                "left": 345.06,
+                "top": 76,
+                "right": 614.94,
+                "bottom": 88,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-14",
+              "bounds": {
+                "left": 349.68,
+                "top": 80.95,
+                "right": 619.56,
+                "bottom": 92.95,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-15",
+              "bounds": {
+                "left": 343.4,
+                "top": 82.89,
+                "right": 613.28,
+                "bottom": 94.89,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-16",
+              "bounds": {
+                "left": 347.13,
+                "top": 84.03,
+                "right": 617.01,
+                "bottom": 96.03,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-17",
+              "bounds": {
+                "left": 348.9,
+                "top": 84.08,
+                "right": 618.78,
+                "bottom": 96.08,
+                "width": 269.88,
+                "height": 12
+              },
+              "labels": [
+                "MOVE  •  RESONATE [SPACE / ENTER]"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-18",
+              "bounds": {
+                "left": 736.59,
+                "top": 186.08,
+                "right": 833.86,
+                "bottom": 195.08,
+                "width": 97.27,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-19",
+              "bounds": {
+                "left": 738.49,
+                "top": 187.25,
+                "right": 835.76,
+                "bottom": 196.25,
+                "width": 97.27,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-20",
+              "bounds": {
+                "left": 728.99,
+                "top": 187.65,
+                "right": 826.26,
+                "bottom": 196.65,
+                "width": 97.27,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-21",
+              "bounds": {
+                "left": 732.45,
+                "top": 191.42,
+                "right": 829.73,
+                "bottom": 200.42,
+                "width": 97.28,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-22",
+              "bounds": {
+                "left": 738.74,
+                "top": 191.56,
+                "right": 836.01,
+                "bottom": 200.56,
+                "width": 97.27,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-23",
+              "bounds": {
+                "left": 724.59,
+                "top": 191.64,
+                "right": 821.86,
+                "bottom": 200.64,
+                "width": 97.27,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-24",
+              "bounds": {
+                "left": 724.29,
+                "top": 191.95,
+                "right": 821.56,
+                "bottom": 200.95,
+                "width": 97.27,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-25",
+              "bounds": {
+                "left": 732.81,
+                "top": 193.1,
+                "right": 830.08,
+                "bottom": 202.1,
+                "width": 97.27,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-26",
+              "bounds": {
+                "left": 727.29,
+                "top": 193.49,
+                "right": 824.56,
+                "bottom": 202.49,
+                "width": 97.27,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-27",
+              "bounds": {
+                "left": 731.36,
+                "top": 193.5,
+                "right": 828.64,
+                "bottom": 202.5,
+                "width": 97.28,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-28",
+              "bounds": {
+                "left": 735.99,
+                "top": 198.45,
+                "right": 833.26,
+                "bottom": 207.45,
+                "width": 97.27,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-29",
+              "bounds": {
+                "left": 729.71,
+                "top": 200.39,
+                "right": 826.98,
+                "bottom": 209.39,
+                "width": 97.27,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-30",
+              "bounds": {
+                "left": 733.43,
+                "top": 201.53,
+                "right": 830.7,
+                "bottom": 210.53,
+                "width": 97.27,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-31",
+              "bounds": {
+                "left": 735.21,
+                "top": 201.58,
+                "right": 832.48,
+                "bottom": 210.58,
+                "width": 97.27,
+                "height": 9
+              },
+              "labels": [
+                "NEXT SIGNAL"
+              ],
+              "geometrySource": "canvas-fillText"
+            },
+            {
+              "id": "HUD-32",
+              "bounds": {
+                "left": 293.37,
+                "top": 488.06,
+                "right": 681.37,
+                "bottom": 524.06,
+                "width": 388,
+                "height": 36
+              },
+              "labels": [
+                "STORM PRESSURE",
+                "1%"
+              ],
+              "geometrySource": "canvas-fillPathRect+text"
+            },
+            {
+              "id": "HUD-33",
+              "bounds": {
+                "left": 305.22,
+                "top": 502.58,
+                "right": 655.22,
+                "bottom": 510.58,
+                "width": 350,
+                "height": 8
+              },
+              "labels": [
+                "1%",
+                "STORM PRESSURE"
+              ],
+              "geometrySource": "canvas-fillRect+text"
+            },
+            {
+              "id": "HUD-34",
+              "bounds": {
+                "left": 297.62,
+                "top": 504.15,
+                "right": 647.62,
+                "bottom": 512.15,
+                "width": 350,
+                "height": 8
+              },
+              "labels": [
+                "STORM PRESSURE"
+              ],
+              "geometrySource": "canvas-fillRect+text"
+            },
+            {
+              "id": "HUD-35",
+              "bounds": {
+                "left": 301.09,
+                "top": 507.92,
+                "right": 651.09,
+                "bottom": 515.92,
+                "width": 350,
+                "height": 8
+              },
+              "labels": [
+                "STORM PRESSURE"
+              ],
+              "geometrySource": "canvas-fillRect+text"
+            },
+            {
+              "id": "HUD-36",
+              "bounds": {
+                "left": 307.37,
+                "top": 508.06,
+                "right": 657.37,
+                "bottom": 516.06,
+                "width": 350,
+                "height": 8
+              },
+              "labels": [
+                "STORM PRESSURE",
+                "1%"
+              ],
+              "geometrySource": "canvas-fillRect+text"
+            }
+          ],
+          "issues": [
+            {
+              "type": "overlap",
+              "regionA": "HUD-01",
+              "regionB": "HUD-03",
+              "intersection": {
+                "left": 23.22,
+                "top": 23.08,
+                "right": 231.84,
+                "bottom": 54.58,
+                "width": 208.62,
+                "height": 31.5
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-06",
+              "intersection": {
+                "left": 352.18,
+                "top": 69.75,
+                "right": 620.17,
+                "bottom": 80.58,
+                "width": 267.99,
+                "height": 10.83
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-07",
+              "intersection": {
+                "left": 350.28,
+                "top": 70.15,
+                "right": 612.56,
+                "bottom": 80.58,
+                "width": 262.28,
+                "height": 10.43
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-08",
+              "intersection": {
+                "left": 350.28,
+                "top": 73.92,
+                "right": 616.03,
+                "bottom": 80.58,
+                "width": 265.75,
+                "height": 6.66
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-09",
+              "intersection": {
+                "left": 352.43,
+                "top": 74.06,
+                "right": 620.17,
+                "bottom": 80.58,
+                "width": 267.74,
+                "height": 6.52
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-10",
+              "intersection": {
+                "left": 350.28,
+                "top": 74.45,
+                "right": 607.87,
+                "bottom": 80.58,
+                "width": 257.59,
+                "height": 6.13
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-11",
+              "intersection": {
+                "left": 350.28,
+                "top": 75.6,
+                "right": 616.39,
+                "bottom": 80.58,
+                "width": 266.11,
+                "height": 4.98
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-12",
+              "intersection": {
+                "left": 350.28,
+                "top": 75.99,
+                "right": 610.87,
+                "bottom": 80.58,
+                "width": 260.59,
+                "height": 4.59
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-05",
+              "regionB": "HUD-13",
+              "intersection": {
+                "left": 350.28,
+                "top": 76,
+                "right": 614.94,
+                "bottom": 80.58,
+                "width": 264.66,
+                "height": 4.58
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-07",
+              "intersection": {
+                "left": 352.18,
+                "top": 70.15,
+                "right": 612.56,
+                "bottom": 81.75,
+                "width": 260.38,
+                "height": 11.6
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-08",
+              "intersection": {
+                "left": 352.18,
+                "top": 73.92,
+                "right": 616.03,
+                "bottom": 81.75,
+                "width": 263.85,
+                "height": 7.83
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-09",
+              "intersection": {
+                "left": 352.43,
+                "top": 74.06,
+                "right": 622.07,
+                "bottom": 81.75,
+                "width": 269.64,
+                "height": 7.69
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-10",
+              "intersection": {
+                "left": 352.18,
+                "top": 74.45,
+                "right": 607.87,
+                "bottom": 81.75,
+                "width": 255.69,
+                "height": 7.3
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-11",
+              "intersection": {
+                "left": 352.18,
+                "top": 75.6,
+                "right": 616.39,
+                "bottom": 81.75,
+                "width": 264.21,
+                "height": 6.15
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-12",
+              "intersection": {
+                "left": 352.18,
+                "top": 75.99,
+                "right": 610.87,
+                "bottom": 81.75,
+                "width": 258.69,
+                "height": 5.76
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-06",
+              "regionB": "HUD-13",
+              "intersection": {
+                "left": 352.18,
+                "top": 76,
+                "right": 614.94,
+                "bottom": 81.75,
+                "width": 262.76,
+                "height": 5.75
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-07",
+              "regionB": "HUD-08",
+              "intersection": {
+                "left": 346.15,
+                "top": 73.92,
+                "right": 612.56,
+                "bottom": 82.15,
+                "width": 266.41,
+                "height": 8.23
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-07",
+              "regionB": "HUD-09",
+              "intersection": {
+                "left": 352.43,
+                "top": 74.06,
+                "right": 612.56,
+                "bottom": 82.15,
+                "width": 260.13,
+                "height": 8.09
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-07",
+              "regionB": "HUD-10",
+              "intersection": {
+                "left": 342.68,
+                "top": 74.45,
+                "right": 607.87,
+                "bottom": 82.15,
+                "width": 265.19,
+                "height": 7.7
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-07",
+              "regionB": "HUD-11",
+              "intersection": {
+                "left": 346.51,
+                "top": 75.6,
+                "right": 612.56,
+                "bottom": 82.15,
+                "width": 266.05,
+                "height": 6.55
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-07",
+              "regionB": "HUD-12",
+              "intersection": {
+                "left": 342.68,
+                "top": 75.99,
+                "right": 610.87,
+                "bottom": 82.15,
+                "width": 268.19,
+                "height": 6.16
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-07",
+              "regionB": "HUD-13",
+              "intersection": {
+                "left": 345.06,
+                "top": 76,
+                "right": 612.56,
+                "bottom": 82.15,
+                "width": 267.5,
+                "height": 6.15
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-08",
+              "regionB": "HUD-09",
+              "intersection": {
+                "left": 352.43,
+                "top": 74.06,
+                "right": 616.03,
+                "bottom": 85.92,
+                "width": 263.6,
+                "height": 11.86
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-08",
+              "regionB": "HUD-10",
+              "intersection": {
+                "left": 346.15,
+                "top": 74.45,
+                "right": 607.87,
+                "bottom": 85.92,
+                "width": 261.72,
+                "height": 11.47
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-08",
+              "regionB": "HUD-11",
+              "intersection": {
+                "left": 346.51,
+                "top": 75.6,
+                "right": 616.03,
+                "bottom": 85.92,
+                "width": 269.52,
+                "height": 10.32
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-08",
+              "regionB": "HUD-12",
+              "intersection": {
+                "left": 346.15,
+                "top": 75.99,
+                "right": 610.87,
+                "bottom": 85.92,
+                "width": 264.72,
+                "height": 9.93
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-08",
+              "regionB": "HUD-13",
+              "intersection": {
+                "left": 346.15,
+                "top": 76,
+                "right": 614.94,
+                "bottom": 85.92,
+                "width": 268.79,
+                "height": 9.92
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-08",
+              "regionB": "HUD-14",
+              "intersection": {
+                "left": 349.68,
+                "top": 80.95,
+                "right": 616.03,
+                "bottom": 85.92,
+                "width": 266.35,
+                "height": 4.97
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-08",
+              "regionB": "HUD-15",
+              "intersection": {
+                "left": 346.15,
+                "top": 82.89,
+                "right": 613.28,
+                "bottom": 85.92,
+                "width": 267.13,
+                "height": 3.03
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-09",
+              "regionB": "HUD-10",
+              "intersection": {
+                "left": 352.43,
+                "top": 74.45,
+                "right": 607.87,
+                "bottom": 86.06,
+                "width": 255.44,
+                "height": 11.61
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-09",
+              "regionB": "HUD-11",
+              "intersection": {
+                "left": 352.43,
+                "top": 75.6,
+                "right": 616.39,
+                "bottom": 86.06,
+                "width": 263.96,
+                "height": 10.46
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-09",
+              "regionB": "HUD-12",
+              "intersection": {
+                "left": 352.43,
+                "top": 75.99,
+                "right": 610.87,
+                "bottom": 86.06,
+                "width": 258.44,
+                "height": 10.07
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-09",
+              "regionB": "HUD-13",
+              "intersection": {
+                "left": 352.43,
+                "top": 76,
+                "right": 614.94,
+                "bottom": 86.06,
+                "width": 262.51,
+                "height": 10.06
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-09",
+              "regionB": "HUD-14",
+              "intersection": {
+                "left": 352.43,
+                "top": 80.95,
+                "right": 619.56,
+                "bottom": 86.06,
+                "width": 267.13,
+                "height": 5.11
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-09",
+              "regionB": "HUD-15",
+              "intersection": {
+                "left": 352.43,
+                "top": 82.89,
+                "right": 613.28,
+                "bottom": 86.06,
+                "width": 260.85,
+                "height": 3.17
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-10",
+              "regionB": "HUD-11",
+              "intersection": {
+                "left": 346.51,
+                "top": 75.6,
+                "right": 607.87,
+                "bottom": 86.45,
+                "width": 261.36,
+                "height": 10.85
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-10",
+              "regionB": "HUD-12",
+              "intersection": {
+                "left": 340.99,
+                "top": 75.99,
+                "right": 607.87,
+                "bottom": 86.45,
+                "width": 266.88,
+                "height": 10.46
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-10",
+              "regionB": "HUD-13",
+              "intersection": {
+                "left": 345.06,
+                "top": 76,
+                "right": 607.87,
+                "bottom": 86.45,
+                "width": 262.81,
+                "height": 10.45
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-10",
+              "regionB": "HUD-14",
+              "intersection": {
+                "left": 349.68,
+                "top": 80.95,
+                "right": 607.87,
+                "bottom": 86.45,
+                "width": 258.19,
+                "height": 5.5
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-10",
+              "regionB": "HUD-15",
+              "intersection": {
+                "left": 343.4,
+                "top": 82.89,
+                "right": 607.87,
+                "bottom": 86.45,
+                "width": 264.47,
+                "height": 3.56
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-11",
+              "regionB": "HUD-12",
+              "intersection": {
+                "left": 346.51,
+                "top": 75.99,
+                "right": 610.87,
+                "bottom": 87.6,
+                "width": 264.36,
+                "height": 11.61
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-11",
+              "regionB": "HUD-13",
+              "intersection": {
+                "left": 346.51,
+                "top": 76,
+                "right": 614.94,
+                "bottom": 87.6,
+                "width": 268.43,
+                "height": 11.6
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-11",
+              "regionB": "HUD-14",
+              "intersection": {
+                "left": 349.68,
+                "top": 80.95,
+                "right": 616.39,
+                "bottom": 87.6,
+                "width": 266.71,
+                "height": 6.65
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-11",
+              "regionB": "HUD-15",
+              "intersection": {
+                "left": 346.51,
+                "top": 82.89,
+                "right": 613.28,
+                "bottom": 87.6,
+                "width": 266.77,
+                "height": 4.71
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-11",
+              "regionB": "HUD-16",
+              "intersection": {
+                "left": 347.13,
+                "top": 84.03,
+                "right": 616.39,
+                "bottom": 87.6,
+                "width": 269.26,
+                "height": 3.57
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-11",
+              "regionB": "HUD-17",
+              "intersection": {
+                "left": 348.9,
+                "top": 84.08,
+                "right": 616.39,
+                "bottom": 87.6,
+                "width": 267.49,
+                "height": 3.52
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-12",
+              "regionB": "HUD-13",
+              "intersection": {
+                "left": 345.06,
+                "top": 76,
+                "right": 610.87,
+                "bottom": 87.99,
+                "width": 265.81,
+                "height": 11.99
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-12",
+              "regionB": "HUD-14",
+              "intersection": {
+                "left": 349.68,
+                "top": 80.95,
+                "right": 610.87,
+                "bottom": 87.99,
+                "width": 261.19,
+                "height": 7.04
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-12",
+              "regionB": "HUD-15",
+              "intersection": {
+                "left": 343.4,
+                "top": 82.89,
+                "right": 610.87,
+                "bottom": 87.99,
+                "width": 267.47,
+                "height": 5.1
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-12",
+              "regionB": "HUD-16",
+              "intersection": {
+                "left": 347.13,
+                "top": 84.03,
+                "right": 610.87,
+                "bottom": 87.99,
+                "width": 263.74,
+                "height": 3.96
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-12",
+              "regionB": "HUD-17",
+              "intersection": {
+                "left": 348.9,
+                "top": 84.08,
+                "right": 610.87,
+                "bottom": 87.99,
+                "width": 261.97,
+                "height": 3.91
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-13",
+              "regionB": "HUD-14",
+              "intersection": {
+                "left": 349.68,
+                "top": 80.95,
+                "right": 614.94,
+                "bottom": 88,
+                "width": 265.26,
+                "height": 7.05
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-13",
+              "regionB": "HUD-15",
+              "intersection": {
+                "left": 345.06,
+                "top": 82.89,
+                "right": 613.28,
+                "bottom": 88,
+                "width": 268.22,
+                "height": 5.11
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-13",
+              "regionB": "HUD-16",
+              "intersection": {
+                "left": 347.13,
+                "top": 84.03,
+                "right": 614.94,
+                "bottom": 88,
+                "width": 267.81,
+                "height": 3.97
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-13",
+              "regionB": "HUD-17",
+              "intersection": {
+                "left": 348.9,
+                "top": 84.08,
+                "right": 614.94,
+                "bottom": 88,
+                "width": 266.04,
+                "height": 3.92
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-14",
+              "regionB": "HUD-15",
+              "intersection": {
+                "left": 349.68,
+                "top": 82.89,
+                "right": 613.28,
+                "bottom": 92.95,
+                "width": 263.6,
+                "height": 10.06
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-14",
+              "regionB": "HUD-16",
+              "intersection": {
+                "left": 349.68,
+                "top": 84.03,
+                "right": 617.01,
+                "bottom": 92.95,
+                "width": 267.33,
+                "height": 8.92
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-14",
+              "regionB": "HUD-17",
+              "intersection": {
+                "left": 349.68,
+                "top": 84.08,
+                "right": 618.78,
+                "bottom": 92.95,
+                "width": 269.1,
+                "height": 8.87
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-15",
+              "regionB": "HUD-16",
+              "intersection": {
+                "left": 347.13,
+                "top": 84.03,
+                "right": 613.28,
+                "bottom": 94.89,
+                "width": 266.15,
+                "height": 10.86
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-15",
+              "regionB": "HUD-17",
+              "intersection": {
+                "left": 348.9,
+                "top": 84.08,
+                "right": 613.28,
+                "bottom": 94.89,
+                "width": 264.38,
+                "height": 10.81
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-16",
+              "regionB": "HUD-17",
+              "intersection": {
+                "left": 348.9,
+                "top": 84.08,
+                "right": 617.01,
+                "bottom": 96.03,
+                "width": 268.11,
+                "height": 11.95
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-18",
+              "regionB": "HUD-19",
+              "intersection": {
+                "left": 738.49,
+                "top": 187.25,
+                "right": 833.86,
+                "bottom": 195.08,
+                "width": 95.37,
+                "height": 7.83
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-18",
+              "regionB": "HUD-20",
+              "intersection": {
+                "left": 736.59,
+                "top": 187.65,
+                "right": 826.26,
+                "bottom": 195.08,
+                "width": 89.67,
+                "height": 7.43
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-18",
+              "regionB": "HUD-21",
+              "intersection": {
+                "left": 736.59,
+                "top": 191.42,
+                "right": 829.73,
+                "bottom": 195.08,
+                "width": 93.14,
+                "height": 3.66
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-18",
+              "regionB": "HUD-22",
+              "intersection": {
+                "left": 738.74,
+                "top": 191.56,
+                "right": 833.86,
+                "bottom": 195.08,
+                "width": 95.12,
+                "height": 3.52
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-18",
+              "regionB": "HUD-23",
+              "intersection": {
+                "left": 736.59,
+                "top": 191.64,
+                "right": 821.86,
+                "bottom": 195.08,
+                "width": 85.27,
+                "height": 3.44
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-18",
+              "regionB": "HUD-24",
+              "intersection": {
+                "left": 736.59,
+                "top": 191.95,
+                "right": 821.56,
+                "bottom": 195.08,
+                "width": 84.97,
+                "height": 3.13
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-19",
+              "regionB": "HUD-20",
+              "intersection": {
+                "left": 738.49,
+                "top": 187.65,
+                "right": 826.26,
+                "bottom": 196.25,
+                "width": 87.77,
+                "height": 8.6
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-19",
+              "regionB": "HUD-21",
+              "intersection": {
+                "left": 738.49,
+                "top": 191.42,
+                "right": 829.73,
+                "bottom": 196.25,
+                "width": 91.24,
+                "height": 4.83
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-19",
+              "regionB": "HUD-22",
+              "intersection": {
+                "left": 738.74,
+                "top": 191.56,
+                "right": 835.76,
+                "bottom": 196.25,
+                "width": 97.02,
+                "height": 4.69
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-19",
+              "regionB": "HUD-23",
+              "intersection": {
+                "left": 738.49,
+                "top": 191.64,
+                "right": 821.86,
+                "bottom": 196.25,
+                "width": 83.37,
+                "height": 4.61
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-19",
+              "regionB": "HUD-24",
+              "intersection": {
+                "left": 738.49,
+                "top": 191.95,
+                "right": 821.56,
+                "bottom": 196.25,
+                "width": 83.07,
+                "height": 4.3
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-19",
+              "regionB": "HUD-25",
+              "intersection": {
+                "left": 738.49,
+                "top": 193.1,
+                "right": 830.08,
+                "bottom": 196.25,
+                "width": 91.59,
+                "height": 3.15
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-20",
+              "regionB": "HUD-21",
+              "intersection": {
+                "left": 732.45,
+                "top": 191.42,
+                "right": 826.26,
+                "bottom": 196.65,
+                "width": 93.81,
+                "height": 5.23
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-20",
+              "regionB": "HUD-22",
+              "intersection": {
+                "left": 738.74,
+                "top": 191.56,
+                "right": 826.26,
+                "bottom": 196.65,
+                "width": 87.52,
+                "height": 5.09
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-20",
+              "regionB": "HUD-23",
+              "intersection": {
+                "left": 728.99,
+                "top": 191.64,
+                "right": 821.86,
+                "bottom": 196.65,
+                "width": 92.87,
+                "height": 5.01
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-20",
+              "regionB": "HUD-24",
+              "intersection": {
+                "left": 728.99,
+                "top": 191.95,
+                "right": 821.56,
+                "bottom": 196.65,
+                "width": 92.57,
+                "height": 4.7
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-20",
+              "regionB": "HUD-25",
+              "intersection": {
+                "left": 732.81,
+                "top": 193.1,
+                "right": 826.26,
+                "bottom": 196.65,
+                "width": 93.45,
+                "height": 3.55
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-20",
+              "regionB": "HUD-26",
+              "intersection": {
+                "left": 728.99,
+                "top": 193.49,
+                "right": 824.56,
+                "bottom": 196.65,
+                "width": 95.57,
+                "height": 3.16
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-20",
+              "regionB": "HUD-27",
+              "intersection": {
+                "left": 731.36,
+                "top": 193.5,
+                "right": 826.26,
+                "bottom": 196.65,
+                "width": 94.9,
+                "height": 3.15
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-21",
+              "regionB": "HUD-22",
+              "intersection": {
+                "left": 738.74,
+                "top": 191.56,
+                "right": 829.73,
+                "bottom": 200.42,
+                "width": 90.99,
+                "height": 8.86
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-21",
+              "regionB": "HUD-23",
+              "intersection": {
+                "left": 732.45,
+                "top": 191.64,
+                "right": 821.86,
+                "bottom": 200.42,
+                "width": 89.41,
+                "height": 8.78
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-21",
+              "regionB": "HUD-24",
+              "intersection": {
+                "left": 732.45,
+                "top": 191.95,
+                "right": 821.56,
+                "bottom": 200.42,
+                "width": 89.11,
+                "height": 8.47
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-21",
+              "regionB": "HUD-25",
+              "intersection": {
+                "left": 732.81,
+                "top": 193.1,
+                "right": 829.73,
+                "bottom": 200.42,
+                "width": 96.92,
+                "height": 7.32
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-21",
+              "regionB": "HUD-26",
+              "intersection": {
+                "left": 732.45,
+                "top": 193.49,
+                "right": 824.56,
+                "bottom": 200.42,
+                "width": 92.11,
+                "height": 6.93
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-21",
+              "regionB": "HUD-27",
+              "intersection": {
+                "left": 732.45,
+                "top": 193.5,
+                "right": 828.64,
+                "bottom": 200.42,
+                "width": 96.19,
+                "height": 6.92
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-22",
+              "regionB": "HUD-23",
+              "intersection": {
+                "left": 738.74,
+                "top": 191.64,
+                "right": 821.86,
+                "bottom": 200.56,
+                "width": 83.12,
+                "height": 8.92
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-22",
+              "regionB": "HUD-24",
+              "intersection": {
+                "left": 738.74,
+                "top": 191.95,
+                "right": 821.56,
+                "bottom": 200.56,
+                "width": 82.82,
+                "height": 8.61
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-22",
+              "regionB": "HUD-25",
+              "intersection": {
+                "left": 738.74,
+                "top": 193.1,
+                "right": 830.08,
+                "bottom": 200.56,
+                "width": 91.34,
+                "height": 7.46
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-22",
+              "regionB": "HUD-26",
+              "intersection": {
+                "left": 738.74,
+                "top": 193.49,
+                "right": 824.56,
+                "bottom": 200.56,
+                "width": 85.82,
+                "height": 7.07
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-22",
+              "regionB": "HUD-27",
+              "intersection": {
+                "left": 738.74,
+                "top": 193.5,
+                "right": 828.64,
+                "bottom": 200.56,
+                "width": 89.9,
+                "height": 7.06
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-23",
+              "regionB": "HUD-24",
+              "intersection": {
+                "left": 724.59,
+                "top": 191.95,
+                "right": 821.56,
+                "bottom": 200.64,
+                "width": 96.97,
+                "height": 8.69
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-23",
+              "regionB": "HUD-25",
+              "intersection": {
+                "left": 732.81,
+                "top": 193.1,
+                "right": 821.86,
+                "bottom": 200.64,
+                "width": 89.05,
+                "height": 7.54
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-23",
+              "regionB": "HUD-26",
+              "intersection": {
+                "left": 727.29,
+                "top": 193.49,
+                "right": 821.86,
+                "bottom": 200.64,
+                "width": 94.57,
+                "height": 7.15
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-23",
+              "regionB": "HUD-27",
+              "intersection": {
+                "left": 731.36,
+                "top": 193.5,
+                "right": 821.86,
+                "bottom": 200.64,
+                "width": 90.5,
+                "height": 7.14
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-24",
+              "regionB": "HUD-25",
+              "intersection": {
+                "left": 732.81,
+                "top": 193.1,
+                "right": 821.56,
+                "bottom": 200.95,
+                "width": 88.75,
+                "height": 7.85
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-24",
+              "regionB": "HUD-26",
+              "intersection": {
+                "left": 727.29,
+                "top": 193.49,
+                "right": 821.56,
+                "bottom": 200.95,
+                "width": 94.27,
+                "height": 7.46
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-24",
+              "regionB": "HUD-27",
+              "intersection": {
+                "left": 731.36,
+                "top": 193.5,
+                "right": 821.56,
+                "bottom": 200.95,
+                "width": 90.2,
+                "height": 7.45
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-25",
+              "regionB": "HUD-26",
+              "intersection": {
+                "left": 732.81,
+                "top": 193.49,
+                "right": 824.56,
+                "bottom": 202.1,
+                "width": 91.75,
+                "height": 8.61
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-25",
+              "regionB": "HUD-27",
+              "intersection": {
+                "left": 732.81,
+                "top": 193.5,
+                "right": 828.64,
+                "bottom": 202.1,
+                "width": 95.83,
+                "height": 8.6
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-25",
+              "regionB": "HUD-28",
+              "intersection": {
+                "left": 735.99,
+                "top": 198.45,
+                "right": 830.08,
+                "bottom": 202.1,
+                "width": 94.09,
+                "height": 3.65
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-26",
+              "regionB": "HUD-27",
+              "intersection": {
+                "left": 731.36,
+                "top": 193.5,
+                "right": 824.56,
+                "bottom": 202.49,
+                "width": 93.2,
+                "height": 8.99
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-26",
+              "regionB": "HUD-28",
+              "intersection": {
+                "left": 735.99,
+                "top": 198.45,
+                "right": 824.56,
+                "bottom": 202.49,
+                "width": 88.57,
+                "height": 4.04
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-27",
+              "regionB": "HUD-28",
+              "intersection": {
+                "left": 735.99,
+                "top": 198.45,
+                "right": 828.64,
+                "bottom": 202.5,
+                "width": 92.65,
+                "height": 4.05
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-28",
+              "regionB": "HUD-29",
+              "intersection": {
+                "left": 735.99,
+                "top": 200.39,
+                "right": 826.98,
+                "bottom": 207.45,
+                "width": 90.99,
+                "height": 7.06
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-28",
+              "regionB": "HUD-30",
+              "intersection": {
+                "left": 735.99,
+                "top": 201.53,
+                "right": 830.7,
+                "bottom": 207.45,
+                "width": 94.71,
+                "height": 5.92
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-28",
+              "regionB": "HUD-31",
+              "intersection": {
+                "left": 735.99,
+                "top": 201.58,
+                "right": 832.48,
+                "bottom": 207.45,
+                "width": 96.49,
+                "height": 5.87
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-29",
+              "regionB": "HUD-30",
+              "intersection": {
+                "left": 733.43,
+                "top": 201.53,
+                "right": 826.98,
+                "bottom": 209.39,
+                "width": 93.55,
+                "height": 7.86
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-29",
+              "regionB": "HUD-31",
+              "intersection": {
+                "left": 735.21,
+                "top": 201.58,
+                "right": 826.98,
+                "bottom": 209.39,
+                "width": 91.77,
+                "height": 7.81
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-30",
+              "regionB": "HUD-31",
+              "intersection": {
+                "left": 735.21,
+                "top": 201.58,
+                "right": 830.7,
+                "bottom": 210.53,
+                "width": 95.49,
+                "height": 8.95
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-32",
+              "regionB": "HUD-33",
+              "intersection": {
+                "left": 305.22,
+                "top": 502.58,
+                "right": 655.22,
+                "bottom": 510.58,
+                "width": 350,
+                "height": 8
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-32",
+              "regionB": "HUD-34",
+              "intersection": {
+                "left": 297.62,
+                "top": 504.15,
+                "right": 647.62,
+                "bottom": 512.15,
+                "width": 350,
+                "height": 8
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-32",
+              "regionB": "HUD-35",
+              "intersection": {
+                "left": 301.09,
+                "top": 507.92,
+                "right": 651.09,
+                "bottom": 515.92,
+                "width": 350,
+                "height": 8
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-32",
+              "regionB": "HUD-36",
+              "intersection": {
+                "left": 307.37,
+                "top": 508.06,
+                "right": 657.37,
+                "bottom": 516.06,
+                "width": 350,
+                "height": 8
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-33",
+              "regionB": "HUD-34",
+              "intersection": {
+                "left": 305.22,
+                "top": 504.15,
+                "right": 647.62,
+                "bottom": 510.58,
+                "width": 342.4,
+                "height": 6.43
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-34",
+              "regionB": "HUD-35",
+              "intersection": {
+                "left": 301.09,
+                "top": 507.92,
+                "right": 647.62,
+                "bottom": 512.15,
+                "width": 346.53,
+                "height": 4.23
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-34",
+              "regionB": "HUD-36",
+              "intersection": {
+                "left": 307.37,
+                "top": 508.06,
+                "right": 647.62,
+                "bottom": 512.15,
+                "width": 340.25,
+                "height": 4.09
+              }
+            },
+            {
+              "type": "overlap",
+              "regionA": "HUD-35",
+              "regionB": "HUD-36",
+              "intersection": {
+                "left": 307.37,
+                "top": 508.06,
+                "right": 651.09,
+                "bottom": 515.92,
+                "width": 343.72,
+                "height": 7.86
+              }
+            }
+          ],
+          "recentDrawCalls": 294,
+          "recentTextDraws": 109,
+          "hudTextDraws": 109
+        }
+      },
+      "scenarioId": "failure-proof"
+    }
+  ]
+}
