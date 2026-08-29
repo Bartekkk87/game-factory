@@ -10,6 +10,10 @@ This index prevents dated strategy snapshots from silently competing for authori
 
 Machine-readable status and supersedes links live in `STATUS-CHAIN.json`.
 
+## Current Product experiment
+
+`LUMEN-CURRENT-A-B-CANARY-PLAN-2026-08-29.md` is the Owner-authorized experiment record for the current Lumen Current controlled model comparison. It freezes the already canonical Owner brief and orders the Product runs as OpenAI reference first, followed by the identical OpenRouter/GLM-5.3-Flash challenger, with no learning promotion or configuration mutation between runs. It does not supersede architecture authority.
+
 ## Superseded architecture-hardening documents
 
 The following remain valuable historical implementation evidence but no longer describe current open work:
