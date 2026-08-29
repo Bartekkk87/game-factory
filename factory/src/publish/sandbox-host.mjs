@@ -1,9 +1,23 @@
+import { createHash } from 'node:crypto';
+
 function escapeAttr(value) {
   return String(value ?? '')
     .replaceAll('&', '&amp;')
     .replaceAll('"', '&quot;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;');
+}
+
+function unescapeAttr(value) {
+  return String(value ?? '')
+    .replaceAll('&quot;', '"')
+    .replaceAll('&lt;', '<')
+    .replaceAll('&gt;', '>')
+    .replaceAll('&amp;', '&');
+}
+
+function sha256Text(value) {
+  return createHash('sha256').update(Buffer.from(String(value), 'utf8')).digest('hex');
 }
 
 export function assembleSandboxHost({ title, gameHtml, candidateSha }) {
@@ -25,6 +39,47 @@ export function assembleSandboxHost({ title, gameHtml, candidateSha }) {
 </body>
 </html>
 `;
+}
+
+export function materializeStaticSandboxHost({ hostHtml, payloadFilename = 'play.html' }) {
+  const source = String(hostHtml ?? '');
+  const filename = String(payloadFilename || '').trim();
+  if (!/^[A-Za-z0-9._/-]+$/.test(filename) || filename.startsWith('/') || filename.includes('..')) {
+    throw new Error('static sandbox payload filename must be a safe relative path');
+  }
+
+  const shaMatch = source.match(/data-verified-candidate-sha="([0-9a-f]{64})"/i);
+  const iframeMatch = source.match(/<iframe\b[^>]*\ssrcdoc="[^"]*"[^>]*><\/iframe>/i);
+  if (!shaMatch || !iframeMatch) return null;
+
+  if (!/\ssandbox="allow-scripts"(?:\s|>)/i.test(iframeMatch[0])) {
+    throw new Error('static sandbox materialization requires exact sandbox="allow-scripts" isolation');
+  }
+  if (/allow-same-origin/i.test(iframeMatch[0])) {
+    throw new Error('static sandbox materialization refuses allow-same-origin');
+  }
+
+  const srcdocMatch = iframeMatch[0].match(/\ssrcdoc="([^"]*)"/i);
+  if (!srcdocMatch) return null;
+  const payloadHtml = unescapeAttr(srcdocMatch[1]);
+  const expectedSha = shaMatch[1].toLowerCase();
+  const actualSha = sha256Text(payloadHtml);
+  if (actualSha !== expectedSha) {
+    throw new Error(`static sandbox payload SHA mismatch: expected ${expectedSha}, got ${actualSha}`);
+  }
+
+  const rewrittenIframe = iframeMatch[0].replace(
+    /\ssrcdoc="[^"]*"/i,
+    ` src="${escapeAttr(filename)}"`
+  );
+  const rewrittenHostHtml = source.replace(iframeMatch[0], rewrittenIframe);
+
+  return Object.freeze({
+    hostHtml: rewrittenHostHtml,
+    payloadHtml,
+    payloadFilename: filename,
+    verifiedPayloadSha256: actualSha
+  });
 }
 
 export function sandboxHostPolicy() {
