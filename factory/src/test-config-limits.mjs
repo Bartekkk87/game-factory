@@ -29,11 +29,17 @@ assert.equal(zero.maxPolishRounds, 0);
 assert.equal(zero.maxFreshRebuilds, 0);
 assert.equal(zero.minOverallScore, 0);
 assert.equal(zero.repairBudgetUsd, 0);
+assert.equal(zero.directorMaxTokens, 8192);
 
-const invalid = readLimits({ GF_MAX_REPAIR_CALLS: '-1', GF_BUDGET_USD: '0' });
+const configuredDirectorBudget = readLimits({ GF_DIRECTOR_MAX_TOKENS: '32768' }).limits;
+assert.equal(configuredDirectorBudget.directorMaxTokens, 32768);
+
+const invalid = readLimits({ GF_MAX_REPAIR_CALLS: '-1', GF_BUDGET_USD: '0', GF_DIRECTOR_MAX_TOKENS: '0' });
 assert.equal(invalid.limits.maxRepairCalls, 6);
 assert.equal(invalid.limits.budgetUsd, 10);
+assert.equal(invalid.limits.directorMaxTokens, 8192);
 assert.match(invalid.stderr, /ignoring invalid GF_MAX_REPAIR_CALLS/);
 assert.match(invalid.stderr, /ignoring invalid GF_BUDGET_USD/);
+assert.match(invalid.stderr, /ignoring invalid GF_DIRECTOR_MAX_TOKENS/);
 
 console.log('config limit selftest: PASS');
