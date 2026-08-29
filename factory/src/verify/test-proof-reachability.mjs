@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { compileProofPlan, validateProofPlan } from './proof-plan.mjs';
 
 const harborGdd = {
@@ -108,4 +109,19 @@ validValueChangeGdd.probePlan.requirementProbes.push({
 const validValueChangePlan = compileProofPlan({ gdd: validValueChangeGdd, baseSeconds: 12, maxProofSeconds: 125 });
 assert.equal(validValueChangePlan.pass, true, 'distinct value-change fields remain valid');
 
-console.log('proof reachability OK: typed timing authoritative, terminal scenarios independent, unknown states and unsatisfiable value-change probes fail closed before Engineer spend');
+const b3Fixture = JSON.parse(fs.readFileSync(
+  new URL('../../../examples/fixtures/regressions/lumen-glm-b3-unsatisfiable-probes.json', import.meta.url),
+  'utf8'
+));
+assert.equal(b3Fixture.schemaVersion, 'game-factory.historical-regression-fixture/v1');
+assert.equal(b3Fixture.origin.runId, '20260829-101836');
+assert.equal(b3Fixture.origin.workflowRunId, 33247502298);
+assert.match(b3Fixture.origin.evidenceCommitSha, /^[0-9a-f]{40}$/);
+assert(b3Fixture.origin.sourceRefs.every((ref) => /^[0-9a-f]{40}$/.test(ref.gitBlobSha)));
+const b3Plan = compileProofPlan({ gdd: b3Fixture.gdd, baseSeconds: 12, maxProofSeconds: 125 });
+assert.equal(b3Plan.pass, b3Fixture.expected.proofPlanPass, 'historical GLM B3 probe contract must fail closed before Engineer spend');
+for (const term of b3Fixture.expected.requiredErrorTerms) {
+  assert(b3Plan.errors.some((error) => error.includes(term)), `historical B3 regression must preserve error term: ${term}`);
+}
+
+console.log('proof reachability OK: typed timing authoritative, terminal scenarios independent, unknown states and unsatisfiable value-change probes fail closed before Engineer spend, GLM B3 regression pinned');
