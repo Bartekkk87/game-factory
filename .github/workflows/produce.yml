@@ -12,15 +12,63 @@ on:
         required: false
         default: '10'
       provider:
-        description: 'LLM Provider'
+        description: 'Globaler LLM Provider'
         required: false
         default: 'openai'
         type: choice
         options: [openai, openrouter]
+      model:
+        description: 'Optionaler globaler Modell-Slug'
+        required: false
+        default: ''
+      director_provider:
+        description: 'Optionaler Director Provider Override'
+        required: false
+        default: ''
+      director_model:
+        description: 'Optionaler Director Modell Override'
+        required: false
+        default: ''
+      engineer_provider:
+        description: 'Optionaler Engineer Provider Override'
+        required: false
+        default: ''
+      engineer_model:
+        description: 'Optionaler Engineer Modell Override'
+        required: false
+        default: ''
+      playtester_provider:
+        description: 'Optionaler Playtester Provider Override'
+        required: false
+        default: ''
+      playtester_model:
+        description: 'Optionaler Playtester Modell Override'
+        required: false
+        default: ''
+      auditor_provider:
+        description: 'Optionaler Auditor Provider Override'
+        required: false
+        default: ''
+      auditor_model:
+        description: 'Optionaler Auditor Modell Override'
+        required: false
+        default: ''
       director_max_tokens:
         description: 'Maximale Output-Tokens fuer Director/Director-Repair'
         required: false
-        default: '8192'
+        default: '32768'
+      engineer_max_tokens:
+        description: 'Maximale Output-Tokens fuer Engineer Build/Repair/Rebuild/Polish'
+        required: false
+        default: '65536'
+      playtester_max_tokens:
+        description: 'Maximale Output-Tokens fuer Playtester'
+        required: false
+        default: '32768'
+      auditor_max_tokens:
+        description: 'Maximale Output-Tokens fuer Auditor'
+        required: false
+        default: '16384'
   push:
     paths: ['ideas/**']
     branches: [main]
@@ -61,13 +109,25 @@ jobs:
           OPENAI_PRODUCTION: ${{ secrets.OPENAI_PRODUCTION }}
           OPENROUTER_PRODUCTION: ${{ secrets.OPENROUTER_PRODUCTION }}
           GF_LLM_PROVIDER: ${{ github.event.inputs.provider || 'openai' }}
+          GF_LLM_PROVIDER_DIRECTOR: ${{ github.event.inputs.director_provider || vars.GF_LLM_PROVIDER_DIRECTOR }}
+          GF_LLM_PROVIDER_ENGINEER: ${{ github.event.inputs.engineer_provider || vars.GF_LLM_PROVIDER_ENGINEER }}
+          GF_LLM_PROVIDER_PLAYTESTER: ${{ github.event.inputs.playtester_provider || vars.GF_LLM_PROVIDER_PLAYTESTER }}
+          GF_LLM_PROVIDER_AUDITOR: ${{ github.event.inputs.auditor_provider || vars.GF_LLM_PROVIDER_AUDITOR }}
         run: |
-          case "$GF_LLM_PROVIDER" in
-            openai) test -n "$OPENAI_PRODUCTION" || { echo "OPENAI_PRODUCTION is missing in repository secrets" >&2; exit 1; } ;;
-            openrouter) test -n "$OPENROUTER_PRODUCTION" || { echo "OPENROUTER_PRODUCTION is missing in repository secrets" >&2; exit 1; } ;;
-            *) echo "Provider $GF_LLM_PROVIDER has no approved Production credential lane" >&2; exit 1 ;;
-          esac
-          echo "Using provider: $GF_LLM_PROVIDER (isolated production credential lane)"
+          PROVIDERS=$(printf '%s\n' \
+            "$GF_LLM_PROVIDER" \
+            "$GF_LLM_PROVIDER_DIRECTOR" \
+            "$GF_LLM_PROVIDER_ENGINEER" \
+            "$GF_LLM_PROVIDER_PLAYTESTER" \
+            "$GF_LLM_PROVIDER_AUDITOR" | sed '/^$/d' | sort -u)
+          while IFS= read -r provider; do
+            case "$provider" in
+              openai) test -n "$OPENAI_PRODUCTION" || { echo "OPENAI_PRODUCTION is missing in repository secrets" >&2; exit 1; } ;;
+              openrouter) test -n "$OPENROUTER_PRODUCTION" || { echo "OPENROUTER_PRODUCTION is missing in repository secrets" >&2; exit 1; } ;;
+              *) echo "Provider $provider has no approved Production credential lane" >&2; exit 1 ;;
+            esac
+            echo "Using provider: $provider (isolated production credential lane)"
+          done <<< "$PROVIDERS"
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
@@ -99,12 +159,19 @@ jobs:
           OPENROUTER_PRODUCTION: ${{ secrets.OPENROUTER_PRODUCTION }}
           GF_LLM_PROVIDER: ${{ github.event.inputs.provider || 'openai' }}
           GF_LLM_LANE: production
-          GF_MODEL: ${{ vars.GF_MODEL }}
-          GF_MODEL_DIRECTOR: ${{ vars.GF_MODEL_DIRECTOR }}
-          GF_MODEL_ENGINEER: ${{ vars.GF_MODEL_ENGINEER }}
-          GF_MODEL_PLAYTESTER: ${{ vars.GF_MODEL_PLAYTESTER }}
-          GF_MODEL_AUDITOR: ${{ vars.GF_MODEL_AUDITOR }}
-          GF_DIRECTOR_MAX_TOKENS: ${{ github.event.inputs.director_max_tokens || '8192' }}
+          GF_MODEL: ${{ github.event.inputs.model || vars.GF_MODEL }}
+          GF_LLM_PROVIDER_DIRECTOR: ${{ github.event.inputs.director_provider || vars.GF_LLM_PROVIDER_DIRECTOR }}
+          GF_LLM_PROVIDER_ENGINEER: ${{ github.event.inputs.engineer_provider || vars.GF_LLM_PROVIDER_ENGINEER }}
+          GF_LLM_PROVIDER_PLAYTESTER: ${{ github.event.inputs.playtester_provider || vars.GF_LLM_PROVIDER_PLAYTESTER }}
+          GF_LLM_PROVIDER_AUDITOR: ${{ github.event.inputs.auditor_provider || vars.GF_LLM_PROVIDER_AUDITOR }}
+          GF_MODEL_DIRECTOR: ${{ github.event.inputs.director_model || vars.GF_MODEL_DIRECTOR }}
+          GF_MODEL_ENGINEER: ${{ github.event.inputs.engineer_model || vars.GF_MODEL_ENGINEER }}
+          GF_MODEL_PLAYTESTER: ${{ github.event.inputs.playtester_model || vars.GF_MODEL_PLAYTESTER }}
+          GF_MODEL_AUDITOR: ${{ github.event.inputs.auditor_model || vars.GF_MODEL_AUDITOR }}
+          GF_DIRECTOR_MAX_TOKENS: ${{ github.event.inputs.director_max_tokens || '32768' }}
+          GF_ENGINEER_MAX_TOKENS: ${{ github.event.inputs.engineer_max_tokens || '65536' }}
+          GF_PLAYTESTER_MAX_TOKENS: ${{ github.event.inputs.playtester_max_tokens || '32768' }}
+          GF_AUDITOR_MAX_TOKENS: ${{ github.event.inputs.auditor_max_tokens || '16384' }}
           GF_MAX_POLISH_ROUNDS: '3'
           GF_MIN_SCORE: '6.5'
           IDEA_B64: ${{ steps.prep.outputs.IDEA_B64 }}
