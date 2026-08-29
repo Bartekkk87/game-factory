@@ -17,6 +17,10 @@ on:
         default: 'openai'
         type: choice
         options: [openai, openrouter]
+      director_max_tokens:
+        description: 'Maximale Output-Tokens fuer Director/Director-Repair'
+        required: false
+        default: '8192'
   push:
     paths: ['ideas/**']
     branches: [main]
@@ -100,6 +104,7 @@ jobs:
           GF_MODEL_ENGINEER: ${{ vars.GF_MODEL_ENGINEER }}
           GF_MODEL_PLAYTESTER: ${{ vars.GF_MODEL_PLAYTESTER }}
           GF_MODEL_AUDITOR: ${{ vars.GF_MODEL_AUDITOR }}
+          GF_DIRECTOR_MAX_TOKENS: ${{ github.event.inputs.director_max_tokens || '8192' }}
           GF_MAX_POLISH_ROUNDS: '3'
           GF_MIN_SCORE: '6.5'
           IDEA_B64: ${{ steps.prep.outputs.IDEA_B64 }}
