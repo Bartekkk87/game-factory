@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { PATHS } from '../config.mjs';
+import { PATHS, ROOT } from '../config.mjs';
+import { verifyLessonPromotionProvenance } from '../learning/promotion-proof.mjs';
 
 export const LESSON_SCHEMA = 'learning-lesson/v2';
 export const MAX_LESSON_DIRECTIVE_CHARS = 800;
@@ -64,10 +65,12 @@ export function assertProductionLesson(lesson) {
   return { ...lesson };
 }
 
-function isSafeProductionLesson(lesson, role) {
+function isSafeProductionLesson(lesson, role, promotionRoot) {
   try {
     const validated = assertProductionLesson(lesson);
-    return validated.role === role;
+    if (validated.role !== role) return false;
+    verifyLessonPromotionProvenance(validated, { root: promotionRoot });
+    return true;
   } catch {
     return false;
   }
@@ -139,7 +142,7 @@ function mergeByKey(current, incoming, keyFor) {
   return [...map.values()];
 }
 
-export function createMemoryStore(file = DEFAULT_FILE) {
+export function createMemoryStore(file = DEFAULT_FILE, { promotionRoot = ROOT } = {}) {
   const updateMemory = (mutator) => {
     if (typeof mutator !== 'function') throw new Error('memory update requires a mutator function');
     const lock = acquireLock(file);
@@ -165,7 +168,7 @@ export function createMemoryStore(file = DEFAULT_FILE) {
 
   const lessonsFor = (role, limit = MAX_PRODUCTION_LESSONS) => loadMemory()
     .lessons
-    .filter((lesson) => isSafeProductionLesson(lesson, role))
+    .filter((lesson) => isSafeProductionLesson(lesson, role, promotionRoot))
     .slice(-Math.min(Math.max(0, Number(limit) || 0), MAX_PRODUCTION_LESSONS))
     .map((lesson) => ({
       schemaVersion: lesson.schemaVersion,
@@ -212,4 +215,4 @@ export const registerProduct = defaultStore.registerProduct;
 export const bumpStats = defaultStore.bumpStats;
 
 // No direct lesson-write helper exists. Active Production lessons are accepted
-// only when they carry the typed schema and merge-bound promotion provenance.
+// only when the typed schema and merge-bound promotion provenance both validate.

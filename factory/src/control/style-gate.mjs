@@ -9,7 +9,11 @@ export const CRITICAL_STYLE_FILES = Object.freeze([
   'factory/src/control/binary-evidence.mjs',
   'factory/src/learning/proposal-capability.mjs',
   'factory/src/learning/privileged-lifecycle.mjs',
+  'factory/src/learning/promotion-proof.mjs',
   'factory/src/memory/store.mjs',
+  'factory/src/llm/model-registry.mjs',
+  'factory/src/llm/client.mjs',
+  'factory/src/llm/router.mjs',
   'factory/src/evaluation/s5-benchmark-contract.mjs',
   'factory/src/evaluation/s5-benchmark-result.mjs',
   'factory/src/verify/proof-plan.mjs',
@@ -36,7 +40,9 @@ export function inspectCriticalStyle(file) {
     if (line.length > 180 && semicolons >= 4) denseLines++;
   });
   const nonEmpty = lines.filter((line) => line.trim()).length || 1;
-  if (denseLines / nonEmpty > 0.05) errors.push(`${file}: excessive compressed multi-statement lines (${denseLines}/${nonEmpty})`);
+  if (denseLines / nonEmpty > 0.05) {
+    errors.push(`${file}: excessive compressed multi-statement lines (${denseLines}/${nonEmpty})`);
+  }
   return errors;
 }
 
