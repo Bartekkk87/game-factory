@@ -1,0 +1,2208 @@
+{
+  "pass": false,
+  "status": "failed",
+  "contractSha256": "1ad6151de1a644d47585271aea2ff14ad220f4cb292f3410ec8270e3bf0f23a1",
+  "requirementIds": [
+    "MH-01",
+    "MH-02",
+    "MH-03",
+    "MH-04",
+    "MH-05",
+    "MH-06",
+    "MH-07",
+    "NG-01",
+    "NG-02",
+    "NG-03"
+  ],
+  "criteria": [
+    {
+      "requirementId": "MH-01",
+      "acceptanceId": "AC-MH-01",
+      "probeId": "PR-MH-01",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "player_moved",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": false,
+      "traceable": true,
+      "detail": "no value-changing player_moved event"
+    },
+    {
+      "requirementId": "MH-02",
+      "acceptanceId": "AC-MH-02",
+      "probeId": "PR-MH-02",
+      "kind": "score_change",
+      "declaredKind": "score_change",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": true,
+      "traceable": true,
+      "detail": "score changed across telemetry"
+    },
+    {
+      "requirementId": "MH-03",
+      "acceptanceId": "AC-MH-03",
+      "probeId": "PR-MH-03",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": true,
+      "traceable": true,
+      "detail": "state success reached in verifier scenarios (observed=won)"
+    },
+    {
+      "requirementId": "MH-04",
+      "acceptanceId": "AC-MH-04",
+      "probeId": "PR-MH-04",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": true,
+      "traceable": true,
+      "detail": "state failure reached in verifier scenarios (observed=gameover)"
+    },
+    {
+      "requirementId": "MH-05",
+      "acceptanceId": "AC-MH-05",
+      "probeId": "PR-MH-05",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "run_restarted",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": false,
+      "traceable": true,
+      "detail": "no value-changing run_restarted event"
+    },
+    {
+      "requirementId": "MH-06",
+      "acceptanceId": "AC-MH-06",
+      "probeId": "PR-MH-06",
+      "kind": "layout_no_overlap",
+      "declaredKind": "layout_no_overlap",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed-canvas-geometry",
+      "pass": true,
+      "traceable": true,
+      "detail": "independent canvas layout observed at early: 5 HUD regions, no overlap/out-of-bounds issues, with score progress"
+    },
+    {
+      "requirementId": "MH-07",
+      "acceptanceId": "AC-MH-07",
+      "probeId": "PR-MH-07",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "pressure_escalated",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": false,
+      "traceable": true,
+      "detail": "no value-changing pressure_escalated event"
+    },
+    {
+      "requirementId": "NG-01",
+      "acceptanceId": "AC-NG-01",
+      "probeId": "PR-NG-01",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "weapon_fired",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event weapon_fired absent"
+    },
+    {
+      "requirementId": "NG-02",
+      "acceptanceId": "AC-NG-02",
+      "probeId": "PR-NG-02",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "shop_opened",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event shop_opened absent"
+    },
+    {
+      "requirementId": "NG-03",
+      "acceptanceId": "AC-NG-03",
+      "probeId": "PR-NG-03",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "node_auto_activated",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event node_auto_activated absent"
+    }
+  ],
+  "failures": [
+    {
+      "requirementId": "MH-01",
+      "acceptanceId": "AC-MH-01",
+      "probeId": "PR-MH-01",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "player_moved",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": false,
+      "traceable": true,
+      "detail": "no value-changing player_moved event"
+    },
+    {
+      "requirementId": "MH-05",
+      "acceptanceId": "AC-MH-05",
+      "probeId": "PR-MH-05",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "run_restarted",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": false,
+      "traceable": true,
+      "detail": "no value-changing run_restarted event"
+    },
+    {
+      "requirementId": "MH-07",
+      "acceptanceId": "AC-MH-07",
+      "probeId": "PR-MH-07",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "pressure_escalated",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": false,
+      "traceable": true,
+      "detail": "no value-changing pressure_escalated event"
+    }
+  ],
+  "coverage": {
+    "evaluatedRequirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-03",
+      "MH-04",
+      "MH-05",
+      "MH-06",
+      "MH-07",
+      "NG-01",
+      "NG-02",
+      "NG-03"
+    ],
+    "harnessObservedRequirementIds": [
+      "MH-02",
+      "MH-03",
+      "MH-04",
+      "MH-06"
+    ],
+    "canvasGeometryRequirementIds": [
+      "MH-06"
+    ],
+    "generatedGameEventDependentRequirementIds": [
+      "MH-01",
+      "MH-05",
+      "MH-07",
+      "NG-01",
+      "NG-02",
+      "NG-03"
+    ],
+    "correlatedGeneratedGameEventRequirementIds": [],
+    "independentReviewClaimIds": [],
+    "independentReviewClaims": [],
+    "ambiguousUnknownClaimIdsExcluded": [],
+    "unstructuredBriefContentEvaluated": true,
+    "independentReviewRequired": false,
+    "scope": "Full-brief Product Fidelity routes structured MH/NG requirements to deterministic verifier evidence and every concrete non-ambiguous descriptive UN claim to mandatory independent screenshot/experience review. Ambiguous maybe/optional unknowns remain explicitly non-binding. Independent-review claims are not treated as deterministic PASS and cannot be waived by generated-game self-attestation."
+  },
+  "observedEvents": [
+    {
+      "seq": 18,
+      "type": "player_moved",
+      "time": 1.167,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 782,
+        "playerY": 270,
+        "before": 757,
+        "after": 782,
+        "playerX_before": 757,
+        "playerX_after": 782,
+        "value": 782
+      }
+    },
+    {
+      "seq": 19,
+      "type": "player_moved",
+      "time": 1.25,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 807,
+        "playerY": 270,
+        "before": 782,
+        "after": 807,
+        "playerX_before": 782,
+        "playerX_after": 807,
+        "value": 807
+      }
+    },
+    {
+      "seq": 20,
+      "type": "player_moved",
+      "time": 1.333,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 832,
+        "playerY": 270,
+        "before": 807,
+        "after": 832,
+        "playerX_before": 807,
+        "playerX_after": 832,
+        "value": 832
+      }
+    },
+    {
+      "seq": 21,
+      "type": "player_moved",
+      "time": 1.417,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 857,
+        "playerY": 270,
+        "before": 832,
+        "after": 857,
+        "playerX_before": 832,
+        "playerX_after": 857,
+        "value": 857
+      }
+    },
+    {
+      "seq": 22,
+      "type": "player_moved",
+      "time": 1.5,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 882,
+        "playerY": 270,
+        "before": 857,
+        "after": 882,
+        "playerX_before": 857,
+        "playerX_after": 882,
+        "value": 882
+      }
+    },
+    {
+      "seq": 23,
+      "type": "player_moved",
+      "time": 1.583,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 907,
+        "playerY": 270,
+        "before": 882,
+        "after": 907,
+        "playerX_before": 882,
+        "playerX_after": 907,
+        "value": 907
+      }
+    },
+    {
+      "seq": 24,
+      "type": "player_moved",
+      "time": 1.667,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 932,
+        "playerY": 270,
+        "before": 907,
+        "after": 932,
+        "playerX_before": 907,
+        "playerX_after": 932,
+        "value": 932
+      }
+    },
+    {
+      "seq": 25,
+      "type": "player_moved",
+      "time": 1.75,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 934,
+        "playerY": 270,
+        "before": 932,
+        "after": 934,
+        "playerX_before": 932,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 26,
+      "type": "player_moved",
+      "time": 3.383,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 934,
+        "playerY": 271,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 27,
+      "type": "player_moved",
+      "time": 3.467,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 934,
+        "playerY": 281,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 28,
+      "type": "player_moved",
+      "time": 3.55,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 934,
+        "playerY": 299,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 29,
+      "type": "player_moved",
+      "time": 3.633,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 934,
+        "playerY": 321,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 30,
+      "type": "player_moved",
+      "time": 3.716,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 934,
+        "playerY": 344,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 31,
+      "type": "pressure_escalated",
+      "time": 3.75,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "hazardSpeed": 1.35,
+        "before": 1,
+        "after": 1.35,
+        "hazardSpeed_before": 1,
+        "hazardSpeed_after": 1.35,
+        "value": 1.35
+      }
+    },
+    {
+      "seq": 32,
+      "type": "score_changed",
+      "time": 3.75,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 100,
+        "after": 200,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 33,
+      "type": "player_moved",
+      "time": 3.8,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 934,
+        "playerY": 368,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 34,
+      "type": "player_moved",
+      "time": 3.883,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 934,
+        "playerY": 393,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 35,
+      "type": "player_moved",
+      "time": 3.966,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 934,
+        "playerY": 418,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 36,
+      "type": "player_moved",
+      "time": 4.05,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 934,
+        "playerY": 443,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 37,
+      "type": "player_moved",
+      "time": 4.133,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 934,
+        "playerY": 467,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 38,
+      "type": "player_moved",
+      "time": 4.216,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 934,
+        "playerY": 492,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 39,
+      "type": "player_moved",
+      "time": 4.3,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 934,
+        "playerY": 514,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 40,
+      "type": "player_moved",
+      "time": 6.65,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 933,
+        "playerY": 514,
+        "before": 934,
+        "after": 933,
+        "playerX_before": 934,
+        "playerX_after": 933,
+        "value": 933
+      }
+    },
+    {
+      "seq": 41,
+      "type": "player_moved",
+      "time": 6.733,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 923,
+        "playerY": 514,
+        "before": 933,
+        "after": 923,
+        "playerX_before": 933,
+        "playerX_after": 923,
+        "value": 923
+      }
+    },
+    {
+      "seq": 42,
+      "type": "player_moved",
+      "time": 6.816,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 905,
+        "playerY": 514,
+        "before": 923,
+        "after": 905,
+        "playerX_before": 923,
+        "playerX_after": 905,
+        "value": 905
+      }
+    },
+    {
+      "seq": 43,
+      "type": "player_moved",
+      "time": 6.9,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 883,
+        "playerY": 514,
+        "before": 905,
+        "after": 883,
+        "playerX_before": 905,
+        "playerX_after": 883,
+        "value": 883
+      }
+    },
+    {
+      "seq": 44,
+      "type": "player_moved",
+      "time": 6.983,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 860,
+        "playerY": 514,
+        "before": 883,
+        "after": 860,
+        "playerX_before": 883,
+        "playerX_after": 860,
+        "value": 860
+      }
+    },
+    {
+      "seq": 45,
+      "type": "player_moved",
+      "time": 7.066,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 836,
+        "playerY": 514,
+        "before": 860,
+        "after": 836,
+        "playerX_before": 860,
+        "playerX_after": 836,
+        "value": 836
+      }
+    },
+    {
+      "seq": 46,
+      "type": "player_moved",
+      "time": 7.15,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 811,
+        "playerY": 514,
+        "before": 836,
+        "after": 811,
+        "playerX_before": 836,
+        "playerX_after": 811,
+        "value": 811
+      }
+    },
+    {
+      "seq": 47,
+      "type": "player_moved",
+      "time": 7.233,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 786,
+        "playerY": 514,
+        "before": 811,
+        "after": 786,
+        "playerX_before": 811,
+        "playerX_after": 786,
+        "value": 786
+      }
+    },
+    {
+      "seq": 48,
+      "type": "player_moved",
+      "time": 7.316,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 761,
+        "playerY": 514,
+        "before": 786,
+        "after": 761,
+        "playerX_before": 786,
+        "playerX_after": 761,
+        "value": 761
+      }
+    },
+    {
+      "seq": 49,
+      "type": "player_moved",
+      "time": 7.4,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 737,
+        "playerY": 514,
+        "before": 761,
+        "after": 737,
+        "playerX_before": 761,
+        "playerX_after": 737,
+        "value": 737
+      }
+    },
+    {
+      "seq": 50,
+      "type": "player_moved",
+      "time": 7.483,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 712,
+        "playerY": 514,
+        "before": 737,
+        "after": 712,
+        "playerX_before": 737,
+        "playerX_after": 712,
+        "value": 712
+      }
+    },
+    {
+      "seq": 51,
+      "type": "player_moved",
+      "time": 7.566,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 687,
+        "playerY": 514,
+        "before": 712,
+        "after": 687,
+        "playerX_before": 712,
+        "playerX_after": 687,
+        "value": 687
+      }
+    },
+    {
+      "seq": 52,
+      "type": "player_moved",
+      "time": 7.65,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 662,
+        "playerY": 514,
+        "before": 687,
+        "after": 662,
+        "playerX_before": 687,
+        "playerX_after": 662,
+        "value": 662
+      }
+    },
+    {
+      "seq": 53,
+      "type": "player_moved",
+      "time": 7.733,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 637,
+        "playerY": 514,
+        "before": 662,
+        "after": 637,
+        "playerX_before": 662,
+        "playerX_after": 637,
+        "value": 637
+      }
+    },
+    {
+      "seq": 54,
+      "type": "player_moved",
+      "time": 7.816,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 612,
+        "playerY": 514,
+        "before": 637,
+        "after": 612,
+        "playerX_before": 637,
+        "playerX_after": 612,
+        "value": 612
+      }
+    },
+    {
+      "seq": 55,
+      "type": "player_moved",
+      "time": 7.9,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 587,
+        "playerY": 514,
+        "before": 612,
+        "after": 587,
+        "playerX_before": 612,
+        "playerX_after": 587,
+        "value": 587
+      }
+    },
+    {
+      "seq": 56,
+      "type": "player_moved",
+      "time": 7.983,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 562,
+        "playerY": 514,
+        "before": 587,
+        "after": 562,
+        "playerX_before": 587,
+        "playerX_after": 562,
+        "value": 562
+      }
+    },
+    {
+      "seq": 57,
+      "type": "player_moved",
+      "time": 8.066,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 537,
+        "playerY": 514,
+        "before": 562,
+        "after": 537,
+        "playerX_before": 562,
+        "playerX_after": 537,
+        "value": 537
+      }
+    },
+    {
+      "seq": 58,
+      "type": "player_moved",
+      "time": 8.15,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 512,
+        "playerY": 514,
+        "before": 537,
+        "after": 512,
+        "playerX_before": 537,
+        "playerX_after": 512,
+        "value": 512
+      }
+    },
+    {
+      "seq": 59,
+      "type": "player_moved",
+      "time": 8.233,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 487,
+        "playerY": 514,
+        "before": 512,
+        "after": 487,
+        "playerX_before": 512,
+        "playerX_after": 487,
+        "value": 487
+      }
+    },
+    {
+      "seq": 60,
+      "type": "player_moved",
+      "time": 8.316,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 462,
+        "playerY": 514,
+        "before": 487,
+        "after": 462,
+        "playerX_before": 487,
+        "playerX_after": 462,
+        "value": 462
+      }
+    },
+    {
+      "seq": 61,
+      "type": "player_moved",
+      "time": 8.4,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 437,
+        "playerY": 514,
+        "before": 462,
+        "after": 437,
+        "playerX_before": 462,
+        "playerX_after": 437,
+        "value": 437
+      }
+    },
+    {
+      "seq": 62,
+      "type": "player_moved",
+      "time": 8.483,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 412,
+        "playerY": 514,
+        "before": 437,
+        "after": 412,
+        "playerX_before": 437,
+        "playerX_after": 412,
+        "value": 412
+      }
+    },
+    {
+      "seq": 63,
+      "type": "player_moved",
+      "time": 8.566,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 387,
+        "playerY": 514,
+        "before": 412,
+        "after": 387,
+        "playerX_before": 412,
+        "playerX_after": 387,
+        "value": 387
+      }
+    },
+    {
+      "seq": 64,
+      "type": "player_moved",
+      "time": 8.65,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 362,
+        "playerY": 514,
+        "before": 387,
+        "after": 362,
+        "playerX_before": 387,
+        "playerX_after": 362,
+        "value": 362
+      }
+    },
+    {
+      "seq": 65,
+      "type": "player_moved",
+      "time": 8.733,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 337,
+        "playerY": 514,
+        "before": 362,
+        "after": 337,
+        "playerX_before": 362,
+        "playerX_after": 337,
+        "value": 337
+      }
+    },
+    {
+      "seq": 66,
+      "type": "player_moved",
+      "time": 8.816,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 312,
+        "playerY": 514,
+        "before": 337,
+        "after": 312,
+        "playerX_before": 337,
+        "playerX_after": 312,
+        "value": 312
+      }
+    },
+    {
+      "seq": 67,
+      "type": "pressure_escalated",
+      "time": 8.833,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "hazardSpeed": 1.7,
+        "before": 1.35,
+        "after": 1.7,
+        "hazardSpeed_before": 1.35,
+        "hazardSpeed_after": 1.7,
+        "value": 1.7
+      }
+    },
+    {
+      "seq": 68,
+      "type": "score_changed",
+      "time": 8.833,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 200,
+        "after": 300,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 69,
+      "type": "state_reached",
+      "time": 8.833,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "state": "success"
+      }
+    },
+    {
+      "seq": 70,
+      "type": "game_won",
+      "time": 8.833,
+      "state": "won",
+      "score": 300,
+      "data": {
+        "from": "playing",
+        "to": "won"
+      }
+    },
+    {
+      "seq": 1,
+      "type": "run_restarted",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "runCount": 1,
+        "before": 0,
+        "after": 1,
+        "runCount_before": 0,
+        "runCount_after": 1,
+        "value": 1
+      }
+    },
+    {
+      "seq": 2,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 3,
+      "type": "player_moved",
+      "time": 0.083,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "playerX": 482,
+        "playerY": 270,
+        "before": 480,
+        "after": 482,
+        "playerX_before": 480,
+        "playerX_after": 482,
+        "value": 482
+      }
+    },
+    {
+      "seq": 4,
+      "type": "player_moved",
+      "time": 0.167,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "playerX": 494,
+        "playerY": 270,
+        "before": 482,
+        "after": 494,
+        "playerX_before": 482,
+        "playerX_after": 494,
+        "value": 494
+      }
+    },
+    {
+      "seq": 5,
+      "type": "player_moved",
+      "time": 0.25,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "playerX": 513,
+        "playerY": 270,
+        "before": 494,
+        "after": 513,
+        "playerX_before": 494,
+        "playerX_after": 513,
+        "value": 513
+      }
+    },
+    {
+      "seq": 6,
+      "type": "player_moved",
+      "time": 0.333,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "playerX": 535,
+        "playerY": 270,
+        "before": 513,
+        "after": 535,
+        "playerX_before": 513,
+        "playerX_after": 535,
+        "value": 535
+      }
+    },
+    {
+      "seq": 7,
+      "type": "player_moved",
+      "time": 0.417,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "playerX": 559,
+        "playerY": 270,
+        "before": 535,
+        "after": 559,
+        "playerX_before": 535,
+        "playerX_after": 559,
+        "value": 559
+      }
+    },
+    {
+      "seq": 8,
+      "type": "player_moved",
+      "time": 0.5,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "playerX": 583,
+        "playerY": 270,
+        "before": 559,
+        "after": 583,
+        "playerX_before": 559,
+        "playerX_after": 583,
+        "value": 583
+      }
+    },
+    {
+      "seq": 9,
+      "type": "player_moved",
+      "time": 0.583,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "playerX": 608,
+        "playerY": 270,
+        "before": 583,
+        "after": 608,
+        "playerX_before": 583,
+        "playerX_after": 608,
+        "value": 608
+      }
+    },
+    {
+      "seq": 10,
+      "type": "player_moved",
+      "time": 0.667,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "playerX": 633,
+        "playerY": 270,
+        "before": 608,
+        "after": 633,
+        "playerX_before": 608,
+        "playerX_after": 633,
+        "value": 633
+      }
+    },
+    {
+      "seq": 11,
+      "type": "player_moved",
+      "time": 0.75,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "playerX": 658,
+        "playerY": 270,
+        "before": 633,
+        "after": 658,
+        "playerX_before": 633,
+        "playerX_after": 658,
+        "value": 658
+      }
+    },
+    {
+      "seq": 12,
+      "type": "player_moved",
+      "time": 0.833,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "playerX": 683,
+        "playerY": 270,
+        "before": 658,
+        "after": 683,
+        "playerX_before": 658,
+        "playerX_after": 683,
+        "value": 683
+      }
+    },
+    {
+      "seq": 13,
+      "type": "pressure_escalated",
+      "time": 0.833,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "hazardSpeed": 1,
+        "before": 1,
+        "after": 1,
+        "hazardSpeed_before": 1,
+        "hazardSpeed_after": 1,
+        "value": 1
+      }
+    },
+    {
+      "seq": 14,
+      "type": "score_changed",
+      "time": 0.833,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 0,
+        "after": 100,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 15,
+      "type": "player_moved",
+      "time": 0.917,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 708,
+        "playerY": 270,
+        "before": 683,
+        "after": 708,
+        "playerX_before": 683,
+        "playerX_after": 708,
+        "value": 708
+      }
+    },
+    {
+      "seq": 16,
+      "type": "player_moved",
+      "time": 1,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 733,
+        "playerY": 270,
+        "before": 708,
+        "after": 733,
+        "playerX_before": 708,
+        "playerX_after": 733,
+        "value": 733
+      }
+    },
+    {
+      "seq": 17,
+      "type": "player_moved",
+      "time": 1.083,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 758,
+        "playerY": 270,
+        "before": 733,
+        "after": 758,
+        "playerX_before": 733,
+        "playerX_after": 758,
+        "value": 758
+      }
+    },
+    {
+      "seq": 18,
+      "type": "player_moved",
+      "time": 1.167,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 783,
+        "playerY": 270,
+        "before": 758,
+        "after": 783,
+        "playerX_before": 758,
+        "playerX_after": 783,
+        "value": 783
+      }
+    },
+    {
+      "seq": 19,
+      "type": "player_moved",
+      "time": 1.25,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 808,
+        "playerY": 270,
+        "before": 783,
+        "after": 808,
+        "playerX_before": 783,
+        "playerX_after": 808,
+        "value": 808
+      }
+    },
+    {
+      "seq": 20,
+      "type": "player_moved",
+      "time": 1.333,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 832,
+        "playerY": 270,
+        "before": 808,
+        "after": 832,
+        "playerX_before": 808,
+        "playerX_after": 832,
+        "value": 832
+      }
+    },
+    {
+      "seq": 21,
+      "type": "player_moved",
+      "time": 1.417,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 858,
+        "playerY": 270,
+        "before": 832,
+        "after": 858,
+        "playerX_before": 832,
+        "playerX_after": 858,
+        "value": 858
+      }
+    },
+    {
+      "seq": 22,
+      "type": "player_moved",
+      "time": 1.5,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 883,
+        "playerY": 270,
+        "before": 858,
+        "after": 883,
+        "playerX_before": 858,
+        "playerX_after": 883,
+        "value": 883
+      }
+    },
+    {
+      "seq": 23,
+      "type": "player_moved",
+      "time": 1.583,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 907,
+        "playerY": 270,
+        "before": 883,
+        "after": 907,
+        "playerX_before": 883,
+        "playerX_after": 907,
+        "value": 907
+      }
+    },
+    {
+      "seq": 24,
+      "type": "player_moved",
+      "time": 1.667,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 933,
+        "playerY": 270,
+        "before": 907,
+        "after": 933,
+        "playerX_before": 907,
+        "playerX_after": 933,
+        "value": 933
+      }
+    },
+    {
+      "seq": 25,
+      "type": "player_moved",
+      "time": 1.75,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 934,
+        "playerY": 270,
+        "before": 933,
+        "after": 934,
+        "playerX_before": 933,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 26,
+      "type": "player_moved",
+      "time": 3.383,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 934,
+        "playerY": 271,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 27,
+      "type": "player_moved",
+      "time": 3.467,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 934,
+        "playerY": 281,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 28,
+      "type": "player_moved",
+      "time": 3.55,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 934,
+        "playerY": 299,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 29,
+      "type": "player_moved",
+      "time": 3.633,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 934,
+        "playerY": 321,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 30,
+      "type": "player_moved",
+      "time": 3.717,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "playerX": 934,
+        "playerY": 344,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 31,
+      "type": "pressure_escalated",
+      "time": 3.767,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "hazardSpeed": 1.35,
+        "before": 1,
+        "after": 1.35,
+        "hazardSpeed_before": 1,
+        "hazardSpeed_after": 1.35,
+        "value": 1.35
+      }
+    },
+    {
+      "seq": 32,
+      "type": "score_changed",
+      "time": 3.767,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 100,
+        "after": 200,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 33,
+      "type": "player_moved",
+      "time": 3.8,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 934,
+        "playerY": 368,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 34,
+      "type": "player_moved",
+      "time": 3.883,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 934,
+        "playerY": 393,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 35,
+      "type": "player_moved",
+      "time": 3.967,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 934,
+        "playerY": 418,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 36,
+      "type": "player_moved",
+      "time": 4.05,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 934,
+        "playerY": 443,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 37,
+      "type": "player_moved",
+      "time": 4.133,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 934,
+        "playerY": 468,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 38,
+      "type": "player_moved",
+      "time": 4.217,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 934,
+        "playerY": 493,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 39,
+      "type": "player_moved",
+      "time": 4.3,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 934,
+        "playerY": 514,
+        "before": 934,
+        "after": 934,
+        "playerX_before": 934,
+        "playerX_after": 934,
+        "value": 934
+      }
+    },
+    {
+      "seq": 40,
+      "type": "player_moved",
+      "time": 6.7,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 933,
+        "playerY": 514,
+        "before": 934,
+        "after": 933,
+        "playerX_before": 934,
+        "playerX_after": 933,
+        "value": 933
+      }
+    },
+    {
+      "seq": 41,
+      "type": "player_moved",
+      "time": 6.783,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 923,
+        "playerY": 514,
+        "before": 933,
+        "after": 923,
+        "playerX_before": 933,
+        "playerX_after": 923,
+        "value": 923
+      }
+    },
+    {
+      "seq": 42,
+      "type": "player_moved",
+      "time": 6.867,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 905,
+        "playerY": 514,
+        "before": 923,
+        "after": 905,
+        "playerX_before": 923,
+        "playerX_after": 905,
+        "value": 905
+      }
+    },
+    {
+      "seq": 43,
+      "type": "player_moved",
+      "time": 6.95,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 883,
+        "playerY": 514,
+        "before": 905,
+        "after": 883,
+        "playerX_before": 905,
+        "playerX_after": 883,
+        "value": 883
+      }
+    },
+    {
+      "seq": 44,
+      "type": "player_moved",
+      "time": 7.033,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 860,
+        "playerY": 514,
+        "before": 883,
+        "after": 860,
+        "playerX_before": 883,
+        "playerX_after": 860,
+        "value": 860
+      }
+    },
+    {
+      "seq": 45,
+      "type": "player_moved",
+      "time": 7.117,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 836,
+        "playerY": 514,
+        "before": 860,
+        "after": 836,
+        "playerX_before": 860,
+        "playerX_after": 836,
+        "value": 836
+      }
+    },
+    {
+      "seq": 46,
+      "type": "player_moved",
+      "time": 7.2,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 811,
+        "playerY": 514,
+        "before": 836,
+        "after": 811,
+        "playerX_before": 836,
+        "playerX_after": 811,
+        "value": 811
+      }
+    },
+    {
+      "seq": 47,
+      "type": "player_moved",
+      "time": 7.283,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 786,
+        "playerY": 514,
+        "before": 811,
+        "after": 786,
+        "playerX_before": 811,
+        "playerX_after": 786,
+        "value": 786
+      }
+    },
+    {
+      "seq": 48,
+      "type": "player_moved",
+      "time": 7.367,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 761,
+        "playerY": 514,
+        "before": 786,
+        "after": 761,
+        "playerX_before": 786,
+        "playerX_after": 761,
+        "value": 761
+      }
+    },
+    {
+      "seq": 49,
+      "type": "player_moved",
+      "time": 7.45,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 736,
+        "playerY": 514,
+        "before": 761,
+        "after": 736,
+        "playerX_before": 761,
+        "playerX_after": 736,
+        "value": 736
+      }
+    },
+    {
+      "seq": 50,
+      "type": "player_moved",
+      "time": 7.533,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 711,
+        "playerY": 514,
+        "before": 736,
+        "after": 711,
+        "playerX_before": 736,
+        "playerX_after": 711,
+        "value": 711
+      }
+    },
+    {
+      "seq": 51,
+      "type": "player_moved",
+      "time": 7.617,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 686,
+        "playerY": 514,
+        "before": 711,
+        "after": 686,
+        "playerX_before": 711,
+        "playerX_after": 686,
+        "value": 686
+      }
+    },
+    {
+      "seq": 52,
+      "type": "player_moved",
+      "time": 7.7,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 661,
+        "playerY": 514,
+        "before": 686,
+        "after": 661,
+        "playerX_before": 686,
+        "playerX_after": 661,
+        "value": 661
+      }
+    },
+    {
+      "seq": 53,
+      "type": "player_moved",
+      "time": 7.783,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 637,
+        "playerY": 514,
+        "before": 661,
+        "after": 637,
+        "playerX_before": 661,
+        "playerX_after": 637,
+        "value": 637
+      }
+    },
+    {
+      "seq": 54,
+      "type": "player_moved",
+      "time": 7.867,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 612,
+        "playerY": 514,
+        "before": 637,
+        "after": 612,
+        "playerX_before": 637,
+        "playerX_after": 612,
+        "value": 612
+      }
+    },
+    {
+      "seq": 55,
+      "type": "player_moved",
+      "time": 7.95,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 586,
+        "playerY": 514,
+        "before": 612,
+        "after": 586,
+        "playerX_before": 612,
+        "playerX_after": 586,
+        "value": 586
+      }
+    },
+    {
+      "seq": 56,
+      "type": "player_moved",
+      "time": 8.033,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 561,
+        "playerY": 514,
+        "before": 586,
+        "after": 561,
+        "playerX_before": 586,
+        "playerX_after": 561,
+        "value": 561
+      }
+    },
+    {
+      "seq": 57,
+      "type": "player_moved",
+      "time": 8.117,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 537,
+        "playerY": 514,
+        "before": 561,
+        "after": 537,
+        "playerX_before": 561,
+        "playerX_after": 537,
+        "value": 537
+      }
+    },
+    {
+      "seq": 58,
+      "type": "player_moved",
+      "time": 8.2,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 512,
+        "playerY": 514,
+        "before": 537,
+        "after": 512,
+        "playerX_before": 537,
+        "playerX_after": 512,
+        "value": 512
+      }
+    },
+    {
+      "seq": 59,
+      "type": "player_moved",
+      "time": 8.283,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 487,
+        "playerY": 514,
+        "before": 512,
+        "after": 487,
+        "playerX_before": 512,
+        "playerX_after": 487,
+        "value": 487
+      }
+    },
+    {
+      "seq": 60,
+      "type": "player_moved",
+      "time": 8.366,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 462,
+        "playerY": 514,
+        "before": 487,
+        "after": 462,
+        "playerX_before": 487,
+        "playerX_after": 462,
+        "value": 462
+      }
+    },
+    {
+      "seq": 61,
+      "type": "player_moved",
+      "time": 8.45,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 437,
+        "playerY": 514,
+        "before": 462,
+        "after": 437,
+        "playerX_before": 462,
+        "playerX_after": 437,
+        "value": 437
+      }
+    },
+    {
+      "seq": 62,
+      "type": "player_moved",
+      "time": 8.533,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 412,
+        "playerY": 514,
+        "before": 437,
+        "after": 412,
+        "playerX_before": 437,
+        "playerX_after": 412,
+        "value": 412
+      }
+    },
+    {
+      "seq": 63,
+      "type": "player_moved",
+      "time": 8.616,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 387,
+        "playerY": 514,
+        "before": 412,
+        "after": 387,
+        "playerX_before": 412,
+        "playerX_after": 387,
+        "value": 387
+      }
+    },
+    {
+      "seq": 64,
+      "type": "player_moved",
+      "time": 8.7,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 362,
+        "playerY": 514,
+        "before": 387,
+        "after": 362,
+        "playerX_before": 387,
+        "playerX_after": 362,
+        "value": 362
+      }
+    },
+    {
+      "seq": 65,
+      "type": "player_moved",
+      "time": 8.783,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "playerX": 336,
+        "playerY": 514,
+        "before": 362,
+        "after": 336,
+        "playerX_before": 362,
+        "playerX_after": 336,
+        "value": 336
+      }
+    },
+    {
+      "seq": 66,
+      "type": "pressure_escalated",
+      "time": 8.85,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "hazardSpeed": 1.7,
+        "before": 1.35,
+        "after": 1.7,
+        "hazardSpeed_before": 1.35,
+        "hazardSpeed_after": 1.7,
+        "value": 1.7
+      }
+    },
+    {
+      "seq": 67,
+      "type": "score_changed",
+      "time": 8.85,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 200,
+        "after": 300,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 68,
+      "type": "state_reached",
+      "time": 8.85,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "state": "success"
+      }
+    },
+    {
+      "seq": 69,
+      "type": "game_won",
+      "time": 8.85,
+      "state": "won",
+      "score": 300,
+      "data": {
+        "from": "playing",
+        "to": "won"
+      }
+    },
+    {
+      "seq": 70,
+      "type": "run_restarted",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "runCount": 2,
+        "before": 1,
+        "after": 2,
+        "runCount_before": 1,
+        "runCount_after": 2,
+        "value": 2
+      }
+    },
+    {
+      "seq": 1,
+      "type": "run_restarted",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "runCount": 1,
+        "before": 0,
+        "after": 1,
+        "runCount_before": 0,
+        "runCount_after": 1,
+        "value": 1
+      }
+    },
+    {
+      "seq": 2,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 3,
+      "type": "state_reached",
+      "time": 22.232,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "state": "failure"
+      }
+    },
+    {
+      "seq": 4,
+      "type": "game_over",
+      "time": 22.232,
+      "state": "gameover",
+      "score": 0,
+      "data": {
+        "from": "playing",
+        "to": "gameover"
+      }
+    },
+    {
+      "seq": 5,
+      "type": "run_restarted",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "runCount": 2,
+        "before": 1,
+        "after": 2,
+        "runCount_before": 1,
+        "runCount_after": 2,
+        "value": 2
+      }
+    }
+  ]
+}

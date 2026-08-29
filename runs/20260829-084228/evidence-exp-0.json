@@ -1,0 +1,45 @@
+{
+  "fidelityVerdict": "PASS",
+  "missingRequirements": [],
+  "fidelityCritique": [
+    "No mandatory independent full-brief UN claims were supplied for screenshot/telemetry adjudication. Deterministic product-fidelity authority reports all MH and NG criteria passed."
+  ],
+  "independentClaimReviews": [],
+  "scores": {
+    "visuals": 6.5,
+    "uiClarity": 7,
+    "funProxy": 6.5,
+    "performance": 10
+  },
+  "overall": 7.1,
+  "critique": [
+    "The screenshots present a coherent dark teal bioluminescent palette, translucent glass-like vertical panes, luminous circuit paths, and distinct cyan/lime node rings; this is materially more authored than a flat default playfield.",
+    "Objective readability is strong: SIGNALS progresses visibly from 1/3 to 2/3 to 3/3, the score rises from 100 to 300 to 600, and the STORM PRESSURE meter remains perimeter-mounted.",
+    "The central success presentation is clear and consequential: “GARDEN RESTORED,” final score, and best score are prominent while the completed three-signal HUD remains visible behind it.",
+    "The live frames communicate guided traversal via bright connecting paths and NEXT SIGNAL labels, but hazards read mostly as sparse purple ribbon panels and the playfield still feels somewhat diagrammatic rather than like a dense botanical conservatory.",
+    "Top HUD hierarchy is slightly muddy: the large centered score duplicates the right SCORE panel, and the first two frames visually crowd SCORE/BEST values. The victory panel says “Click / press R to retry,” which is inconsistent with the on-screen primary control language using Space/Enter.",
+    "Performance is excellent in the supplied metrics: 61 FPS overall and 60 FPS at the gameplay and terminal snapshots."
+  ],
+  "priorityFixes": [
+    "Unify score presentation: retain one primary score location during play or clearly style the centered number as a short-lived score-gain popup; ensure SCORE and BEST never visually collide.",
+    "Increase environmental specificity and hazard readability: replace or augment the sparse purple ribbon rectangles with more clearly shaped storm currents and add visible botanical circuit/vine, water-reflection, and restoration-state detail across the arena.",
+    "Make terminal restart guidance explicitly include Enter, matching the required restart behavior and the game’s control vocabulary; keep any Click/R affordances only as secondary options."
+  ],
+  "reviewProvenance": {
+    "reviewerRole": "playtester",
+    "operation": "playtester",
+    "provider": "openai",
+    "requestedModel": "gpt-5.6-terra",
+    "actualModel": "gpt-5.6-terra",
+    "credentialLane": "production",
+    "stage": "post-build-independent-evidence-review",
+    "independenceBasis": "separate stateless reviewer call over captured screenshots and harness evidence; model diversity is not required"
+  },
+  "fullBriefCoverage": {
+    "independentReviewClaimIds": [],
+    "reviewed": false,
+    "failedClaimIds": [],
+    "pass": true,
+    "evidencePolicy": "independent-observation-required"
+  }
+}
