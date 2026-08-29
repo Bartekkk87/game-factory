@@ -85,4 +85,27 @@ const unknownStatePlan = compileProofPlan({ gdd: unknownStateGdd, baseSeconds: 1
 assert.equal(unknownStatePlan.pass, false, 'unknown verifier states must fail closed before Engineer spend');
 assert(unknownStatePlan.errors.some((e) => /unsupported verifier state dead/i.test(e)));
 
-console.log('proof reachability OK: typed timing is authoritative, prose timing ignored, terminal aliases canonicalized, unknown states fail closed, independent success/failure/restart scenarios compiled');
+const impossibleValueChangeGdd = structuredClone(harborGdd);
+impossibleValueChangeGdd.probePlan.requirementProbes.push({
+  id: 'PR-MH-01', ownerRequirementId: 'MH-01', kind: 'event_value_change', eventType: 'player_moved', beforeField: 'playerX', afterField: 'playerX'
+});
+const impossibleValueChangePlan = compileProofPlan({ gdd: impossibleValueChangeGdd, baseSeconds: 12, maxProofSeconds: 125 });
+assert.equal(impossibleValueChangePlan.pass, false, 'same-field event_value_change must be rejected before Engineer spend');
+assert(impossibleValueChangePlan.errors.some((e) => /PR-MH-01 event_value_change is unsatisfiable.*playerX/i.test(e)));
+
+const missingValueChangeFieldsGdd = structuredClone(harborGdd);
+missingValueChangeFieldsGdd.probePlan.requirementProbes.push({
+  id: 'PR-MH-08', ownerRequirementId: 'MH-08', kind: 'event_value_change', eventType: 'pressure_escalated'
+});
+const missingValueChangeFieldsPlan = compileProofPlan({ gdd: missingValueChangeFieldsGdd, baseSeconds: 12, maxProofSeconds: 125 });
+assert.equal(missingValueChangeFieldsPlan.pass, false, 'event_value_change without explicit before/after fields must fail closed');
+assert(missingValueChangeFieldsPlan.errors.some((e) => /PR-MH-08 event_value_change requires distinct beforeField and afterField/i.test(e)));
+
+const validValueChangeGdd = structuredClone(harborGdd);
+validValueChangeGdd.probePlan.requirementProbes.push({
+  id: 'PR-MH-09', ownerRequirementId: 'MH-09', kind: 'event_value_change', eventType: 'pressure_escalated', beforeField: 'hazardSpeedBefore', afterField: 'hazardSpeedAfter'
+});
+const validValueChangePlan = compileProofPlan({ gdd: validValueChangeGdd, baseSeconds: 12, maxProofSeconds: 125 });
+assert.equal(validValueChangePlan.pass, true, 'distinct value-change fields remain valid');
+
+console.log('proof reachability OK: typed timing authoritative, terminal scenarios independent, unknown states and unsatisfiable value-change probes fail closed before Engineer spend');
