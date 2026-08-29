@@ -13,6 +13,10 @@ import { resolveRoleRoute } from './router.mjs';
 import { buildOpenAiCompatibleChatRequest } from './adapters/openai-compatible-chat.mjs';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const REQUEST_TIMEOUT_MS_BY_PROVIDER = Object.freeze({
+  openai: 180000,
+  openrouter: 360000
+});
 const DEFINITELY_PRE_DELIVERY_CODES = new Set([
   'ENOTFOUND',
   'EAI_AGAIN',
@@ -82,10 +86,11 @@ export async function chat({
 
   let lastError;
   const maxAttempts = 6;
+  const requestTimeoutMs = REQUEST_TIMEOUT_MS_BY_PROVIDER[route.provider.id] ?? 180000;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 180000);
+    const timeout = setTimeout(() => controller.abort(), requestTimeoutMs);
     let reservationId = null;
     let reservationClosed = false;
 
