@@ -7,6 +7,25 @@ central safety claims, not to confirm them. A green required check was explicitl
 as evidence of correctness — and, as shown below, the green check on this exact head coexists
 with total-data-loss and arbitrary-file-deletion defects.
 
+## Final Owner decision — audit loop closed
+
+The Owner closed further audit iteration after the second independent review. Where earlier
+audit interpretations conflict, the final technical review recorded here is authoritative:
+
+- PR #64 remains **NO-GO** and must not be merged at the audited head.
+- P0-1, P0-2, P0-3 and P1-3 remain the accepted remediation blockers.
+- The AC-PG-numbered scorecard stays withdrawn. The exact Owner criteria are now preserved in
+  the remediation handoff and may be graded only after test/evidence mapping on a remediation
+  head.
+- P2-7 is limited to the remaining load-time, pre-swap and future Git-binding gaps. A subsequent
+  normal task *does* capture the actual pre-patch tree again and compare it with the stored
+  baseline during commit; earlier wording denying that was incorrect.
+- No further broad audit is required before remediation. Closure is by executable negative
+  regression tests and the existing trusted gates, followed by a bounded blocker review.
+
+The implementation sequence and immutable handoff constraints are recorded in
+`PROJECT-GAME-MODE-V0.1-REMEDIATION-HANDOFF.md`.
+
 ---
 
 ## 0. Erratum (2026-08-29, same day — post-review correction)
@@ -455,11 +474,10 @@ argument if it ever became exploitable.
 
 ---
 
-### P2-7 — Project State's `gitCommitSha` binding is missing and `treeSha256` re-verification is
-narrower than it first appears (downgraded from P1 to P2 on second-pass correction; see §0
-erratum entry 7)
+### P2-7 — Project State's `gitCommitSha` binding and final staging integrity proof are missing
+(downgraded from P1 to P2 on second-pass correction; final Owner interpretation above)
 
-**Severity: P2 (downgraded from P1 — see §0 erratum entry 7). Affected: `project-state.mjs` →
+**Severity: P2 (downgraded from P1 — see §0 erratum entry 9). Affected: `project-state.mjs` →
 `validateProjectState()`, `nextVerifiedState()`; `transaction.mjs` line 90.**
 
 **Correction:** the prior severity treated `treeSha256` as effectively unchecked anywhere on
@@ -470,16 +488,15 @@ this is a real check, and it is what P0-3 shows being defeated when `baseline` i
 concession requested is fair: given that check exists, calling `treeSha256` "never enforced"
 overreached.
 
-What the check does **not** do — and this is the part of the finding that survives — is verify
-tree *integrity* against an independent source. Both sides of the comparison derive from the
-same staging copy within the same task's prepare→commit window; nothing recomputes
-`captureProjectTree()` against the actual committed workspace at any later, independent point
-(a subsequent `loadProjectState()` call, a periodic audit, a next task's prepare) and compares
-it to the stored `baseline.treeSha256`. So the check that exists guards *staleness within one
-task's lifecycle*, not *tree integrity over the project's lifetime*. Whether that residual gap
-matters in practice depends entirely on whether anything other than this Foundation's own
-transaction path can ever touch the committed workspace — true today (nothing does), but a
-question that stays open once a PG-A0 runner or any other future write path exists.
+The next normal task does capture the actual pre-patch tree again through
+`applyPatchToStaging()` and line 90 compares that capture with the stored baseline. It therefore
+detects source-tree drift since the previous promoted baseline. The surviving integrity gaps are
+narrower: `loadProjectState()` by itself does not perform that comparison, and the transaction
+does not re-capture the candidate staging tree immediately before the final directory swap. A
+mutation of staging after patch evidence was captured is therefore not detected by a final
+candidate-SHA check. The remediation requirement is a pre-swap re-hash matching
+`patchEvidence.candidateAfter`; load-time validation is required only at an authority boundary,
+not in every data-loading helper.
 
 On `gitCommitSha`: the concession here is also fair. `nextVerifiedState()` defaulting it to
 `null` at local-commit time is architecturally reasonable — the PR's own commit and any GitHub
@@ -691,10 +708,12 @@ kontrolliert relevant". On the evidence: **controlled-incomplete**, with no drif
 
 ---
 
-### P3-1 — AC-PG-001 … AC-PG-020 are referenced but never defined
+### P3-1 — AC-PG-001 … AC-PG-020 were referenced but not defined in the audited Foundation
 
 `AC-PG-*` identifiers appear only in the right-hand column of
-`PROJECT-GAME-MODE-V0.1-IMPLEMENTATION-CATALOG.md`. No file in the repository defines them.
+`PROJECT-GAME-MODE-V0.1-IMPLEMENTATION-CATALOG.md` at the audited PR #64 head. No file in that
+audited Foundation defines them. The later Owner-approved remediation handoff now preserves the
+exact definitions, but PR #64 still contains no binding test/evidence mapping for them.
 `AC-PG-001` is not referenced at all. **Correction (second pass, see §0 erratum entry 8):** an
 earlier version of this document graded these IDs individually against a reconstructed mapping
 and reported a summed PASS/FAIL/UNPROVEN score in section 8. A second independent
@@ -732,7 +751,7 @@ touching only those documents produces no Branch Verifier run; the trusted gate 
 | "staging transaction, fail-closed abort and crash rollback journal" | **Refuted.** Journal is unvalidated and enables out-of-tree deletion and foreign-baseline install (P0-2) |
 | "Crash produces mixed old/new project → journaled whole-directory swap" | **Refuted.** Two concurrent tasks destroy the project and report success (P0-3) |
 | "atomic verified baseline" | **Refuted.** Promotion is neither isolated nor guarded when baseline is null (P0-3) |
-| "Project State … state alone authorizes nothing" | **Partially refuted, at reduced severity** (§0 erratum, second pass). `gitCommitSha` defaults to null and no later step ever binds it; tree SHA is checked only for staleness within one task's lifecycle, not independently re-verified later (P2-7) |
+| "Project State … state alone authorizes nothing" | **Partially refuted, at reduced severity.** `gitCommitSha` defaults to null and no later step binds it; normal later tasks do detect prior source-tree drift, but no final pre-swap candidate re-hash or later Git binding exists (P2-7) |
 | "`.factory/**` and project authority files are reserved" | **Not refuted on reconsideration** (§0 erratum). The reserved-path predicate is case-sensitive, but the mandatory tree-diff appears to catch the resulting case-collision before promotion — analysis, not an executed reproduction (P3-4) |
 | "editable source is distinct from reproducible build output" | **Partially refuted.** Hardcoded `'build'` disagrees with `manifest.layout.buildDir` (P2-1) |
 | "Deploy success proves playability … blank fixture fails" | **Partially refuted, on the class of defects the negative fixture models.** Blank fixture fails; the detector misses most of the required adversarial list (P2-4). The favicon false-FAIL (P3-5) was not confirmed against CI's real browser and is downgraded — see §0 erratum |
@@ -793,8 +812,8 @@ mid-loop, leaving earlier operations applied. Harmless in staging; not harmless 
 
 **Correction (second pass, see §0 erratum entry 8):** the first two versions of this document
 presented a 20-row table numbered `AC-PG-001` … `AC-PG-020` with a definitive PASS/FAIL/UNPROVEN
-count. That framing is withdrawn. `AC-PG-*` identifiers are not defined anywhere in the
-repository — they appear only as bare IDs in the implementation catalog's attribution column,
+count. That framing is withdrawn. At the audited PR #64 head, `AC-PG-*` identifiers are not
+defined — they appear only as bare IDs in the implementation catalog's attribution column,
 several of them (e.g. `AC-PG-019`) attributed to **more than one** component with no text
 saying what the ID itself means. A second, independent attempt to reconstruct the same 20
 IDs from that same catalog table produced materially different readings for at least four of
@@ -808,6 +827,11 @@ disagreeing this much is itself the proof that no reconstruction here is authori
 numbered acceptance scorecard implies a precision this document cannot supply, and presenting
 one — even hedged as reconstructed — invites exactly the disagreement above.
 
+The exact Owner definitions are now recorded in
+`PROJECT-GAME-MODE-V0.1-REMEDIATION-HANDOFF.md`. They govern remediation, but they do not
+retroactively turn the withdrawn reconstruction into an authoritative score for the audited
+head.
+
 What follows instead is a qualitative statement of the same territory, organized by control
 category rather than by disputed ID, with no combined score:
 
@@ -818,7 +842,7 @@ category rather than by disputed ID, with no combined score:
 | Task/manifest contract immutability | Hash coverage, field rejection | Undeclared extra fields survive on disk outside the hash (P2-2); no milestone/ADR authority exists yet (P2-5) |
 | Scoped ADD/MODIFY/DELETE, protected paths | Path traversal, symlinks, case collisions, before/after SHA | Holds; the reserved-path predicate is case-sensitive but the mandatory tree-diff likely closes the resulting gap — unproven on an actual case-insensitive filesystem (P3-4) |
 | Deterministic tree evidence, no undeclared side effects | Full before/after tree comparison | Holds |
-| Project state authority, no second source of truth | Direct code trace of the commit and load paths | Partially holds: `gitCommitSha` is never populated by any step; a real `treeSha256` staleness check exists but only within one task's prepare→commit window, not as independent re-verification later (P2-7, downgraded from P1 — §0 erratum second pass) |
+| Project state authority, no second source of truth | Direct code trace of the commit and load paths | Partially holds: each later normal task compares the actual pre-patch tree with the stored baseline; `gitCommitSha` is never populated, and no final pre-swap candidate re-hash exists (P2-7) |
 | Bounded, relevant context selection | Selection bounds, dependency-graph staleness | Bounded; relevance is not — a hand-maintained, immutable `moduleGraph`/`testMap` can silently omit real dependencies (P2-6) |
 | Verified-capability and regression registry | Registration path, semantic binding | Registerable but not enforced: caller-supplied, semantically unconstrained, last-write-wins (P1-3) |
 | Hierarchical verification (L1–L10) | Whether declared checks are executed | **Does not hold.** No check is ever executed; grading accepts caller-supplied result objects (P0-1) |
