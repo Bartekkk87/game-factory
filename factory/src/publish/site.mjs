@@ -1,9 +1,9 @@
-// Pages gallery builder. This comment also records the 2026-08-29 benchmark-preview refresh; runtime behavior is unchanged.
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, PATHS } from '../config.mjs';
 import { log } from '../util/log.mjs';
 import { readJson, ensureDir } from '../util/fsx.mjs';
+import { materializeStaticSandboxHost } from './sandbox-host.mjs';
 
 function arg(name) {
   const i = process.argv.indexOf(name);
@@ -116,16 +116,37 @@ footer{text-align:center;color:#4b5578;font-size:12px;padding:40px 0 28px}
 `;
 }
 
+function materializePortableSandboxPreviews(baseDir) {
+  if (!fs.existsSync(baseDir)) return 0;
+  let count = 0;
+  for (const entry of fs.readdirSync(baseDir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const indexFile = path.join(baseDir, entry.name, 'index.html');
+    if (!fs.existsSync(indexFile)) continue;
+    const hostHtml = fs.readFileSync(indexFile, 'utf8');
+    const materialized = materializeStaticSandboxHost({ hostHtml });
+    if (!materialized) continue;
+    fs.writeFileSync(path.join(baseDir, entry.name, materialized.payloadFilename), materialized.payloadHtml);
+    fs.writeFileSync(indexFile, materialized.hostHtml);
+    count += 1;
+  }
+  return count;
+}
+
 OUT = path.resolve(ROOT, arg('--out') || '_site');
 fs.rmSync(OUT, { recursive: true, force: true });
 ensureDir(OUT);
 
 const drafts = scan(PATHS.drafts);
 const products = scan(PATHS.products);
+let portablePreviewCount = 0;
 
 for (const prefix of [PATHS.drafts, PATHS.products]) {
-  if (fs.existsSync(prefix)) fs.cpSync(prefix, path.join(OUT, path.basename(prefix)), { recursive: true });
+  if (!fs.existsSync(prefix)) continue;
+  const copiedDir = path.join(OUT, path.basename(prefix));
+  fs.cpSync(prefix, copiedDir, { recursive: true });
+  portablePreviewCount += materializePortableSandboxPreviews(copiedDir);
 }
 
 fs.writeFileSync(path.join(OUT, 'index.html'), page({ drafts, products }));
-log.info(`site generated: ${drafts.length} draft(s), ${products.length} published -> ${OUT}`);
+log.info(`site generated: ${drafts.length} draft(s), ${products.length} published, ${portablePreviewCount} portable sandbox preview(s) -> ${OUT}`);
