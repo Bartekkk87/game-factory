@@ -1,0 +1,254 @@
+{
+  "schema": "game-factory.run-evidence/v1",
+  "generatedAt": "2026-08-29T09:33:10.322Z",
+  "run": {
+    "id": "20260829-092132",
+    "status": "failed",
+    "reason": "engineer_invalid_output",
+    "source": "ideas-folder",
+    "candidateSha": null
+  },
+  "gates": {
+    "technical": {
+      "pass": false,
+      "checks": null
+    },
+    "productFidelity": {
+      "pass": false,
+      "status": "pending-verification",
+      "criteria": null
+    },
+    "experience": {
+      "pass": false,
+      "advisory": true,
+      "authoritative": false,
+      "score": 0,
+      "threshold": 6.5,
+      "scores": null,
+      "critique": []
+    },
+    "budget": {
+      "pass": false,
+      "authoritative": true,
+      "spentUsd": 0.018204,
+      "budgetUsd": 10
+    },
+    "release": {
+      "pass": false,
+      "rule": "Technical PASS + Product Fidelity PASS + Budget PASS",
+      "reasons": [
+        "technical_not_passed",
+        "product_fidelity_not_passed",
+        "budget_not_passed"
+      ]
+    }
+  },
+  "costs": {
+    "schema": "game-factory.cost-ledger/v2",
+    "runId": "20260829-092132",
+    "budgetUsd": 10,
+    "costUsd": 0.018204,
+    "spentUsd": 0.018204,
+    "reservedUsd": 0,
+    "remainingUsd": 9.981796,
+    "tokens": 20822,
+    "tokenBreakdown": {
+      "inputTokens": 9741,
+      "cachedInputTokens": 0,
+      "outputTokens": 11081,
+      "totalTokens": 20822
+    },
+    "accountingComplete": false,
+    "pass": false,
+    "stageBudgets": {
+      "repair": {
+        "maxCalls": 6,
+        "maxUsd": 4,
+        "calls": 0,
+        "spentUsd": 0,
+        "remainingUsd": 4
+      },
+      "polish": {
+        "maxCalls": 3,
+        "maxUsd": 3,
+        "calls": 0,
+        "spentUsd": 0,
+        "remainingUsd": 3
+      },
+      "freshRebuild": {
+        "maxCalls": 1,
+        "maxUsd": 4,
+        "calls": 0,
+        "spentUsd": 0,
+        "remainingUsd": 4
+      }
+    },
+    "byRole": {
+      "director": {
+        "costUsd": 0.003501,
+        "attempts": 2,
+        "inputTokens": 9741,
+        "cachedInputTokens": 0,
+        "outputTokens": 11081
+      },
+      "engineer": {
+        "costUsd": 0.014704,
+        "attempts": 1,
+        "inputTokens": 0,
+        "cachedInputTokens": 0,
+        "outputTokens": 0
+      }
+    },
+    "byModel": {
+      "z-ai/glm-5.3-flash": {
+        "costUsd": 0.018204,
+        "attempts": 3,
+        "inputTokens": 9741,
+        "cachedInputTokens": 0,
+        "outputTokens": 11081
+      }
+    },
+    "byOperation": {
+      "director": {
+        "costUsd": 0.003501,
+        "attempts": 2,
+        "inputTokens": 9741,
+        "cachedInputTokens": 0,
+        "outputTokens": 11081
+      },
+      "build": {
+        "costUsd": 0.014704,
+        "attempts": 1,
+        "inputTokens": 0,
+        "cachedInputTokens": 0,
+        "outputTokens": 0
+      }
+    },
+    "attempts": [
+      {
+        "id": "llm-attempt-1",
+        "logicalCallId": "call-1",
+        "role": "director",
+        "operation": "director",
+        "scope": null,
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.3-flash",
+        "modelVersion": "GLM-5.3-Flash",
+        "modelAliasKind": "stable-id",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 0.15,
+          "cachedInputUsdPerM": 0.03,
+          "outputUsdPerM": 0.5,
+          "source": "openrouter-official-list-price-2026-08-29"
+        },
+        "estimatedInputTokens": 22316,
+        "maxOutputTokens": 8192,
+        "reservedUsd": 0.007443,
+        "costUsd": 0.002416,
+        "status": "settled",
+        "startedAt": "2026-08-29T09:21:32.869Z",
+        "usage": {
+          "inputTokens": 4901,
+          "cachedInputTokens": 0,
+          "outputTokens": 8192,
+          "totalTokens": 13093
+        },
+        "responseModelId": "z-ai/glm-5.3-flash",
+        "providerReportedCostUsd": 0.002416,
+        "modelCalculatedCostUsd": 0.004831,
+        "pricingTier": "standard",
+        "costSource": "provider-reported",
+        "endedAt": "2026-08-29T09:24:45.073Z"
+      },
+      {
+        "id": "llm-attempt-2",
+        "logicalCallId": "call-1",
+        "role": "director",
+        "operation": "director",
+        "scope": null,
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.3-flash",
+        "modelVersion": "GLM-5.3-Flash",
+        "modelAliasKind": "stable-id",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 2,
+        "pricing": {
+          "inputUsdPerM": 0.15,
+          "cachedInputUsdPerM": 0.03,
+          "outputUsdPerM": 0.5,
+          "source": "openrouter-official-list-price-2026-08-29"
+        },
+        "estimatedInputTokens": 22316,
+        "maxOutputTokens": 8192,
+        "reservedUsd": 0.007443,
+        "costUsd": 0.001085,
+        "status": "settled",
+        "startedAt": "2026-08-29T09:24:46.274Z",
+        "usage": {
+          "inputTokens": 4840,
+          "cachedInputTokens": 0,
+          "outputTokens": 2889,
+          "totalTokens": 7729
+        },
+        "responseModelId": "z-ai/glm-5.3-flash",
+        "providerReportedCostUsd": 0.001085,
+        "modelCalculatedCostUsd": 0.002171,
+        "pricingTier": "standard",
+        "costSource": "provider-reported",
+        "endedAt": "2026-08-29T09:27:10.315Z"
+      },
+      {
+        "id": "llm-attempt-3",
+        "logicalCallId": "call-2",
+        "role": "engineer",
+        "operation": "build",
+        "scope": null,
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.3-flash",
+        "modelVersion": "GLM-5.3-Flash",
+        "modelAliasKind": "stable-id",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 0.15,
+          "cachedInputUsdPerM": 0.03,
+          "outputUsdPerM": 0.5,
+          "source": "openrouter-official-list-price-2026-08-29"
+        },
+        "estimatedInputTokens": 58024,
+        "maxOutputTokens": 12000,
+        "reservedUsd": 0.014704,
+        "costUsd": 0.014704,
+        "status": "billing-uncertain",
+        "startedAt": "2026-08-29T09:27:10.318Z",
+        "costSource": "conservative-reservation-uncertain-transport",
+        "error": "Invalid JSON response: This operation was aborted",
+        "endedAt": "2026-08-29T09:33:10.322Z",
+        "modelCalculatedCostUsd": null,
+        "providerReportedCostUsd": null
+      }
+    ],
+    "violations": [
+      {
+        "reason": "billing_uncertain",
+        "at": "2026-08-29T09:33:10.322Z",
+        "attemptId": "llm-attempt-3",
+        "role": "engineer",
+        "model": "z-ai/glm-5.3-flash",
+        "chargedUsd": 0.014704
+      }
+    ]
+  },
+  "counters": {
+    "attempts": 1,
+    "repairCalls": 0,
+    "polishRounds": 0,
+    "freshRebuilds": 0
+  },
+  "audit": null,
+  "artifacts": {
+    "ownerContract": "owner-contract.json"
+  }
+}

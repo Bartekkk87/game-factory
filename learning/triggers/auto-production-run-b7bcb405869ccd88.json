@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "learning-trigger-v1",
+  "policyVersion": "controlled-improvement-trigger-v3",
+  "allowed": true,
+  "reasons": [
+    "failed-production-run-requires-case-root-cause"
+  ],
+  "allowedScopes": [
+    "case-root-cause"
+  ],
+  "authority": "analysis-only",
+  "canValidate": false,
+  "canActivate": false,
+  "eventKind": "production-run",
+  "eventId": "20260829-092132",
+  "eventFailed": true,
+  "evaluationFailureRef": null,
+  "evaluationFailureClass": null,
+  "aggregateRef": "learning/aggregates/auto-production-run-b7bcb405869ccd88.json",
+  "rootCauseRef": "learning/root-causes/auto-production-run-b7bcb405869ccd88.json"
+}
