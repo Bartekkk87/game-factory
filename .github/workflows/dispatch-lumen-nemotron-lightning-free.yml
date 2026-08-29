@@ -1,0 +1,51 @@
+name: Dispatch Lumen Nemotron Lightning Free
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'evaluation/triggers/lumen-current-nemotron-lightning-free-go.md'
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Verify frozen Lumen brief remains the latest idea
+        run: |
+          LATEST=$(git log -1 --format= --name-only -- 'ideas/*.md' | head -n1)
+          test "$LATEST" = "ideas/lumen-current-openai-reference-retry-2026-08-29.md" || {
+            echo "Refusing Nemotron dispatch: latest idea is $LATEST" >&2
+            exit 1
+          }
+
+      - name: Dispatch zero-token-cost NVIDIA challenger
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run produce.yml \
+            --ref main \
+            -f provider=openrouter \
+            -f model='nvidia/nemotron-3.5-lightning:free' \
+            -f director_provider=openrouter \
+            -f director_model='nvidia/nemotron-3.5-lightning:free' \
+            -f engineer_provider=openrouter \
+            -f engineer_model='nvidia/nemotron-3.5-lightning:free' \
+            -f playtester_provider=openrouter \
+            -f playtester_model='nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free' \
+            -f auditor_provider=openrouter \
+            -f auditor_model='nvidia/nemotron-3.5-lightning:free' \
+            -f budget_usd=10 \
+            -f director_max_tokens=32768 \
+            -f engineer_max_tokens=65536 \
+            -f playtester_max_tokens=32768 \
+            -f auditor_max_tokens=16384 \
+            -f idea=''

@@ -14,6 +14,7 @@ function configuredNumber(key, fallback, { min, integer = false }) {
 }
 
 const count = (key, fallback) => configuredNumber(key, fallback, { min: 0, integer: true });
+const tokenCeiling = (key, fallback) => configuredNumber(key, fallback, { min: 1, integer: true });
 const nonNegative = (key, fallback) => configuredNumber(key, fallback, { min: 0 });
 const positive = (key, fallback) => configuredNumber(key, fallback, { min: Number.EPSILON });
 
@@ -22,7 +23,11 @@ export const LIMITS = {
   maxRepairCalls: count('GF_MAX_REPAIR_CALLS', 6),
   maxPolishRounds: count('GF_MAX_POLISH_ROUNDS', 3),
   maxFreshRebuilds: count('GF_MAX_FRESH_REBUILDS', 1),
-  directorMaxTokens: configuredNumber('GF_DIRECTOR_MAX_TOKENS', 8192, { min: 1, integer: true }),
+  // Ceilings are generous guards, not target lengths. Cost/call budgets remain authoritative.
+  directorMaxTokens: tokenCeiling('GF_DIRECTOR_MAX_TOKENS', 32768),
+  engineerMaxTokens: tokenCeiling('GF_ENGINEER_MAX_TOKENS', 65536),
+  playtesterMaxTokens: tokenCeiling('GF_PLAYTESTER_MAX_TOKENS', 32768),
+  auditorMaxTokens: tokenCeiling('GF_AUDITOR_MAX_TOKENS', 16384),
   minOverallScore: nonNegative('GF_MIN_SCORE', 6.5),
   budgetUsd: positive('GF_BUDGET_USD', 10),
   repairBudgetUsd: nonNegative('GF_REPAIR_BUDGET_USD', 4),

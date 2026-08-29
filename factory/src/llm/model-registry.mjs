@@ -17,6 +17,7 @@ const caps = (overrides = {}) => Object.freeze({
   maxOutputTokens: null,
   promptCaching: false,
   continuation: false,
+  freeEndpoint: false,
   ...overrides
 });
 
@@ -60,175 +61,92 @@ const OPENAI_REASONING_REQUEST = Object.freeze({
 // selectable only by explicit route configuration and are never production defaults.
 const BUILTIN_MODELS = Object.freeze({
   'openai:gpt-5.6-sol': model({
-    provider: 'openai',
-    id: 'gpt-5.6-sol',
-    aliasKind: 'rolling-alias',
-    benchmarkStatus: 'rescue-candidate',
-    capabilities: {
-      vision: true,
-      structuredOutputs: true,
-      reasoning: true,
-      responsesApi: true,
-      contextWindow: 1050000,
-      maxOutputTokens: 128000,
-      promptCaching: true
-    },
+    provider: 'openai', id: 'gpt-5.6-sol', aliasKind: 'rolling-alias', benchmarkStatus: 'rescue-candidate',
+    capabilities: { vision: true, structuredOutputs: true, reasoning: true, responsesApi: true, contextWindow: 1050000, maxOutputTokens: 128000, promptCaching: true },
     requestShape: OPENAI_REASONING_REQUEST,
-    pricing: {
-      inputUsdPerM: 4,
-      cachedInputUsdPerM: 0.4,
-      outputUsdPerM: 20,
-      longContext: GPT56_LONG_CONTEXT,
-      source: 'openai-official-2026-08-27'
-    }
+    pricing: { inputUsdPerM: 4, cachedInputUsdPerM: 0.4, outputUsdPerM: 20, longContext: GPT56_LONG_CONTEXT, source: 'openai-official-2026-08-27' }
   }),
   'openai:gpt-5.6-terra': model({
-    provider: 'openai',
-    id: 'gpt-5.6-terra',
-    aliasKind: 'rolling-alias',
-    benchmarkStatus: 'reference-candidate',
-    capabilities: {
-      vision: true,
-      structuredOutputs: true,
-      reasoning: true,
-      responsesApi: true,
-      contextWindow: 1050000,
-      maxOutputTokens: 128000,
-      promptCaching: true
-    },
+    provider: 'openai', id: 'gpt-5.6-terra', aliasKind: 'rolling-alias', benchmarkStatus: 'reference-candidate',
+    capabilities: { vision: true, structuredOutputs: true, reasoning: true, responsesApi: true, contextWindow: 1050000, maxOutputTokens: 128000, promptCaching: true },
     requestShape: OPENAI_REASONING_REQUEST,
-    pricing: {
-      inputUsdPerM: 2,
-      cachedInputUsdPerM: 0.2,
-      outputUsdPerM: 12,
-      longContext: GPT56_LONG_CONTEXT,
-      source: 'openai-official-2026-08-27'
-    }
+    pricing: { inputUsdPerM: 2, cachedInputUsdPerM: 0.2, outputUsdPerM: 12, longContext: GPT56_LONG_CONTEXT, source: 'openai-official-2026-08-27' }
   }),
   'openai:gpt-5.6-luna': model({
-    provider: 'openai',
-    id: 'gpt-5.6-luna',
-    aliasKind: 'rolling-alias',
-    benchmarkStatus: 'economy-candidate',
-    capabilities: {
-      vision: true,
-      structuredOutputs: true,
-      reasoning: true,
-      responsesApi: true,
-      contextWindow: 1050000,
-      maxOutputTokens: 128000,
-      promptCaching: true
-    },
+    provider: 'openai', id: 'gpt-5.6-luna', aliasKind: 'rolling-alias', benchmarkStatus: 'economy-candidate',
+    capabilities: { vision: true, structuredOutputs: true, reasoning: true, responsesApi: true, contextWindow: 1050000, maxOutputTokens: 128000, promptCaching: true },
     requestShape: OPENAI_REASONING_REQUEST,
-    pricing: {
-      inputUsdPerM: 0.2,
-      cachedInputUsdPerM: 0.02,
-      outputUsdPerM: 1.2,
-      longContext: GPT56_LONG_CONTEXT,
-      source: 'openai-official-2026-08-27'
-    }
+    pricing: { inputUsdPerM: 0.2, cachedInputUsdPerM: 0.02, outputUsdPerM: 1.2, longContext: GPT56_LONG_CONTEXT, source: 'openai-official-2026-08-27' }
   }),
   'openai:gpt-4o': model({
-    provider: 'openai',
-    id: 'gpt-4o',
-    aliasKind: 'legacy-alias',
-    benchmarkStatus: 'legacy',
+    provider: 'openai', id: 'gpt-4o', aliasKind: 'legacy-alias', benchmarkStatus: 'legacy',
     capabilities: { vision: true, structuredOutputs: true, contextWindow: 128000, maxOutputTokens: 16384, promptCaching: true },
     pricing: { inputUsdPerM: 2.5, cachedInputUsdPerM: 1.25, outputUsdPerM: 10, source: 'openai-official-2026-08-27' }
   }),
   'openai:gpt-4o-2024-08-06': model({
-    provider: 'openai',
-    id: 'gpt-4o-2024-08-06',
-    versionLabel: '2024-08-06',
-    benchmarkStatus: 'legacy',
+    provider: 'openai', id: 'gpt-4o-2024-08-06', versionLabel: '2024-08-06', benchmarkStatus: 'legacy',
     capabilities: { vision: true, structuredOutputs: true, contextWindow: 128000, maxOutputTokens: 16384, promptCaching: true },
     pricing: { inputUsdPerM: 2.5, cachedInputUsdPerM: 1.25, outputUsdPerM: 10, source: 'openai-official-2026-08-27' }
   }),
   'openai:gpt-4o-2024-11-20': model({
-    provider: 'openai',
-    id: 'gpt-4o-2024-11-20',
-    versionLabel: '2024-11-20',
-    benchmarkStatus: 'legacy',
+    provider: 'openai', id: 'gpt-4o-2024-11-20', versionLabel: '2024-11-20', benchmarkStatus: 'legacy',
     capabilities: { vision: true, structuredOutputs: true, contextWindow: 128000, maxOutputTokens: 16384, promptCaching: true },
     pricing: { inputUsdPerM: 2.5, cachedInputUsdPerM: 1.25, outputUsdPerM: 10, source: 'openai-official-2026-08-27' }
   }),
   'openai:gpt-4o-mini': model({
-    provider: 'openai',
-    id: 'gpt-4o-mini',
-    aliasKind: 'legacy-alias',
-    benchmarkStatus: 'legacy',
+    provider: 'openai', id: 'gpt-4o-mini', aliasKind: 'legacy-alias', benchmarkStatus: 'legacy',
     capabilities: { vision: true, structuredOutputs: true, contextWindow: 128000, maxOutputTokens: 16384, promptCaching: true },
     pricing: { inputUsdPerM: 0.15, cachedInputUsdPerM: 0.075, outputUsdPerM: 0.6, source: 'openai-official-2026-08-27' }
   }),
   'openai:gpt-4o-mini-2024-07-18': model({
-    provider: 'openai',
-    id: 'gpt-4o-mini-2024-07-18',
-    versionLabel: '2024-07-18',
-    benchmarkStatus: 'legacy',
+    provider: 'openai', id: 'gpt-4o-mini-2024-07-18', versionLabel: '2024-07-18', benchmarkStatus: 'legacy',
     capabilities: { vision: true, structuredOutputs: true, contextWindow: 128000, maxOutputTokens: 16384, promptCaching: true },
     pricing: { inputUsdPerM: 0.15, cachedInputUsdPerM: 0.075, outputUsdPerM: 0.6, source: 'openai-official-2026-08-27' }
   }),
   'deepseek:deepseek-v4-flash': model({
-    provider: 'deepseek',
-    id: 'deepseek-v4-flash',
-    versionLabel: 'DeepSeek-V4-Flash-0731',
-    aliasKind: 'rolling-alias',
-    benchmarkStatus: 'candidate',
+    provider: 'deepseek', id: 'deepseek-v4-flash', versionLabel: 'DeepSeek-V4-Flash-0731', aliasKind: 'rolling-alias', benchmarkStatus: 'candidate',
     capabilities: { reasoning: true, structuredOutputs: false, responsesApi: true, contextWindow: 1000000, maxOutputTokens: 384000, promptCaching: true },
     requestShape: { contractSource: 'provider-compatibility-default-unverified' },
     pricing: { inputUsdPerM: 0.14, cachedInputUsdPerM: 0.0028, outputUsdPerM: 0.28, source: 'deepseek-official-2026-08-27' }
   }),
   'deepseek:deepseek-v4-pro': model({
-    provider: 'deepseek',
-    id: 'deepseek-v4-pro',
-    versionLabel: 'DeepSeek-V4-Pro',
-    aliasKind: 'rolling-alias',
-    benchmarkStatus: 'candidate',
+    provider: 'deepseek', id: 'deepseek-v4-pro', versionLabel: 'DeepSeek-V4-Pro', aliasKind: 'rolling-alias', benchmarkStatus: 'candidate',
     capabilities: { reasoning: true, structuredOutputs: false, responsesApi: false, contextWindow: 1000000, maxOutputTokens: 384000, promptCaching: true },
     requestShape: { contractSource: 'provider-compatibility-default-unverified' },
     pricing: { inputUsdPerM: 0.435, cachedInputUsdPerM: 0.003625, outputUsdPerM: 0.87, source: 'deepseek-official-2026-08-27' }
   }),
   'openrouter:deepseek/deepseek-chat-v3.1': model({
-    provider: 'openrouter',
-    id: 'deepseek/deepseek-chat-v3.1',
-    versionLabel: 'DeepSeek-V3.1',
-    aliasKind: 'stable-id',
-    benchmarkStatus: 'challenger',
+    provider: 'openrouter', id: 'deepseek/deepseek-chat-v3.1', versionLabel: 'DeepSeek-V3.1', aliasKind: 'stable-id', benchmarkStatus: 'challenger',
     capabilities: { jsonObject: true, structuredOutputs: true, reasoning: true, contextWindow: 163840, maxOutputTokens: 32768, promptCaching: true },
     requestShape: { contractSource: 'openrouter-compatible-default-unverified' },
     pricing: { inputUsdPerM: 0.25, cachedInputUsdPerM: 0.13, outputUsdPerM: 0.95, source: 'openrouter-official-2026-08-27' }
   }),
   'openrouter:z-ai/glm-5.3-flash': model({
-    provider: 'openrouter',
-    id: 'z-ai/glm-5.3-flash',
-    versionLabel: 'GLM-5.3-Flash',
-    aliasKind: 'stable-id',
-    benchmarkStatus: 'challenger',
-    capabilities: {
-      vision: true,
-      jsonObject: true,
-      structuredOutputs: false,
-      reasoning: true,
-      contextWindow: 1310720,
-      maxOutputTokens: 131072,
-      promptCaching: true
-    },
+    provider: 'openrouter', id: 'z-ai/glm-5.3-flash', versionLabel: 'GLM-5.3-Flash', aliasKind: 'stable-id', benchmarkStatus: 'challenger',
+    capabilities: { vision: true, jsonObject: true, structuredOutputs: false, reasoning: true, contextWindow: 1310720, maxOutputTokens: 131072, promptCaching: true },
     requestShape: {
-      tokenParam: 'max_tokens',
-      temperature: 'free',
-      jsonMode: 'response_format',
-      reasoningEffort: 'low',
-      reasoningExclude: true,
-      providerSort: 'throughput',
-      providerRequireParameters: true,
-      contractSource: 'openrouter-official-model-metadata-and-routing-docs-2026-08-29'
+      tokenParam: 'max_tokens', temperature: 'free', jsonMode: 'response_format', reasoningEffort: 'low', reasoningExclude: true,
+      providerSort: 'throughput', providerRequireParameters: true, contractSource: 'openrouter-official-model-metadata-and-routing-docs-2026-08-29'
     },
-    pricing: {
-      inputUsdPerM: 0.15,
-      cachedInputUsdPerM: 0.03,
-      outputUsdPerM: 0.50,
-      source: 'openrouter-official-list-price-2026-08-29'
-    }
+    pricing: { inputUsdPerM: 0.15, cachedInputUsdPerM: 0.03, outputUsdPerM: 0.50, source: 'openrouter-official-list-price-2026-08-29' }
+  }),
+  'openrouter:nvidia/nemotron-3.5-lightning:free': model({
+    provider: 'openrouter', id: 'nvidia/nemotron-3.5-lightning:free', versionLabel: 'NVIDIA Nemotron 3.5 Lightning Free', aliasKind: 'stable-id', benchmarkStatus: 'free-challenger',
+    capabilities: { jsonObject: true, structuredOutputs: false, contextWindow: 1000000, maxOutputTokens: 65536, freeEndpoint: true },
+    requestShape: { tokenParam: 'max_tokens', temperature: 'free', jsonMode: 'prompt', providerSort: 'throughput', requestTimeoutMs: 360000, contractSource: 'openrouter-official-nemotron-3.5-lightning-free-2026-08-29' },
+    pricing: { inputUsdPerM: 0, cachedInputUsdPerM: 0, outputUsdPerM: 0, source: 'openrouter-official-free-endpoint-2026-08-29' }
+  }),
+  'openrouter:nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free': model({
+    provider: 'openrouter', id: 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free', versionLabel: 'NVIDIA Nemotron 3 Nano Omni Free', aliasKind: 'stable-id', benchmarkStatus: 'free-reviewer',
+    capabilities: { vision: true, jsonObject: true, structuredOutputs: false, reasoning: true, contextWindow: 256000, maxOutputTokens: 65536, freeEndpoint: true },
+    requestShape: { tokenParam: 'max_tokens', temperature: 'free', jsonMode: 'prompt', requestTimeoutMs: 600000, contractSource: 'openrouter-official-nemotron-3-nano-omni-free-2026-08-29' },
+    pricing: { inputUsdPerM: 0, cachedInputUsdPerM: 0, outputUsdPerM: 0, source: 'openrouter-official-free-endpoint-2026-08-29' }
+  }),
+  'openrouter:nvidia/nemotron-3-ultra-550b-a55b:free': model({
+    provider: 'openrouter', id: 'nvidia/nemotron-3-ultra-550b-a55b:free', versionLabel: 'NVIDIA Nemotron 3 Ultra Free', aliasKind: 'stable-id', benchmarkStatus: 'free-challenger',
+    capabilities: { jsonObject: true, structuredOutputs: false, reasoning: true, contextWindow: 1000000, maxOutputTokens: 65536, freeEndpoint: true },
+    requestShape: { tokenParam: 'max_tokens', temperature: 'free', jsonMode: 'prompt', providerSort: 'throughput', requestTimeoutMs: 900000, contractSource: 'openrouter-official-nemotron-3-ultra-free-2026-08-29' },
+    pricing: { inputUsdPerM: 0, cachedInputUsdPerM: 0, outputUsdPerM: 0, source: 'openrouter-official-free-endpoint-2026-08-29' }
   })
 });
 
@@ -288,7 +206,8 @@ function validRequestShape(value) {
   return value
     && ['max_tokens', 'max_completion_tokens'].includes(value.tokenParam)
     && ['free', 'unsupported'].includes(value.temperature)
-    && ['response_format', 'none'].includes(value.jsonMode)
+    && ['response_format', 'prompt', 'none'].includes(value.jsonMode)
+    && (value.requestTimeoutMs == null || (Number.isInteger(value.requestTimeoutMs) && value.requestTimeoutMs > 0))
     && typeof value.contractSource === 'string'
     && value.contractSource.trim().length > 0;
 }

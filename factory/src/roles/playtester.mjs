@@ -3,6 +3,7 @@ import { chat } from '../llm/client.mjs';
 import { extractJson } from '../llm/json.mjs';
 import { loadPrompt } from '../util/skills.mjs';
 import { ownerRequirementIds, ownerFidelityClaimIds, ownerIndependentReviewClaims } from '../contract/owner.mjs';
+import { LIMITS } from '../config.mjs';
 
 const REVIEW_EVIDENCE_SOURCES = new Set(['screenshot', 'harness_telemetry', 'runtime_event_corroboration']);
 const INDEPENDENT_EVIDENCE_SOURCES = new Set(['screenshot', 'harness_telemetry']);
@@ -143,7 +144,15 @@ export async function runPlaytester({ metrics, images, ownerContract, gdd, telem
   let lastErr;
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      const completion = await chat({ role: 'playtester', system, user, images: dataUrls.slice(0, 4), json: true, temperature: 0.3 });
+      const completion = await chat({
+        role: 'playtester',
+        system,
+        user,
+        images: dataUrls.slice(0, 4),
+        json: true,
+        temperature: 0.3,
+        maxTokens: LIMITS.playtesterMaxTokens
+      });
       const result = extractJson(completion.text);
       result.reviewProvenance = {
         reviewerRole: completion.role,

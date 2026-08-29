@@ -54,6 +54,12 @@ export function llmFailureReason(error, fallback) {
   return 'llm_transport_timeout';
 }
 
+export function requestTimeoutMsForRoute(route) {
+  const configuredModelTimeout = Number(route?.model?.requestShape?.requestTimeoutMs);
+  if (Number.isInteger(configuredModelTimeout) && configuredModelTimeout > 0) return configuredModelTimeout;
+  return REQUEST_TIMEOUT_MS_BY_PROVIDER[route?.provider?.id] ?? 180000;
+}
+
 export async function chat({
   role = 'engineer',
   operation = role,
@@ -101,7 +107,7 @@ export async function chat({
 
   let lastError;
   const maxAttempts = 6;
-  const requestTimeoutMs = REQUEST_TIMEOUT_MS_BY_PROVIDER[route.provider.id] ?? 180000;
+  const requestTimeoutMs = requestTimeoutMsForRoute(route);
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const controller = new AbortController();
