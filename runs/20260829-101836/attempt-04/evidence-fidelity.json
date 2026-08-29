@@ -1,0 +1,1366 @@
+{
+  "pass": false,
+  "status": "failed",
+  "contractSha256": "1ad6151de1a644d47585271aea2ff14ad220f4cb292f3410ec8270e3bf0f23a1",
+  "requirementIds": [
+    "MH-01",
+    "MH-02",
+    "MH-03",
+    "MH-04",
+    "MH-05",
+    "MH-06",
+    "MH-07",
+    "NG-01",
+    "NG-02",
+    "NG-03"
+  ],
+  "criteria": [
+    {
+      "requirementId": "MH-01",
+      "acceptanceId": "AC-MH-01",
+      "probeId": "PR-MH-01",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "player_moved",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": false,
+      "traceable": true,
+      "detail": "no value-changing player_moved event"
+    },
+    {
+      "requirementId": "MH-02",
+      "acceptanceId": "AC-MH-02",
+      "probeId": "PR-MH-02",
+      "kind": "score_change",
+      "declaredKind": "score_change",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": true,
+      "traceable": true,
+      "detail": "score changed across telemetry"
+    },
+    {
+      "requirementId": "MH-03",
+      "acceptanceId": "AC-MH-03",
+      "probeId": "PR-MH-03",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": false,
+      "traceable": true,
+      "detail": "state success not reached in verifier scenarios"
+    },
+    {
+      "requirementId": "MH-04",
+      "acceptanceId": "AC-MH-04",
+      "probeId": "PR-MH-04",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": true,
+      "traceable": true,
+      "detail": "state failure reached in verifier scenarios (observed=gameover)"
+    },
+    {
+      "requirementId": "MH-05",
+      "acceptanceId": "AC-MH-05",
+      "probeId": "PR-MH-05",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "run_restarted",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": false,
+      "traceable": true,
+      "detail": "no value-changing run_restarted event"
+    },
+    {
+      "requirementId": "MH-06",
+      "acceptanceId": "AC-MH-06",
+      "probeId": "PR-MH-06",
+      "kind": "layout_no_overlap",
+      "declaredKind": "layout_no_overlap",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed-canvas-geometry",
+      "pass": false,
+      "traceable": true,
+      "detail": "independent canvas layout insufficient at best phase failure-proof:post_restart: regions=38/3, issueCount=109, scoreProgress=false issues=out-of-bounds,overlap"
+    },
+    {
+      "requirementId": "MH-07",
+      "acceptanceId": "AC-MH-07",
+      "probeId": "PR-MH-07",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "pressure_escalated",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": false,
+      "traceable": true,
+      "detail": "no value-changing pressure_escalated event"
+    },
+    {
+      "requirementId": "NG-01",
+      "acceptanceId": "AC-NG-01",
+      "probeId": "PR-NG-01",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "weapon_fired",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event weapon_fired absent"
+    },
+    {
+      "requirementId": "NG-02",
+      "acceptanceId": "AC-NG-02",
+      "probeId": "PR-NG-02",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "shop_opened",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event shop_opened absent"
+    },
+    {
+      "requirementId": "NG-03",
+      "acceptanceId": "AC-NG-03",
+      "probeId": "PR-NG-03",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "node_auto_activated",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event node_auto_activated absent"
+    }
+  ],
+  "failures": [
+    {
+      "requirementId": "MH-01",
+      "acceptanceId": "AC-MH-01",
+      "probeId": "PR-MH-01",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "player_moved",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": false,
+      "traceable": true,
+      "detail": "no value-changing player_moved event"
+    },
+    {
+      "requirementId": "MH-03",
+      "acceptanceId": "AC-MH-03",
+      "probeId": "PR-MH-03",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": false,
+      "traceable": true,
+      "detail": "state success not reached in verifier scenarios"
+    },
+    {
+      "requirementId": "MH-05",
+      "acceptanceId": "AC-MH-05",
+      "probeId": "PR-MH-05",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "run_restarted",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": false,
+      "traceable": true,
+      "detail": "no value-changing run_restarted event"
+    },
+    {
+      "requirementId": "MH-06",
+      "acceptanceId": "AC-MH-06",
+      "probeId": "PR-MH-06",
+      "kind": "layout_no_overlap",
+      "declaredKind": "layout_no_overlap",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed-canvas-geometry",
+      "pass": false,
+      "traceable": true,
+      "detail": "independent canvas layout insufficient at best phase failure-proof:post_restart: regions=38/3, issueCount=109, scoreProgress=false issues=out-of-bounds,overlap"
+    },
+    {
+      "requirementId": "MH-07",
+      "acceptanceId": "AC-MH-07",
+      "probeId": "PR-MH-07",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "pressure_escalated",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": false,
+      "traceable": true,
+      "detail": "no value-changing pressure_escalated event"
+    }
+  ],
+  "coverage": {
+    "evaluatedRequirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-03",
+      "MH-04",
+      "MH-05",
+      "MH-06",
+      "MH-07",
+      "NG-01",
+      "NG-02",
+      "NG-03"
+    ],
+    "harnessObservedRequirementIds": [
+      "MH-02",
+      "MH-03",
+      "MH-04",
+      "MH-06"
+    ],
+    "canvasGeometryRequirementIds": [
+      "MH-06"
+    ],
+    "generatedGameEventDependentRequirementIds": [
+      "MH-01",
+      "MH-05",
+      "MH-07",
+      "NG-01",
+      "NG-02",
+      "NG-03"
+    ],
+    "correlatedGeneratedGameEventRequirementIds": [],
+    "independentReviewClaimIds": [],
+    "independentReviewClaims": [],
+    "ambiguousUnknownClaimIdsExcluded": [],
+    "unstructuredBriefContentEvaluated": true,
+    "independentReviewRequired": false,
+    "scope": "Full-brief Product Fidelity routes structured MH/NG requirements to deterministic verifier evidence and every concrete non-ambiguous descriptive UN claim to mandatory independent screenshot/experience review. Ambiguous maybe/optional unknowns remain explicitly non-binding. Independent-review claims are not treated as deterministic PASS and cannot be waived by generated-game self-attestation."
+  },
+  "observedEvents": [
+    {
+      "seq": 1,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 2,
+      "type": "score_changed",
+      "time": 0.017,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 0,
+        "after": 100,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 3,
+      "type": "pressure_escalated",
+      "time": 0.017,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 1,
+        "after": 1.7,
+        "node": 3
+      }
+    },
+    {
+      "seq": 4,
+      "type": "player_moved",
+      "time": 0.083,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 480,
+        "after": 484,
+        "playerX": 484
+      }
+    },
+    {
+      "seq": 5,
+      "type": "player_moved",
+      "time": 0.433,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 484,
+        "after": 569,
+        "playerX": 569
+      }
+    },
+    {
+      "seq": 6,
+      "type": "score_changed",
+      "time": 0.75,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 100,
+        "after": 200,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 7,
+      "type": "pressure_escalated",
+      "time": 0.75,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 1.7,
+        "after": 1.35,
+        "node": 1
+      }
+    },
+    {
+      "seq": 8,
+      "type": "player_moved",
+      "time": 0.8,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 569,
+        "after": 673,
+        "playerX": 673
+      }
+    },
+    {
+      "seq": 9,
+      "type": "player_moved",
+      "time": 1.167,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 673,
+        "after": 778,
+        "playerX": 778
+      }
+    },
+    {
+      "seq": 10,
+      "type": "player_moved",
+      "time": 1.517,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 778,
+        "after": 877,
+        "playerX": 877
+      }
+    },
+    {
+      "seq": 11,
+      "type": "player_moved",
+      "time": 1.867,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 877,
+        "after": 934,
+        "playerX": 934
+      }
+    },
+    {
+      "seq": 12,
+      "type": "player_moved",
+      "time": 6.7,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 934,
+        "after": 930,
+        "playerX": 930
+      }
+    },
+    {
+      "seq": 13,
+      "type": "player_moved",
+      "time": 7.066,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 930,
+        "after": 843,
+        "playerX": 843
+      }
+    },
+    {
+      "seq": 14,
+      "type": "player_moved",
+      "time": 7.433,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 843,
+        "after": 739,
+        "playerX": 739
+      }
+    },
+    {
+      "seq": 15,
+      "type": "player_moved",
+      "time": 7.783,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 739,
+        "after": 639,
+        "playerX": 639
+      }
+    },
+    {
+      "seq": 16,
+      "type": "player_moved",
+      "time": 8.133,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 639,
+        "after": 539,
+        "playerX": 539
+      }
+    },
+    {
+      "seq": 17,
+      "type": "player_moved",
+      "time": 8.483,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 539,
+        "after": 439,
+        "playerX": 439
+      }
+    },
+    {
+      "seq": 18,
+      "type": "player_moved",
+      "time": 8.833,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 439,
+        "after": 340,
+        "playerX": 340
+      }
+    },
+    {
+      "seq": 19,
+      "type": "score_changed",
+      "time": 8.833,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 200,
+        "after": 300,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 20,
+      "type": "pressure_escalated",
+      "time": 8.833,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 1.35,
+        "after": 1.7,
+        "node": 2
+      }
+    },
+    {
+      "seq": 21,
+      "type": "player_moved",
+      "time": 9.183,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 340,
+        "after": 240,
+        "playerX": 240
+      }
+    },
+    {
+      "seq": 22,
+      "type": "player_moved",
+      "time": 9.533,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 240,
+        "after": 140,
+        "playerX": 140
+      }
+    },
+    {
+      "seq": 23,
+      "type": "player_moved",
+      "time": 9.9,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 140,
+        "after": 44,
+        "playerX": 44
+      }
+    },
+    {
+      "seq": 24,
+      "type": "player_moved",
+      "time": 10.25,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 44,
+        "after": 26,
+        "playerX": 26
+      }
+    },
+    {
+      "seq": 1,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 2,
+      "type": "score_changed",
+      "time": 0.017,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 0,
+        "after": 100,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 3,
+      "type": "pressure_escalated",
+      "time": 0.017,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 1,
+        "after": 1.7,
+        "node": 3
+      }
+    },
+    {
+      "seq": 4,
+      "type": "player_moved",
+      "time": 0.083,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 480,
+        "after": 484,
+        "playerX": 484
+      }
+    },
+    {
+      "seq": 5,
+      "type": "player_moved",
+      "time": 0.433,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 484,
+        "after": 569,
+        "playerX": 569
+      }
+    },
+    {
+      "seq": 6,
+      "type": "score_changed",
+      "time": 0.75,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 100,
+        "after": 200,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 7,
+      "type": "pressure_escalated",
+      "time": 0.75,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 1.7,
+        "after": 1.35,
+        "node": 1
+      }
+    },
+    {
+      "seq": 8,
+      "type": "player_moved",
+      "time": 0.8,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 569,
+        "after": 673,
+        "playerX": 673
+      }
+    },
+    {
+      "seq": 9,
+      "type": "player_moved",
+      "time": 1.15,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 673,
+        "after": 773,
+        "playerX": 773
+      }
+    },
+    {
+      "seq": 10,
+      "type": "player_moved",
+      "time": 1.517,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 773,
+        "after": 877,
+        "playerX": 877
+      }
+    },
+    {
+      "seq": 11,
+      "type": "player_moved",
+      "time": 1.867,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 877,
+        "after": 934,
+        "playerX": 934
+      }
+    },
+    {
+      "seq": 12,
+      "type": "player_moved",
+      "time": 6.733,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 934,
+        "after": 930,
+        "playerX": 930
+      }
+    },
+    {
+      "seq": 13,
+      "type": "player_moved",
+      "time": 7.1,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 930,
+        "after": 843,
+        "playerX": 843
+      }
+    },
+    {
+      "seq": 14,
+      "type": "player_moved",
+      "time": 7.466,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 843,
+        "after": 739,
+        "playerX": 739
+      }
+    },
+    {
+      "seq": 15,
+      "type": "player_moved",
+      "time": 7.833,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 739,
+        "after": 634,
+        "playerX": 634
+      }
+    },
+    {
+      "seq": 16,
+      "type": "player_moved",
+      "time": 8.183,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 634,
+        "after": 534,
+        "playerX": 534
+      }
+    },
+    {
+      "seq": 17,
+      "type": "player_moved",
+      "time": 8.55,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 534,
+        "after": 430,
+        "playerX": 430
+      }
+    },
+    {
+      "seq": 18,
+      "type": "score_changed",
+      "time": 8.833,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 200,
+        "after": 300,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 19,
+      "type": "pressure_escalated",
+      "time": 8.833,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 1.35,
+        "after": 1.7,
+        "node": 2
+      }
+    },
+    {
+      "seq": 20,
+      "type": "player_moved",
+      "time": 8.916,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 430,
+        "after": 325,
+        "playerX": 325
+      }
+    },
+    {
+      "seq": 21,
+      "type": "player_moved",
+      "time": 9.266,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 325,
+        "after": 226,
+        "playerX": 226
+      }
+    },
+    {
+      "seq": 22,
+      "type": "player_moved",
+      "time": 9.633,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 226,
+        "after": 121,
+        "playerX": 121
+      }
+    },
+    {
+      "seq": 23,
+      "type": "player_moved",
+      "time": 9.983,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 121,
+        "after": 36,
+        "playerX": 36
+      }
+    },
+    {
+      "seq": 24,
+      "type": "player_moved",
+      "time": 10.349,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 36,
+        "after": 26,
+        "playerX": 26
+      }
+    },
+    {
+      "seq": 25,
+      "type": "player_moved",
+      "time": 13.333,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 26,
+        "after": 30,
+        "playerX": 30
+      }
+    },
+    {
+      "seq": 26,
+      "type": "player_moved",
+      "time": 13.683,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 30,
+        "after": 113,
+        "playerX": 113
+      }
+    },
+    {
+      "seq": 27,
+      "type": "player_moved",
+      "time": 14.049,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 113,
+        "after": 217,
+        "playerX": 217
+      }
+    },
+    {
+      "seq": 28,
+      "type": "player_moved",
+      "time": 14.416,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 217,
+        "after": 321,
+        "playerX": 321
+      }
+    },
+    {
+      "seq": 29,
+      "type": "player_moved",
+      "time": 14.766,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 321,
+        "after": 421,
+        "playerX": 421
+      }
+    },
+    {
+      "seq": 30,
+      "type": "player_moved",
+      "time": 15.133,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 421,
+        "after": 526,
+        "playerX": 526
+      }
+    },
+    {
+      "seq": 31,
+      "type": "player_moved",
+      "time": 15.483,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 526,
+        "after": 625,
+        "playerX": 625
+      }
+    },
+    {
+      "seq": 32,
+      "type": "player_moved",
+      "time": 15.849,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 625,
+        "after": 730,
+        "playerX": 730
+      }
+    },
+    {
+      "seq": 33,
+      "type": "player_moved",
+      "time": 16.216,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 730,
+        "after": 834,
+        "playerX": 834
+      }
+    },
+    {
+      "seq": 34,
+      "type": "player_moved",
+      "time": 16.566,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 834,
+        "after": 933,
+        "playerX": 933
+      }
+    },
+    {
+      "seq": 35,
+      "type": "player_moved",
+      "time": 20.116,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 933,
+        "after": 928,
+        "playerX": 928
+      }
+    },
+    {
+      "seq": 36,
+      "type": "player_moved",
+      "time": 20.482,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 928,
+        "after": 838,
+        "playerX": 838
+      }
+    },
+    {
+      "seq": 37,
+      "type": "player_moved",
+      "time": 20.849,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 838,
+        "after": 734,
+        "playerX": 734
+      }
+    },
+    {
+      "seq": 38,
+      "type": "player_moved",
+      "time": 21.216,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 734,
+        "after": 629,
+        "playerX": 629
+      }
+    },
+    {
+      "seq": 39,
+      "type": "player_moved",
+      "time": 21.582,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 629,
+        "after": 525,
+        "playerX": 525
+      }
+    },
+    {
+      "seq": 40,
+      "type": "player_moved",
+      "time": 21.932,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 525,
+        "after": 425,
+        "playerX": 425
+      }
+    },
+    {
+      "seq": 41,
+      "type": "player_moved",
+      "time": 22.299,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 425,
+        "after": 321,
+        "playerX": 321
+      }
+    },
+    {
+      "seq": 42,
+      "type": "player_moved",
+      "time": 22.649,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 321,
+        "after": 221,
+        "playerX": 221
+      }
+    },
+    {
+      "seq": 43,
+      "type": "player_moved",
+      "time": 23.016,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 221,
+        "after": 116,
+        "playerX": 116
+      }
+    },
+    {
+      "seq": 44,
+      "type": "player_moved",
+      "time": 23.382,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 116,
+        "after": 26,
+        "playerX": 26
+      }
+    },
+    {
+      "seq": 45,
+      "type": "player_moved",
+      "time": 26.865,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 26,
+        "after": 30,
+        "playerX": 30
+      }
+    },
+    {
+      "seq": 46,
+      "type": "player_moved",
+      "time": 27.232,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 30,
+        "after": 117,
+        "playerX": 117
+      }
+    },
+    {
+      "seq": 47,
+      "type": "player_moved",
+      "time": 27.582,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 117,
+        "after": 217,
+        "playerX": 217
+      }
+    },
+    {
+      "seq": 48,
+      "type": "player_moved",
+      "time": 27.949,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 217,
+        "after": 321,
+        "playerX": 321
+      }
+    },
+    {
+      "seq": 49,
+      "type": "player_moved",
+      "time": 28.315,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 321,
+        "after": 426,
+        "playerX": 426
+      }
+    },
+    {
+      "seq": 50,
+      "type": "player_moved",
+      "time": 28.682,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 426,
+        "after": 530,
+        "playerX": 530
+      }
+    },
+    {
+      "seq": 51,
+      "type": "player_moved",
+      "time": 29.049,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 530,
+        "after": 635,
+        "playerX": 635
+      }
+    },
+    {
+      "seq": 52,
+      "type": "player_moved",
+      "time": 29.415,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 635,
+        "after": 739,
+        "playerX": 739
+      }
+    },
+    {
+      "seq": 53,
+      "type": "player_moved",
+      "time": 29.782,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 739,
+        "after": 844,
+        "playerX": 844
+      }
+    },
+    {
+      "seq": 54,
+      "type": "player_moved",
+      "time": 30.149,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 844,
+        "after": 934,
+        "playerX": 934
+      }
+    },
+    {
+      "seq": 55,
+      "type": "player_moved",
+      "time": 33.648,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 934,
+        "after": 930,
+        "playerX": 930
+      }
+    },
+    {
+      "seq": 56,
+      "type": "player_moved",
+      "time": 33.998,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 930,
+        "after": 847,
+        "playerX": 847
+      }
+    },
+    {
+      "seq": 57,
+      "type": "player_moved",
+      "time": 34.348,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 847,
+        "after": 748,
+        "playerX": 748
+      }
+    },
+    {
+      "seq": 58,
+      "type": "player_moved",
+      "time": 34.715,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 748,
+        "after": 644,
+        "playerX": 644
+      }
+    },
+    {
+      "seq": 59,
+      "type": "player_moved",
+      "time": 35.065,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 644,
+        "after": 544,
+        "playerX": 544
+      }
+    },
+    {
+      "seq": 60,
+      "type": "player_moved",
+      "time": 35.415,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 544,
+        "after": 444,
+        "playerX": 444
+      }
+    },
+    {
+      "seq": 61,
+      "type": "state_reached",
+      "time": 35.515,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "state": "failure",
+        "stability": 0
+      }
+    },
+    {
+      "seq": 62,
+      "type": "game_over",
+      "time": 35.515,
+      "state": "gameover",
+      "score": 300,
+      "data": {
+        "from": "playing",
+        "to": "gameover"
+      }
+    },
+    {
+      "seq": 63,
+      "type": "run_restarted",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 1,
+        "after": 2
+      }
+    },
+    {
+      "seq": 1,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 2,
+      "type": "score_changed",
+      "time": 0.017,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 0,
+        "after": 100,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 3,
+      "type": "pressure_escalated",
+      "time": 0.017,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 1,
+        "after": 1.7,
+        "node": 3
+      }
+    },
+    {
+      "seq": 4,
+      "type": "state_reached",
+      "time": 12.916,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "state": "failure",
+        "stability": 0
+      }
+    },
+    {
+      "seq": 5,
+      "type": "game_over",
+      "time": 12.916,
+      "state": "gameover",
+      "score": 100,
+      "data": {
+        "from": "playing",
+        "to": "gameover"
+      }
+    },
+    {
+      "seq": 6,
+      "type": "run_restarted",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 1,
+        "after": 2
+      }
+    }
+  ]
+}

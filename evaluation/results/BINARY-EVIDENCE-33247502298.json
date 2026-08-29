@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "game-factory.binary-evidence-manifest/v1",
+  "generatedAt": "2026-08-29T10:33:56.663Z",
+  "storage": {
+    "provider": "github-actions-artifact",
+    "artifactName": "run-binary-evidence-33247502298",
+    "workflowRunId": "33247502298",
+    "retentionDays": 30,
+    "durabilityClass": "bounded-retention-object-storage"
+  },
+  "files": [
+    {
+      "path": "runs/20260829-101836/attempt-01/shots/shot-1-title.png",
+      "sha256": "78fd5aa53f8717bde87f995c595df00f8946979ccac543fc039cdf08897d1f97",
+      "bytes": 62064
+    },
+    {
+      "path": "runs/20260829-101836/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "a2fe5eb80433b4f0cae8ba1762b81d61c6618738e228be02f69dd6d7eedf3cea",
+      "bytes": 290365
+    },
+    {
+      "path": "runs/20260829-101836/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "a682e4fc10044d1e6be7e64a133e361059d04ef9d3b47a14fc06552ed91b0e38",
+      "bytes": 285487
+    },
+    {
+      "path": "runs/20260829-101836/attempt-02/shots/shot-1-title.png",
+      "sha256": "78fd5aa53f8717bde87f995c595df00f8946979ccac543fc039cdf08897d1f97",
+      "bytes": 62064
+    },
+    {
+      "path": "runs/20260829-101836/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "31a6aea1cf74b673d4fb067e34a4079af44fd5a95d4aeff19ce041132d3be17d",
+      "bytes": 284448
+    },
+    {
+      "path": "runs/20260829-101836/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "fa0742fad86e279c0ffddf11658f67778b3d3891288d0da6ef354af061d249eb",
+      "bytes": 213402
+    },
+    {
+      "path": "runs/20260829-101836/attempt-03/shots/shot-1-title.png",
+      "sha256": "78fd5aa53f8717bde87f995c595df00f8946979ccac543fc039cdf08897d1f97",
+      "bytes": 62064
+    },
+    {
+      "path": "runs/20260829-101836/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "4f0fe30b6b72eb8fbe05a3bf74feda614d6113d936886fd8f4d3a59fd47b7d49",
+      "bytes": 284561
+    },
+    {
+      "path": "runs/20260829-101836/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "15dc9831b1f7915e5f040b5cd576f7b343a9f8edce9f5552029e6d87cdd78609",
+      "bytes": 213613
+    },
+    {
+      "path": "runs/20260829-101836/attempt-04/shots/shot-1-title.png",
+      "sha256": "bf2a40ae211c4e94bf43dc91cd4950509ab0f23f6af68a7bab87ee9d4c11fd7c",
+      "bytes": 61642
+    },
+    {
+      "path": "runs/20260829-101836/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "33889293bbed52394a23a81f63fdae133e4dcc15c75c5e4ca068813553a6658d",
+      "bytes": 300858
+    },
+    {
+      "path": "runs/20260829-101836/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "2693f9a533e45d6c85b531a1ccf57d2ed13ab5891c5cb09043e7d77d910e988e",
+      "bytes": 306127
+    },
+    {
+      "path": "runs/20260829-101836/attempt-05/shots/shot-1-title.png",
+      "sha256": "78fd5aa53f8717bde87f995c595df00f8946979ccac543fc039cdf08897d1f97",
+      "bytes": 62064
+    },
+    {
+      "path": "runs/20260829-101836/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "113d7fc5a5c065c520a8cc8cdd3e37ebd01e8accf63974472fe699de08af79b2",
+      "bytes": 284046
+    },
+    {
+      "path": "runs/20260829-101836/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "2398d1996a85e76b374d2a77d29567c5b4c1378c7ad4180aa267eb241ef9581e",
+      "bytes": 213617
+    }
+  ]
+}
