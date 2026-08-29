@@ -14,7 +14,7 @@ import { evaluateContract } from '../verify/contract.mjs';
 import { evaluateProductFidelity } from '../verify/fidelity.mjs';
 import { assemble } from '../publish/assemble.mjs';
 import { registerProduct, bumpStats } from '../memory/store.mjs';
-import { beginRunBudget, costReport } from '../llm/client.mjs';
+import { beginRunBudget, costReport, llmFailureReason } from '../llm/client.mjs';
 import { evaluateReleaseGate } from '../control/release-gate.mjs';
 import { createRunEvidence } from '../control/evidence.mjs';
 import { retainBestFailed } from '../control/repair-policy.mjs';
@@ -182,10 +182,6 @@ async function verifyAttemptFailClosed({ runDir, state, attempt, design, ownerCo
       failure: failClosed(runDir, state, 'verifier_failed', { error, attempt, phase })
     };
   }
-}
-
-function llmFailureReason(error, fallback) {
-  return error?.code === 'BUDGET_BLOCKED' ? 'budget_blocked' : fallback;
 }
 
 function reviewMarkdown(meta) {
