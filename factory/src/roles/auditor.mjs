@@ -1,6 +1,7 @@
 import { chat } from '../llm/client.mjs';
 import { extractJson } from '../llm/json.mjs';
 import { loadPrompt } from '../util/skills.mjs';
+import { LIMITS } from '../config.mjs';
 
 const SEVERITIES = new Set(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']);
 
@@ -11,7 +12,8 @@ export async function runAuditor({ digest }) {
     system,
     user: JSON.stringify(digest, null, 2),
     json: true,
-    temperature: 0.2
+    temperature: 0.2,
+    maxTokens: LIMITS.auditorMaxTokens
   });
   const audit = extractJson(text);
   if (!['CONSISTENT', 'CONCERNS'].includes(audit.assessment)) {
