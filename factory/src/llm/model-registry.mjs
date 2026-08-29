@@ -208,7 +208,7 @@ const BUILTIN_MODELS = Object.freeze({
       vision: true,
       jsonObject: true,
       structuredOutputs: false,
-      reasoning: false,
+      reasoning: true,
       contextWindow: 1310720,
       maxOutputTokens: 131072,
       promptCaching: true
@@ -217,7 +217,11 @@ const BUILTIN_MODELS = Object.freeze({
       tokenParam: 'max_tokens',
       temperature: 'free',
       jsonMode: 'response_format',
-      contractSource: 'openrouter-official-2026-08-29'
+      reasoningEffort: 'low',
+      reasoningExclude: true,
+      providerSort: 'throughput',
+      providerRequireParameters: true,
+      contractSource: 'openrouter-official-model-metadata-and-routing-docs-2026-08-29'
     },
     pricing: {
       inputUsdPerM: 0.15,
