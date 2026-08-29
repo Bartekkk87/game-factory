@@ -1,0 +1,217 @@
+{
+  "reason": "engineer_invalid_output",
+  "closedAt": "2026-08-29T12:00:17.143Z",
+  "cost": {
+    "schema": "game-factory.cost-ledger/v2",
+    "runId": "20260829-115640",
+    "budgetUsd": 10,
+    "costUsd": 0.012657,
+    "spentUsd": 0.012657,
+    "reservedUsd": 0,
+    "remainingUsd": 9.987343,
+    "tokens": 45475,
+    "tokenBreakdown": {
+      "inputTokens": 26912,
+      "cachedInputTokens": 0,
+      "outputTokens": 18563,
+      "totalTokens": 45475
+    },
+    "accountingComplete": true,
+    "pass": true,
+    "stageBudgets": {
+      "repair": {
+        "maxCalls": 6,
+        "maxUsd": 4,
+        "calls": 1,
+        "spentUsd": 0.002616,
+        "remainingUsd": 3.997384
+      },
+      "polish": {
+        "maxCalls": 3,
+        "maxUsd": 3,
+        "calls": 0,
+        "spentUsd": 0,
+        "remainingUsd": 3
+      },
+      "freshRebuild": {
+        "maxCalls": 1,
+        "maxUsd": 4,
+        "calls": 0,
+        "spentUsd": 0,
+        "remainingUsd": 4
+      }
+    },
+    "byRole": {
+      "director": {
+        "costUsd": 0.004981,
+        "attempts": 2,
+        "inputTokens": 12371,
+        "cachedInputTokens": 0,
+        "outputTokens": 6563
+      },
+      "engineer": {
+        "costUsd": 0.007676,
+        "attempts": 1,
+        "inputTokens": 14541,
+        "cachedInputTokens": 0,
+        "outputTokens": 12000
+      }
+    },
+    "byModel": {
+      "z-ai/glm-5.3-flash": {
+        "costUsd": 0.012657,
+        "attempts": 3,
+        "inputTokens": 26912,
+        "cachedInputTokens": 0,
+        "outputTokens": 18563
+      }
+    },
+    "byOperation": {
+      "director": {
+        "costUsd": 0.002365,
+        "attempts": 1,
+        "inputTokens": 4840,
+        "cachedInputTokens": 0,
+        "outputTokens": 3591
+      },
+      "repair": {
+        "costUsd": 0.002616,
+        "attempts": 1,
+        "inputTokens": 7531,
+        "cachedInputTokens": 0,
+        "outputTokens": 2972
+      },
+      "build": {
+        "costUsd": 0.007676,
+        "attempts": 1,
+        "inputTokens": 14541,
+        "cachedInputTokens": 0,
+        "outputTokens": 12000
+      }
+    },
+    "attempts": [
+      {
+        "id": "llm-attempt-1",
+        "logicalCallId": "call-1",
+        "role": "director",
+        "operation": "director",
+        "scope": null,
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.3-flash",
+        "modelVersion": "GLM-5.3-Flash",
+        "modelAliasKind": "stable-id",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 0.15,
+          "cachedInputUsdPerM": 0.03,
+          "outputUsdPerM": 0.5,
+          "source": "openrouter-official-list-price-2026-08-29"
+        },
+        "estimatedInputTokens": 22316,
+        "maxOutputTokens": 32768,
+        "reservedUsd": 0.019731,
+        "costUsd": 0.002365,
+        "status": "settled",
+        "startedAt": "2026-08-29T11:56:40.496Z",
+        "usage": {
+          "inputTokens": 4840,
+          "cachedInputTokens": 0,
+          "outputTokens": 3591,
+          "totalTokens": 8431
+        },
+        "responseModelId": "z-ai/glm-5.3-flash",
+        "providerReportedCostUsd": 0.002365,
+        "modelCalculatedCostUsd": 0.002522,
+        "pricingTier": "standard",
+        "costSource": "provider-reported",
+        "endedAt": "2026-08-29T11:57:28.126Z"
+      },
+      {
+        "id": "llm-attempt-2",
+        "logicalCallId": "call-2",
+        "role": "director",
+        "operation": "repair",
+        "scope": "repair",
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.3-flash",
+        "modelVersion": "GLM-5.3-Flash",
+        "modelAliasKind": "stable-id",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 0.15,
+          "cachedInputUsdPerM": 0.03,
+          "outputUsdPerM": 0.5,
+          "source": "openrouter-official-list-price-2026-08-29"
+        },
+        "estimatedInputTokens": 33053,
+        "maxOutputTokens": 32768,
+        "reservedUsd": 0.021342,
+        "costUsd": 0.002616,
+        "status": "settled",
+        "startedAt": "2026-08-29T11:57:28.128Z",
+        "usage": {
+          "inputTokens": 7531,
+          "cachedInputTokens": 0,
+          "outputTokens": 2972,
+          "totalTokens": 10503
+        },
+        "responseModelId": "z-ai/glm-5.3-flash",
+        "providerReportedCostUsd": 0.002616,
+        "modelCalculatedCostUsd": 0.002616,
+        "pricingTier": "standard",
+        "costSource": "provider-reported",
+        "endedAt": "2026-08-29T11:58:06.770Z"
+      },
+      {
+        "id": "llm-attempt-3",
+        "logicalCallId": "call-3",
+        "role": "engineer",
+        "operation": "build",
+        "scope": null,
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.3-flash",
+        "modelVersion": "GLM-5.3-Flash",
+        "modelAliasKind": "stable-id",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 0.15,
+          "cachedInputUsdPerM": 0.03,
+          "outputUsdPerM": 0.5,
+          "source": "openrouter-official-list-price-2026-08-29"
+        },
+        "estimatedInputTokens": 56634,
+        "maxOutputTokens": 12000,
+        "reservedUsd": 0.014495,
+        "costUsd": 0.007676,
+        "status": "settled",
+        "startedAt": "2026-08-29T11:58:06.772Z",
+        "usage": {
+          "inputTokens": 14541,
+          "cachedInputTokens": 0,
+          "outputTokens": 12000,
+          "totalTokens": 26541
+        },
+        "responseModelId": "z-ai/glm-5.3-flash",
+        "providerReportedCostUsd": 0.007676,
+        "modelCalculatedCostUsd": 0.008181,
+        "pricingTier": "standard",
+        "costSource": "provider-reported",
+        "endedAt": "2026-08-29T12:00:17.142Z"
+      }
+    ],
+    "violations": []
+  },
+  "releaseGate": {
+    "pass": false,
+    "rule": "Technical PASS + Product Fidelity PASS + Budget PASS",
+    "reasons": [
+      "technical_not_passed",
+      "product_fidelity_not_passed"
+    ]
+  },
+  "error": "No valid JSON found in LLM response: {\"title\":\"Lumen Current\",\"css\":\"html,body{margin:0;padding:0;background:#04090f;height:100%;overflow:hidden}canvas#game{display:block;margin:auto;image-rendering:auto}\",\"html\":\"\",\"js\":\"(function(){\\n'use strict';\\nconst M = GF.math;\\nconst {clamp, lerp, rand, dist, TAU} = M;\\nconst W = 960, H = 540;",
+  "attempt": 1
+}

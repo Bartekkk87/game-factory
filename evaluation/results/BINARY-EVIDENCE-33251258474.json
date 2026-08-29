@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "game-factory.binary-evidence-manifest/v1",
+  "generatedAt": "2026-08-29T12:00:17.259Z",
+  "storage": {
+    "provider": "github-actions-artifact",
+    "artifactName": "run-binary-evidence-33251258474",
+    "workflowRunId": "33251258474",
+    "retentionDays": 30,
+    "durabilityClass": "bounded-retention-object-storage"
+  },
+  "files": []
+}

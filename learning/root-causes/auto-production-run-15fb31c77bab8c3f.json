@@ -1,0 +1,369 @@
+{
+  "schemaVersion": "failed-run-root-cause-v1",
+  "runId": "20260829-101836",
+  "runStatus": "failed",
+  "runReason": "debug_exhausted",
+  "generatedFrom": "durable-run-evidence-only",
+  "diagnosticIndependence": "terminal families are defined in learning/root-cause.mjs and do not import verifier state semantics",
+  "authority": {
+    "may": [
+      "diagnose-evidence",
+      "rank-hypotheses",
+      "propose-validation"
+    ],
+    "mustNot": [
+      "edit-production",
+      "validate-candidate",
+      "activate-candidate",
+      "weaken-gates",
+      "start-paid-run"
+    ]
+  },
+  "attempts": [
+    {
+      "id": "attempt-01",
+      "failedChecks": 4,
+      "technicalFailures": [],
+      "fidelityFailures": [
+        "MH-01",
+        "MH-03",
+        "MH-05",
+        "MH-07"
+      ],
+      "failedCriteria": [
+        {
+          "requirementId": "MH-01",
+          "probeId": "PR-MH-01",
+          "kind": "event_value_change",
+          "detail": "no value-changing player_moved event"
+        },
+        {
+          "requirementId": "MH-03",
+          "probeId": "PR-MH-03",
+          "kind": "state_reached",
+          "detail": "state success not reached in verifier scenarios"
+        },
+        {
+          "requirementId": "MH-05",
+          "probeId": "PR-MH-05",
+          "kind": "event_value_change",
+          "detail": "no value-changing run_restarted event"
+        },
+        {
+          "requirementId": "MH-07",
+          "probeId": "PR-MH-07",
+          "kind": "event_value_change",
+          "detail": "no value-changing pressure_escalated event"
+        }
+      ],
+      "runtimeErrors": [],
+      "observedStates": [
+        "failure",
+        "gameover",
+        "playing",
+        "title"
+      ],
+      "evidenceRefs": [
+        "attempt-01/evidence-tech.json",
+        "attempt-01/evidence-fidelity.json",
+        "attempt-01/telemetry.json"
+      ]
+    },
+    {
+      "id": "attempt-02",
+      "failedChecks": 3,
+      "technicalFailures": [],
+      "fidelityFailures": [
+        "MH-01",
+        "MH-05",
+        "MH-07"
+      ],
+      "failedCriteria": [
+        {
+          "requirementId": "MH-01",
+          "probeId": "PR-MH-01",
+          "kind": "event_value_change",
+          "detail": "no value-changing player_moved event"
+        },
+        {
+          "requirementId": "MH-05",
+          "probeId": "PR-MH-05",
+          "kind": "event_value_change",
+          "detail": "no value-changing run_restarted event"
+        },
+        {
+          "requirementId": "MH-07",
+          "probeId": "PR-MH-07",
+          "kind": "event_value_change",
+          "detail": "no value-changing pressure_escalated event"
+        }
+      ],
+      "runtimeErrors": [],
+      "observedStates": [
+        "failure",
+        "gameover",
+        "playing",
+        "success",
+        "title",
+        "won"
+      ],
+      "evidenceRefs": [
+        "attempt-02/evidence-tech.json",
+        "attempt-02/evidence-fidelity.json",
+        "attempt-02/telemetry.json"
+      ]
+    },
+    {
+      "id": "attempt-03",
+      "failedChecks": 3,
+      "technicalFailures": [],
+      "fidelityFailures": [
+        "MH-01",
+        "MH-05",
+        "MH-07"
+      ],
+      "failedCriteria": [
+        {
+          "requirementId": "MH-01",
+          "probeId": "PR-MH-01",
+          "kind": "event_value_change",
+          "detail": "no value-changing player_moved event"
+        },
+        {
+          "requirementId": "MH-05",
+          "probeId": "PR-MH-05",
+          "kind": "event_value_change",
+          "detail": "no value-changing run_restarted event"
+        },
+        {
+          "requirementId": "MH-07",
+          "probeId": "PR-MH-07",
+          "kind": "event_value_change",
+          "detail": "no value-changing pressure_escalated event"
+        }
+      ],
+      "runtimeErrors": [],
+      "observedStates": [
+        "failure",
+        "gameover",
+        "playing",
+        "success",
+        "title",
+        "won"
+      ],
+      "evidenceRefs": [
+        "attempt-03/evidence-tech.json",
+        "attempt-03/evidence-fidelity.json",
+        "attempt-03/telemetry.json"
+      ]
+    },
+    {
+      "id": "attempt-04",
+      "failedChecks": 7,
+      "technicalFailures": [
+        "no_runtime_errors",
+        "input_causality"
+      ],
+      "fidelityFailures": [
+        "MH-01",
+        "MH-03",
+        "MH-05",
+        "MH-06",
+        "MH-07"
+      ],
+      "failedCriteria": [
+        {
+          "requirementId": "MH-01",
+          "probeId": "PR-MH-01",
+          "kind": "event_value_change",
+          "detail": "no value-changing player_moved event"
+        },
+        {
+          "requirementId": "MH-03",
+          "probeId": "PR-MH-03",
+          "kind": "state_reached",
+          "detail": "state success not reached in verifier scenarios"
+        },
+        {
+          "requirementId": "MH-05",
+          "probeId": "PR-MH-05",
+          "kind": "event_value_change",
+          "detail": "no value-changing run_restarted event"
+        },
+        {
+          "requirementId": "MH-06",
+          "probeId": "PR-MH-06",
+          "kind": "layout_no_overlap",
+          "detail": "independent canvas layout insufficient at best phase failure-proof:post_restart: regions=38/3, issueCount=109, scoreProgress=false issues=out-of-bounds,overlap"
+        },
+        {
+          "requirementId": "MH-07",
+          "probeId": "PR-MH-07",
+          "kind": "event_value_change",
+          "detail": "no value-changing pressure_escalated event"
+        }
+      ],
+      "runtimeErrors": [
+        "Uncaught TypeError: game.tween is not a function",
+        "[failure-proof] game.tween is not a function",
+        "[success-proof] game.tween is not a function",
+        "game.tween is not a function"
+      ],
+      "observedStates": [
+        "failure",
+        "gameover",
+        "playing",
+        "title"
+      ],
+      "evidenceRefs": [
+        "attempt-04/evidence-tech.json",
+        "attempt-04/evidence-fidelity.json",
+        "attempt-04/telemetry.json"
+      ]
+    },
+    {
+      "id": "attempt-05",
+      "failedChecks": 3,
+      "technicalFailures": [],
+      "fidelityFailures": [
+        "MH-01",
+        "MH-05",
+        "MH-07"
+      ],
+      "failedCriteria": [
+        {
+          "requirementId": "MH-01",
+          "probeId": "PR-MH-01",
+          "kind": "event_value_change",
+          "detail": "no value-changing player_moved event"
+        },
+        {
+          "requirementId": "MH-05",
+          "probeId": "PR-MH-05",
+          "kind": "event_value_change",
+          "detail": "no value-changing run_restarted event"
+        },
+        {
+          "requirementId": "MH-07",
+          "probeId": "PR-MH-07",
+          "kind": "event_value_change",
+          "detail": "no value-changing pressure_escalated event"
+        }
+      ],
+      "runtimeErrors": [],
+      "observedStates": [
+        "failure",
+        "gameover",
+        "playing",
+        "success",
+        "title",
+        "won"
+      ],
+      "evidenceRefs": [
+        "attempt-05/evidence-tech.json",
+        "attempt-05/evidence-fidelity.json",
+        "attempt-05/telemetry.json"
+      ]
+    }
+  ],
+  "trajectory": [
+    4,
+    3,
+    3,
+    7,
+    3
+  ],
+  "bestAttempt": "attempt-02",
+  "finalAttempt": "attempt-05",
+  "stateProbes": [
+    {
+      "id": "PR-MH-03",
+      "state": "success",
+      "diagnosticFamily": "success"
+    },
+    {
+      "id": "PR-MH-04",
+      "state": "failure",
+      "diagnosticFamily": "failure"
+    }
+  ],
+  "proofScenarios": [
+    {
+      "id": "base",
+      "inputMode": "active+idle-control",
+      "seconds": 12,
+      "stopStates": [],
+      "diagnosticTerminalFamilies": [],
+      "restartAtEnd": false
+    },
+    {
+      "id": "success-proof",
+      "inputMode": "active",
+      "seconds": 80,
+      "stopStates": [
+        "success"
+      ],
+      "diagnosticTerminalFamilies": [
+        "success"
+      ],
+      "restartAtEnd": true
+    },
+    {
+      "id": "failure-proof",
+      "inputMode": "idle",
+      "seconds": 80,
+      "stopStates": [
+        "failure"
+      ],
+      "diagnosticTerminalFamilies": [
+        "failure"
+      ],
+      "restartAtEnd": true
+    }
+  ],
+  "observedStates": [
+    "failure",
+    "gameover",
+    "playing",
+    "success",
+    "title",
+    "won"
+  ],
+  "findings": [
+    {
+      "id": "terminal-state-vocabulary-mismatch",
+      "confidence": 0.95,
+      "targetLayer": "verifier",
+      "role": "director",
+      "summary": "Independent learning evidence observed runtime state won, in the same diagnostic terminal family as requested success, while the related terminal proof still failed in at least one attempt.",
+      "evidence": [
+        "PR-MH-03",
+        "gdd.json",
+        "won"
+      ],
+      "validationPlan": "Compare verifier-owned state semantics against this independent diagnostic family. Normalize only proven aliases in the verifier, preserve raw states as evidence, and keep unknown states fail closed."
+    }
+  ],
+  "primaryFindingId": "terminal-state-vocabulary-mismatch",
+  "sourceRefs": [
+    "FAILURE.json",
+    "RUN-EVIDENCE.json",
+    "attempt-01/evidence-fidelity.json",
+    "attempt-01/evidence-tech.json",
+    "attempt-01/telemetry.json",
+    "attempt-02/evidence-fidelity.json",
+    "attempt-02/evidence-tech.json",
+    "attempt-02/telemetry.json",
+    "attempt-03/evidence-fidelity.json",
+    "attempt-03/evidence-tech.json",
+    "attempt-03/telemetry.json",
+    "attempt-04/evidence-fidelity.json",
+    "attempt-04/evidence-tech.json",
+    "attempt-04/telemetry.json",
+    "attempt-05/evidence-fidelity.json",
+    "attempt-05/evidence-tech.json",
+    "attempt-05/telemetry.json",
+    "gdd.json"
+  ],
+  "conclusion": "Primary evidence-backed hypothesis: Independent learning evidence observed runtime state won, in the same diagnostic terminal family as requested success, while the related terminal proof still failed in at least one attempt."
+}
