@@ -83,6 +83,47 @@ function collectStateProbes(value, out = [], seen = new Set()) {
   return out;
 }
 
+function collectUnsatisfiableValueChangeProbes(gdd) {
+  const probes = Array.isArray(gdd?.probePlan?.requirementProbes) ? gdd.probePlan.requirementProbes : [];
+  return probes
+    .filter((probe) => String(probe?.kind || '') === 'event_value_change')
+    .map((probe) => {
+      const beforeField = String(probe?.beforeField || '').trim();
+      const afterField = String(probe?.afterField || '').trim();
+      const eventType = String(probe?.eventType || '').trim();
+      const reason = !beforeField || !afterField
+        ? 'missing-before-or-after-field'
+        : beforeField === afterField
+          ? 'same-field-comparison'
+          : null;
+      return {
+        probeId: String(probe?.id || probe?.probeId || 'missing'),
+        eventType,
+        beforeField,
+        afterField,
+        reason
+      };
+    })
+    .filter((probe) => probe.reason);
+}
+
+function unsatisfiableValueChangeProbesFromFailure(failure) {
+  const error = String(failure?.error || '');
+  const matches = [];
+  const sameField = /probe\s+([^\s;]+)\s+event_value_change is unsatisfiable: beforeField and afterField are both\s+([^;\n]+)/gi;
+  for (const match of error.matchAll(sameField)) {
+    const probeId = String(match[1] || '').trim();
+    const field = String(match[2] || '').trim();
+    if (probeId && field) matches.push({ probeId, eventType: '', beforeField: field, afterField: field, reason: 'same-field-comparison' });
+  }
+  const missingFields = /probe\s+([^\s;]+)\s+event_value_change requires distinct beforeField and afterField/gi;
+  for (const match of error.matchAll(missingFields)) {
+    const probeId = String(match[1] || '').trim();
+    if (probeId) matches.push({ probeId, eventType: '', beforeField: '', afterField: '', reason: 'missing-before-or-after-field' });
+  }
+  return matches;
+}
+
 function collectProofScenarios(value, out = [], seen = new Set()) {
   if (!value || typeof value !== 'object' || seen.has(value)) return out;
   seen.add(value);
@@ -165,7 +206,24 @@ export function analyzeFailedProductionRun({ runId, runsRoot = PATHS.runs } = {}
   const final = attempts.at(-1) || null;
   const stateProbes = collectStateProbes(gdd);
   const proofScenarios = collectProofScenarios(gdd);
+  const unsatisfiableProbes = [
+    ...collectUnsatisfiableValueChangeProbes(gdd),
+    ...unsatisfiableValueChangeProbesFromFailure(failure)
+  ].filter((probe, index, all) => all.findIndex((candidate) => candidate.probeId === probe.probeId && candidate.reason === probe.reason) === index);
   const findings = [];
+
+  if (unsatisfiableProbes.length) {
+    const terms = unsatisfiableProbes.map((probe) => {
+      if (probe.reason === 'same-field-comparison') return `${probe.probeId}:${probe.beforeField}=${probe.afterField}`;
+      return `${probe.probeId}:missing before/after field`;
+    });
+    findings.push(finding(
+      'director-probe-contract-unsatisfiable', 1, 'control-plane', 'director',
+      `Director emitted logically unsatisfiable event_value_change probe contract(s): ${terms.join(', ')}. Such probes cannot pass because the verifier must compare two distinct observable fields.`,
+      [gdd ? 'gdd.json' : 'FAILURE.json', ...terms],
+      'Reject unsatisfiable event_value_change probes deterministically during proof-plan validation before Engineer spend. Reproduce the historical failure with a zero-paid regression fixture and prove same-field or missing-field probes fail closed while distinct before/after fields remain valid.'
+    ));
+  }
 
   const unsupportedStates = unsupportedVerifierStatesFromFailure(failure);
   if (String(runEvidence.run.reason || failure?.reason || '').toLowerCase() === 'director_failed' && unsupportedStates.length) {
@@ -271,6 +329,7 @@ export function analyzeFailedProductionRun({ runId, runsRoot = PATHS.runs } = {}
     bestAttempt: best?.id || null,
     finalAttempt: final?.id || null,
     stateProbes,
+    unsatisfiableProbes,
     proofScenarios,
     observedStates,
     findings: deduped,
