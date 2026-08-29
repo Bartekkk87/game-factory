@@ -73,7 +73,8 @@ export async function runDirector({ idea, source, ownerContract }) {
       system,
       user,
       json: true,
-      temperature: attempt === 1 ? 0.5 : 0.2
+      temperature: attempt === 1 ? 0.5 : 0.2,
+      maxTokens: LIMITS.directorMaxTokens
     });
 
     let rawGdd;
