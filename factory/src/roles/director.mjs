@@ -67,7 +67,9 @@ export async function runDirector({ idea, source, ownerContract }) {
 
     const { text } = await chat({
       role: 'director',
-      operation: attempt === 1 ? 'director' : 'director-repair',
+      // Director retries intentionally consume the governed repair-stage call/USD budget
+      // in addition to the global run budget.
+      operation: attempt === 1 ? 'director' : 'repair',
       system,
       user,
       json: true,

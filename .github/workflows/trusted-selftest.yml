@@ -1,0 +1,94 @@
+name: Trusted PR Selftest Gate
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  actions: read
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: trusted-selftest-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  selftest:
+    name: selftest
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout trusted base
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: trusted-base
+          persist-credentials: false
+
+      - name: Checkout candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: candidate
+          persist-credentials: false
+
+      - name: Protect required-check root of trust
+        env:
+          EXPECTED_VERIFY_MIGRATION_SHA256: 4c180691ea1e3575432dc6314303084e79061bc5ddf9929030f86a416d1daa77
+        run: |
+          set -euo pipefail
+
+          BASE_TRUSTED_SHA=$(sha256sum trusted-base/.github/workflows/trusted-selftest.yml | cut -d' ' -f1)
+          CANDIDATE_TRUSTED_SHA=$(sha256sum candidate/.github/workflows/trusted-selftest.yml | cut -d' ' -f1)
+          if [ "$BASE_TRUSTED_SHA" != "$CANDIDATE_TRUSTED_SHA" ]; then
+            echo "trusted-selftest.yml cannot modify its own required-check authority" >&2
+            exit 1
+          fi
+
+          BASE_VERIFY_SHA=$(sha256sum trusted-base/.github/workflows/verify.yml | cut -d' ' -f1)
+          CANDIDATE_VERIFY_SHA=$(sha256sum candidate/.github/workflows/verify.yml | cut -d' ' -f1)
+          if [ "$BASE_VERIFY_SHA" != "$CANDIDATE_VERIFY_SHA" ] && [ "$CANDIDATE_VERIFY_SHA" != "$EXPECTED_VERIFY_MIGRATION_SHA256" ]; then
+            echo "verify.yml changed outside the one-time trusted migration target" >&2
+            exit 1
+          fi
+
+          ruby <<'RUBY'
+          require 'yaml'
+          Dir['candidate/.github/workflows/*.{yml,yaml}'].sort.each do |file|
+            doc = YAML.safe_load(File.read(file), permitted_classes: [], permitted_symbols: [], aliases: false) || {}
+            jobs = doc['jobs'].is_a?(Hash) ? doc['jobs'] : {}
+            jobs.each do |job_id, job|
+              job_name = job.is_a?(Hash) ? job['name'].to_s : ''
+              next unless job_id.to_s == 'selftest' || job_name == 'selftest'
+              allowed = File.basename(file) == 'trusted-selftest.yml' && job_id.to_s == 'selftest'
+              abort("competing selftest check authority in #{file}:#{job_id}") unless allowed
+            end
+          end
+          RUBY
+
+      - name: Require exact candidate branch verifier success
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          for ATTEMPT in $(seq 1 90); do
+            RESPONSE=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${GITHUB_REPOSITORY}/actions/workflows/verify.yml/runs?head_sha=${HEAD_SHA}&event=push&per_page=10")
+            STATUS=$(printf '%s' "$RESPONSE" | jq -r '.workflow_runs | sort_by(.run_number) | last | .status // ""')
+            CONCLUSION=$(printf '%s' "$RESPONSE" | jq -r '.workflow_runs | sort_by(.run_number) | last | .conclusion // ""')
+            if [ "$STATUS" = "completed" ]; then
+              if [ "$CONCLUSION" = "success" ]; then
+                echo "trusted selftest: candidate verify.yml workflow succeeded for $HEAD_SHA"
+                exit 0
+              fi
+              echo "candidate verify.yml workflow concluded: $CONCLUSION" >&2
+              exit 1
+            fi
+            sleep 10
+          done
+          echo "candidate verify.yml workflow did not complete inside trusted gate window" >&2
+          exit 1

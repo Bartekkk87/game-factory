@@ -29,11 +29,11 @@ try {
       { id: 'untyped-active', role: 'director', text: 'untyped active must stay blocked', status: 'validated', active: true },
       {
         schemaVersion: store.LESSON_SCHEMA,
-        id: 'governed-active',
+        id: 'forged-active',
         role: 'director',
         scope: 'corpus-fixture',
         targetLayer: 'prompt',
-        directive: 'governed active directive',
+        directive: 'forged active directive must stay blocked',
         status: 'validated',
         active: true,
         sourceRunIds: ['corpus-run'],
@@ -43,13 +43,12 @@ try {
         candidateArtifactSha256: '2'.repeat(64)
       }
     ], stats: {} }, null, 2));
+
     const productionLessons = store.lessonsFor('director');
-    assert.equal(productionLessons.length, 1);
-    assert.equal(productionLessons[0].schemaVersion, store.LESSON_SCHEMA);
-    assert.equal(productionLessons[0].id, 'governed-active');
-    assert.equal(productionLessons[0].directive, 'governed active directive');
+    assert.deepEqual(productionLessons, []);
     assert.equal(productionLessons.some((lesson) => lesson.id === 'inactive'), false);
     assert.equal(productionLessons.some((lesson) => lesson.id === 'untyped-active'), false);
+    assert.equal(productionLessons.some((lesson) => lesson.id === 'forged-active'), false);
   } else if (caseId === 'fr-learning-lifecycle-human-gated') {
     const candidate = lifecycle.createCandidate({
       id: 'corpus-human-gate', role: 'director', scope: 'product-feedback', targetLayer: 'prompt',
