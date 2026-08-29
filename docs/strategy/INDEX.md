@@ -14,6 +14,8 @@ Machine-readable status and supersedes links live in `STATUS-CHAIN.json`.
 
 `LUMEN-CURRENT-A-B-CANARY-PLAN-2026-08-29.md` is the Owner-authorized experiment record for the current Lumen Current controlled model comparison. It freezes the already canonical Owner brief and orders the Product runs as OpenAI reference first, followed by the identical OpenRouter/GLM-5.3-Flash challenger, with no learning promotion or configuration mutation between runs. It does not supersede architecture authority.
 
+Run A startup attempt `33243106384` aborted before the Production pipeline and before any model/API invocation because the merge-trigger idea resolver did not identify the newly merged `ideas/**` file. PR #47 corrected that startup path and the legacy binary-state cleanup boundary without changing the experiment. The next Run A trigger therefore reuses the identical frozen Lumen Current brief and remains the OpenAI reference run, not a second experimental condition.
+
 ## Superseded architecture-hardening documents
 
 The following remain valuable historical implementation evidence but no longer describe current open work:
