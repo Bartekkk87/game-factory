@@ -21,8 +21,11 @@ for (const [key, model] of entries) {
   assert.ok(model.requestShape, `${key} requestShape missing`);
   assert.ok(['max_tokens', 'max_completion_tokens'].includes(model.requestShape.tokenParam), `${key} tokenParam invalid`);
   assert.ok(['free', 'unsupported'].includes(model.requestShape.temperature), `${key} temperature contract invalid`);
-  assert.ok(['response_format', 'none'].includes(model.requestShape.jsonMode), `${key} jsonMode invalid`);
+  assert.ok(['response_format', 'prompt', 'none'].includes(model.requestShape.jsonMode), `${key} jsonMode invalid`);
   assert.ok(String(model.requestShape.contractSource || '').trim(), `${key} request contract source missing`);
+  if (model.requestShape.requestTimeoutMs != null) {
+    assert.ok(Number.isInteger(model.requestShape.requestTimeoutMs) && model.requestShape.requestTimeoutMs > 0, `${key} timeout contract invalid`);
+  }
 
   const request = buildOpenAiCompatibleChatRequest({
     route,
@@ -47,6 +50,11 @@ for (const [key, model] of entries) {
 
   if (model.requestShape.jsonMode === 'response_format') {
     assert.deepEqual(body.response_format, { type: 'json_object' }, `${key} JSON response contract mismatch`);
+    assert.doesNotMatch(body.messages[0].content, /MACHINE OUTPUT CONTRACT/, `${key} unexpectedly used prompt JSON guard`);
+  } else if (model.requestShape.jsonMode === 'prompt') {
+    assert.equal(Object.hasOwn(body, 'response_format'), false, `${key} emitted unsupported response_format`);
+    assert.match(body.messages[0].content, /Return exactly one valid JSON object/, `${key} prompt JSON guard missing`);
+    assert.match(body.messages[0].content, /fail closed/, `${key} prompt JSON fail-closed guard missing`);
   } else {
     assert.equal(Object.hasOwn(body, 'response_format'), false, `${key} emitted unsupported response_format`);
   }
@@ -93,6 +101,20 @@ const glmBody = JSON.parse(glmRequest.body);
 assert.deepEqual(glmBody.reasoning, { effort: 'low', exclude: true });
 assert.deepEqual(glmBody.provider, { sort: 'throughput', require_parameters: true });
 assert.deepEqual(glmBody.response_format, { type: 'json_object' });
+
+for (const key of [
+  'openrouter:nvidia/nemotron-3.5-lightning:free',
+  'openrouter:nvidia/nemotron-3-ultra-550b-a55b:free'
+]) {
+  const nemotron = registry[key];
+  assert.equal(nemotron.capabilities.freeEndpoint, true, `${key} must be explicitly marked free`);
+  assert.equal(nemotron.capabilities.maxOutputTokens, 65536, `${key} output ceiling metadata mismatch`);
+  assert.equal(nemotron.pricing.inputUsdPerM, 0, `${key} input pricing must be zero`);
+  assert.equal(nemotron.pricing.outputUsdPerM, 0, `${key} output pricing must be zero`);
+  assert.equal(nemotron.requestShape.jsonMode, 'prompt', `${key} must not claim provider-enforced JSON`);
+}
+assert.equal(registry['openrouter:nvidia/nemotron-3.5-lightning:free'].requestShape.requestTimeoutMs, 360000);
+assert.equal(registry['openrouter:nvidia/nemotron-3-ultra-550b-a55b:free'].requestShape.requestTimeoutMs, 900000);
 
 const fixtureModel = structuredClone(entries[0][1]);
 delete fixtureModel.requestShape;
