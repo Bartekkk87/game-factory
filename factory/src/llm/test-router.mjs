@@ -128,6 +128,29 @@ try {
   assert.equal(resolveRoleRoute({ role: 'engineer' }).model.id, 'deepseek-v4-pro');
   assert.equal(resolveRoleRoute({ role: 'director' }).provider.id, 'openai');
 
+  delete process.env.GF_LLM_PROVIDER_ENGINEER;
+  delete process.env.GF_MODEL_ENGINEER;
+  process.env.GF_LLM_PROVIDER = 'openrouter';
+  process.env.GF_MODEL = 'nvidia/nemotron-3.5-lightning:free';
+  const nemotronEngineer = resolveRoleRoute({
+    role: 'engineer',
+    operation: 'build',
+    requirements: { jsonObject: true, maxOutputTokens: 65536 }
+  });
+  assert.equal(nemotronEngineer.provider.id, 'openrouter');
+  assert.equal(nemotronEngineer.model.id, 'nvidia/nemotron-3.5-lightning:free');
+  assert.equal(nemotronEngineer.model.capabilities.freeEndpoint, true);
+  assert.equal(nemotronEngineer.model.requestShape.jsonMode, 'prompt');
+  assert.equal(getModelPricing('openrouter', 'nvidia/nemotron-3.5-lightning:free').outputUsdPerM, 0);
+  assert.throws(() => resolveRoleRoute({
+    role: 'playtester',
+    requirements: { vision: true, maxOutputTokens: 32768 }
+  }), ModelCapabilityError, 'Nemotron Lightning free must not be treated as a vision reviewer');
+  assert.throws(() => resolveRoleRoute({
+    role: 'engineer',
+    requirements: { maxOutputTokens: 65537 }
+  }), ModelCapabilityError, 'Nemotron Lightning free must enforce its 65536 completion limit');
+
   console.log('model/provider router selftest: PASS');
 } finally {
   for (const key of managed) {
