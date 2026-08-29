@@ -9,6 +9,12 @@ function requestShapeFor(route) {
   if (!['response_format', 'none'].includes(shape.jsonMode)) {
     throw new Error(`Model ${route.model.id} has no valid JSON request contract`);
   }
+  if (shape.reasoningEffort != null && !['max', 'xhigh', 'high', 'medium', 'low', 'minimal', 'none'].includes(shape.reasoningEffort)) {
+    throw new Error(`Model ${route.model.id} has no valid reasoning effort contract`);
+  }
+  if (shape.providerSort != null && !['price', 'throughput', 'latency'].includes(shape.providerSort)) {
+    throw new Error(`Model ${route.model.id} has no valid OpenRouter provider sort contract`);
+  }
   return shape;
 }
 
@@ -24,6 +30,12 @@ function assertRequestShape({ route, images, json, temperature, maxTokens }) {
   if (images.length && caps.vision !== true) throw new Error(`Model ${route.model.id} does not support vision input`);
   if (json && caps.jsonObject === false) throw new Error(`Model ${route.model.id} does not support JSON-object mode`);
   if (json && shape.jsonMode === 'none') throw new Error(`Model ${route.model.id} has no configured JSON request mode`);
+  if (shape.reasoningEffort && caps.reasoning !== true) {
+    throw new Error(`Model ${route.model.id} has reasoning request tuning but reasoning capability is false`);
+  }
+  if (shape.providerSort && route.provider.id !== 'openrouter') {
+    throw new Error(`Model ${route.model.id} has OpenRouter routing tuning on non-OpenRouter provider ${route.provider.id}`);
+  }
 
   if (shape.temperature === 'free' && temperature != null) {
     const value = Number(temperature);
@@ -64,6 +76,20 @@ export function buildOpenAiCompatibleChatRequest({
 
   if (json && shape.jsonMode === 'response_format') {
     body.response_format = { type: 'json_object' };
+  }
+
+  if (shape.reasoningEffort) {
+    body.reasoning = {
+      effort: shape.reasoningEffort,
+      ...(shape.reasoningExclude === true ? { exclude: true } : {})
+    };
+  }
+
+  if (route.provider.id === 'openrouter' && shape.providerSort) {
+    body.provider = {
+      sort: shape.providerSort,
+      ...(shape.providerRequireParameters === true ? { require_parameters: true } : {})
+    };
   }
 
   const headers = {
