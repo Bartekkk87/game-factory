@@ -27,7 +27,13 @@ const DEFINITELY_PRE_DELIVERY_CODES = new Set([
   'UNABLE_TO_VERIFY_LEAF_SIGNATURE'
 ]);
 
-export class LlmError extends Error {}
+export class LlmError extends Error {
+  constructor(message, { code = null, cause = undefined } = {}) {
+    super(message, cause === undefined ? undefined : { cause });
+    this.name = 'LlmError';
+    if (code) this.code = code;
+  }
+}
 export { beginRunBudget, costReport };
 
 function transportCode(error) {
@@ -37,6 +43,15 @@ function transportCode(error) {
 export function isDefinitelyPreDeliveryTransportError(error) {
   if (!error || error.name === 'AbortError') return false;
   return DEFINITELY_PRE_DELIVERY_CODES.has(transportCode(error));
+}
+
+export function llmFailureReason(error, fallback) {
+  if (error?.code === 'BUDGET_BLOCKED') return 'budget_blocked';
+  if (error?.code !== 'REQUEST_TIMEOUT') return fallback;
+  if (String(fallback).startsWith('director')) return 'director_transport_timeout';
+  if (String(fallback).startsWith('engineer')) return 'engineer_transport_timeout';
+  if (String(fallback).startsWith('playtester')) return 'playtester_transport_timeout';
+  return 'llm_transport_timeout';
 }
 
 export async function chat({
@@ -117,7 +132,7 @@ export async function chat({
       try {
         data = await response.json();
       } catch (error) {
-        throw new LlmError(`Invalid JSON response: ${error.message}`);
+        throw new LlmError(`Invalid JSON response: ${error.message}`, { cause: error });
       }
 
       const usage = data.usage ?? {};
@@ -150,7 +165,10 @@ export async function chat({
         modelVersion: actualModel || route.model.versionLabel,
         costUsd: settled.costUsd
       };
-    } catch (error) {
+    } catch (caught) {
+      const error = controller.signal.aborted && caught?.code !== 'REQUEST_TIMEOUT'
+        ? new LlmError(`Request timed out after ${requestTimeoutMs}ms`, { code: 'REQUEST_TIMEOUT', cause: caught })
+        : caught;
       lastError = error;
 
       if (reservationId && !reservationClosed) {

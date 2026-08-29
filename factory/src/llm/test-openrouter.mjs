@@ -55,6 +55,11 @@ try {
   assert.equal(glm.benchmarkStatus, 'challenger');
   assert.equal(glm.capabilities.contextWindow, 1310720);
   assert.equal(glm.capabilities.maxOutputTokens, 131072);
+  assert.equal(glm.capabilities.reasoning, true);
+  assert.equal(glm.requestShape.reasoningEffort, 'low');
+  assert.equal(glm.requestShape.reasoningExclude, true);
+  assert.equal(glm.requestShape.providerSort, 'throughput');
+  assert.equal(glm.requestShape.providerRequireParameters, true);
   assert.equal(glm.pricing.inputUsdPerM, 0.15);
   assert.equal(glm.pricing.outputUsdPerM, 0.5);
   assert.throws(() => getModelRecord('openrouter', 'definitely-unknown'), UnknownModelError);
