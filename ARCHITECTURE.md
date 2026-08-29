@@ -1,8 +1,10 @@
-# Game Factory — Architektur v2.9 (Studio OS)
+# Game Factory — Architektur v3.0 (Studio OS)
 
 Evidence-first Game-Development-Plattform auf GitHub. GitHub ist die executable/durable Source of Truth für Code, Runs, Evidence, Learning-Artefakte, Evaluation und Promotionen. Notion spiegelt Entscheidungen und Status.
 
-Stand: **29.08.2026 — Factory Foundation + Controlled Improvement + Golden Corpus S0–S5 CLOSED; realer Failure → Validated Candidate → Human Application Pfad `APPLIED-CLOSED` demonstriert; Audit-v2 A-1/A-2 zero-paid implementiert und branch-verifiziert.**
+Stand: **29.08.2026 — Architecture Audit v2 intern vollständig reconciled; PR #40 auf `main` gemerged und exact-main verifiziert; Repository-Ruleset `Protect main` live aktiv; Factory aus Architektur-/Governance-Sicht Canary-ready, unabhängiger Re-Audit ausdrücklich noch erwünscht.**
+
+Kein Paid Product Canary und kein model-backed Benchmark ist durch diesen Status autorisiert.
 
 ## 1. Architekturprinzipien
 
@@ -11,14 +13,15 @@ Stand: **29.08.2026 — Factory Foundation + Controlled Improvement + Golden Cor
 3. **Owner Intent ist Vertrag.** Must-Haves/No-Gos und durable Referenzen dürfen downstream nicht still verschwinden.
 4. **Modelle sind Worker, keine Control Plane.** Budget, SHA-Binding, Release, Learning und Benchmark-Authority bleiben deterministisch/governed.
 5. **Production Factory und Improvement Factory sind getrennt.** Kein ungeprüfter Candidate darf Production beeinflussen.
-6. **Provider/Modelle sind austauschbar, soweit ihr deklarierter Request-Contract verifiziert ist.** Kein stiller Challenger- oder Cross-Provider-Fallback.
-7. **Promotion/Application ist explizit und reversibel.** Geschützte Layer benötigen separaten Human-Review/Merge und maschinell prüfbare Provenance.
+6. **Provider/Modelle sind nur innerhalb ihres deklarierten Request-Contracts austauschbar.** Kein stiller Challenger- oder Cross-Provider-Fallback.
+7. **Promotion/Application ist explizit und reversibel.** Geschützte Layer benötigen Human Review/Merge und maschinell prüfbare Provenance.
 8. **Git-backed Evidence vor unsichtbarer Memory.** Dauerhafte Claims brauchen nachvollziehbare Provenance.
 9. **Keine neue Kontrollkomponente ohne reproduzierten Failure Mode.**
 10. **Kein Paid Game- oder model-backed Benchmark-Run ohne separate Owner-Freigabe.**
 11. **Learning generalisiert Regeln, nicht Einzelfallnamen.**
 12. **Code Authority und Runtime State sind getrennt.** `main` ist autoritativ; `runtime-state` ist durable, aber nicht autoritativ.
-13. **Corpus-Fälle sind nur dann unabhängige Beobachtungen, wenn jeder Fall einen eigenen adressierbaren Oracle-Lauf besitzt.**
+13. **Corpus-Fälle zählen nur als unabhängige Beobachtungen, wenn jeder Fall einen eigenen adressierbaren Oracle-Lauf besitzt.**
+14. **Dokumentation besitzt eine explizite Authority-Kette.** Alte Snapshots dürfen aktuelle Architektur nicht still überschreiben.
 
 Authority Order:
 
@@ -26,7 +29,7 @@ Authority Order:
 
 Golden Corpus und Benchmark-Ergebnisse liefern Evidence, aber keine Production-Authority.
 
-## 2. Schichten
+## 2. Systemschichten
 
 ```text
 L7 PRODUCT / OWNER
@@ -75,7 +78,9 @@ Binding release rule:
 
 `Technical PASS + Product Fidelity PASS + Budget PASS`
 
-Der LLM-basierte Experience-Score bleibt als qualitative Product-Evidence sichtbar und kann Polish steuern, ist aber **advisory / non-authoritative**. Auditor und qualitative Playtester-Fidelity sind ebenfalls advisory. Kein LLM kann allein einen Release freigeben.
+Der LLM-basierte Experience-Score bleibt qualitative Product-Evidence und kann Polish steuern, ist aber **advisory / non-authoritative**. Auditor und qualitative Playtester-Fidelity sind ebenfalls advisory. Kein LLM kann allein Release-Authority ausüben.
+
+Ein technischer Release-PASS ist nicht identisch mit Owner Product Acceptance.
 
 ## 4. Owner Contract / Product Truth
 
@@ -85,7 +90,7 @@ Der LLM-basierte Experience-Score bleibt als qualitative Product-Evidence sichtb
 - explizite No-Gos -> stabile `NG-*` Constraints;
 - mehrdeutige/freeform Inhalte werden konservativ bewahrt;
 - Director erhält Raw Owner Idea + Owner Contract;
-- Traceability verlangt genau ein Acceptance Criterion und eine unterstützte Verifier-Probe je harter Owner-Anforderung;
+- Traceability verlangt Acceptance Criterion und unterstützte Verifier-Probe je harter Owner-Anforderung;
 - Idea-File-Ingestion bewahrt exakte Bytes für `ownerBriefSha256`.
 
 ## 5. Verifier / Product Fidelity
@@ -107,6 +112,8 @@ Implementiert und regressionsgeprüft:
 
 Generated self-attestation ist keine ausreichende unabhängige Evidence. Product-spezifische semantische Labels sind nicht automatisch technische Verifier-States.
 
+Proof-Dauer besitzt nur über das typisierte Feld `probePlan.roundSeconds` Autorität. Prosa wird dafür nicht geparst. Ungültige typisierte Werte scheitern fail-closed; fehlende Werte verwenden einen sicheren Maximalrahmen.
+
 ## 6. Controlled Improvement / Protected Layers
 
 Lifecycle:
@@ -125,18 +132,36 @@ Protected Layers:
 
 `skill`, `prompt`, `owner-contract`, `verifier`, `product-fidelity`, `release-gate`, `engine-contract`, `control-plane`, `evaluation`.
 
-### Prompt-Lesson Promotion
+### Capability split
 
-Prompt-Lesson-Promotion akzeptiert nicht mehr nur die Behauptung `approvalKind=human-merge`. Der Lifecycle verlangt:
+Automatic Analysis importiert nur die sichere Proposal Capability:
 
-- einen gültig geformten GitHub-PR-Ref;
-- einen vollständigen Git-Commit-SHA, der in aktuellem `HEAD` enthalten ist;
+- Candidate lesen;
+- inaktiven Candidate erzeugen.
+
+Privilegierte Lifecycle-Fähigkeiten liegen separat:
+
+- validate;
+- promote;
+- deactivate;
+- Application Receipt schließen.
+
+Diese Trennung ist auf Modul-/Caller-Ebene strukturell und regressionsgeprüft. Sie ist **kein OS-/Prozess-Sandbox-Versprechen**.
+
+### Prompt/Lesson Promotion
+
+Promotion akzeptiert nicht nur die Behauptung `approvalKind=human-merge`. Der Lifecycle bindet:
+
+- gültigen GitHub-PR-Ref;
+- vollständigen Git-Commit-SHA im aktuellen History-Pfad;
 - SHA-256 des validierten Candidate-Artefakts;
 - Nachweis, dass exakt dieses Candidate-Artefakt im angegebenen Commit enthalten ist.
 
 Direktes Erzeugen aktiver Lessons über `memory/store.mjs` ist entfernt.
 
-### Git Authority / Runtime State
+Production Lessons verwenden `learning-lesson/v2`, sind in Anzahl und Direktivenlänge begrenzt und werden explizit unterhalb höherer Prompt-/Governance-Authority serialisiert.
+
+## 7. Git Authority / Runtime State
 
 Die Git-seitige Authority ist zweigeteilt:
 
@@ -146,99 +171,88 @@ Die Git-seitige Authority ist zweigeteilt:
 Production und Review:
 
 1. checken explizit `main` aus;
-2. prüfen, dass die seit dem Merge-Base eigenen Änderungen von `runtime-state` ausschließlich in erlaubten State-Pfaden liegen;
-3. mergen den erlaubten State lokal in den aktuellen `main`-Tree;
-4. prüfen anschließend, dass der kombinierte Tree gegenüber `main` ausschließlich in State-Pfaden abweicht;
-5. führen Production/Review mit dem autoritativen Code aus `main` aus;
-6. stage'n nur explizit erlaubte Runtime-/Evidence-Pfade;
-7. prüfen staged Evidence auf bekannte Secret-Formate;
-8. pushen ausschließlich `HEAD:runtime-state`.
+2. validieren `runtime-state` gegen erlaubte State-Pfade;
+3. laden erlaubten State lokal in den autoritativen Main-Code;
+4. führen Production/Review mit Code aus `main` aus;
+5. stage'n nur explizit erlaubte Runtime-/Evidence-Pfade;
+6. prüfen staged Evidence auf bekannte Secret-Formate;
+7. pushen ausschließlich `HEAD:runtime-state`.
 
-Die erlaubten State-Pfade sind:
+Erlaubte State-Pfade:
 
 `runs/`, `drafts/`, `products/`, `archive/`, `memory/`, `learning/`, `evaluation/results/`.
 
-Production und Review teilen die Concurrency-Gruppe `game-factory-runtime-state`, sodass sie denselben State-Branch nicht gleichzeitig fortschreiben.
+Production und Review teilen die Concurrency-Gruppe `game-factory-runtime-state`.
 
-GitHub Pages folgt derselben Trust-Richtung: Code wird aus `main` ausgeführt; `runtime-state` wird nur nach Branch-/Tree-Policy als read-only Gallery-State zugeladen.
+### Repository enforcement
 
-Zusätzlich gelten Runtime-Protected-Path-Check und `CODEOWNERS` als Defense in Depth.
+C-3 ist live geschlossen.
 
-**Repository-Admin-Boundary:** Der Code-Split beseitigt die Notwendigkeit von Bot-Pushes auf `main`, ersetzt aber keine Branch Protection. C-3 ist erst vollständig geschlossen, wenn GitHub `main` tatsächlich als protected branch/ruleset mit Pflichtreview und ohne Actions-Bypass erzwingt.
+Ruleset `Protect main`:
 
-## 7. Real Learning Proof — Lumen Current
+- id `21788078`;
+- enforcement `active`;
+- target exakt `refs/heads/main`;
+- Pull Request vor Merge erforderlich;
+- GitHub Actions Check `selftest` erforderlich;
+- Deletions blockiert;
+- Non-fast-forward/Force Pushes blockiert;
+- Bypass-Liste leer;
+- `current_user_can_bypass = never`;
+- GitHub meldet `main` als `protected: true`.
 
-Paid Production Canary #1 (`33207019862`) scheiterte vor Build, weil der Director produzierte:
+`required approving reviews = 0` ist im aktuellen Single-Owner-Modell bewusst gesetzt, um keinen Self-Review-Deadlock zu erzeugen. Dieser Governance-Trade-off ist für den externen Re-Audit ausdrücklich sichtbar.
 
-```text
-PR-MH-03 -> state_reached: restored
-PR-MH-04 -> state_reached: glass_breach
-```
+## 8. Budget und persistenter State
 
-Der Verifier blockierte vor Engineer-Spend. Der reparierte Learning-Pfad klassifiziert deterministisch:
+Der Cost Ledger ist run-scoped über `AsyncLocalStorage`; parallel laufende async Runs dürfen Budgetzustand nicht überschreiben.
 
-`director-verifier-state-contract-mismatch`
+Memory-Updates verwenden Locking, Re-Read unter Lock, atomaren Replace und Recovery-/Concurrency-Tests. Dies ist ein transactional/concurrency-safe Store, **kein behaupteter append-only Event Store**.
 
-Die generalisierte Regel lautet:
+Unklare Provider-Zustellung bleibt bei Kosten konservativ fail-closed.
 
-**`state_reached` verwendet nur das endliche Verifier-Protokoll; thematische Zustände gehören in Events/UI/World-State-Daten.**
-
-Der reale Fehler ist zusätzlich als unveränderliche Historical-Regression-Fixture gebunden. Die Fixture enthält Origin-Run, Evidence-Commit und Git-Blob-SHAs. Der Test hängt nicht mehr konditional von einem später löschbaren `runs/`-Verzeichnis ab.
-
-Historische Application Closure:
-
-- PR `#36`;
-- Merge `7af126e3300b23c19bd088ca32c08c7e81947d8b`;
-- Post-Merge Verifier `33211092911` SUCCESS;
-- Receipt `learning/applications/candidate-production-run-b37ac8d268e8549c.json` = `APPLIED-CLOSED`.
-
-Der Candidate bleibt `validated`, `active=false`.
-
-## 8. Golden Factory Evaluation Corpus — S0–S5
+## 9. Golden Factory Evaluation Corpus — S0–S5
 
 Golden Corpus ist Evaluation/Evidence, keine zweite Control Plane und kein Weight Training.
 
-### S0 — Registry + Coverage
-Typed Case Schema, durable Seed Registry, Provenance-Prüfung und Coverage Baseline.
+### S0/S1
 
-### S1a/S1b — Executable Cases + bounded sibling variance
-Fallakten besitzen executable Expected-Outcome-Semantik und dokumentierte Nachbarvarianten.
+Typed Registry, Provenance, executable Expected Outcomes und bounded sibling variants.
 
-### S2 — Evaluation Runner + Quality Delta
-Audit-v2 A-1/A-2 ersetzt die bisherige Sammeltest-Messung durch einen fallbezogenen Execution Contract:
+### S2
 
-- **34 aktive Corpus-Fälle** insgesamt;
-- **34 unabhängige Case-Ausführungen**;
-- **9 Oracle-Implementierungsdateien**, die per `--case <case-id>` ausschließlich die Assertion des adressierten Falls ausführen;
-- `independentObservationCount` ist eine bindende S2-Metrik;
-- `observationDeficit > 0` ist eine Corpus Regression und scheitert fail-closed;
-- die ursprünglichen 29 Seed-/Variant-Fälle bleiben erhalten;
-- zusätzlich sind **5 reale Production-derived Fehler als `historical-regression`** registriert, jeweils mit Origin Run und Fix Commit.
+Aktueller Contract:
 
-Die fünf Historical Regressions sind:
+- **34 aktive Corpus-Fälle**;
+- **34 unabhängige fallbezogene Beobachtungen**;
+- **9 Oracle-Implementierungsdateien**;
+- `independentObservationCount` ist bindend;
+- `observationDeficit > 0` scheitert fail-closed;
+- 5 reale Production-derived `historical-regression`-Fälle mit Origin-/Fix-Provenance.
+
+Historical Regressions:
 
 1. Harbor Repair Regression;
 2. Harbor Proof-Plan Unreachability;
 3. Lumen Director State Contract;
-4. Provider Request Contract — `max_completion_tokens` statt `max_tokens`;
-5. Provider Request Contract — unsupported `temperature`.
+4. Provider token-parameter request failure;
+5. Provider unsupported-temperature request failure.
 
-Der frühere Stand `29 registrierte Fälle / 8 eindeutige Sammel-Selftests` ist damit nur noch historischer Audit-Ausgangspunkt und **nicht mehr die aktuelle unabhängige Messgranularität**.
+Provider-Regressions replayen Request Construction und sind **kein** Live-Kompatibilitätsnachweis.
 
-### S3 — Evaluation Failure Intake
-Kompatible Corpus-Mismatches können analysis-only in Controlled Improvement eingehen; Candidates bleiben inaktiv.
+### S3/S4
 
-### S4 — Non-Prompt Application Receipt
-`learning-application-receipt-v1` bindet Candidate SHA, Target Layer/Scope, Human Approval, PR/Merge, Validation, Post-Merge Regression und Corpus-Evidence. `APPLIED-CLOSED` aktiviert keinen Candidate.
+Evaluation Failures können analysis-only in Controlled Improvement einfließen. S4 Application Receipts binden Candidate, Human Application, Merge, Validation und Post-Merge Regression. `APPLIED-CLOSED` aktiviert keinen Candidate.
 
-### S5 — System Configuration Benchmark
+### S5
+
 Vergleichseinheit:
 
-`Model + Prompt/Skill + Context Contract + Verifier + Retry + Escalation`
+`Model + Prompt/Skill + Context Contract + Verifier + Retry + Escalation + Sampling`
 
-S5 liefert gepinnte Config-SHAs, Development/Holdout-Isolation, separate Oracles, bounded Trials, Trace Attribution, Kosten/Latenz und advisory `human-review-required` Authority. Ein model-backed S5 Run benötigt separate Owner-Autorisierung.
+Sampling ist gepinnt. Resultate berichten Trials, Varianz/Standardabweichung und 95%-Unsicherheit. Ein model-backed S5 Run benötigt separate Owner-Autorisierung. Ein realer Benchmark-Gewinner ist aktuell **nicht** nachgewiesen.
 
-## 9. Model / Provider Layer
+## 10. Model / Provider Layer
 
 Canonical Runtime Stack:
 
@@ -255,61 +269,137 @@ Die Request-Form wird pro Modell deklarativ über `requestShape` definiert:
 - JSON-Mode;
 - Herkunft/Verifikationsstatus des Contracts.
 
-Der Adapter darf diese Semantik nicht mehr aus `provider.id` ableiten. Ein zero-paid Contract-Test läuft über jeden Registry-Eintrag. Nicht real verifizierte Provider-Contracts werden als `unverified` markiert und nicht als bestätigte Kompatibilität dargestellt.
+Der Adapter darf diese Semantik nicht aus `provider.id` ableiten. Ein zero-paid Contract-Test läuft über Registry-Einträge.
+
+Nicht live verifizierte Provider-Contracts werden nicht als bestätigte Kompatibilität dargestellt.
 
 Transport-Retry:
 
 - eindeutig pre-delivery DNS/Connect/TLS -> Reservation freigeben, Retry erlaubt;
 - Timeout/Abort, `ECONNRESET` und unklare Zustellung -> konservatives Settlement, `accountingComplete=false`, kein weiterer Paid Call.
 
-## 10. Generated-Code Isolation
+## 11. Binary Evidence
 
-`assemble.mjs` schützt gegen vorzeitiges Schließen von `<script>` und `<style>` durch generierte Inhalte. Die Produktseite trägt eine restriktive CSP mit blockierten externen Verbindungen und Fremdressourcen.
+Binary Screenshots/Media werden nicht als gewöhnlicher Runtime-Git-State fortgeschrieben.
 
-Langfristiges Zielbild bleibt eine **separate Origin für untrusted generated code**. CSP ist die sofort wirksame Schutzschicht, auch bei direkter Navigation zur Produkt-URL.
+- SHA-Manifest bindet Pfad, Hash und Bytes;
+- GitHub Actions Artifact ist der aktuelle Binärspeicher;
+- Retention ist explizit begrenzt, aktuell 30 Tage;
+- Binary Evidence wird vor Runtime-State-Git-Staging entfernt;
+- staged-state policy lehnt Binärdateien ab.
 
-## 11. Current Gaming Milestone
+**Wichtige Boundary:** Das ist bounded-retention object storage, kein permanentes Archiv. Ob 30 Tage den gewünschten Audit-Horizont erfüllen, ist eine offene Residual-Risk-Frage für den unabhängigen Auditor.
 
-Issue `#17` bleibt offen. Lumen Canary #1 erreichte keinen spielbaren Draft; hands-on Owner ACCEPT/REJECT bleibt für einen unabhängigen Post-Repair-Canary offen.
+## 12. Generated-Code Isolation
 
-**Vor einem zweiten Paid Production Canary wird die Architektur finalisiert.** Der Ablauf ist daher:
+Generated Code ist gegen Tag-Terminator-Injection geschützt und wird für Preview/Publishing in einen Host-Wrapper gebunden.
 
-1. verbleibende akzeptierte Architecture-Audit-Tracks separat implementieren und regressionsprüfen;
-2. repository-seitiges C-3 Enforcement als Final-Gate schließen;
-3. Gesamtarchitektur gegen den Audit erneut prüfen;
-4. erst danach Brief, Coverage, Risiken und Kostenrahmen für einen möglichen Canary vorlegen;
-5. **STOP für frische explizite Owner-Freigabe**;
-6. höchstens einen Paid Canary ausführen;
-7. Owner hands-on ACCEPT/REJECT.
+Der Game-Payload läuft in einem sandboxed `srcdoc` iframe:
 
-## 12. Cross-Domain Portability Hypothesis
+- `sandbox="allow-scripts"`;
+- kein `allow-same-origin`;
+- dadurch opaque browser origin;
+- restriktive Child-CSP / externe Netzwerkverbindungen blockiert;
+- Host bindet verifizierten Candidate SHA.
+
+**Boundary:** Das ist Browser-Origin-Isolation, nicht ein separat deploytes DNS/Domain. Eine physisch getrennte Hosting-Origin bleibt Defense-in-Depth-Option.
+
+## 13. Maintainability und Dokument-Authority
+
+Critical Control/Evaluation/Learning/Isolation Modules unterliegen einem deterministischen Style Gate im Full Verifier.
+
+**Boundary:** Es gibt keinen Anspruch, dass das gesamte Repository mit ESLint/Prettier formatiert oder auf `node --test` migriert ist.
+
+Strategie-Dokumente besitzen eine zentrale Authority-/Supersedes-Kette:
+
+- `docs/strategy/STATUS-CHAIN.json`;
+- `docs/strategy/INDEX.md`.
+
+Unlisted dated snapshots sind standardmäßig historical/non-authoritative.
+
+Canonical Audit-Reconciliation:
+
+`docs/strategy/ARCHITECTURE-AUDIT-V2-FINAL-RECONCILIATION-2026-08-29.md`
+
+## 14. Legal Status
+
+Repository enthält `SECURITY.md`, `CONTRIBUTING.md`, `CODEOWNERS` und Root `LICENSE`.
+
+Aktueller Lizenzstatus:
+
+**NO LICENSE GRANTED / All rights reserved.**
+
+Es wurde keine permissive/Open-Source-Lizenz auf Owner-Seite erfunden. Eine spätere Distribution-/Reuse-Lizenz ist eine separate Owner-/Legal-/Business-Entscheidung.
+
+## 15. Real Learning Proof — Lumen Current
+
+Paid Production Canary #1 (`33207019862`) scheiterte vor Build an einem Director-to-Verifier State Contract Mismatch.
+
+Der Verifier blockierte vor Engineer-Spend. Die generalisierte Regel lautet:
+
+**`state_reached` verwendet nur das endliche Verifier-Protokoll; thematische Zustände gehören in Events/UI/World-State-Daten.**
+
+Der reale Fehler ist als immutable Historical Regression gebunden.
+
+Historical Application Closure:
+
+- PR `#36`;
+- Merge `7af126e3300b23c19bd088ca32c08c7e81947d8b`;
+- Post-Merge Verifier `33211092911` SUCCESS;
+- Application Receipt = `APPLIED-CLOSED`;
+- Candidate bleibt `validated`, `active=false`.
+
+## 16. Current Gaming Milestone
+
+Issue `#17` bleibt offen, weil der post-repair unabhängige Product Proof noch keinen spielbaren Draft für hands-on Owner ACCEPT/REJECT erreicht hat.
+
+Das ist **kein offener Architecture Audit v2 Finding**.
+
+Vor einem weiteren Paid Canary:
+
+1. unabhängigen Re-Audit auswerten;
+2. falls kein Canary-blocking Finding entsteht: Brief, Coverage, Risiken und Kostenrahmen vorlegen;
+3. **STOP für frische explizite Owner-Freigabe**;
+4. höchstens den autorisierten Paid Run ausführen;
+5. Owner hands-on ACCEPT/REJECT;
+6. Evidence vor weiteren Architekturänderungen klassifizieren.
+
+## 17. Cross-Domain Portability Hypothesis
 
 Potenziell wiederverwendbares Pattern:
 
 `Intent/Contract -> Worker -> Observable Evidence -> Deterministic/Governed Gate -> Failure Taxonomy -> Candidate Improvement -> Validation Corpus -> Human Application -> Audit Trail`
 
-Cross-Domain-Portabilität bleibt eine begründete Hypothese, keine gemessene Kennzahl und keine außerhalb Gaming bewiesene Produktbehauptung.
+Cross-Domain-Portabilität bleibt eine begründete Hypothese, keine gemessene Kennzahl.
 
-## 13. Proof Boundary
+## 18. Proof Boundary und Rest-Risiken
 
-Aktuell gerechtfertigt: **EVIDENCE-DRIVEN CONTROLLED IMPROVEMENT**.
+Intern gerechtfertigt:
 
-Zusätzlich gerechtfertigt:
+- **EVIDENCE-DRIVEN CONTROLLED IMPROVEMENT**;
+- 34/34 unabhängige zero-paid Corpus-Beobachtungen;
+- fünf explizite historische Production-Regressionsfälle;
+- repository-internes Audit-v2 Hardening auf `main` exact-main grün;
+- `main` live durch aktives Ruleset geschützt;
+- Architektur-/Governance-Programm intern Canary-ready.
 
-- 34 aktive Corpus-Fälle besitzen 34 fallbezogene, zero-paid Einzelbeobachtungen;
-- 5 reale Production-derived Fehler sind explizit als Historical Regression mit Origin-Run-/Fix-Commit-Provenance registriert.
+Explizite Residuals für unabhängigen Re-Audit:
 
-Nicht gerechtfertigt bzw. noch offen:
+1. D-1: Binär-Evidence-Retention ist bounded (30 Tage), nicht permanent;
+2. C-2: Privilege Split ist Modul-/Capability-Trennung, kein OS-Sandbox;
+3. E-3: opaque Browser-Origin, keine separate DNS/Domain;
+4. F-1: Critical-Module Style Gate, kein repo-weites ESLint/Prettier/`node --test`;
+5. C-3: Required Approvals = 0 im Single-Owner-Modell;
+6. F-3: breitere Distribution-/Reuse-Lizenz nicht gewählt.
 
-- vollständige GitHub Protected-Branch-Enforcement, solange die Admin-Einstellung nicht aktiviert ist;
-- strukturelle Trennung von Proposal- und privilegierten Learning-Capabilities (C-2);
-- run-scoped Budget Ledger und concurrency-safe/append-only Memory (D-2);
-- durable Binary Evidence außerhalb normalen Git-History-Wachstums (D-1);
-- S5 Sampling/Variance/Confidence (B-4);
-- separate Origin für untrusted generated code (E-3);
-- typed Proof Duration / Lesson Contracts und verbleibende Maintainability/Governance-Tracks;
+Nicht gerechtfertigt:
+
 - fully self-modifying/self-authorizing Factory;
 - realer model-backed Benchmark-Gewinner;
 - automatische Production-Model-Promotion;
+- Live-Kompatibilität jeder registrierten Provider/Model-Kombination;
 - nachgewiesener Learning-Impact auf ein später Owner-akzeptiertes Spiel;
-- bewiesene Cross-Domain-Portabilität.
+- bewiesene Cross-Domain-Portabilität;
+- Behauptung, dass ein unabhängiger externer Audit bereits bestanden wurde.
+
+Der nächste Audit soll diese interne Closure ausdrücklich zu widerlegen versuchen.
