@@ -3,7 +3,7 @@
   "defaultUnlistedStatus": "historical-non-authoritative",
   "authorityOrder": [
     "ARCHITECTURE.md",
-    "docs/strategy/ARCHITECTURE-AUDIT-V2-FINAL-RECONCILIATION-2026-08-29.md",
+    "docs/strategy/INDEPENDENT-REAUDIT-REMEDIATION-CLOSURE-2026-08-29.md",
     "docs/strategy/PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md"
   ],
   "documents": [
@@ -14,9 +14,18 @@
       "supersedes": []
     },
     {
+      "path": "docs/strategy/INDEPENDENT-REAUDIT-REMEDIATION-CLOSURE-2026-08-29.md",
+      "role": "architecture-independent-reaudit-remediation-closure",
+      "status": "canonical",
+      "supersedes": [
+        "docs/strategy/ARCHITECTURE-AUDIT-V2-FINAL-RECONCILIATION-2026-08-29.md"
+      ]
+    },
+    {
       "path": "docs/strategy/ARCHITECTURE-AUDIT-V2-FINAL-RECONCILIATION-2026-08-29.md",
       "role": "architecture-audit-final-reconciliation",
-      "status": "canonical",
+      "status": "superseded",
+      "supersededBy": "docs/strategy/INDEPENDENT-REAUDIT-REMEDIATION-CLOSURE-2026-08-29.md",
       "supersedes": [
         "docs/strategy/ARCHITECTURE-FINALIZATION-TRACK-2026-08-29.md",
         "docs/strategy/ARCHITECTURE-AUDIT-V2-HARDENING-2026-08-28.md"
