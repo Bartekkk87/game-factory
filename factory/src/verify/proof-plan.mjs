@@ -10,6 +10,30 @@ function declaredRoundSeconds(gdd) {
   return { value: raw, error: null };
 }
 
+function probeId(probe) {
+  return String(probe?.id || 'missing');
+}
+
+function validateProbeSatisfiability(probe, errors) {
+  const id = probeId(probe);
+  const kind = String(probe?.kind || '');
+  if (kind === 'event' || kind === 'event_absent' || kind === 'event_value_change') {
+    const eventType = String(probe?.eventType || probe?.legacyEventType || '').trim();
+    if (!eventType) errors.push(`probe ${id} kind ${kind} requires eventType`);
+  }
+  if (kind !== 'event_value_change') return;
+
+  const beforeField = String(probe?.beforeField || '').trim();
+  const afterField = String(probe?.afterField || '').trim();
+  if (!beforeField || !afterField) {
+    errors.push(`probe ${id} event_value_change requires distinct beforeField and afterField`);
+    return;
+  }
+  if (beforeField === afterField) {
+    errors.push(`probe ${id} event_value_change is unsatisfiable: beforeField and afterField are both ${beforeField}`);
+  }
+}
+
 function routeProbe(probe, scenarioIds) {
   const kind = String(probe?.kind || '');
   const terminalState = canonicalTerminalState(probe?.state);
@@ -32,6 +56,8 @@ export function validateProofPlan({ gdd, plan } = {}) {
   const timing = declaredRoundSeconds(gdd);
   if (timing.error) errors.push(timing.error);
   if (plan?.declaredRoundSeconds !== timing.value) errors.push('proof plan declaredRoundSeconds does not match typed probePlan.roundSeconds');
+
+  for (const probe of probes) validateProbeSatisfiability(probe, errors);
 
   const stateProbes = probes.filter((probe) => probe?.kind === 'state_reached');
   for (const probe of stateProbes) {
