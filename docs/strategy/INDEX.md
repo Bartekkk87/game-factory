@@ -10,6 +10,16 @@ This index prevents dated strategy snapshots from silently competing for authori
 
 Machine-readable status and supersedes links live in `STATUS-CHAIN.json`.
 
+## Current independent audits
+
+`PROJECT-GAME-MODE-V0.1-INDEPENDENT-AUDIT.md` is the independent adversarial audit record for
+GitHub PR #64 (`Project Game Mode v0.1: bounded deterministic foundation`, not merged). Verdict:
+NO-GO, with three P0 findings reproduced against the exact audited PR head. It is an audit/
+evidence record, not project-game architecture authority — the canonical
+`PROJECT-GAME-MODE-V0.1-*` documents above are unaffected and unchanged by it. Do not treat it
+as superseding them; it evaluates whether their implementation in PR #64 can be trusted, not
+their design.
+
 ## Current Product experiment
 
 `LUMEN-CURRENT-A-B-CANARY-PLAN-2026-08-29.md` remains the Owner-authorized experiment record for the Lumen Current controlled model comparison. It freezes the canonical Owner brief and comparison controls. Later evidence must not silently change those controls.

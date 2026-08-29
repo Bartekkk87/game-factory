@@ -9,6 +9,85 @@ with total-data-loss and arbitrary-file-deletion defects.
 
 ---
 
+## 0. Erratum (2026-08-29, same day — post-review correction)
+
+This document was independently cross-checked after first publication. The cross-check
+confirmed the three P0 findings and P1-3 without change. It also found real defects in the
+audit itself. They are corrected in place below; this section records what changed and why,
+so the revision history stays visible rather than silently overwritten.
+
+1. **P1-1 (case-insensitive reserved-path bypass) is downgraded from P1 to P3.** The original
+   text argued this "would be P0" on a case-insensitive filesystem. Tracing the full code path
+   (not just the `isReservedProjectPath()` predicate) shows the patch pipeline's mandatory
+   before/after tree-diff almost certainly catches this: on a case-preserving, case-insensitive
+   filesystem (APFS, NTFS default), the on-disk directory entry keeps its original case
+   (`PROJECT.json`), so `captureProjectTree()`'s `fs.readdirSync()`-based walk reports the
+   changed path as `PROJECT.json`, while the declared operation says `project.json`. The
+   `declared !== observed` string comparison in `applyPatchToStaging()` then throws
+   `scope evidence mismatch` and the whole transaction aborts. This was not executed on a real
+   case-insensitive filesystem (still unavailable in this container) — it is corrected static
+   analysis, not a new reproduction. It replaces a claim that was itself unreproduced. The
+   underlying predicate inconsistency is real and kept as a finding, but as a robustness/error-
+   quality issue (confusing abort mode), not a demonstrated scope-escape. See revised **P3-1**.
+2. **P1-2 is narrowed.** The "wrote project alpha's state into project beta's workspace" step
+   used `writeProjectStateAtomic()` directly, which is exported but is **not** the path
+   `commitVerifiedTransaction()` uses — that function always calls it with the transaction's
+   own manifest, loaded fresh from the same workspace, so the demonstrated cross-project write
+   is not reachable through the documented commit flow today. This is now stated explicitly.
+   The other two parts of P1-2 — `gitCommitSha` defaults to `null` and is never populated or
+   checked by the normal flow, and `treeSha256` is never re-verified against the actual tree on
+   load — remain, are reachable through the normal flow, and keep the finding at P1.
+3. **P2-3 (browser-proof false FAIL) is downgraded to P3 and re-attributed.** CI job logs for
+   the audited head (run `33271453720`, step *"Prove verifier accepts good and rejects bad
+   products"*, `19:44:37–19:46:37`) show the PR's own browser-proof selftest — which includes
+   the positive fixture this finding is about — **passed** using CI's freshly installed
+   Chromium (`npx playwright install --with-deps chromium`, same run, step *"Install browser"*,
+   completed `19:40:25`). My reproduction used a Chromium **build 1194** substituted via
+   `executablePath` because this container's pinned Playwright (`1.62.1`) expects build 1234
+   and neither the exact build nor a fresh install was available here. The false FAIL is most
+   likely an artifact of that older substitute build's favicon-request behavior, not a defect
+   that reproduces against the PR's actual target browser. The original text ("the gate's
+   outcome depends on which Chromium binary CI happens to ship") overstated a risk to CI that
+   the CI evidence I already had access to does not support. The narrower point — that any
+   missing optional asset is currently treated as fatal by `fatal-browser-errors` — is kept as
+   a documentation-weight P3, not a P2 CI risk.
+4. **Section 3 / Section 9 (Micro-Game path) undersold CI evidence for the four unexecuted
+   browser suites.** They were reported as "UNPROVEN" without citing that CI's job-step log for
+   the exact audited head already shows all four passing individually: *"Prove P0 action
+   reachability repair"*, *"Prove independent terminal proof scenarios"*, *"Prove independent
+   HUD geometry verifier"*, *"Prove verifier causality and visual activity controls"* — all
+   `conclusion: success`, run `33271453720`, steps 42–45. Corrected framing: **not
+   independently reproduced in this sandbox** (Chromium version mismatch, stated as a real
+   limitation) **but confirmed via CI job-step logs to have passed on the exact audited head**,
+   which is a materially stronger claim than "UNPROVEN" and is not the same as "PASS by my own
+   execution". Both distinctions are now stated explicitly wherever this arises.
+5. **The stop-on-first-P0 rule was not literally followed, and the original text implied it
+   was.** P0-1 was found first; the audit then continued to P0-2, P0-3 and the P1–P3 findings
+   rather than halting immediately. The three P0s are independent code paths (verification
+   grading, crash recovery, concurrency) — stopping at the first would have left the second and
+   third undiscovered, and the NO-GO verdict and Owner decision benefit from knowing the full
+   blast radius rather than one instance of it. That is a reasoned deviation, not compliance,
+   and it is stated as a deviation rather than folded silently into "reproduction secured, audit
+   stopped" language used in earlier drafts of the closing sections.
+6. **The audit PR's own CI is red**, run `33273142760`, failing at the *"Require exact candidate
+   branch verifier success"* step of the Trusted Selftest Gate — because this document's path
+   (`docs/strategy/*.md`) was outside `verify.yml`'s push-trigger path filter, so no
+   `branch-selftest` run ever existed for the commit the trusted gate was polling for. This is
+   exactly finding **P3-3** manifesting on the audit's own PR. It is fixed in this revision by
+   registering this document in `docs/strategy/INDEX.md`, which is inside the path filter.
+7. **Branch protection / ruleset detail** — this session still has no ruleset-read tool
+   available (checked again during this revision: no such GitHub MCP tool is present). Section
+   10's "NOT VERIFIABLE" status for branch protection therefore stands unchanged. Any more
+   specific ruleset description obtained through a different channel has not been independently
+   confirmed by this session and is not asserted here.
+
+None of the three P0 findings, P1-3, or the overall NO-GO verdict changed as a result of this
+review. What changed is severity calibration on three secondary findings and completeness of
+CI-evidence attribution — exactly the kind of gap an adversarial audit should have caught in
+itself, and did not until asked to re-check.
+
+---
+
 ## 1. Commit identity
 
 | Item | Value |
@@ -69,23 +148,31 @@ Environment: Linux, Node v22.22.2, isolated git worktree at `e8228a7`, `npm inst
 | Node module syntax check, all `factory/src/**/*.mjs` | **PASS** | Via per-suite import |
 | Style gate / staged-commit policy | **PASS** | Both strengthened by the PR |
 | Zero-paid suites, 36 of 40 | **PASS** | Contract, control, learning, LLM, evaluation S0–S5, memory, publish, roles, fidelity, proof-reachability |
-| 4 browser suites | **NOT EXECUTABLE** | See below — environment, not PR |
-| Project browser proof (`test-browser-proof.mjs`) | **FAIL under full Chromium** | Reproducible false-FAIL, F-10 |
-| Blank-screen negative fixture | **PASS** (fixture only) | Detects the fixture, not the class — F-11 |
-| Micro-Game path on `main` at `8fdbf29`, same 4 suites | **FAIL identically** | Confirms pre-existing/environmental |
+| 4 browser suites | **NOT independently reproduced locally; confirmed via CI job-step logs on the exact audited head** | See below |
+| Project browser proof (`test-browser-proof.mjs`), local substitute Chromium | **FAIL** | Reproducible false-FAIL against build 1194; **CI's fresh-installed Chromium passed the same fixture on the exact audited head** — see P3-5 (§0 erratum) |
+| Blank-screen negative fixture | **PASS** (fixture only) | Detects the fixture, not the class — P2-4 |
+| Micro-Game path on `main` at `8fdbf29`, same 4 suites, local substitute Chromium | **FAIL identically** | Confirms local failure is environment/version-related, not PR-specific |
 
 **Environment limitation, stated plainly.** The repo pins `playwright@1.62.1`, which expects
 Chromium build 1234; this container ships build 1194. Four pre-existing browser suites
 (`test-action-reachability`, `test-causality-visual`, `test-layout-geometry`,
-`test-proof-scenarios`) therefore could not launch. I verified these fail **identically on
-`main` at `8fdbf29`** with the same environment, so they are **not** attributable to PR #64.
-To execute the PR's own browser proof I injected `executablePath` pointing at the available
-Chromium via a harness shim, without modifying the PR's pinned dependency.
+`test-proof-scenarios`) therefore could not launch locally under the exact pinned build. I
+verified they fail **identically on `main` at `8fdbf29`** with the same substitute-build
+environment, so the local failure is **not** attributable to PR #64. To execute the PR's own
+browser proof at all, I injected `executablePath` pointing at the available Chromium via a
+harness shim, without modifying the PR's pinned dependency.
 
-Per audit rule 3 ("no PASS statement where a relevant test could not be executed"), the
-following are reported as **UNPROVEN, not PASS**: the full Micro-Game browser regression set,
-and any claim that the browser proof behaves correctly on the CI headless-shell binary beyond
-what run 33271470501 asserts.
+**Correction (see §0 erratum):** the first version of this document reported the four suites as
+blanket "UNPROVEN" and did not check whether CI's own job-step log for the exact audited head
+already settled the question. It does: run `33271453720`'s steps *"Prove P0 action reachability
+repair"*, *"Prove independent terminal proof scenarios"*, *"Prove independent HUD geometry
+verifier"*, and *"Prove verifier causality and visual activity controls"* are each individually
+`conclusion: success` on head `e8228a7`, and the browser-proof step *"Prove verifier accepts
+good and rejects bad products"* is `conclusion: success` in the same run using CI's fresh
+Chromium install. Correct framing, held to throughout the rest of this document: **not
+independently reproduced by this audit's own execution** (a real, stated limitation) **but
+confirmed via CI job-step logs to have passed on the exact audited head** — which is materially
+stronger than "UNPROVEN" and should not be read as equivalent to this audit's own PASS.
 
 ---
 
@@ -260,10 +347,11 @@ tree is non-empty.
 
 ---
 
-### P1-1 — Reserved-path protection is case-sensitive and fails on the Owner's own platforms
+### P3-4 — Reserved-path predicate is case-sensitive (downgraded from P1; see Section 0 erratum)
 
-**Severity: P1. Affected: `contracts.mjs` → `RESERVED_PATHS` / `isReservedProjectPath()`,
-lines 10–50.**
+**Severity: P3 (downgraded from P1 on post-review correction — physically kept in reading
+order near the related findings rather than resorted). Affected: `contracts.mjs` →
+`RESERVED_PATHS` / `isReservedProjectPath()`, lines 10–50.**
 
 Reserved-path matching is exact-case string comparison. Reproduced:
 
@@ -277,49 +365,78 @@ isReservedProjectPath("ROADMAP.json") = true
 isReservedProjectPath("roadmap.json") = false
 ```
 
-On Linux/ext4 this is harmless — `project.json` is a distinct file. On **macOS/APFS and
-Windows/NTFS, which are case-insensitive by default**, a task scoped to `project.json`
-passes every contract check and then overwrites `PROJECT.json`: the immutable project
-manifest, the Owner Vision, the requirements and the contract hash. Issue #63 establishes that
-the Owner's devices are an iPhone and a laptop, and PR #61 addressed Safari specifically, so a
-macOS developer path is a realistic assumption rather than a theoretical one.
+On Linux/ext4 this is harmless — `project.json` is a distinct file. The first version of this
+document argued that on **macOS/APFS and Windows/NTFS, which are case-insensitive by default**,
+a task scoped to `project.json` would pass every contract check and overwrite `PROJECT.json`,
+and rated that scenario "would be P0". A post-review re-trace of the *entire* patch path (not
+just the predicate) does not support that: `applyPatchToStaging()`'s mandatory before/after
+tree-diff is the actual backstop here, and it almost certainly catches this case regardless of
+the predicate's case-sensitivity.
 
-I classify this **P1 rather than P0** only because I could not execute the filesystem-level
-overwrite in this Linux container; the predicate defect is confirmed, the exploitation is
-inferred. On a case-insensitive filesystem it is a scope escape onto project authority files
-and would be P0. It should be re-tested on macOS before any severity is settled.
+Reasoning: on a case-preserving, case-insensitive filesystem (the default for both APFS and
+NTFS), writing through the path `project.json` resolves to the same file as `PROJECT.json`,
+but the **directory entry's stored name does not change** — `fs.readdirSync()` still returns
+`PROJECT.json`. `captureProjectTree()` walks with `readdirSync`, so the "after" tree reports the
+changed path as `PROJECT.json`. The patch declared `MODIFY:project.json` (or `DELETE`/`ADD`,
+same argument). `applyPatchToStaging()` compares `declared` against `observed` as an exact
+string list and throws `scope evidence mismatch` on any difference — which this is, since the
+casing differs. The transaction aborts before evidence, state, or swap are ever touched.
 
-Unicode normalisation (NFC/NFD) is likewise unhandled, though not exploitable for the current
-all-ASCII reserved set.
+This was **not exercised on an actual case-insensitive filesystem** — none was available in
+either the original or this revised pass — so it remains analysis rather than a reproduction,
+same as the original claim it corrects. What changed is that the original claim was asserted
+without tracing the tree-diff backstop; this revision traces it and finds it very likely closes
+the gap. The residual, real defect is narrower: `isReservedProjectPath()` and the scope/
+protected-path predicates are still case-sensitive, so a case-colliding task fails late, with a
+generic `scope evidence mismatch` rather than a clear `task scope cannot include reserved
+project authority path` error — a confusing failure mode and an inconsistency worth fixing, but
+not a demonstrated scope escape. Re-test on an actual case-insensitive filesystem before
+closing this out either way; if the tree-diff backstop turns out not to hold in some path this
+analysis missed, this reverts to P0/P1.
+
+Unicode normalisation (NFC/NFD) is likewise unhandled by the predicate, though not exploitable
+for the current all-ASCII reserved set, and would be subject to the same tree-diff backstop
+argument if it ever became exploitable.
 
 ---
 
-### P1-2 — Project State is not bound to Git, to the tree it describes, or to its own project
+### P1-2 — Project State's `gitCommitSha` and `treeSha256` are never enforced on the normal path
 
-**Severity: P1. Affected: `project-state.mjs` → `validateProjectState()`,
-`writeProjectStateAtomic()`, `nextVerifiedState()`.**
+**Severity: P1 (narrowed on post-review correction — see Section 0 erratum). Affected:
+`project-state.mjs` → `validateProjectState()`, `writeProjectStateAtomic()`,
+`nextVerifiedState()`.**
 
-Four separate gaps, all reproduced (`audit-harness/adv-03-misc.mjs`):
+Two gaps, both reachable through the documented `commitVerifiedTransaction()` flow, not just
+through direct low-level API calls:
 
-- **The project-identity check is self-referential.** `writeProjectStateAtomic()` calls
-  `validateProjectState(state, state.projectId)` — comparing the state's own field to itself.
-  I wrote project `alpha`'s state, carrying a forged baseline, into project `beta`'s workspace
-  root; it was accepted and persisted with `projectId: "alpha"`.
-- **`gitCommitSha` may be `null`.** `nextVerifiedState()` defaults it to `null` and
-  `validateProjectState()` never requires it. A state can therefore present a fully "verified"
-  baseline with no Git commit and no PR behind it — precisely the second-source-of-truth the
-  falsification document claims to have closed. The document's own residual-risk column admits
-  "Future workflow must bind PR head and evidence exactly"; that binding does not exist, so the
-  claim "state alone authorizes nothing" is **structurally true only by convention**, since
-  nothing consumes `gitCommitSha`.
-- **`treeSha256` is never re-checked against the tree.** A baseline claiming
-  `aaaa…` was accepted against a workspace whose actual tree SHA was `d3700b0c…`. Nothing
-  recomputes on load.
-- **Missing state file is not an error by default.** `loadProjectState(..., { create: true })`
-  is the default and returns `baseline: null`, which — as shown in P0-3 — disables the only
-  drift guard. An old state can be silently combined with a new source tree.
+- **`gitCommitSha` may be `null`.** `nextVerifiedState()` defaults it to `null`;
+  `commitVerifiedTransaction()` never supplies one; `validateProjectState()` never requires one.
+  A state can therefore present a fully "verified" baseline with no Git commit and no PR behind
+  it — precisely the second-source-of-truth the falsification document claims to have closed.
+  The document's own residual-risk column admits "Future workflow must bind PR head and
+  evidence exactly"; that binding does not exist in code, so the claim "state alone authorizes
+  nothing" describes an intended future property, not a mechanism enforced today.
+- **`treeSha256` is never re-checked against the tree on load.** A baseline claiming
+  `aaaa…` was accepted by `validateProjectState()` against a workspace whose actual tree SHA was
+  `d3700b0c…`; nothing recomputes it. `loadProjectState()` in the normal commit flow does not
+  either.
 
-`baselineHistory` entries are not validated at all (only `state.baseline` is).
+`baselineHistory` entries are not validated at all (only `state.baseline` is). Missing state
+file is not an error by default (`loadProjectState(..., { create: true })`), which — as shown
+in P0-3 — disables the only drift guard; an old state can be silently combined with a new
+source tree.
+
+**Correction:** the original text also demonstrated a third gap — "the project-identity check
+is self-referential" — by calling `writeProjectStateAtomic()` directly with project `alpha`'s
+state and project `beta`'s root, and showing it wrote `projectId: "alpha"` into `beta`'s
+workspace. That call bypasses `commitVerifiedTransaction()` entirely, which always loads and
+writes state using the transaction's own manifest (loaded fresh from the workspace being
+committed), so the cross-project write shown is not reachable through the documented single
+commit entry point today. `writeProjectStateAtomic()` is still exported with no caller-
+independent identity check of its own — a real defense-in-depth gap for any future caller
+(most plausibly the not-yet-built PG-A0 runner, since no other adapter exists) — but it is not,
+as originally implied, a defect in the current normal flow. Kept as part of this finding at
+reduced weight rather than as an independently reproduced flaw in the transaction path.
 
 ---
 
@@ -386,15 +503,19 @@ future refactor that reorders those literals silently invalidates every stored h
 
 ---
 
-### P2-3 — Browser proof produces a reproducible false FAIL on benign asset 404s
+### P3-5 — `fatal-browser-errors` treats a missing optional asset as fatal (downgraded from P2;
+see Section 0 erratum)
 
-**Severity: P2. Affected: `web-runtime-adapter.mjs` → `runBrowserBootProof()`, line 65.**
+**Severity: P3 (downgraded from P2 on post-review correction). Affected:
+`web-runtime-adapter.mjs` → `runBrowserBootProof()`, line 65.**
 
 `fatal-browser-errors` fails if `consoleErrors.length !== 0`, where `consoleErrors` captures
 **every** console message of type `error` — including a missing-favicon 404 the browser
-requests on its own.
+requests on its own, which is not a defect in the game.
 
-Running the PR's own positive fixture under full Chromium:
+Running the PR's own positive fixture through a **substitute Chromium (build 1194)**, injected
+via `executablePath` because this container's pinned Playwright (`1.62.1`) expects build 1234
+and neither that exact build nor a fresh install was obtainable here:
 
 ```
 AssertionError: [{"id":"fatal-browser-errors","pass":false,
@@ -402,12 +523,21 @@ AssertionError: [{"id":"fatal-browser-errors","pass":false,
 ```
 
 I isolated the cause: the 404 is `/favicon.ico`. Adding `<link rel="icon" href="data:,">` to the
-fixture eliminates it entirely. The page itself boots, renders and responds to clicks correctly.
+fixture eliminates it entirely; the page itself boots, renders and responds to clicks correctly.
 
-The CI headless-shell binary does not request a favicon, which is why run 33271470501 is green.
-**The gate's outcome depends on which Chromium binary CI happens to ship, not on the game.**
-Any real project with one missing optional asset fails a gate that has nothing to say about
-playability — the standard precondition for a gate being weakened or bypassed later.
+**Correction:** the original text concluded from this that "the gate's outcome depends on which
+Chromium binary CI happens to ship" and rated it P2. That conclusion is not supported by the CI
+evidence this audit already had. CI job logs for the audited head (run `33271453720`) show a
+**fresh** `npx playwright install --with-deps chromium` (step *"Install browser"*,
+`19:40:25`) followed by the PR's own browser-proof selftest — the exact positive fixture this
+finding is about — **passing** (step *"Prove verifier accepts good and rejects bad products"*,
+`19:44:37–19:46:37`). CI's real target browser did not reproduce this false FAIL on the exact
+audited head. The most likely explanation is that build 1194 — an older build than CI's fresh
+install — behaves differently around the favicon request than the version CI actually uses;
+this was not independently confirmed, since the exact CI-installed build was not available for
+direct comparison in this container. What is not in dispute: the check counts every console
+error as fatal, including one that says nothing about playability. That narrower point is real
+and worth documentation-level attention; the CI-risk framing was not.
 
 ---
 
@@ -496,9 +626,11 @@ attributions; that mapping is my assumption, not the PR's, and is stated as such
 ### P3-2 — Micro-Game verifier now depends on the Project browser proof
 
 `factory/src/verify/test-verifier.mjs` gains `await import('../project/test-browser-proof.mjs')`.
-A Project-side browser regression now fails the **Micro-Game** verifier. Combined with P2-3,
-a favicon-class false FAIL in the Project fixture blocks the Micro path. Coupling in the
-direction the PR elsewhere takes care to avoid.
+A Project-side browser regression now fails the **Micro-Game** verifier. Combined with P3-5
+(§0 erratum — a false FAIL was observed against a substitute Chromium build in this audit's own
+sandbox, not confirmed against CI's real browser), the coupling means such a false FAIL would
+block the Micro path too if it ever occurred on the real CI browser. Coupling in the direction
+the PR elsewhere takes care to avoid, independent of whether P3-5 itself materializes on CI.
 
 ### P3-3 — Workflow path filter omits the new strategy documents
 
@@ -519,10 +651,10 @@ touching only those documents produces no Branch Verifier run; the trusted gate 
 | "staging transaction, fail-closed abort and crash rollback journal" | **Refuted.** Journal is unvalidated and enables out-of-tree deletion and foreign-baseline install (P0-2) |
 | "Crash produces mixed old/new project → journaled whole-directory swap" | **Refuted.** Two concurrent tasks destroy the project and report success (P0-3) |
 | "atomic verified baseline" | **Refuted.** Promotion is neither isolated nor guarded when baseline is null (P0-3) |
-| "Project State … state alone authorizes nothing" | **Refuted as an enforced property.** `gitCommitSha` may be null, tree SHA never re-checked, project identity check self-referential (P1-2) |
-| "`.factory/**` and project authority files are reserved" | **Refuted on case-insensitive filesystems** (P1-1) |
+| "Project State … state alone authorizes nothing" | **Refuted as an enforced property, on the normal commit flow.** `gitCommitSha` defaults to null and is never populated or checked; tree SHA is never re-checked on load (P1-2) |
+| "`.factory/**` and project authority files are reserved" | **Not refuted on reconsideration** (§0 erratum). The reserved-path predicate is case-sensitive, but the mandatory tree-diff appears to catch the resulting case-collision before promotion — analysis, not an executed reproduction (P3-4) |
 | "editable source is distinct from reproducible build output" | **Partially refuted.** Hardcoded `'build'` disagrees with `manifest.layout.buildDir` (P2-1) |
-| "Deploy success proves playability … blank fixture fails" | **Partially refuted.** Blank fixture fails, but the detector misses most of the class and false-FAILs on a favicon (P2-3, P2-4) |
+| "Deploy success proves playability … blank fixture fails" | **Partially refuted, on the class of defects the negative fixture models.** Blank fixture fails; the detector misses most of the required adversarial list (P2-4). The favicon false-FAIL (P3-5) was not confirmed against CI's real browser and is downgraded — see §0 erratum |
 | "immutable Project Manifest and Development Task contracts" | **Partially refuted.** Undeclared fields survive on disk outside the hash (P2-2) |
 
 ## 6. Assumptions not refuted, but unproven
@@ -561,7 +693,9 @@ before-SHA and after-SHA mismatch rejected; `maxFilesChanged` enforced; undeclar
 caught by full before/after tree comparison; `.factory/**`, `PROJECT.json`, `ROADMAP.json`,
 `ARCHITECTURE.md` reserved; protected regression fixtures blocked at plan time.
 
-Two gaps: case-insensitivity (P1-1), and — answering the audit's explicit question about a
+Two gaps: the case-sensitive reserved-path predicate, likely closed in practice by the tree-diff
+safety net rather than by the predicate itself (P3-4, §0 erratum), and — answering the audit's
+explicit question about a
 later Engineer adapter — **nothing structurally prevents bypass**. `applyPatchToStaging()` is a
 convention, not a chokepoint: `captureProjectTree`, `writeProjectStateAtomic` and
 `commitVerifiedTransaction` are all exported and independently callable, and
@@ -583,10 +717,10 @@ defined in the repository, so this grading rests on my reconstruction).
 | AC-PG-001 | Project Mode coexists with Micro Game path | **PASS** |
 | AC-PG-002 | Persistent multi-file workspace + manifest | **PASS** |
 | AC-PG-003 | Durable immutable Vision→Task hierarchy | **FAIL** (P2-2 undeclared fields; P2-5 no milestone authority) |
-| AC-PG-004 | Exact scoped ADD/MODIFY/DELETE | **PASS** on case-sensitive FS; **FAIL** on case-insensitive (P1-1) |
-| AC-PG-005 | Protected paths honoured | **FAIL** (P1-1) |
+| AC-PG-004 | Exact scoped ADD/MODIFY/DELETE | **PASS**, with a case-sensitive predicate whose exploitability is unproven and likely closed by the tree-diff safety net (P3-4, §0 erratum) |
+| AC-PG-005 | Protected paths honoured | **PASS**, same caveat as AC-PG-004 (P3-4) |
 | AC-PG-006 | Deterministic tree SHA, no undeclared side effects | **PASS** with caveat (P2-1 build-dir mismatch; locale sort unproven) |
-| AC-PG-007 | Project state authority, no second truth | **FAIL** (P1-2) |
+| AC-PG-007 | Project state authority, no second truth | **FAIL** on the normal commit flow: `gitCommitSha` unpopulated, tree SHA unchecked on load (P1-2) |
 | AC-PG-008 | Bounded context selection | **PASS** for boundedness; **FAIL** for relevance/drift (P2-6) |
 | AC-PG-009 | Verified capability registry | **FAIL** (caller-supplied, unenforced — P1-3) |
 | AC-PG-010 | Hierarchical verification L1–L10 | **FAIL** (P0-1) |
@@ -595,26 +729,36 @@ defined in the repository, so this grading rests on my reconstruction).
 | AC-PG-013 | save→reload→load equivalence | **UNPROVEN** (no adapter, no browser reload proof) |
 | AC-PG-014 | Editable source vs reproducible build separation | **PASS** with caveat (P2-1) |
 | AC-PG-015 | Web Runtime Adapter, engine-neutral control plane | **PASS** |
-| AC-PG-016 | Real browser boot/playability proof | **FAIL** (P2-3 false FAIL; P2-4 misses the #63 class; Chromium-only) |
+| AC-PG-016 | Real browser boot/playability proof | **FAIL**, on detection breadth (P2-4 misses most of the required #63-class list; Chromium-only). The favicon false-FAIL (P3-5) did not reproduce on CI's real browser and is not counted against this — see §0 erratum |
 | AC-PG-017 | Atomic verified baseline promotion | **FAIL** (P0-3) |
 | AC-PG-018 | Crash recovery / rollback | **FAIL** (P0-2) |
 | AC-PG-019 | Independent verification evidence | **FAIL** (P0-1) |
 | AC-PG-020 | Fail-closed abort, no partial promotion | **FAIL** (P0-3) |
 
-**Totals: 6 PASS, 11 FAIL, 2 UNPROVEN, 1 platform-conditional.**
+**Totals (corrected, see §0 erratum): 7 PASS, 11 FAIL, 2 UNPROVEN.** (Originally reported as
+6 PASS / 11 FAIL / 2 UNPROVEN / 1 platform-conditional; AC-PG-004 and AC-PG-005 moved cleanly
+to PASS following the P3-4 downgrade, so the "platform-conditional" bucket is now empty rather
+than removed — the combined PASS-plus-conditional count of 7 is unchanged.)
 
 ## 9. Micro-Game regression status
 
-**Unchanged and functional — JA, with one stated limitation.**
+**Unchanged and functional — JA.**
 
 The PR's five edits to pre-existing modules are additive and gate-strengthening: `project/` is
 added to protected commit paths and to critical style files; CODEOWNERS gains `/factory/src/project/`
 and `/projects/`. No gate weakened, no `produceGame()` change, no runtime-state allowlist change,
-no publishing/gallery/learning/budget/router change. 36 of 40 zero-paid suites pass at `e8228a7`;
-the 4 that do not are Chromium-version failures reproduced identically on `main` at `8fdbf29`.
+no publishing/gallery/learning/budget/router change. 36 of 40 zero-paid suites pass at `e8228a7`
+under this audit's own local execution; the 4 that do not run locally are Chromium-version
+failures (build 1194 vs pinned build 1234), reproduced identically on `main` at `8fdbf29` under
+the same substitute build, so the local non-execution is environmental, not PR-specific.
 
-Limitation: the full Micro-Game browser regression could not be executed in this environment,
-so it is reported **UNPROVEN**, not PASS. The one new coupling is P3-2.
+**Correction (see §0 erratum):** the full Micro-Game browser regression was not independently
+executed by this audit, but it was not left unproven either — CI's job-step log for the exact
+audited head (run `33271453720`) shows all four browser suites and the browser-proof step
+individually passing on `e8228a7`. Stated precisely: **not independently reproduced in this
+audit's own environment, but confirmed passing on the exact audited head via CI job-step logs**.
+The one new coupling introduced by the PR is P3-2 (Micro verifier now imports the Project
+browser proof).
 
 ## 10. GitHub governance status
 
@@ -681,8 +825,15 @@ many separate tasks without scope escape, partial baseline promotion, unnoticed 
 contract drift or a second source of truth — is **not supported**. Partial baseline promotion
 and unnoticed regression are demonstrated, not merely unproven.
 
-Per audit rule 10, the audit was stopped on P0 discovery, reproductions were secured, and **no
-repair was attempted**. Fixing any of this requires separate Owner approval.
+**Correction (see §0 erratum):** audit rule 10's literal instruction is to stop immediately on a
+P0 finding. This audit found P0-1 first and continued to P0-2, P0-3, and the P1–P3 findings
+rather than halting there — a deliberate deviation, made because the three P0s sit in
+independent code paths (verification grading, crash recovery, concurrency) and halting at the
+first would have left the second and third, and the concurrency-specific data-loss mode in
+particular, undiscovered for the Owner decision this document exists to inform. It is recorded
+here as a deviation, not claimed as compliance. Reproductions for all three P0s were secured
+(see the revised appendix below) and **no repair was attempted** at any point. Fixing any of
+this requires separate Owner approval.
 
 Foundation suitable for PG-A0: **NO.**
 Foundation suitable for the Canary: **NO.**
@@ -706,19 +857,177 @@ change (journal path derivation + project lock + `create: false` state load) bef
 
 ## Appendix — reproduction harness
 
-Adversarial scripts, run against `e8228a7` in an isolated worktree, deliberately **not**
-committed to this branch (audit rule: no productive code changes; findings must not be
-concealed by fixture edits):
+**Correction (see §0 erratum):** the first version of this document referenced these scripts
+by filename only, pointing at a session-local scratchpad path (`audit-harness/`) that does not
+persist. That made the P0 reproductions non-durable — a real gap: findings a reader cannot
+re-run are weaker than findings they can. The three P0 reproductions are embedded verbatim
+below so they survive independently of any particular session. They were run against `e8228a7`
+in an isolated `git worktree` outside this branch; none of these files are added to the
+repository itself (audit rule: no productive code changes on this branch), only reproduced here
+as text. Run any of them by saving as a `.mjs` file at the repository root of a checkout of
+`e8228a7` and executing with `node`.
 
-| Script | Finding |
+### P0-1 reproduction — fabricated verification passes invalid code
+
+```js
+// Does the Foundation execute verification commands, or merely accept result objects?
+import fs from 'node:fs'; import os from 'node:os'; import path from 'node:path';
+import { createTaskContract } from './factory/src/project/contracts.mjs';
+import { initializeProjectWorkspace } from './factory/src/project/manifest.mjs';
+import { prepareTaskTransaction, commitVerifiedTransaction } from './factory/src/project/transaction.mjs';
+import { sha256 } from './factory/src/project/contracts.mjs';
+
+const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'adv01-'));
+const root = path.join(temp, 'projects', 'canary');
+initializeProjectWorkspace(root, {
+  projectId: 'canary', ownerVision: 'v',
+  requirements: [{ id: 'R1', statement: 'r' }],
+  moduleGraph: {}, testMap: {}
+});
+
+const task = createTaskContract({
+  taskId: 'T-001', projectId: 'canary', milestoneId: 'M001', title: 't',
+  scope: { add: ['src/world.js'], modify: [], delete: [], protected: [], maxFilesChanged: 1 },
+  acceptance: [{ id: 'AC-X', statement: 's' }],
+  verification: { checks: [
+    // Commands that would CRASH or are outright nonsense. They are never run.
+    { id: 'UNIT', level: 'L2', kind: 'command', command: 'exit 1 # always fails', acceptanceIds: ['AC-X'] },
+    { id: 'INT',  level: 'L4', kind: 'command', command: 'this-binary-does-not-exist', acceptanceIds: ['AC-X'] },
+    { id: 'REG',  level: 'L5', kind: 'command', command: '', acceptanceIds: ['AC-X'] }
+  ] },
+  context: { targetFiles: ['src/world.js'], maxFiles: 10, maxBytes: 20000 }
+});
+
+const content = 'export const broken = (((;\n';   // deliberately NOT valid JavaScript
+const tx = prepareTaskTransaction({ projectRoot: root, task, operations: [
+  { operation: 'ADD', path: 'src/world.js', content, afterSha256: sha256(Buffer.from(content)) }
+]});
+
+// Fabricated results: no command was ever executed, evidenceSha256 is invented,
+// producer/verifier are arbitrary distinct strings.
+const results = ['UNIT','INT','REG'].map((id) => ({
+  checkId: id, pass: true,
+  evidenceSha256: 'f'.repeat(64),         // invented; no artifact exists
+  producer: 'a', verifier: 'b',           // "independent" == two different strings
+  detail: 'never executed'
+}));
+
+const out = commitVerifiedTransaction(tx, {
+  verificationResults: results,
+  modelEvidence: { provider: 'x', actualModel: 'y', operation: 'z' },
+  operationEvidence: { operation: 'z', context: { selectionSha256: 'a'.repeat(64) } }
+});
+
+console.log('commit status      :', out.status);
+console.log('baselinePromoted   :', out.baselinePromoted);
+console.log('promoted file      :', JSON.stringify(fs.readFileSync(path.join(root,'src/world.js'),'utf8')));
+console.log('syntactically valid:', (()=>{ try { new Function(fs.readFileSync(path.join(root,'src/world.js'),'utf8')); return true; } catch { return false; } })());
+fs.rmSync(temp, { recursive: true, force: true });
+```
+
+Expected if the Foundation actually verified: promotion refused. Observed:
+`commit status: committed`, `baselinePromoted: true`, `syntactically valid: false`.
+
+### P0-2 reproduction — crafted journal deletes outside the workspace, installs a foreign tree
+
+```js
+// recoverProjectTransactions() trusts journal-supplied absolute paths.
+import fs from 'node:fs'; import os from 'node:os'; import path from 'node:path';
+import { initializeProjectWorkspace } from './factory/src/project/manifest.mjs';
+import { recoverProjectTransactions } from './factory/src/project/transaction.mjs';
+
+const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'adv02-'));
+const root = path.join(temp, 'projects', 'canary');
+initializeProjectWorkspace(root, { projectId:'canary', ownerVision:'v', requirements:[{id:'R1',statement:'r'}] });
+
+// A completely unrelated directory OUTSIDE the project workspace.
+const victim = path.join(temp, 'unrelated-owner-data');
+fs.mkdirSync(victim, { recursive: true });
+fs.writeFileSync(path.join(victim, 'important.txt'), 'owner data that must survive');
+
+// A "foreign" tree an attacker wants installed as the project baseline.
+const foreign = path.join(temp, 'attacker-tree');
+fs.mkdirSync(foreign, { recursive: true });
+fs.writeFileSync(path.join(foreign, 'PWNED.txt'), 'this replaced the project');
+
+// Journal dir is a *sibling* of the project root: <dirname>/.<basename>.transactions
+const journals = path.join(path.dirname(root), `.${path.basename(root)}.transactions`);
+fs.mkdirSync(journals, { recursive: true });
+fs.writeFileSync(path.join(journals, 'evil.json'), JSON.stringify({
+  schemaVersion: 'project-game.transaction/v1',
+  id: 'evil', taskId: 'T-evil',
+  projectRoot: '/some/other/project',   // never checked against the root being recovered
+  staging: victim,                      // <- rmSync(recursive, force)
+  backup: foreign,                      // <- renameSync(backup, root)
+  phase: 'prepared'
+}));
+
+console.log('victim exists before   :', fs.existsSync(path.join(victim,'important.txt')));
+const recovered = recoverProjectTransactions(root);
+console.log('recovery result        :', JSON.stringify(recovered));
+console.log('victim exists after    :', fs.existsSync(path.join(victim,'important.txt')));
+console.log('project root contents  :', fs.existsSync(root) ? fs.readdirSync(root) : '(gone)');
+fs.rmSync(temp, { recursive: true, force: true });
+```
+
+Expected: journal rejected as out-of-scope; nothing outside the project touched. Observed:
+`victim exists after: false` (recursively deleted); `project root contents: [ 'PWNED.txt' ]`
+(foreign tree installed as baseline).
+
+### P0-3 reproduction — two ordinary concurrent tasks destroy the project
+
+```js
+// No lock. prepareTaskTransaction() calls recoverProjectTransactions() first,
+// which destroys any *other* in-flight transaction's staging directory.
+import fs from 'node:fs'; import os from 'node:os'; import path from 'node:path';
+import { createTaskContract, sha256 } from './factory/src/project/contracts.mjs';
+import { initializeProjectWorkspace } from './factory/src/project/manifest.mjs';
+import { prepareTaskTransaction, commitVerifiedTransaction } from './factory/src/project/transaction.mjs';
+
+const temp = fs.mkdtempSync(path.join(os.tmpdir(),'adv04-'));
+const root = path.join(temp,'projects','canary');
+initializeProjectWorkspace(root,{projectId:'canary',ownerVision:'v',requirements:[{id:'R1',statement:'r'}]});
+
+const mk = (taskId, file) => createTaskContract({
+  taskId, projectId:'canary', milestoneId:'M001', title:'t',
+  scope:{ add:[file], modify:[], delete:[], protected:[], maxFilesChanged:1 },
+  acceptance:[{id:'AC-X',statement:'s'}],
+  verification:{ checks:[
+    {id:'UNIT',level:'L2',kind:'command',command:'c',acceptanceIds:['AC-X']},
+    {id:'INT',level:'L4',kind:'command',command:'c',acceptanceIds:['AC-X']},
+    {id:'REG',level:'L5',kind:'command',command:'c',acceptanceIds:['AC-X']}]},
+  context:{ targetFiles:[file], maxFiles:10, maxBytes:20000 }
+});
+const ops = (file, body) => [{ operation:'ADD', path:file, content:body, afterSha256: sha256(Buffer.from(body)) }];
+const results = ['UNIT','INT','REG'].map(id=>({checkId:id,pass:true,evidenceSha256:'f'.repeat(64),producer:'a',verifier:'b'}));
+const ev = { modelEvidence:{provider:'x',actualModel:'y',operation:'z'}, operationEvidence:{operation:'z',context:{selectionSha256:'a'.repeat(64)}} };
+
+// Task A prepares (staging created, journal phase=prepared).
+const txA = prepareTaskTransaction({ projectRoot: root, task: mk('T-A','src/a.js'), operations: ops('src/a.js','export const a=1;\n') });
+
+// Task B prepares concurrently -> its recover() sweep deletes A's staging.
+const txB = prepareTaskTransaction({ projectRoot: root, task: mk('T-B','src/b.js'), operations: ops('src/b.js','export const b=1;\n') });
+console.log('A staging exists after B.prepare :', fs.existsSync(txA.staging), ' <-- A destroyed mid-flight');
+
+const outB = commitVerifiedTransaction(txB, { verificationResults: results, ...ev });
+console.log('B commit                          :', outB.status);
+const outA = commitVerifiedTransaction(txA, { verificationResults: results, ...ev });
+console.log('A commit                          :', outA.status);
+console.log('project root contents             :', fs.readdirSync(root));
+console.log('PROJECT.json survived              :', fs.existsSync(path.join(root,'PROJECT.json')));
+fs.rmSync(temp,{recursive:true,force:true});
+```
+
+Expected: task A refuses to commit (staging gone / baseline drift), project intact. Observed:
+`A staging exists after B.prepare: false`; both `A commit` and `B commit` report `committed`;
+`project root contents: [ '.factory' ]`; `PROJECT.json survived: false`.
+
+### Supporting material (findings retained but not embedded verbatim)
+
+| Finding | Support |
 |---|---|
-| `adv-01-verification.mjs` | P0-1 |
-| `adv-02-journal.mjs` | P0-2 |
-| `adv-04-concurrency.mjs` | P0-3 |
-| `adv-03-misc.mjs` | P1-1, P1-2, P2-1, P2-2 |
-| `probe-proof404.mjs` | P2-3 |
-| `pw-shim.mjs` | Chromium 1194/1234 mismatch shim |
-
-Each is self-contained, uses only `node:` builtins plus the modules under audit, creates its own
-`mkdtemp` workspace, and cleans up. They can be re-created from the reproduction steps recorded
-in each finding above.
+| P1-2 (gitCommitSha/treeSha256) | `validateProjectState()`/`nextVerifiedState()` code trace in the finding text above; reproducible by inspection — no script needed beyond calling `nextVerifiedState()` and observing `gitCommitSha: null` |
+| P2-1 (build-dir exclusion mismatch) | `captureProjectTree()` default-excludes vs. `manifest.layout.buildDir`, shown by inspecting `file-state.mjs` against a manifest created with a custom `buildDir` — reproduced identically to the PR's own `test-foundation.mjs` custom-layout project |
+| P2-2 (undeclared contract fields survive on disk) | `validateProjectManifest()` code trace; reproducible by writing a `PROJECT.json` with an extra top-level key and calling `loadProjectManifest()` |
+| P3-4 (case-sensitive reserved paths) | `isReservedProjectPath()` code trace; reproducible with the literal calls shown in that finding |
+| P3-5 (favicon 404 counts as fatal) | Isolated by adding `<link rel="icon" href="data:,">` to the PR's own positive fixture in `test-browser-proof.mjs` and observing the failure disappear |
