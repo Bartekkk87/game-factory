@@ -35,4 +35,5 @@ jobs:
             --ref main \
             -f provider=openrouter \
             -f budget_usd=10 \
+            -f director_max_tokens=32768 \
             -f idea=''
