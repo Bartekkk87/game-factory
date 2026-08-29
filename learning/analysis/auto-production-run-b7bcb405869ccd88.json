@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "improvement-analysis-v1",
+  "id": "auto-production-run-b7bcb405869ccd88",
+  "triggerRef": "learning/triggers/auto-production-run-b7bcb405869ccd88.json",
+  "aggregateRef": "learning/aggregates/auto-production-run-b7bcb405869ccd88.json",
+  "rootCauseRef": "learning/root-causes/auto-production-run-b7bcb405869ccd88.json",
+  "event": {
+    "kind": "production-run",
+    "id": "20260829-092132"
+  },
+  "scope": "case-root-cause",
+  "authority": {
+    "may": [
+      "propose-scoped-learning-candidate"
+    ],
+    "mustNot": [
+      "validate-candidate",
+      "activate-candidate",
+      "promote-candidate",
+      "activate-production",
+      "edit-production",
+      "change-own-authority",
+      "weaken-release-gates",
+      "start-paid-work"
+    ]
+  },
+  "facts": [
+    "Failed production run 20260829-092132 was analyzed from durable run/attempt evidence without an additional LLM call.",
+    "Attempt failure trajectory: no attempt evidence.",
+    "Best attempt: unknown; final attempt: unknown.",
+    "Evidence-backed findings: none above deterministic threshold."
+  ],
+  "findingIds": [],
+  "evaluationFailureClass": null,
+  "conclusion": "Analysis stopped safely: no bounded root-cause hypothesis crossed the deterministic evidence threshold.",
+  "candidateId": null,
+  "blocked": "no bounded root-cause hypothesis crossed the deterministic evidence threshold",
+  "canValidate": false,
+  "canActivate": false
+}

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "failed-run-root-cause-v1",
+  "runId": "20260829-092132",
+  "runStatus": "failed",
+  "runReason": "engineer_invalid_output",
+  "generatedFrom": "durable-run-evidence-only",
+  "diagnosticIndependence": "terminal families are defined in learning/root-cause.mjs and do not import verifier state semantics",
+  "authority": {
+    "may": [
+      "diagnose-evidence",
+      "rank-hypotheses",
+      "propose-validation"
+    ],
+    "mustNot": [
+      "edit-production",
+      "validate-candidate",
+      "activate-candidate",
+      "weaken-gates",
+      "start-paid-run"
+    ]
+  },
+  "attempts": [],
+  "trajectory": [],
+  "bestAttempt": null,
+  "finalAttempt": null,
+  "stateProbes": [
+    {
+      "id": "PR-MH-03",
+      "state": "success",
+      "diagnosticFamily": "success"
+    },
+    {
+      "id": "PR-MH-04",
+      "state": "failure",
+      "diagnosticFamily": "failure"
+    }
+  ],
+  "proofScenarios": [
+    {
+      "id": "base",
+      "inputMode": "active+idle-control",
+      "seconds": 12,
+      "stopStates": [],
+      "diagnosticTerminalFamilies": [],
+      "restartAtEnd": false
+    },
+    {
+      "id": "success-proof",
+      "inputMode": "active",
+      "seconds": 95,
+      "stopStates": [
+        "success"
+      ],
+      "diagnosticTerminalFamilies": [
+        "success"
+      ],
+      "restartAtEnd": true
+    },
+    {
+      "id": "failure-proof",
+      "inputMode": "idle",
+      "seconds": 95,
+      "stopStates": [
+        "failure"
+      ],
+      "diagnosticTerminalFamilies": [
+        "failure"
+      ],
+      "restartAtEnd": true
+    }
+  ],
+  "observedStates": [],
+  "findings": [],
+  "primaryFindingId": null,
+  "sourceRefs": [
+    "FAILURE.json",
+    "RUN-EVIDENCE.json",
+    "gdd.json"
+  ],
+  "conclusion": "No bounded root-cause hypothesis crossed the deterministic evidence threshold; preserve evidence and require further validation before repair."
+}

@@ -1,0 +1,1603 @@
+{
+  "schemaVersion": "game-factory.binary-evidence-manifest/v1",
+  "generatedAt": "2026-08-29T08:45:54.135Z",
+  "storage": {
+    "provider": "github-actions-artifact",
+    "artifactName": "run-binary-evidence-33243770348",
+    "workflowRunId": "33243770348",
+    "retentionDays": 30,
+    "durabilityClass": "bounded-retention-object-storage"
+  },
+  "files": [
+    {
+      "path": "drafts/lumen-current/activity-1-gameplay.png",
+      "sha256": "653e87c89300981bb90e0b538d0f1197d19164d3e614afa80a0ee7bb83e9e26d",
+      "bytes": 326017
+    },
+    {
+      "path": "drafts/lumen-current/activity-2-gameplay.png",
+      "sha256": "9f26b1a9ffb5da9523d4e6d717e0e7e0477adc25af911965fcfa55c6c5980499",
+      "bytes": 337233
+    },
+    {
+      "path": "drafts/lumen-current/shot-2-gameplay.png",
+      "sha256": "75a0b686a73b486558fbace9c12ff692568f56614644210d13c52a71cbab71d9",
+      "bytes": 334757
+    },
+    {
+      "path": "drafts/lumen-current/shot-3-gameplay.png",
+      "sha256": "43efa00df7ca9ff9ead8175707537cae90e2a561fc0369ec0fdded8995a4c20c",
+      "bytes": 221770
+    },
+    {
+      "path": "drafts/titan-core-salvage/shot-2-gameplay.png",
+      "sha256": "204dc885a27e3d7c90cfffbda8175aced7a4124ca3280f88a46cb02e5c753f28",
+      "bytes": 376569
+    },
+    {
+      "path": "drafts/titan-core-salvage/shot-3-gameplay.png",
+      "sha256": "1b1108fd78aaffa247b12b2d9e4d671a744a0fae15dce0237acf0f257f87f99a",
+      "bytes": 319326
+    },
+    {
+      "path": "runs/20260826-102914-color-cascade/attempt-01/shots/shot-1-title.png",
+      "sha256": "a1552228da2175e8f2b3b0e7672bf223529713a16bcb8e9c4c22572f76058f57",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-102914-color-cascade/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "55465a8675389a41c90532d69cb4b9e0cbf3926f8d8373908975d8393da30678",
+      "bytes": 37772
+    },
+    {
+      "path": "runs/20260826-102914-color-cascade/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "55465a8675389a41c90532d69cb4b9e0cbf3926f8d8373908975d8393da30678",
+      "bytes": 37772
+    },
+    {
+      "path": "runs/20260826-102914-color-cascade/attempt-02/shots/shot-1-title.png",
+      "sha256": "a1552228da2175e8f2b3b0e7672bf223529713a16bcb8e9c4c22572f76058f57",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-102914-color-cascade/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "55465a8675389a41c90532d69cb4b9e0cbf3926f8d8373908975d8393da30678",
+      "bytes": 37772
+    },
+    {
+      "path": "runs/20260826-102914-color-cascade/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "55465a8675389a41c90532d69cb4b9e0cbf3926f8d8373908975d8393da30678",
+      "bytes": 37772
+    },
+    {
+      "path": "runs/20260826-102914-color-cascade/attempt-03/shots/shot-1-title.png",
+      "sha256": "a1552228da2175e8f2b3b0e7672bf223529713a16bcb8e9c4c22572f76058f57",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-102914-color-cascade/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "429a28f7433d6f3cff71f3dbd4ae7bd470dfbb92610860be7f6961a86d0920e5",
+      "bytes": 4255
+    },
+    {
+      "path": "runs/20260826-102914-color-cascade/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "429a28f7433d6f3cff71f3dbd4ae7bd470dfbb92610860be7f6961a86d0920e5",
+      "bytes": 4255
+    },
+    {
+      "path": "runs/20260826-102914-color-cascade/attempt-04/shots/shot-1-title.png",
+      "sha256": "a1552228da2175e8f2b3b0e7672bf223529713a16bcb8e9c4c22572f76058f57",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-102914-color-cascade/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "17a93643dd7c1c8d892bf5c18cc1bcad96e400b0e0fb133a8cdf481ed9df818d",
+      "bytes": 8846
+    },
+    {
+      "path": "runs/20260826-102914-color-cascade/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "31555bdad4354c2557c8c915a42b220def262d4977d9c62e07edd5a0fc6d3bdf",
+      "bytes": 42320
+    },
+    {
+      "path": "runs/20260826-102914-color-cascade/attempt-05/shots/shot-1-title.png",
+      "sha256": "a1552228da2175e8f2b3b0e7672bf223529713a16bcb8e9c4c22572f76058f57",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-102914-color-cascade/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "17a93643dd7c1c8d892bf5c18cc1bcad96e400b0e0fb133a8cdf481ed9df818d",
+      "bytes": 8846
+    },
+    {
+      "path": "runs/20260826-102914-color-cascade/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "31555bdad4354c2557c8c915a42b220def262d4977d9c62e07edd5a0fc6d3bdf",
+      "bytes": 42320
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-01/shots/shot-1-title.png",
+      "sha256": "5c6367b5386db8503d9bb4fec2a2efb0c6b0367ce223fe2fa89814ad1e0d8c74",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "b72cdea9749cbb7c76920ec5d6597f90f24853b81151b1d6ac07e13b1a2d9253",
+      "bytes": 15124
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "93b0046340e34b1975d5ffb226621f7e2a36e448968eea5520ddf581cce1502d",
+      "bytes": 14312
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-02/shots/shot-1-title.png",
+      "sha256": "5c6367b5386db8503d9bb4fec2a2efb0c6b0367ce223fe2fa89814ad1e0d8c74",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "c201786420e81b6cdd4fb8a0383fc8ee8557be961de89a8eb78cf77faac5e3d1",
+      "bytes": 20238
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "52e2bbcf91b134c3f8cd7a81865e691e8d650dba96e7d1b1727fd8e5d7106f4f",
+      "bytes": 15903
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-03/shots/shot-1-title.png",
+      "sha256": "5c6367b5386db8503d9bb4fec2a2efb0c6b0367ce223fe2fa89814ad1e0d8c74",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "02698bb997aa2e24e8097cf32afd0a5600b12af8aa971c0c3d519c1087014689",
+      "bytes": 5302
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "a6f27d041c9f6d8826c3ee70ad941ae27645ee224ed16ba993195633b548db41",
+      "bytes": 5375
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-04/shots/shot-1-title.png",
+      "sha256": "5c6367b5386db8503d9bb4fec2a2efb0c6b0367ce223fe2fa89814ad1e0d8c74",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "319b1cf9e4d2ffc5a0f24ed3bc0dffbe58bf52e3972dd7eda1a2946b0782adef",
+      "bytes": 5483
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "9bf8ad5742d0f483196ec4be56cd2e920c0b2debf626e05950a3d6cd7c13de27",
+      "bytes": 5295
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-05/shots/shot-1-title.png",
+      "sha256": "5c6367b5386db8503d9bb4fec2a2efb0c6b0367ce223fe2fa89814ad1e0d8c74",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "02698bb997aa2e24e8097cf32afd0a5600b12af8aa971c0c3d519c1087014689",
+      "bytes": 5302
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "bdc7d866ae4619622b87226ac0c326148c4f0b123536e0472a46c6757234288d",
+      "bytes": 5349
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-06/shots/shot-1-title.png",
+      "sha256": "5c6367b5386db8503d9bb4fec2a2efb0c6b0367ce223fe2fa89814ad1e0d8c74",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-06/shots/shot-2-gameplay.png",
+      "sha256": "c40abd7ca03de3d9b0180d0156dab705664cd58eb8e6e2335495d179c2fef9e5",
+      "bytes": 7639
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-06/shots/shot-3-gameplay.png",
+      "sha256": "ae7493443cfee1f8ed71960957045c3c6de1885295ad21dca61bf85aa7803db7",
+      "bytes": 6733
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-07/shots/shot-1-title.png",
+      "sha256": "5c6367b5386db8503d9bb4fec2a2efb0c6b0367ce223fe2fa89814ad1e0d8c74",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-07/shots/shot-2-gameplay.png",
+      "sha256": "d2617a6ae7a41e45dc8e4e80ca73d103243b93a2ac2651a9661320d702bad976",
+      "bytes": 6370
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-07/shots/shot-3-gameplay.png",
+      "sha256": "d2617a6ae7a41e45dc8e4e80ca73d103243b93a2ac2651a9661320d702bad976",
+      "bytes": 6370
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-08/shots/shot-1-title.png",
+      "sha256": "5c6367b5386db8503d9bb4fec2a2efb0c6b0367ce223fe2fa89814ad1e0d8c74",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-08/shots/shot-2-gameplay.png",
+      "sha256": "2586fb66c4614ab624d649cdf89c469a8a90e529ab937052dd15dae11bd4fe77",
+      "bytes": 7053
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-08/shots/shot-3-gameplay.png",
+      "sha256": "2586fb66c4614ab624d649cdf89c469a8a90e529ab937052dd15dae11bd4fe77",
+      "bytes": 7053
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-09/shots/shot-1-title.png",
+      "sha256": "5c6367b5386db8503d9bb4fec2a2efb0c6b0367ce223fe2fa89814ad1e0d8c74",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-09/shots/shot-2-gameplay.png",
+      "sha256": "2586fb66c4614ab624d649cdf89c469a8a90e529ab937052dd15dae11bd4fe77",
+      "bytes": 7053
+    },
+    {
+      "path": "runs/20260826-113120-core-awakening-salvage/attempt-09/shots/shot-3-gameplay.png",
+      "sha256": "d2617a6ae7a41e45dc8e4e80ca73d103243b93a2ac2651a9661320d702bad976",
+      "bytes": 6370
+    },
+    {
+      "path": "runs/20260826-115057-core-salvage/attempt-01/shots/shot-1-title.png",
+      "sha256": "bfdac79bb68de511455ce1b5205925195a41c3c76988f6568d9580864081a8a9",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260826-115057-core-salvage/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "ef23e086ff9e89538acc4c611a88ee27ed906b94f9d6c83819afe09c46c334a6",
+      "bytes": 39508
+    },
+    {
+      "path": "runs/20260826-115057-core-salvage/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "3ecf46c768c48a7422853ed6819e5e00572ba0a26a1c392e0e360666348414b2",
+      "bytes": 38600
+    },
+    {
+      "path": "runs/20260826-115057-core-salvage/attempt-02/shots/shot-1-title.png",
+      "sha256": "bfdac79bb68de511455ce1b5205925195a41c3c76988f6568d9580864081a8a9",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260826-115057-core-salvage/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "ef23e086ff9e89538acc4c611a88ee27ed906b94f9d6c83819afe09c46c334a6",
+      "bytes": 39508
+    },
+    {
+      "path": "runs/20260826-115057-core-salvage/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "3ecf46c768c48a7422853ed6819e5e00572ba0a26a1c392e0e360666348414b2",
+      "bytes": 38600
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-01/shots/shot-1-title.png",
+      "sha256": "42a4c160cd2c2e6b54ffdb5f7e2b787e911ceed874db6d4f41d549eff0ac94ab",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "71502103dac7779d662c5c76a510636b721ef62d30e05044b5996cf65e39ff53",
+      "bytes": 61664
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "734edf9be96fe546a32d402c0c0fbb75313e125533b54937aa29313b84c3f4b9",
+      "bytes": 62724
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-02/shots/shot-1-title.png",
+      "sha256": "42a4c160cd2c2e6b54ffdb5f7e2b787e911ceed874db6d4f41d549eff0ac94ab",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "0e4e80665d2fbf20017943c62131aeb9699bab70f33e0f880a98ebaedcf5ebc6",
+      "bytes": 68285
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "ba2e8dc3c9ce0125bedf23f99fc4c9e6c80528b3dc6bc275eb85e7a0c89285f5",
+      "bytes": 36084
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-03/shots/shot-1-title.png",
+      "sha256": "42a4c160cd2c2e6b54ffdb5f7e2b787e911ceed874db6d4f41d549eff0ac94ab",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "9caa86de35451c46aea014ab30ce0097854f675e0d592f22873902074417dc7e",
+      "bytes": 109349
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "07ea7bf6d66cff8c3ad3c8f9dfdbce008437c924e99c6cf98a044886f9fe7a04",
+      "bytes": 106176
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-04/shots/shot-1-title.png",
+      "sha256": "42a4c160cd2c2e6b54ffdb5f7e2b787e911ceed874db6d4f41d549eff0ac94ab",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "f0f4f23bae165f6943de461a06e3e650c2fc57a8d7fa2e218832a06c97274da1",
+      "bytes": 39634
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "aa21325966987f32faed462a100d7c10a9428d2e67b1289c27a9f9bd779c31d0",
+      "bytes": 106061
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-05/shots/shot-1-title.png",
+      "sha256": "585645728b744016e3bc5c7c8ff984754136a7f6a830f74871daac50b97292cb",
+      "bytes": 45756
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "9daa62aa56d45ea0f07869d91466594f27027f087ef032718f356a5412d238b7",
+      "bytes": 160366
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "a1137a6a209ba9961aa61238a35a6a5cc2baee202a8afed374aafcac4cab0fb8",
+      "bytes": 160980
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-06/shots/shot-1-title.png",
+      "sha256": "572622c99180d2d319b161ef27e135f3f73758026e9c4ef8d6b6a6061157fd02",
+      "bytes": 45763
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-06/shots/shot-2-gameplay.png",
+      "sha256": "204dc885a27e3d7c90cfffbda8175aced7a4124ca3280f88a46cb02e5c753f28",
+      "bytes": 376569
+    },
+    {
+      "path": "runs/20260826-134725-titan-core-salvage/attempt-06/shots/shot-3-gameplay.png",
+      "sha256": "1b1108fd78aaffa247b12b2d9e4d671a744a0fae15dce0237acf0f257f87f99a",
+      "bytes": 319326
+    },
+    {
+      "path": "runs/20260826-173127-core-awakening/attempt-01/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-173127-core-awakening/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "918ec4e0a9b79dd7a1530eb022b77807955a8ee9860fb0555c610d8203566a38",
+      "bytes": 4256
+    },
+    {
+      "path": "runs/20260826-173127-core-awakening/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "918ec4e0a9b79dd7a1530eb022b77807955a8ee9860fb0555c610d8203566a38",
+      "bytes": 4256
+    },
+    {
+      "path": "runs/20260826-173127-core-awakening/attempt-02/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-173127-core-awakening/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "918ec4e0a9b79dd7a1530eb022b77807955a8ee9860fb0555c610d8203566a38",
+      "bytes": 4256
+    },
+    {
+      "path": "runs/20260826-173127-core-awakening/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "b2f87d6d3ffaf89989431aa02b80d417c2f8a2cf62ea2d7a12ef1420d569979e",
+      "bytes": 4379
+    },
+    {
+      "path": "runs/20260826-173127-core-awakening/attempt-03/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-173127-core-awakening/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "918ec4e0a9b79dd7a1530eb022b77807955a8ee9860fb0555c610d8203566a38",
+      "bytes": 4256
+    },
+    {
+      "path": "runs/20260826-173127-core-awakening/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "bb0073cdbd371a6e9edd43a2408bd15cd63cc618ab79089507838d6da7502c51",
+      "bytes": 4370
+    },
+    {
+      "path": "runs/20260826-173127-core-awakening/attempt-04/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-173127-core-awakening/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "ec76042888c0675b2e443b8ef0de6e54a14ec9f0844b11f3f66c649c084215db",
+      "bytes": 4618
+    },
+    {
+      "path": "runs/20260826-173127-core-awakening/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "42bc78aa860d3bec5ce06ea9d1378d0445bfcf1927002f2d8b239ca7e5c6d336",
+      "bytes": 5524
+    },
+    {
+      "path": "runs/20260826-173649-core-awakening/attempt-01/shots/shot-1-title.png",
+      "sha256": "dd941d6853f8e02ed6af46ca66ec2751e5b367661968b7e1912184c13f2111b8",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-173649-core-awakening/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "8012363caf5851bfb7f2e5148fd6757038604cb48eadb8decb7a3678afa2425e",
+      "bytes": 12965
+    },
+    {
+      "path": "runs/20260826-173649-core-awakening/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "a7fb3ef245aa0822467927ff9433437b97537241e5ae1591db5aacca63be4f35",
+      "bytes": 12968
+    },
+    {
+      "path": "runs/20260826-173649-core-awakening/attempt-02/shots/shot-1-title.png",
+      "sha256": "dd941d6853f8e02ed6af46ca66ec2751e5b367661968b7e1912184c13f2111b8",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-173649-core-awakening/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "d80ed3f30ae7051c3d77df065a3fc0cd13d6721b8acedc309f7166b85fa28bd3",
+      "bytes": 34012
+    },
+    {
+      "path": "runs/20260826-173649-core-awakening/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "f7308396004b4d463e7cb6bdd684b0fc69072b2f6b0f7ca39bd59c26af9705e7",
+      "bytes": 35759
+    },
+    {
+      "path": "runs/20260826-173649-core-awakening/attempt-03/shots/shot-1-title.png",
+      "sha256": "7a33ff67d747876d904d0a9fd9850e6be4bbca738d4fb746cff4e98dedd96e42",
+      "bytes": 9960
+    },
+    {
+      "path": "runs/20260826-173649-core-awakening/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "a7c9410bff7b0163f523c7db537e364b3d11521a1ceaf2ed9ee4f27379ade0b8",
+      "bytes": 38487
+    },
+    {
+      "path": "runs/20260826-173649-core-awakening/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "82ff21f0efb06241a45053d330fcfbf98970a1e5dc962b6f7e94e765b06e4f18",
+      "bytes": 40940
+    },
+    {
+      "path": "runs/20260826-173649-core-awakening/attempt-04/shots/shot-1-title.png",
+      "sha256": "0a6ffe28497a4a9a566e52a2f8f6e73dcc1f041cebf536ee3a72b05de7c949e9",
+      "bytes": 13696
+    },
+    {
+      "path": "runs/20260826-173649-core-awakening/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "afff8d03e1840b714588a187827dc47586ec2e749fe086d877d3e78ab2b81d67",
+      "bytes": 43791
+    },
+    {
+      "path": "runs/20260826-173649-core-awakening/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "afff8d03e1840b714588a187827dc47586ec2e749fe086d877d3e78ab2b81d67",
+      "bytes": 43791
+    },
+    {
+      "path": "runs/20260826-173649-core-awakening/attempt-05/shots/shot-1-title.png",
+      "sha256": "01ded5b452c249432d5fa082d81839e85a7e59cb9df0d4ce011d2176738120be",
+      "bytes": 13761
+    },
+    {
+      "path": "runs/20260826-173649-core-awakening/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "642924b65d86a6b1e2b3ead7c040fbffd80eac2f337d2cb012bb7a43bf4b3237",
+      "bytes": 40271
+    },
+    {
+      "path": "runs/20260826-173649-core-awakening/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "83e96c680af714cc55d88c12e879174bc9c68407e51d95173e0ed20e852bc672",
+      "bytes": 40866
+    },
+    {
+      "path": "runs/20260826-174050-core-awakening/attempt-01/shots/shot-1-title.png",
+      "sha256": "2ad540bae83bc27218aac8558495cf718405173c2b4afbf1fd31c5c2c88658f3",
+      "bytes": 4255
+    },
+    {
+      "path": "runs/20260826-174050-core-awakening/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "907764d182ec5af43409b7338a83559dff7f74dd240b0b5328b43a5eb7b6b540",
+      "bytes": 20160
+    },
+    {
+      "path": "runs/20260826-174050-core-awakening/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "3bd359728be99e194f2960c97ba396a89e46f0c045d3ac28c95c20e0b295a6d6",
+      "bytes": 21203
+    },
+    {
+      "path": "runs/20260826-174050-core-awakening/attempt-02/shots/shot-1-title.png",
+      "sha256": "2ad540bae83bc27218aac8558495cf718405173c2b4afbf1fd31c5c2c88658f3",
+      "bytes": 4255
+    },
+    {
+      "path": "runs/20260826-174050-core-awakening/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "907764d182ec5af43409b7338a83559dff7f74dd240b0b5328b43a5eb7b6b540",
+      "bytes": 20160
+    },
+    {
+      "path": "runs/20260826-174050-core-awakening/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "95b130247b4453d4910549711c512ace773b7dda02e9276ae19de60cef54aa0e",
+      "bytes": 20395
+    },
+    {
+      "path": "runs/20260826-174050-core-awakening/attempt-03/shots/shot-1-title.png",
+      "sha256": "2ad540bae83bc27218aac8558495cf718405173c2b4afbf1fd31c5c2c88658f3",
+      "bytes": 4255
+    },
+    {
+      "path": "runs/20260826-174050-core-awakening/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "907764d182ec5af43409b7338a83559dff7f74dd240b0b5328b43a5eb7b6b540",
+      "bytes": 20160
+    },
+    {
+      "path": "runs/20260826-174050-core-awakening/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "95b130247b4453d4910549711c512ace773b7dda02e9276ae19de60cef54aa0e",
+      "bytes": 20395
+    },
+    {
+      "path": "runs/20260826-174050-core-awakening/attempt-04/shots/shot-1-title.png",
+      "sha256": "2ad540bae83bc27218aac8558495cf718405173c2b4afbf1fd31c5c2c88658f3",
+      "bytes": 4255
+    },
+    {
+      "path": "runs/20260826-174050-core-awakening/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "907764d182ec5af43409b7338a83559dff7f74dd240b0b5328b43a5eb7b6b540",
+      "bytes": 20160
+    },
+    {
+      "path": "runs/20260826-174050-core-awakening/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "95b130247b4453d4910549711c512ace773b7dda02e9276ae19de60cef54aa0e",
+      "bytes": 20395
+    },
+    {
+      "path": "runs/20260826-174050-core-awakening/attempt-05/shots/shot-1-title.png",
+      "sha256": "2ad540bae83bc27218aac8558495cf718405173c2b4afbf1fd31c5c2c88658f3",
+      "bytes": 4255
+    },
+    {
+      "path": "runs/20260826-174050-core-awakening/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "b46deaf886e0e80fbfea977f0643e625edf0390c2d0ff68425c1b8d7fc6d8d2a",
+      "bytes": 21610
+    },
+    {
+      "path": "runs/20260826-174050-core-awakening/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "95b130247b4453d4910549711c512ace773b7dda02e9276ae19de60cef54aa0e",
+      "bytes": 20395
+    },
+    {
+      "path": "runs/20260826-174700-core-awakening/attempt-01/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-174700-core-awakening/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "1451ba712702fd9e048af2c830591078379dc9511c1b6b395d95546f7434bc2b",
+      "bytes": 103709
+    },
+    {
+      "path": "runs/20260826-174700-core-awakening/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "c74a554e237f3e3ba2d2250719d512b58c5f652077fadea5560c7916d1c755c1",
+      "bytes": 105282
+    },
+    {
+      "path": "runs/20260826-174700-core-awakening/attempt-02/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-174700-core-awakening/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "eb3a50752c4c1303590ad9f694abe267c3c886377449a39a0d3163c29b176fe8",
+      "bytes": 104444
+    },
+    {
+      "path": "runs/20260826-174700-core-awakening/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "0fee33d0935aa58123eb9c36c1b50794f21f9e5c8052c5c9ceacfd87049be2a5",
+      "bytes": 105293
+    },
+    {
+      "path": "runs/20260826-174700-core-awakening/attempt-03/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-174700-core-awakening/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "1e3027a68ac7a23859f30e31ebac2a1b49cf2e4892cdcce62a63eebde103351a",
+      "bytes": 113822
+    },
+    {
+      "path": "runs/20260826-174700-core-awakening/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "716e44fc59c28c44ce0328fdca7fdbe20d20d91d2dca7231b23117c0920803a9",
+      "bytes": 114466
+    },
+    {
+      "path": "runs/20260826-174700-core-awakening/attempt-04/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-174700-core-awakening/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "1e3027a68ac7a23859f30e31ebac2a1b49cf2e4892cdcce62a63eebde103351a",
+      "bytes": 113822
+    },
+    {
+      "path": "runs/20260826-174700-core-awakening/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "716e44fc59c28c44ce0328fdca7fdbe20d20d91d2dca7231b23117c0920803a9",
+      "bytes": 114466
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-01/shots/shot-1-title.png",
+      "sha256": "e23c3561e6ec94e1cdc4451d08b7875a8b361d57bac8fcd94dad75bd6a912532",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "f9fcad4d43dd196018ee0d90c3bce0e1a6d3b5ce321992f91e37df7defea4373",
+      "bytes": 28513
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "cc5b8fa3684c3258c1f2d83d11fb776444bc4a5a01dba8fc126f8b76a506bcc6",
+      "bytes": 32414
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-02/shots/shot-1-title.png",
+      "sha256": "e23c3561e6ec94e1cdc4451d08b7875a8b361d57bac8fcd94dad75bd6a912532",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "72eb23ac668e7379febe5d07ad91d1202fdfe182a05b628ba7b9ecd8394471e5",
+      "bytes": 26368
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "86bb50e88d8616b2a731df3a55ca17eed99610d135af54aa1670eb41c547be40",
+      "bytes": 28327
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-03/shots/shot-1-title.png",
+      "sha256": "e23c3561e6ec94e1cdc4451d08b7875a8b361d57bac8fcd94dad75bd6a912532",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "8a875b67ca6ab0aa1fbd7a4f2f7eccf2193bd70355d35337ce8db2db55bc7f59",
+      "bytes": 26220
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "ec99f84fab7f8e8f310c9ec655da365339aa67058bd584503eafbb6e6cd8e9aa",
+      "bytes": 29710
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-04/shots/shot-1-title.png",
+      "sha256": "e23c3561e6ec94e1cdc4451d08b7875a8b361d57bac8fcd94dad75bd6a912532",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "532cec86c918012e54a179071eabc10d36cecd8b2206d7c9f495979f9557063c",
+      "bytes": 33777
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "43ab8d38a59dd9cb5c8d8d22c8a1ec98f4d4ff28ddd00cd2f5d4754814f6aff8",
+      "bytes": 33992
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-05/shots/shot-1-title.png",
+      "sha256": "e23c3561e6ec94e1cdc4451d08b7875a8b361d57bac8fcd94dad75bd6a912532",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "594ce23cc190e3cc9873d9ac574d010a692ff407b9bad32a7ca9116ddd2f4ef8",
+      "bytes": 33911
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "4b6920311a0773fcb1b4222a6c1a26be00bad34bed2bfb7a127aef395acd41d1",
+      "bytes": 23619
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-06/shots/shot-1-title.png",
+      "sha256": "e23c3561e6ec94e1cdc4451d08b7875a8b361d57bac8fcd94dad75bd6a912532",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-06/shots/shot-2-gameplay.png",
+      "sha256": "c530b918b412f22a870f4a8b5dac8d157c2945b6070eaeefa9f7421ec88c73c4",
+      "bytes": 64075
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-06/shots/shot-3-gameplay.png",
+      "sha256": "f1a58de2cdb8aae7f44be9dfa7e2769fe38c806196af6a6def63e478a1b0bcd5",
+      "bytes": 68970
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-07/shots/shot-1-title.png",
+      "sha256": "e23c3561e6ec94e1cdc4451d08b7875a8b361d57bac8fcd94dad75bd6a912532",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-07/shots/shot-2-gameplay.png",
+      "sha256": "0d4d836bae17771c4755043980a324d4d5a3055b29340fce2d53adfa5b7570b9",
+      "bytes": 111558
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-07/shots/shot-3-gameplay.png",
+      "sha256": "ddd0c9d09badffc1376cdcd51b1d0e60264bd385fc5d05c587674cf268a2a26f",
+      "bytes": 116789
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-08/shots/shot-1-title.png",
+      "sha256": "e23c3561e6ec94e1cdc4451d08b7875a8b361d57bac8fcd94dad75bd6a912532",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-08/shots/shot-2-gameplay.png",
+      "sha256": "5c4e26a24f3b47eaa94973e32ce85e69b3ba16fec2d6d8ae951e7dfce636f92e",
+      "bytes": 120933
+    },
+    {
+      "path": "runs/20260826-175149-core-awakening/attempt-08/shots/shot-3-gameplay.png",
+      "sha256": "eeda7c1fddc320fe31b7c9411adfcb17cd2e6812c5924118b4d792c9398f9449",
+      "bytes": 120628
+    },
+    {
+      "path": "runs/20260826-180351-core-awakening/attempt-01/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-180351-core-awakening/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "0af67bae6df3f1d776d7369f82a443217c04ce4c268ef52cf092f811cf7ce1db",
+      "bytes": 70556
+    },
+    {
+      "path": "runs/20260826-180351-core-awakening/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "0af67bae6df3f1d776d7369f82a443217c04ce4c268ef52cf092f811cf7ce1db",
+      "bytes": 70556
+    },
+    {
+      "path": "runs/20260826-180351-core-awakening/attempt-02/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-180351-core-awakening/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "632cb611c13bc8a5635053bbedfad5ebbb82698220b885dd72a99c045df87fb4",
+      "bytes": 72018
+    },
+    {
+      "path": "runs/20260826-180351-core-awakening/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "1cea7107ade9bc0b530830a4f98066fc92dbb40212a97bdc80a3faa82490fcb3",
+      "bytes": 73175
+    },
+    {
+      "path": "runs/20260826-180351-core-awakening/attempt-03/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-180351-core-awakening/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "a9c9572589311e38d95be0b4cfd7712ca01ad77a53c1d1fbe05f390fbb59f7df",
+      "bytes": 80024
+    },
+    {
+      "path": "runs/20260826-180351-core-awakening/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "ee1dad32b78607ea7200e5618fcc7fa85f7d0dcda87f216410d125c79bb33776",
+      "bytes": 82219
+    },
+    {
+      "path": "runs/20260826-180351-core-awakening/attempt-04/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-180351-core-awakening/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "dde1764ecbc01f9f2864dd0b27436237196e68ac51821eed1172d91cabbface8",
+      "bytes": 79964
+    },
+    {
+      "path": "runs/20260826-180351-core-awakening/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "333e9b7addaa924d85ff6440f8ab1b5602bbe34ec5f8df3fd6eb83bf7f4d294d",
+      "bytes": 81918
+    },
+    {
+      "path": "runs/20260826-181412-core-awakening/attempt-01/shots/shot-1-title.png",
+      "sha256": "5c6367b5386db8503d9bb4fec2a2efb0c6b0367ce223fe2fa89814ad1e0d8c74",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260826-181412-core-awakening/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "07c5da421e705c51fda7b3ed87f7c71ec238881220c5242349f1de57f4c6dcd4",
+      "bytes": 46895
+    },
+    {
+      "path": "runs/20260826-181412-core-awakening/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "151b35bafee27f8ede2a9f0ad2f76542f08e6154a65c8a2ec1655dbffc2cf6cd",
+      "bytes": 41793
+    },
+    {
+      "path": "runs/20260826-181412-core-awakening/attempt-02/shots/shot-1-title.png",
+      "sha256": "5c6367b5386db8503d9bb4fec2a2efb0c6b0367ce223fe2fa89814ad1e0d8c74",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260826-181412-core-awakening/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "73b2b98eabf6b137a73fa68109956723765d8b8254d2c089a83c24b74b87cb87",
+      "bytes": 43134
+    },
+    {
+      "path": "runs/20260826-181412-core-awakening/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "4494c0bbaeac5d13da10900dd8aa8aa4e20b0ca4ad9686cf03bb71623a55c44e",
+      "bytes": 43431
+    },
+    {
+      "path": "runs/20260826-181412-core-awakening/attempt-03/shots/shot-1-title.png",
+      "sha256": "5c6367b5386db8503d9bb4fec2a2efb0c6b0367ce223fe2fa89814ad1e0d8c74",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260826-181412-core-awakening/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "92f63fa984fc0800cb494a6a0597572f56f0738db596422a646c03c20829a938",
+      "bytes": 93601
+    },
+    {
+      "path": "runs/20260826-181412-core-awakening/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "0b583510c73f10ae5492f1ae9e1753183e28c33d35f50a3ed91884fb14f4e62a",
+      "bytes": 96926
+    },
+    {
+      "path": "runs/20260826-181412-core-awakening/attempt-04/shots/shot-1-title.png",
+      "sha256": "1eea71a5317992d470c52a5500efd215f8fcee07353bf81234fb12e78db0a443",
+      "bytes": 9846
+    },
+    {
+      "path": "runs/20260826-181412-core-awakening/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "0622b7fad6a0ac4569d5c0c1964044594979f707483fa739e4df3c8249235bf5",
+      "bytes": 25191
+    },
+    {
+      "path": "runs/20260826-181412-core-awakening/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "4fff7b59f767167217a1f66c905ceb839373a52951c9a6db0a9ca1057fe64689",
+      "bytes": 26297
+    },
+    {
+      "path": "runs/20260826-181412-core-awakening/attempt-05/shots/shot-1-title.png",
+      "sha256": "f2198604ce2f4c9a82e1154c003660084ed300c2b9eba7c91e15b02ee45d4dcd",
+      "bytes": 16004
+    },
+    {
+      "path": "runs/20260826-181412-core-awakening/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "753f45c197604619fdcfe174fafd3a15d102e1f39ee6bb8bcb9d1e4092ca8213",
+      "bytes": 34139
+    },
+    {
+      "path": "runs/20260826-181412-core-awakening/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "7116db98e5cfb735330d539f2c926498865283d9689adebd84e5d9ee9ee68459",
+      "bytes": 35334
+    },
+    {
+      "path": "runs/20260826-183226-core-awakening/attempt-01/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-183226-core-awakening/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "04b55c25906f4082192b06cffbd5308429a3248f18c60dcfd355a31ccff14b2d",
+      "bytes": 10595
+    },
+    {
+      "path": "runs/20260826-183226-core-awakening/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "04b55c25906f4082192b06cffbd5308429a3248f18c60dcfd355a31ccff14b2d",
+      "bytes": 10595
+    },
+    {
+      "path": "runs/20260826-183226-core-awakening/attempt-02/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-183226-core-awakening/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "a62acca3ffcab5a2ceacc75c8bbf4cf7172a534a7536ae09df56b26f511f0b69",
+      "bytes": 14916
+    },
+    {
+      "path": "runs/20260826-183226-core-awakening/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "a62acca3ffcab5a2ceacc75c8bbf4cf7172a534a7536ae09df56b26f511f0b69",
+      "bytes": 14916
+    },
+    {
+      "path": "runs/20260826-183226-core-awakening/attempt-03/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-183226-core-awakening/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "58e1faf7c99d1912e8b6b2c349b9caefffd70c8d261acc3608595a4b1731cfce",
+      "bytes": 38533
+    },
+    {
+      "path": "runs/20260826-183226-core-awakening/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "58e1faf7c99d1912e8b6b2c349b9caefffd70c8d261acc3608595a4b1731cfce",
+      "bytes": 38533
+    },
+    {
+      "path": "runs/20260826-183226-core-awakening/attempt-04/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-183226-core-awakening/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "58e1faf7c99d1912e8b6b2c349b9caefffd70c8d261acc3608595a4b1731cfce",
+      "bytes": 38533
+    },
+    {
+      "path": "runs/20260826-183226-core-awakening/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "58e1faf7c99d1912e8b6b2c349b9caefffd70c8d261acc3608595a4b1731cfce",
+      "bytes": 38533
+    },
+    {
+      "path": "runs/20260826-183226-core-awakening/attempt-05/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260826-183226-core-awakening/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "58e1faf7c99d1912e8b6b2c349b9caefffd70c8d261acc3608595a4b1731cfce",
+      "bytes": 38533
+    },
+    {
+      "path": "runs/20260826-183226-core-awakening/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "58e1faf7c99d1912e8b6b2c349b9caefffd70c8d261acc3608595a4b1731cfce",
+      "bytes": 38533
+    },
+    {
+      "path": "runs/20260826-190334-breach-breaker/attempt-01/shots/shot-1-title.png",
+      "sha256": "deb302d42f6a24fdfae2e8ea99d6f2da8204fee80d9e021bd099988bb0c9c9e0",
+      "bytes": 4259
+    },
+    {
+      "path": "runs/20260826-190334-breach-breaker/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "f0de59f2ec0f4597fab3e112c19a3082bb8cc482ac3d7cf19584b1e9996fdcfb",
+      "bytes": 124197
+    },
+    {
+      "path": "runs/20260826-190334-breach-breaker/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "f0de59f2ec0f4597fab3e112c19a3082bb8cc482ac3d7cf19584b1e9996fdcfb",
+      "bytes": 124197
+    },
+    {
+      "path": "runs/20260826-190334-breach-breaker/attempt-02/shots/shot-1-title.png",
+      "sha256": "deb302d42f6a24fdfae2e8ea99d6f2da8204fee80d9e021bd099988bb0c9c9e0",
+      "bytes": 4259
+    },
+    {
+      "path": "runs/20260826-190334-breach-breaker/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "a725d72973e5ad2418035ed33adf5a94708f5788470f5a58cecfc2c047660b22",
+      "bytes": 122807
+    },
+    {
+      "path": "runs/20260826-190334-breach-breaker/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "a725d72973e5ad2418035ed33adf5a94708f5788470f5a58cecfc2c047660b22",
+      "bytes": 122807
+    },
+    {
+      "path": "runs/20260826-190334-breach-breaker/attempt-03/shots/shot-1-title.png",
+      "sha256": "deb302d42f6a24fdfae2e8ea99d6f2da8204fee80d9e021bd099988bb0c9c9e0",
+      "bytes": 4259
+    },
+    {
+      "path": "runs/20260826-190334-breach-breaker/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "d829de30d3a9b8d541a354bf9cb2f70801c457a0d634a0024c499589f52902c0",
+      "bytes": 124203
+    },
+    {
+      "path": "runs/20260826-190334-breach-breaker/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "d829de30d3a9b8d541a354bf9cb2f70801c457a0d634a0024c499589f52902c0",
+      "bytes": 124203
+    },
+    {
+      "path": "runs/20260826-190334-breach-breaker/attempt-04/shots/shot-1-title.png",
+      "sha256": "deb302d42f6a24fdfae2e8ea99d6f2da8204fee80d9e021bd099988bb0c9c9e0",
+      "bytes": 4259
+    },
+    {
+      "path": "runs/20260826-190334-breach-breaker/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "22d7970d114801531598bf03bc0aa3e5b6a0fe33f5452dfb97d435c2de3ebf28",
+      "bytes": 124352
+    },
+    {
+      "path": "runs/20260826-190334-breach-breaker/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "7c24beb97c0863e07d82136e8e3d5b0291149e55417d520f778d7d5c9504ecb7",
+      "bytes": 125347
+    },
+    {
+      "path": "runs/20260826-190334-breach-breaker/attempt-05/shots/shot-1-title.png",
+      "sha256": "deb302d42f6a24fdfae2e8ea99d6f2da8204fee80d9e021bd099988bb0c9c9e0",
+      "bytes": 4259
+    },
+    {
+      "path": "runs/20260826-190334-breach-breaker/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "cc55208f006ec63ebd4334805a56e39017ad897a16bda8558d51303d6bdc8f9d",
+      "bytes": 50893
+    },
+    {
+      "path": "runs/20260826-190334-breach-breaker/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "b86c48221f34596cab3ab66f0b32bb7b1f8f8aa3638921054b02ffd65ff57d13",
+      "bytes": 50168
+    },
+    {
+      "path": "runs/20260827-041726-core-awakening/attempt-01/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-041726-core-awakening/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "c904aab010893e148843e3c6bf3c9f06304d87a9b8020460d018793bd8905418",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-041726-core-awakening/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "c904aab010893e148843e3c6bf3c9f06304d87a9b8020460d018793bd8905418",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-041726-core-awakening/attempt-02/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-041726-core-awakening/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "c904aab010893e148843e3c6bf3c9f06304d87a9b8020460d018793bd8905418",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-041726-core-awakening/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "fc551738e022f3395979c82a857d97e7a364fd45fa5fd3d2c4ad569bb2ed27f3",
+      "bytes": 29811
+    },
+    {
+      "path": "runs/20260827-041726-core-awakening/attempt-03/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-041726-core-awakening/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "0ee633220fa6175c353b3f9a44c50e224dd84eec53cb531cfdb3993b8d93757b",
+      "bytes": 30263
+    },
+    {
+      "path": "runs/20260827-041726-core-awakening/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "121fb2351df302be78cdbeb58210f08077d60ba7776ce035c14d655c8b2a9b4f",
+      "bytes": 19006
+    },
+    {
+      "path": "runs/20260827-041726-core-awakening/attempt-04/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-041726-core-awakening/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "c904aab010893e148843e3c6bf3c9f06304d87a9b8020460d018793bd8905418",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-041726-core-awakening/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "7fb21a365eff0f0109000dbcf9d2a594fa0b0ce7b12a1efe4e9727e032f07f44",
+      "bytes": 8521
+    },
+    {
+      "path": "runs/20260827-041726-core-awakening/attempt-05/shots/shot-1-title.png",
+      "sha256": "6cada834095a8f0fb8444e60575268f91e2e8bb6dded7971fd018f6ccd0f1f3f",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-041726-core-awakening/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "4b05c09d3010a1577da3683a0e4e9e62c95d9d988a72b0b55b8f8cd37afb0c46",
+      "bytes": 4360
+    },
+    {
+      "path": "runs/20260827-041726-core-awakening/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "f6436e97d12d3b8ecd17c117fd339b7d3b4af03e4437db5b023c1155bc2e8afd",
+      "bytes": 21360
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-01/shots/shot-1-title.png",
+      "sha256": "6f4b62c5cd79a8d3106c39284985addde2ea00a4e7ec2c09b290c6b6ae04b3f7",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "5a348c20b230c6132ccb15c0976fbdc38b8eee5faa083e81528d5051f98ded21",
+      "bytes": 29499
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "adffa7a194bcc204f19d29a42209db1bff8da3b6196d10541fe293cad8470a9c",
+      "bytes": 31097
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-02/shots/shot-1-title.png",
+      "sha256": "6f4b62c5cd79a8d3106c39284985addde2ea00a4e7ec2c09b290c6b6ae04b3f7",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "0369128fdb139f7b92e9f1ccd195109340d5320b2159c1f19d76b794ec30cc02",
+      "bytes": 27764
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "5bfda7d8f696c6a291c17f2297163ed52e00a4ad0e2daad987f7c8f83dddeffc",
+      "bytes": 31706
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-03/shots/shot-1-title.png",
+      "sha256": "6f4b62c5cd79a8d3106c39284985addde2ea00a4e7ec2c09b290c6b6ae04b3f7",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "0369128fdb139f7b92e9f1ccd195109340d5320b2159c1f19d76b794ec30cc02",
+      "bytes": 27764
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "0369128fdb139f7b92e9f1ccd195109340d5320b2159c1f19d76b794ec30cc02",
+      "bytes": 27764
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-04/shots/shot-1-title.png",
+      "sha256": "6f4b62c5cd79a8d3106c39284985addde2ea00a4e7ec2c09b290c6b6ae04b3f7",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "dd6ef9a44c673f0a6c197a0186486645b970b6eaaa01abc6ca8bf00ece8d2e07",
+      "bytes": 28869
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "e50d085034d54b3434924459034524fdee13ca420f13049ab30ac3723c6137a5",
+      "bytes": 32238
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-05/shots/shot-1-title.png",
+      "sha256": "6f4b62c5cd79a8d3106c39284985addde2ea00a4e7ec2c09b290c6b6ae04b3f7",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "8704e829393879267c31ba15dfaeccf0bccc6fe84422e01091bb276188951190",
+      "bytes": 29728
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "8704e829393879267c31ba15dfaeccf0bccc6fe84422e01091bb276188951190",
+      "bytes": 29728
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-06/shots/shot-1-title.png",
+      "sha256": "6f4b62c5cd79a8d3106c39284985addde2ea00a4e7ec2c09b290c6b6ae04b3f7",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-06/shots/shot-2-gameplay.png",
+      "sha256": "409ca4b58c3b2f07634a5a22239a0b103ad60a4ea4d0d30e0604ab64941e5e5e",
+      "bytes": 55125
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-06/shots/shot-3-gameplay.png",
+      "sha256": "0bfab7785fdb4bb5368a5d733af53b55f11b395e06daa5e60adb340ea902e389",
+      "bytes": 52920
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-07/shots/shot-1-title.png",
+      "sha256": "6f4b62c5cd79a8d3106c39284985addde2ea00a4e7ec2c09b290c6b6ae04b3f7",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-07/shots/shot-2-gameplay.png",
+      "sha256": "e2e35754b80ae4324a2f0953944e83278a210a93036cd509c86c303c3eb3b42f",
+      "bytes": 56821
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-07/shots/shot-3-gameplay.png",
+      "sha256": "6cb700d00370e647c3c9b0364eb514c786ff8e9000033ebefcf1b8a447e7df5f",
+      "bytes": 53074
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-08/shots/shot-1-title.png",
+      "sha256": "6f4b62c5cd79a8d3106c39284985addde2ea00a4e7ec2c09b290c6b6ae04b3f7",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-08/shots/shot-2-gameplay.png",
+      "sha256": "c3e003d09fe0ff108a4fe2824486f376db22f76f2ac67f5637254fb885a7cf4f",
+      "bytes": 58777
+    },
+    {
+      "path": "runs/20260827-042215-titan-core-reforged/attempt-08/shots/shot-3-gameplay.png",
+      "sha256": "6898f73da068fd0084e247de6a4aa544e54efd62324dcccd0b25f13472657884",
+      "bytes": 58742
+    },
+    {
+      "path": "runs/20260827-043356-titan-core-reforged/attempt-01/shots/shot-1-title.png",
+      "sha256": "75f98b3e57527796fc3abc4a3404dc87857d9a869adeaef598d8cc42b8035690",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260827-043356-titan-core-reforged/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "772f5476edbf347d89e33fded19be8f4051b1723f5729c3c22fac728ef1cabb8",
+      "bytes": 10726
+    },
+    {
+      "path": "runs/20260827-043356-titan-core-reforged/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "772f5476edbf347d89e33fded19be8f4051b1723f5729c3c22fac728ef1cabb8",
+      "bytes": 10726
+    },
+    {
+      "path": "runs/20260827-043356-titan-core-reforged/attempt-02/shots/shot-1-title.png",
+      "sha256": "75f98b3e57527796fc3abc4a3404dc87857d9a869adeaef598d8cc42b8035690",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260827-043356-titan-core-reforged/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "772f5476edbf347d89e33fded19be8f4051b1723f5729c3c22fac728ef1cabb8",
+      "bytes": 10726
+    },
+    {
+      "path": "runs/20260827-043356-titan-core-reforged/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "772f5476edbf347d89e33fded19be8f4051b1723f5729c3c22fac728ef1cabb8",
+      "bytes": 10726
+    },
+    {
+      "path": "runs/20260827-043356-titan-core-reforged/attempt-03/shots/shot-1-title.png",
+      "sha256": "75f98b3e57527796fc3abc4a3404dc87857d9a869adeaef598d8cc42b8035690",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260827-043356-titan-core-reforged/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "772f5476edbf347d89e33fded19be8f4051b1723f5729c3c22fac728ef1cabb8",
+      "bytes": 10726
+    },
+    {
+      "path": "runs/20260827-043356-titan-core-reforged/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "772f5476edbf347d89e33fded19be8f4051b1723f5729c3c22fac728ef1cabb8",
+      "bytes": 10726
+    },
+    {
+      "path": "runs/20260827-043356-titan-core-reforged/attempt-04/shots/shot-1-title.png",
+      "sha256": "75f98b3e57527796fc3abc4a3404dc87857d9a869adeaef598d8cc42b8035690",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260827-043356-titan-core-reforged/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "772f5476edbf347d89e33fded19be8f4051b1723f5729c3c22fac728ef1cabb8",
+      "bytes": 10726
+    },
+    {
+      "path": "runs/20260827-043356-titan-core-reforged/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "772f5476edbf347d89e33fded19be8f4051b1723f5729c3c22fac728ef1cabb8",
+      "bytes": 10726
+    },
+    {
+      "path": "runs/20260827-043356-titan-core-reforged/attempt-05/shots/shot-1-title.png",
+      "sha256": "75f98b3e57527796fc3abc4a3404dc87857d9a869adeaef598d8cc42b8035690",
+      "bytes": 4257
+    },
+    {
+      "path": "runs/20260827-043356-titan-core-reforged/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "772f5476edbf347d89e33fded19be8f4051b1723f5729c3c22fac728ef1cabb8",
+      "bytes": 10726
+    },
+    {
+      "path": "runs/20260827-043356-titan-core-reforged/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "772f5476edbf347d89e33fded19be8f4051b1723f5729c3c22fac728ef1cabb8",
+      "bytes": 10726
+    },
+    {
+      "path": "runs/20260827-120138/attempt-01/shots/shot-1-title.png",
+      "sha256": "968c9f47c4a2e7ff44b060944b92e2411a93ebf8a98de4827f2784df224932a8",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-120138/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "f4ddf8f9b45d83b175b3b1d3194eadc693ad0c95c2dfa591cfd579d3e9ef12f5",
+      "bytes": 97717
+    },
+    {
+      "path": "runs/20260827-120138/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "edc97e65418259fa5dadea31a4cd99817af6c7284dd338433a1fe851ae9973d9",
+      "bytes": 96417
+    },
+    {
+      "path": "runs/20260827-120138/attempt-02/shots/shot-1-title.png",
+      "sha256": "968c9f47c4a2e7ff44b060944b92e2411a93ebf8a98de4827f2784df224932a8",
+      "bytes": 4258
+    },
+    {
+      "path": "runs/20260827-120138/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "188c84f421b74e83270302b6dbf2208d0871e01d7bc5622eedfc9fcd899be028",
+      "bytes": 78530
+    },
+    {
+      "path": "runs/20260827-120138/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "9a4075e3e653431a18a0466f922285f9ae60fde89af39ee3cbb4c0551cd22c93",
+      "bytes": 110306
+    },
+    {
+      "path": "runs/20260827-120138/attempt-03/shots/shot-1-title.png",
+      "sha256": "4685254c0b44e826e36cdf898708e1f06d55dd9184b62535901e5889de1b27de",
+      "bytes": 55456
+    },
+    {
+      "path": "runs/20260827-120138/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "b46e74411f228cf1a368bcb07b44c9702178ca01a84ec5ebf55a32222fd2aae7",
+      "bytes": 437111
+    },
+    {
+      "path": "runs/20260827-120138/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "e5f97d6ad9ea92ce73076ed2659b50a5fa1dedda648dacf42d51c082fffd75d3",
+      "bytes": 506008
+    },
+    {
+      "path": "runs/20260827-203110/attempt-01/shots/shot-1-title.png",
+      "sha256": "4691d2f077337d3ded9aa66e137d391f3fbb2c027e82925524810e6afe17d9e4",
+      "bytes": 42502
+    },
+    {
+      "path": "runs/20260827-203110/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "2595782a3e1c9ba22706c6ad647370d77185d90e21db6df0ed1de71a3bc1238e",
+      "bytes": 190722
+    },
+    {
+      "path": "runs/20260827-203110/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "37ee16201ecb5f376007ebf335ef3604444fe267e92b07ab3e31864da7269479",
+      "bytes": 190719
+    },
+    {
+      "path": "runs/20260827-203110/attempt-02/shots/shot-1-title.png",
+      "sha256": "433c1c97e10ef1628c9dc55a0ce51fcb5e3cafa4f909998b7f1cada339b0bab8",
+      "bytes": 42908
+    },
+    {
+      "path": "runs/20260827-203110/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "a2459c3687a75132e2129ec94ed3b52d000170ea56137f3308ad15dd59836780",
+      "bytes": 188850
+    },
+    {
+      "path": "runs/20260827-203110/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "5f47efc47623c5fd8fe6e844696098b2d3459380c7cc81a9c34610dfe5d5f844",
+      "bytes": 187823
+    },
+    {
+      "path": "runs/20260827-203110/attempt-03/shots/shot-1-title.png",
+      "sha256": "f35f4e794c0e4429137ec557f8ca7627d9f8dfa413ba497ac030296d95007e5a",
+      "bytes": 45379
+    },
+    {
+      "path": "runs/20260827-203110/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "bea510fee2e92aaf3a8bbf9d9d68cd5b6b12150ee18df6acf11fa5e8e591272c",
+      "bytes": 182673
+    },
+    {
+      "path": "runs/20260827-203110/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "1cb710b2a76a6da31d5478b726ac77a9f135fc55e47f86bf0b386e9e2c14f798",
+      "bytes": 177518
+    },
+    {
+      "path": "runs/20260827-203110/attempt-04/shots/shot-1-title.png",
+      "sha256": "31cd1fd12b126d4e5c4a4d6723df027d519f197f49136bb760d47abbc90883dd",
+      "bytes": 44858
+    },
+    {
+      "path": "runs/20260827-203110/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "2c22bf6b63550b8112b0527bb8daa3c9482418e9ec590128aac10cd555274166",
+      "bytes": 178943
+    },
+    {
+      "path": "runs/20260827-203110/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "e590418337adf96e80a88507db8520068c2dc5e854cde8d5697dd02b8563d1e3",
+      "bytes": 181232
+    },
+    {
+      "path": "runs/20260827-203110/attempt-05/shots/shot-1-title.png",
+      "sha256": "92d401fbc765aab55a0b87920bd41b943f4cda05634d44409389d25a7d4589fa",
+      "bytes": 44362
+    },
+    {
+      "path": "runs/20260827-203110/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "4ea05faa8b414d6c61711ae89e07c30e51c0da31187e66268d90435ad8665ff7",
+      "bytes": 59455
+    },
+    {
+      "path": "runs/20260827-203110/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "191d6522a4455c87abbb389460c6a267f915e552ca59f79e97af577e15e45abe",
+      "bytes": 58939
+    },
+    {
+      "path": "runs/20260827-210323/attempt-01/shots/shot-1-title.png",
+      "sha256": "f9f54332e59b9860df209cb1790769339ef67b7747b8adeaccddeb9d32a2ada4",
+      "bytes": 45143
+    },
+    {
+      "path": "runs/20260827-210323/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "880a4c4563898790daf736f8b8811aa9e304a90a7112a5fbd0c7066b98c6345a",
+      "bytes": 225550
+    },
+    {
+      "path": "runs/20260827-210323/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "d6ffd33dd69090ccc230cc919b7afcad49c024ab034b483f2ce915153f076b12",
+      "bytes": 224904
+    },
+    {
+      "path": "runs/20260827-210323/attempt-02/shots/shot-1-title.png",
+      "sha256": "50d2c2c9dd3f234d6fc19c4cfd7b40193abc5f90500814b0ceee3ca130fb9ce5",
+      "bytes": 44541
+    },
+    {
+      "path": "runs/20260827-210323/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "99c6091ab2fcbbba15af26a7057af605af10c55575c9bcb145b5fc29706158d9",
+      "bytes": 192637
+    },
+    {
+      "path": "runs/20260827-210323/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "d4de1a6967e70ac9f1b4192173ef635452c6ecad01b9e1146ec0bef12275b9f3",
+      "bytes": 191859
+    },
+    {
+      "path": "runs/20260827-210323/attempt-03/shots/shot-1-title.png",
+      "sha256": "0a87a126169f0cdc2e6d3c4c544879d5a95a45c23b781d2abf685bfd0092ce29",
+      "bytes": 42210
+    },
+    {
+      "path": "runs/20260827-210323/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "bee577cb2066e196c24f88badaab5f994371c12e766de21251816cc86f8dce3e",
+      "bytes": 224555
+    },
+    {
+      "path": "runs/20260827-210323/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "87cbe5d01487a8d2e8587175109a7fb0459d815eb2666c26a686a78687d5fbc6",
+      "bytes": 224579
+    },
+    {
+      "path": "runs/20260827-210323/attempt-04/shots/shot-1-title.png",
+      "sha256": "6c94e1b9795d0b3706b77b5135f5bb91f55446d2cb6a764e1ae09a72d715b8c1",
+      "bytes": 43780
+    },
+    {
+      "path": "runs/20260827-210323/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "db75c335cdb614247019d973f71012c1670674f851605c83048fb95d7abeeb54",
+      "bytes": 229315
+    },
+    {
+      "path": "runs/20260827-210323/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "d92227ce67be1be684b02362f0f129dd1f6326ba72f4f5910cc6db6589f406d9",
+      "bytes": 228924
+    },
+    {
+      "path": "runs/20260827-210323/attempt-05/shots/shot-1-title.png",
+      "sha256": "26188a1d3cc07b671c3afc2bdeb9d73821595bb285cb10e362b754faefe722e3",
+      "bytes": 44069
+    },
+    {
+      "path": "runs/20260827-210323/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "49152152c4efe5eb9e6bd30fd6be58011928ec6fef8cfc6e7925873510af3b31",
+      "bytes": 235228
+    },
+    {
+      "path": "runs/20260827-210323/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "8e764f6fba32b89b6023ebc4cf1fe4d011f1dca24fb3389f3518659c0c5833df",
+      "bytes": 235284
+    },
+    {
+      "path": "runs/20260828-043617/attempt-01/shots/shot-1-title.png",
+      "sha256": "252952c94b80267a3e6e44b635c37e01a98bf27cd08e46e4ef15d44105d5a8d4",
+      "bytes": 42586
+    },
+    {
+      "path": "runs/20260828-043617/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "ff538e8ed172bffb237ff504571ea30e4a8ff62b03509af49d277fcd1bf1432c",
+      "bytes": 161458
+    },
+    {
+      "path": "runs/20260828-043617/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "e0ba969cd6f809df7f234483559db217c5d1b1e48d1731ad1e0a8dc163012df6",
+      "bytes": 162380
+    },
+    {
+      "path": "runs/20260828-043617/attempt-02/shots/shot-1-title.png",
+      "sha256": "eb71dc91aed4c73ff14ffc00379874e1a767664a86ad82eab97b3620b210254d",
+      "bytes": 42906
+    },
+    {
+      "path": "runs/20260828-043617/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "5ecb3f7f869d800cec8fe559629371f5a422a723a3fb44fdc2f9cdd635b56afe",
+      "bytes": 172092
+    },
+    {
+      "path": "runs/20260828-043617/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "629c8a36cb0f436a4a7730ea878a09cb4407f3e1320d42f9d1268a98554876c5",
+      "bytes": 183841
+    },
+    {
+      "path": "runs/20260828-043617/attempt-03/shots/shot-1-title.png",
+      "sha256": "82e1cb7804c033d648b5565030cf834023bcf9376c921880a3902bc2b455121d",
+      "bytes": 42877
+    },
+    {
+      "path": "runs/20260828-043617/attempt-03/shots/shot-2-gameplay.png",
+      "sha256": "240ed89d281f9de1b70664477670f0a657d00e1badec5357f5d3f81ecbbafd01",
+      "bytes": 176385
+    },
+    {
+      "path": "runs/20260828-043617/attempt-03/shots/shot-3-gameplay.png",
+      "sha256": "ac95dc4ad9d3b2c4577214164b58576ae1452ba413587f6ccfe12c53e0cc559f",
+      "bytes": 178709
+    },
+    {
+      "path": "runs/20260828-043617/attempt-04/shots/shot-1-title.png",
+      "sha256": "25276d6c31976e0963d953a6b7eb062308776ddf2751cf33351b2d3bcec42ee8",
+      "bytes": 42743
+    },
+    {
+      "path": "runs/20260828-043617/attempt-04/shots/shot-2-gameplay.png",
+      "sha256": "82f5496364b3803b51c5bff24d577c45defb6e20818198bc8272c6e88dd74ca7",
+      "bytes": 176097
+    },
+    {
+      "path": "runs/20260828-043617/attempt-04/shots/shot-3-gameplay.png",
+      "sha256": "dd88bcfe785dc711e6bfb9edb01e7d956a78ff19dbd7894783da912bdcd7c037",
+      "bytes": 176357
+    },
+    {
+      "path": "runs/20260828-043617/attempt-05/shots/shot-1-title.png",
+      "sha256": "a11adfc636ffbf441bc2d5c8ddbeef1c16d34586293a6d22b41c16efe4aca0bf",
+      "bytes": 44476
+    },
+    {
+      "path": "runs/20260828-043617/attempt-05/shots/shot-2-gameplay.png",
+      "sha256": "0c90d94e6cfd20ea3b12456c1568f6f516cccaad883bd6d20187f3acabd43857",
+      "bytes": 189661
+    },
+    {
+      "path": "runs/20260828-043617/attempt-05/shots/shot-3-gameplay.png",
+      "sha256": "81daa5b7f9c4a1a1dd924b0ab3116c6c03cc08464b692e6359f703c6f9b22365",
+      "bytes": 184193
+    },
+    {
+      "path": "runs/20260829-084228/attempt-01/shots/shot-1-title.png",
+      "sha256": "25282a3b15684177b15dd96b2583314b945a6a43fa567e613cfdb74eb9082f08",
+      "bytes": 44600
+    },
+    {
+      "path": "runs/20260829-084228/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "75a0b686a73b486558fbace9c12ff692568f56614644210d13c52a71cbab71d9",
+      "bytes": 334757
+    },
+    {
+      "path": "runs/20260829-084228/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "43efa00df7ca9ff9ead8175707537cae90e2a561fc0369ec0fdded8995a4c20c",
+      "bytes": 221770
+    }
+  ]
+}

@@ -15,14 +15,22 @@
       "date": "2026-08-27T12:06:19.773Z",
       "status": "rejected",
       "score": 7.7
+    },
+    {
+      "slug": "lumen-current",
+      "title": "Lumen Current",
+      "genre": "action",
+      "date": "2026-08-29T08:45:53.892Z",
+      "status": "draft",
+      "score": 7.1
     }
   ],
   "lessons": [],
   "stats": {
-    "runs": 35,
+    "runs": 40,
     "published": 0,
     "rejected": 1,
-    "failed": 26,
+    "failed": 30,
     "tokens": 0,
     "costUsd": 0
   }

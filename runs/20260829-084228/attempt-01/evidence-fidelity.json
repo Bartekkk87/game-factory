@@ -1,0 +1,875 @@
+{
+  "pass": true,
+  "status": "passed",
+  "contractSha256": "1ad6151de1a644d47585271aea2ff14ad220f4cb292f3410ec8270e3bf0f23a1",
+  "requirementIds": [
+    "MH-01",
+    "MH-02",
+    "MH-03",
+    "MH-04",
+    "MH-05",
+    "MH-06",
+    "MH-07",
+    "NG-01",
+    "NG-02",
+    "NG-03"
+  ],
+  "criteria": [
+    {
+      "requirementId": "MH-01",
+      "acceptanceId": "AC-MH-01",
+      "probeId": "PR-MH-01",
+      "kind": "event",
+      "declaredKind": "event",
+      "strength": "correlated_gameplay",
+      "eventType": "movement_and_resonance_input",
+      "evidenceSource": "generated-game-event+runtime-correlation",
+      "pass": true,
+      "traceable": true,
+      "detail": "event correlated with active gameplay at t=1.483s and engine-observed score 0 -> 100"
+    },
+    {
+      "requirementId": "MH-02",
+      "acceptanceId": "AC-MH-02",
+      "probeId": "PR-MH-02",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "signal_node_activated",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event signal_node_activated changed gameplay value"
+    },
+    {
+      "requirementId": "MH-03",
+      "acceptanceId": "AC-MH-03",
+      "probeId": "PR-MH-03",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": true,
+      "traceable": true,
+      "detail": "state success reached in verifier scenarios (observed=won)"
+    },
+    {
+      "requirementId": "MH-04",
+      "acceptanceId": "AC-MH-04",
+      "probeId": "PR-MH-04",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": true,
+      "traceable": true,
+      "detail": "state failure reached in verifier scenarios (observed=gameover)"
+    },
+    {
+      "requirementId": "MH-05",
+      "acceptanceId": "AC-MH-05",
+      "probeId": "PR-MH-05",
+      "kind": "restart_after_terminal",
+      "declaredKind": "restart_after_terminal",
+      "strength": null,
+      "eventType": "fresh_run_started",
+      "evidenceSource": "harness-observed-terminal-restart",
+      "pass": true,
+      "traceable": true,
+      "detail": "harness restarted success-proof and failure-proof into playing without page reload"
+    },
+    {
+      "requirementId": "MH-06",
+      "acceptanceId": "AC-MH-06",
+      "probeId": "PR-MH-06",
+      "kind": "layout_no_overlap",
+      "declaredKind": "layout_no_overlap",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed-canvas-geometry",
+      "pass": true,
+      "traceable": true,
+      "detail": "independent canvas layout observed at mid: 6 HUD regions, no overlap/out-of-bounds issues, with score progress"
+    },
+    {
+      "requirementId": "MH-07",
+      "acceptanceId": "AC-MH-07",
+      "probeId": "PR-MH-07",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "pressure_escalated",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event pressure_escalated changed gameplay value"
+    },
+    {
+      "requirementId": "NG-01",
+      "acceptanceId": "AC-NG-01",
+      "probeId": "PR-NG-01",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "weapon_fired",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event weapon_fired absent"
+    },
+    {
+      "requirementId": "NG-02",
+      "acceptanceId": "AC-NG-02",
+      "probeId": "PR-NG-02",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "shop_opened",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event shop_opened absent"
+    },
+    {
+      "requirementId": "NG-03",
+      "acceptanceId": "AC-NG-03",
+      "probeId": "PR-NG-03",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "idle_node_activated",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event idle_node_activated absent"
+    }
+  ],
+  "failures": [],
+  "coverage": {
+    "evaluatedRequirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-03",
+      "MH-04",
+      "MH-05",
+      "MH-06",
+      "MH-07",
+      "NG-01",
+      "NG-02",
+      "NG-03"
+    ],
+    "harnessObservedRequirementIds": [
+      "MH-03",
+      "MH-04",
+      "MH-05",
+      "MH-06"
+    ],
+    "canvasGeometryRequirementIds": [
+      "MH-06"
+    ],
+    "generatedGameEventDependentRequirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-07",
+      "NG-01",
+      "NG-02",
+      "NG-03"
+    ],
+    "correlatedGeneratedGameEventRequirementIds": [
+      "MH-01"
+    ],
+    "independentReviewClaimIds": [],
+    "independentReviewClaims": [],
+    "ambiguousUnknownClaimIdsExcluded": [],
+    "unstructuredBriefContentEvaluated": true,
+    "independentReviewRequired": false,
+    "scope": "Full-brief Product Fidelity routes structured MH/NG requirements to deterministic verifier evidence and every concrete non-ambiguous descriptive UN claim to mandatory independent screenshot/experience review. Ambiguous maybe/optional unknowns remain explicitly non-binding. Independent-review claims are not treated as deterministic PASS and cannot be waived by generated-game self-attestation."
+  },
+  "observedEvents": [
+    {
+      "seq": 1,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 2,
+      "type": "score_changed",
+      "time": 1.433,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 0,
+        "after": 100,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 3,
+      "type": "signal_node_activated",
+      "time": 1.433,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "nodeProgressBefore": 0,
+        "nodeProgressAfter": 1,
+        "scoreAward": 100
+      }
+    },
+    {
+      "seq": 4,
+      "type": "pressure_escalated",
+      "time": 1.433,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "hazardSpeedBefore": 35,
+        "hazardSpeedAfter": 53
+      }
+    },
+    {
+      "seq": 5,
+      "type": "movement_and_resonance_input",
+      "time": 1.483,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "x": 792,
+        "y": 270,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 6,
+      "type": "movement_and_resonance_input",
+      "time": 2.233,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "x": 918,
+        "y": 270,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 7,
+      "type": "movement_and_resonance_input",
+      "time": 2.583,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "x": 918,
+        "y": 270,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 8,
+      "type": "movement_and_resonance_input",
+      "time": 2.983,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "x": 918,
+        "y": 270,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 9,
+      "type": "movement_and_resonance_input",
+      "time": 3.733,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "x": 918,
+        "y": 347,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 10,
+      "type": "score_changed",
+      "time": 3.733,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 100,
+        "after": 300,
+        "delta": 200
+      }
+    },
+    {
+      "seq": 11,
+      "type": "signal_node_activated",
+      "time": 3.733,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "nodeProgressBefore": 1,
+        "nodeProgressAfter": 2,
+        "scoreAward": 200
+      }
+    },
+    {
+      "seq": 12,
+      "type": "pressure_escalated",
+      "time": 3.733,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "hazardSpeedBefore": 53,
+        "hazardSpeedAfter": 71
+      }
+    },
+    {
+      "seq": 13,
+      "type": "movement_and_resonance_input",
+      "time": 3.783,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 918,
+        "y": 358,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 14,
+      "type": "movement_and_resonance_input",
+      "time": 4.383,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 918,
+        "y": 490,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 15,
+      "type": "movement_and_resonance_input",
+      "time": 5.083,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 918,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 16,
+      "type": "movement_and_resonance_input",
+      "time": 5.133,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 918,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 17,
+      "type": "movement_and_resonance_input",
+      "time": 5.883,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 918,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 18,
+      "type": "movement_and_resonance_input",
+      "time": 6.383,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 918,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 19,
+      "type": "movement_and_resonance_input",
+      "time": 6.633,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 918,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 20,
+      "type": "movement_and_resonance_input",
+      "time": 7.383,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 757,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 21,
+      "type": "movement_and_resonance_input",
+      "time": 7.683,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 691,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 22,
+      "type": "movement_and_resonance_input",
+      "time": 8.133,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 592,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 23,
+      "type": "movement_and_resonance_input",
+      "time": 8.883,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 427,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 24,
+      "type": "score_changed",
+      "time": 8.883,
+      "state": "playing",
+      "score": 600,
+      "data": {
+        "before": 300,
+        "after": 600,
+        "delta": 300
+      }
+    },
+    {
+      "seq": 25,
+      "type": "signal_node_activated",
+      "time": 8.883,
+      "state": "playing",
+      "score": 600,
+      "data": {
+        "nodeProgressBefore": 2,
+        "nodeProgressAfter": 3,
+        "scoreAward": 300
+      }
+    },
+    {
+      "seq": 26,
+      "type": "pressure_escalated",
+      "time": 8.883,
+      "state": "playing",
+      "score": 600,
+      "data": {
+        "hazardSpeedBefore": 71,
+        "hazardSpeedAfter": 89
+      }
+    },
+    {
+      "seq": 27,
+      "type": "game_won",
+      "time": 8.883,
+      "state": "won",
+      "score": 600,
+      "data": {
+        "from": "playing",
+        "to": "won"
+      }
+    },
+    {
+      "seq": 1,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 2,
+      "type": "score_changed",
+      "time": 1.383,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 0,
+        "after": 100,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 3,
+      "type": "signal_node_activated",
+      "time": 1.383,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "nodeProgressBefore": 0,
+        "nodeProgressAfter": 1,
+        "scoreAward": 100
+      }
+    },
+    {
+      "seq": 4,
+      "type": "pressure_escalated",
+      "time": 1.383,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "hazardSpeedBefore": 35,
+        "hazardSpeedAfter": 53
+      }
+    },
+    {
+      "seq": 5,
+      "type": "movement_and_resonance_input",
+      "time": 1.483,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "x": 792,
+        "y": 270,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 6,
+      "type": "movement_and_resonance_input",
+      "time": 2.233,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "x": 918,
+        "y": 270,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 7,
+      "type": "movement_and_resonance_input",
+      "time": 2.583,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "x": 918,
+        "y": 270,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 8,
+      "type": "movement_and_resonance_input",
+      "time": 2.983,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "x": 918,
+        "y": 270,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 9,
+      "type": "movement_and_resonance_input",
+      "time": 3.733,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "x": 918,
+        "y": 354,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 10,
+      "type": "score_changed",
+      "time": 3.733,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 100,
+        "after": 300,
+        "delta": 200
+      }
+    },
+    {
+      "seq": 11,
+      "type": "signal_node_activated",
+      "time": 3.733,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "nodeProgressBefore": 1,
+        "nodeProgressAfter": 2,
+        "scoreAward": 200
+      }
+    },
+    {
+      "seq": 12,
+      "type": "pressure_escalated",
+      "time": 3.733,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "hazardSpeedBefore": 53,
+        "hazardSpeedAfter": 71
+      }
+    },
+    {
+      "seq": 13,
+      "type": "movement_and_resonance_input",
+      "time": 3.783,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 918,
+        "y": 365,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 14,
+      "type": "movement_and_resonance_input",
+      "time": 4.383,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 918,
+        "y": 497,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 15,
+      "type": "movement_and_resonance_input",
+      "time": 5.083,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 918,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 16,
+      "type": "movement_and_resonance_input",
+      "time": 5.133,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 918,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 17,
+      "type": "movement_and_resonance_input",
+      "time": 5.883,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 918,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 18,
+      "type": "movement_and_resonance_input",
+      "time": 6.383,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 918,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 19,
+      "type": "movement_and_resonance_input",
+      "time": 6.633,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 918,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 20,
+      "type": "movement_and_resonance_input",
+      "time": 7.383,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 760,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 21,
+      "type": "movement_and_resonance_input",
+      "time": 7.683,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 694,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 22,
+      "type": "movement_and_resonance_input",
+      "time": 8.133,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 595,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 23,
+      "type": "movement_and_resonance_input",
+      "time": 8.883,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "x": 430,
+        "y": 498,
+        "resonance": 1
+      }
+    },
+    {
+      "seq": 24,
+      "type": "score_changed",
+      "time": 8.883,
+      "state": "playing",
+      "score": 600,
+      "data": {
+        "before": 300,
+        "after": 600,
+        "delta": 300
+      }
+    },
+    {
+      "seq": 25,
+      "type": "signal_node_activated",
+      "time": 8.883,
+      "state": "playing",
+      "score": 600,
+      "data": {
+        "nodeProgressBefore": 2,
+        "nodeProgressAfter": 3,
+        "scoreAward": 300
+      }
+    },
+    {
+      "seq": 26,
+      "type": "pressure_escalated",
+      "time": 8.883,
+      "state": "playing",
+      "score": 600,
+      "data": {
+        "hazardSpeedBefore": 71,
+        "hazardSpeedAfter": 89
+      }
+    },
+    {
+      "seq": 27,
+      "type": "game_won",
+      "time": 8.883,
+      "state": "won",
+      "score": 600,
+      "data": {
+        "from": "playing",
+        "to": "won"
+      }
+    },
+    {
+      "seq": 28,
+      "type": "fresh_run_started",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "nodeProgress": 0
+      }
+    },
+    {
+      "seq": 1,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 2,
+      "type": "game_over",
+      "time": 75.014,
+      "state": "gameover",
+      "score": 0,
+      "data": {
+        "from": "playing",
+        "to": "gameover"
+      }
+    },
+    {
+      "seq": 3,
+      "type": "fresh_run_started",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "nodeProgress": 0
+      }
+    }
+  ]
+}

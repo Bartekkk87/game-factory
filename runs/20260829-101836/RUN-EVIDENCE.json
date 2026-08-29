@@ -1,0 +1,585 @@
+{
+  "schema": "game-factory.run-evidence/v1",
+  "generatedAt": "2026-08-29T10:33:56.443Z",
+  "run": {
+    "id": "20260829-101836",
+    "status": "failed",
+    "reason": "debug_exhausted",
+    "source": "ideas-folder",
+    "candidateSha": "125591f7c3dd3c87eaf3f7145453b642efa84f0d757806e13310c20c95843a53"
+  },
+  "gates": {
+    "technical": {
+      "pass": true,
+      "checks": [
+        {
+          "id": "probe_present",
+          "label": "Test-Hook __GF__ vorhanden",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "id": "deterministic_seed",
+          "label": "Deterministischer Verifier-Seed ist vorhanden",
+          "pass": true,
+          "detail": "seed=1207618270"
+        },
+        {
+          "id": "telemetry_timeline",
+          "label": "Telemetry enthält start/early/mid/end",
+          "pass": true,
+          "detail": "start:title/0@0ms -> early:playing/100@1200ms -> mid:playing/100@3500ms -> end:won/300@12000ms -> success-proof:start:title/0@0ms -> success-proof:terminal:won/300@9045ms -> success-proof:post_restart:playing/0@9953ms -> failure-proof:start:title/0@0ms -> failure-proof:terminal:gameover/0@22513ms -> failure-proof:post_restart:playing/0@23423ms"
+        },
+        {
+          "id": "idle_baseline",
+          "label": "Deterministische Idle-Control mit gleichem Seed ist vorhanden",
+          "pass": true,
+          "detail": "mode=idle seed=1207618270 timeline=start:title/0@0ms -> early:playing/0@1200ms -> mid:playing/0@3500ms -> end:playing/0@12000ms"
+        },
+        {
+          "id": "no_runtime_errors",
+          "label": "Keine Laufzeitfehler",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "id": "assets_ok",
+          "label": "Alle Assets geladen",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "id": "no_external_network",
+          "label": "Keine ausgehenden Requests zu Fremd-Origins",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "id": "started_playing",
+          "label": "Spiel verlässt den Titelbildschirm",
+          "pass": true,
+          "detail": "endState=won"
+        },
+        {
+          "id": "interactivity",
+          "label": "Spiel zeigt deterministischen Gameplay-Fortschritt in der Telemetry",
+          "pass": true,
+          "detail": "start:title/0@0ms -> early:playing/100@1200ms -> mid:playing/100@3500ms -> end:won/300@12000ms -> success-proof:start:title/0@0ms -> success-proof:terminal:won/300@9045ms -> success-proof:post_restart:playing/0@9953ms -> failure-proof:start:title/0@0ms -> failure-proof:terminal:gameover/0@22513ms -> failure-proof:post_restart:playing/0@23423ms"
+        },
+        {
+          "id": "input_causality",
+          "label": "Gameplay-Fortschritt ist gegenüber der Idle-Control auf Eingaben zurückführbar",
+          "pass": true,
+          "detail": "active(score+200,events+56,end=won) vs idle(score+0,events+0,end=playing)"
+        },
+        {
+          "id": "fps_ok",
+          "label": "Performance >= 30 FPS",
+          "pass": true,
+          "detail": "fps=61"
+        },
+        {
+          "id": "visual_content",
+          "label": "Spielinhalt zeigt visuelle Bildvariation statt eines flachen Vollbilds",
+          "pass": true,
+          "detail": "shot-2-gameplay: VISIBLE (63.27% non-dominant; dominant=36.73%) | shot-3-gameplay: VISIBLE (16.33% non-dominant; dominant=83.67%)"
+        },
+        {
+          "id": "visual_activity",
+          "label": "Gameplay zeigt deterministische Inter-Frame-Aktivität",
+          "pass": true,
+          "detail": "3.0714% pixels changed from live gameplay frames"
+        }
+      ]
+    },
+    "productFidelity": {
+      "pass": false,
+      "status": "failed",
+      "criteria": [
+        {
+          "requirementId": "MH-01",
+          "acceptanceId": "AC-MH-01",
+          "probeId": "PR-MH-01",
+          "kind": "event_value_change",
+          "declaredKind": "event_value_change",
+          "strength": null,
+          "eventType": "player_moved",
+          "evidenceSource": "generated-game-event-dependent",
+          "pass": false,
+          "traceable": true,
+          "detail": "no value-changing player_moved event"
+        },
+        {
+          "requirementId": "MH-02",
+          "acceptanceId": "AC-MH-02",
+          "probeId": "PR-MH-02",
+          "kind": "score_change",
+          "declaredKind": "score_change",
+          "strength": null,
+          "eventType": null,
+          "evidenceSource": "harness-observed",
+          "pass": true,
+          "traceable": true,
+          "detail": "score changed across telemetry"
+        },
+        {
+          "requirementId": "MH-03",
+          "acceptanceId": "AC-MH-03",
+          "probeId": "PR-MH-03",
+          "kind": "state_reached",
+          "declaredKind": "state_reached",
+          "strength": null,
+          "eventType": null,
+          "evidenceSource": "harness-observed",
+          "pass": true,
+          "traceable": true,
+          "detail": "state success reached in verifier scenarios (observed=won)"
+        },
+        {
+          "requirementId": "MH-04",
+          "acceptanceId": "AC-MH-04",
+          "probeId": "PR-MH-04",
+          "kind": "state_reached",
+          "declaredKind": "state_reached",
+          "strength": null,
+          "eventType": null,
+          "evidenceSource": "harness-observed",
+          "pass": true,
+          "traceable": true,
+          "detail": "state failure reached in verifier scenarios (observed=gameover)"
+        },
+        {
+          "requirementId": "MH-05",
+          "acceptanceId": "AC-MH-05",
+          "probeId": "PR-MH-05",
+          "kind": "event_value_change",
+          "declaredKind": "event_value_change",
+          "strength": null,
+          "eventType": "run_restarted",
+          "evidenceSource": "generated-game-event-dependent",
+          "pass": false,
+          "traceable": true,
+          "detail": "no value-changing run_restarted event"
+        },
+        {
+          "requirementId": "MH-06",
+          "acceptanceId": "AC-MH-06",
+          "probeId": "PR-MH-06",
+          "kind": "layout_no_overlap",
+          "declaredKind": "layout_no_overlap",
+          "strength": null,
+          "eventType": null,
+          "evidenceSource": "harness-observed-canvas-geometry",
+          "pass": true,
+          "traceable": true,
+          "detail": "independent canvas layout observed at early: 5 HUD regions, no overlap/out-of-bounds issues, with score progress"
+        },
+        {
+          "requirementId": "MH-07",
+          "acceptanceId": "AC-MH-07",
+          "probeId": "PR-MH-07",
+          "kind": "event_value_change",
+          "declaredKind": "event_value_change",
+          "strength": null,
+          "eventType": "pressure_escalated",
+          "evidenceSource": "generated-game-event-dependent",
+          "pass": false,
+          "traceable": true,
+          "detail": "no value-changing pressure_escalated event"
+        },
+        {
+          "requirementId": "NG-01",
+          "acceptanceId": "AC-NG-01",
+          "probeId": "PR-NG-01",
+          "kind": "event_absent",
+          "declaredKind": "event_absent",
+          "strength": null,
+          "eventType": "weapon_fired",
+          "evidenceSource": "generated-game-event-dependent",
+          "pass": true,
+          "traceable": true,
+          "detail": "event weapon_fired absent"
+        },
+        {
+          "requirementId": "NG-02",
+          "acceptanceId": "AC-NG-02",
+          "probeId": "PR-NG-02",
+          "kind": "event_absent",
+          "declaredKind": "event_absent",
+          "strength": null,
+          "eventType": "shop_opened",
+          "evidenceSource": "generated-game-event-dependent",
+          "pass": true,
+          "traceable": true,
+          "detail": "event shop_opened absent"
+        },
+        {
+          "requirementId": "NG-03",
+          "acceptanceId": "AC-NG-03",
+          "probeId": "PR-NG-03",
+          "kind": "event_absent",
+          "declaredKind": "event_absent",
+          "strength": null,
+          "eventType": "node_auto_activated",
+          "evidenceSource": "generated-game-event-dependent",
+          "pass": true,
+          "traceable": true,
+          "detail": "event node_auto_activated absent"
+        }
+      ]
+    },
+    "experience": {
+      "pass": false,
+      "advisory": true,
+      "authoritative": false,
+      "score": 0,
+      "threshold": 6.5,
+      "scores": null,
+      "critique": []
+    },
+    "budget": {
+      "pass": true,
+      "authoritative": true,
+      "spentUsd": 0.033967,
+      "budgetUsd": 10
+    },
+    "release": {
+      "pass": false,
+      "rule": "Technical PASS + Product Fidelity PASS + Budget PASS",
+      "reasons": [
+        "product_fidelity_not_passed"
+      ]
+    }
+  },
+  "costs": {
+    "schema": "game-factory.cost-ledger/v2",
+    "runId": "20260829-101836",
+    "budgetUsd": 10,
+    "costUsd": 0.033967,
+    "spentUsd": 0.033967,
+    "reservedUsd": 0,
+    "remainingUsd": 9.966033,
+    "tokens": 138336,
+    "tokenBreakdown": {
+      "inputTokens": 92095,
+      "cachedInputTokens": 20480,
+      "outputTokens": 46241,
+      "totalTokens": 138336
+    },
+    "accountingComplete": true,
+    "pass": true,
+    "stageBudgets": {
+      "repair": {
+        "maxCalls": 6,
+        "maxUsd": 4,
+        "calls": 3,
+        "spentUsd": 0.017502,
+        "remainingUsd": 3.982498
+      },
+      "polish": {
+        "maxCalls": 3,
+        "maxUsd": 3,
+        "calls": 0,
+        "spentUsd": 0,
+        "remainingUsd": 3
+      },
+      "freshRebuild": {
+        "maxCalls": 1,
+        "maxUsd": 4,
+        "calls": 1,
+        "spentUsd": 0.007424,
+        "remainingUsd": 3.992576
+      }
+    },
+    "byRole": {
+      "director": {
+        "costUsd": 0.002443,
+        "attempts": 1,
+        "inputTokens": 4840,
+        "cachedInputTokens": 0,
+        "outputTokens": 3433
+      },
+      "engineer": {
+        "costUsd": 0.031525,
+        "attempts": 5,
+        "inputTokens": 87255,
+        "cachedInputTokens": 20480,
+        "outputTokens": 42808
+      }
+    },
+    "byModel": {
+      "z-ai/glm-5.3-flash": {
+        "costUsd": 0.033967,
+        "attempts": 6,
+        "inputTokens": 92095,
+        "cachedInputTokens": 20480,
+        "outputTokens": 46241
+      }
+    },
+    "byOperation": {
+      "director": {
+        "costUsd": 0.002443,
+        "attempts": 1,
+        "inputTokens": 4840,
+        "cachedInputTokens": 0,
+        "outputTokens": 3433
+      },
+      "build": {
+        "costUsd": 0.006599,
+        "attempts": 1,
+        "inputTokens": 14405,
+        "cachedInputTokens": 0,
+        "outputTokens": 8876
+      },
+      "repair": {
+        "costUsd": 0.017502,
+        "attempts": 3,
+        "inputTokens": 58216,
+        "cachedInputTokens": 20480,
+        "outputTokens": 22496
+      },
+      "rebuild": {
+        "costUsd": 0.007424,
+        "attempts": 1,
+        "inputTokens": 14634,
+        "cachedInputTokens": 0,
+        "outputTokens": 11436
+      }
+    },
+    "attempts": [
+      {
+        "id": "llm-attempt-1",
+        "logicalCallId": "call-1",
+        "role": "director",
+        "operation": "director",
+        "scope": null,
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.3-flash",
+        "modelVersion": "GLM-5.3-Flash",
+        "modelAliasKind": "stable-id",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 0.15,
+          "cachedInputUsdPerM": 0.03,
+          "outputUsdPerM": 0.5,
+          "source": "openrouter-official-list-price-2026-08-29"
+        },
+        "estimatedInputTokens": 22316,
+        "maxOutputTokens": 8192,
+        "reservedUsd": 0.007443,
+        "costUsd": 0.002443,
+        "status": "settled",
+        "startedAt": "2026-08-29T10:18:36.665Z",
+        "usage": {
+          "inputTokens": 4840,
+          "cachedInputTokens": 0,
+          "outputTokens": 3433,
+          "totalTokens": 8273
+        },
+        "responseModelId": "z-ai/glm-5.3-flash",
+        "providerReportedCostUsd": 0.002443,
+        "modelCalculatedCostUsd": 0.002443,
+        "pricingTier": "standard",
+        "costSource": "provider-reported",
+        "endedAt": "2026-08-29T10:19:06.646Z"
+      },
+      {
+        "id": "llm-attempt-2",
+        "logicalCallId": "call-2",
+        "role": "engineer",
+        "operation": "build",
+        "scope": null,
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.3-flash",
+        "modelVersion": "GLM-5.3-Flash",
+        "modelAliasKind": "stable-id",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 0.15,
+          "cachedInputUsdPerM": 0.03,
+          "outputUsdPerM": 0.5,
+          "source": "openrouter-official-list-price-2026-08-29"
+        },
+        "estimatedInputTokens": 56267,
+        "maxOutputTokens": 12000,
+        "reservedUsd": 0.01444,
+        "costUsd": 0.006599,
+        "status": "settled",
+        "startedAt": "2026-08-29T10:19:06.649Z",
+        "usage": {
+          "inputTokens": 14405,
+          "cachedInputTokens": 0,
+          "outputTokens": 8876,
+          "totalTokens": 23281
+        },
+        "responseModelId": "z-ai/glm-5.3-flash",
+        "providerReportedCostUsd": 0.006599,
+        "modelCalculatedCostUsd": 0.006599,
+        "pricingTier": "standard",
+        "costSource": "provider-reported",
+        "endedAt": "2026-08-29T10:20:35.797Z"
+      },
+      {
+        "id": "llm-attempt-3",
+        "logicalCallId": "call-3",
+        "role": "engineer",
+        "operation": "repair",
+        "scope": "repair",
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.3-flash",
+        "modelVersion": "GLM-5.3-Flash",
+        "modelAliasKind": "stable-id",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 0.15,
+          "cachedInputUsdPerM": 0.03,
+          "outputUsdPerM": 0.5,
+          "source": "openrouter-official-list-price-2026-08-29"
+        },
+        "estimatedInputTokens": 69458,
+        "maxOutputTokens": 12000,
+        "reservedUsd": 0.016419,
+        "costUsd": 0.00731,
+        "status": "settled",
+        "startedAt": "2026-08-29T10:22:51.868Z",
+        "usage": {
+          "inputTokens": 19216,
+          "cachedInputTokens": 0,
+          "outputTokens": 8855,
+          "totalTokens": 28071
+        },
+        "responseModelId": "z-ai/glm-5.3-flash",
+        "providerReportedCostUsd": 0.00731,
+        "modelCalculatedCostUsd": 0.00731,
+        "pricingTier": "standard",
+        "costSource": "provider-reported",
+        "endedAt": "2026-08-29T10:24:11.158Z"
+      },
+      {
+        "id": "llm-attempt-4",
+        "logicalCallId": "call-4",
+        "role": "engineer",
+        "operation": "repair",
+        "scope": "repair",
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.3-flash",
+        "modelVersion": "GLM-5.3-Flash",
+        "modelAliasKind": "stable-id",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 0.15,
+          "cachedInputUsdPerM": 0.03,
+          "outputUsdPerM": 0.5,
+          "source": "openrouter-official-list-price-2026-08-29"
+        },
+        "estimatedInputTokens": 70374,
+        "maxOutputTokens": 12000,
+        "reservedUsd": 0.016556,
+        "costUsd": 0.0056,
+        "status": "settled",
+        "startedAt": "2026-08-29T10:25:11.719Z",
+        "usage": {
+          "inputTokens": 19500,
+          "cachedInputTokens": 1280,
+          "outputTokens": 5659,
+          "totalTokens": 25159
+        },
+        "responseModelId": "z-ai/glm-5.3-flash",
+        "providerReportedCostUsd": 0.0056,
+        "modelCalculatedCostUsd": 0.005601,
+        "pricingTier": "standard",
+        "costSource": "provider-reported",
+        "endedAt": "2026-08-29T10:26:10.845Z"
+      },
+      {
+        "id": "llm-attempt-5",
+        "logicalCallId": "call-5",
+        "role": "engineer",
+        "operation": "rebuild",
+        "scope": "freshRebuild",
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.3-flash",
+        "modelVersion": "GLM-5.3-Flash",
+        "modelAliasKind": "stable-id",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 0.15,
+          "cachedInputUsdPerM": 0.03,
+          "outputUsdPerM": 0.5,
+          "source": "openrouter-official-list-price-2026-08-29"
+        },
+        "estimatedInputTokens": 57178,
+        "maxOutputTokens": 12000,
+        "reservedUsd": 0.014577,
+        "costUsd": 0.007424,
+        "status": "settled",
+        "startedAt": "2026-08-29T10:27:11.343Z",
+        "usage": {
+          "inputTokens": 14634,
+          "cachedInputTokens": 0,
+          "outputTokens": 11436,
+          "totalTokens": 26070
+        },
+        "responseModelId": "z-ai/glm-5.3-flash",
+        "providerReportedCostUsd": 0.007424,
+        "modelCalculatedCostUsd": 0.007913,
+        "pricingTier": "standard",
+        "costSource": "provider-reported",
+        "endedAt": "2026-08-29T10:29:34.929Z"
+      },
+      {
+        "id": "llm-attempt-6",
+        "logicalCallId": "call-6",
+        "role": "engineer",
+        "operation": "repair",
+        "scope": "repair",
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.3-flash",
+        "modelVersion": "GLM-5.3-Flash",
+        "modelAliasKind": "stable-id",
+        "adapter": "openai-compatible-chat",
+        "transportAttempt": 1,
+        "pricing": {
+          "inputUsdPerM": 0.15,
+          "cachedInputUsdPerM": 0.03,
+          "outputUsdPerM": 0.5,
+          "source": "openrouter-official-list-price-2026-08-29"
+        },
+        "estimatedInputTokens": 70374,
+        "maxOutputTokens": 12000,
+        "reservedUsd": 0.016556,
+        "costUsd": 0.004593,
+        "status": "settled",
+        "startedAt": "2026-08-29T10:31:37.347Z",
+        "usage": {
+          "inputTokens": 19500,
+          "cachedInputTokens": 19200,
+          "outputTokens": 7982,
+          "totalTokens": 27482
+        },
+        "responseModelId": "z-ai/glm-5.3-flash",
+        "providerReportedCostUsd": 0.004593,
+        "modelCalculatedCostUsd": 0.004612,
+        "pricingTier": "standard",
+        "costSource": "provider-reported",
+        "endedAt": "2026-08-29T10:32:55.843Z"
+      }
+    ],
+    "violations": []
+  },
+  "counters": {
+    "attempts": 5,
+    "repairCalls": 3,
+    "polishRounds": 0,
+    "freshRebuilds": 1
+  },
+  "audit": null,
+  "artifacts": {
+    "ownerContract": "owner-contract.json"
+  }
+}
