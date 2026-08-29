@@ -101,7 +101,10 @@ export async function chat({
 
   let lastError;
   const maxAttempts = 6;
-  const requestTimeoutMs = REQUEST_TIMEOUT_MS_BY_PROVIDER[route.provider.id] ?? 180000;
+  const configuredModelTimeout = Number(route.model.requestShape?.requestTimeoutMs);
+  const requestTimeoutMs = Number.isInteger(configuredModelTimeout) && configuredModelTimeout > 0
+    ? configuredModelTimeout
+    : (REQUEST_TIMEOUT_MS_BY_PROVIDER[route.provider.id] ?? 180000);
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const controller = new AbortController();
