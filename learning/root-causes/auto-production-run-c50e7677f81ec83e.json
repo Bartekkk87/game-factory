@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "failed-run-root-cause-v1",
+  "runId": "20260829-090032",
+  "runStatus": "failed",
+  "runReason": "director_failed",
+  "generatedFrom": "durable-run-evidence-only",
+  "diagnosticIndependence": "terminal families are defined in learning/root-cause.mjs and do not import verifier state semantics",
+  "authority": {
+    "may": [
+      "diagnose-evidence",
+      "rank-hypotheses",
+      "propose-validation"
+    ],
+    "mustNot": [
+      "edit-production",
+      "validate-candidate",
+      "activate-candidate",
+      "weaken-gates",
+      "start-paid-run"
+    ]
+  },
+  "attempts": [],
+  "trajectory": [],
+  "bestAttempt": null,
+  "finalAttempt": null,
+  "stateProbes": [],
+  "proofScenarios": [],
+  "observedStates": [],
+  "findings": [],
+  "primaryFindingId": null,
+  "sourceRefs": [
+    "FAILURE.json",
+    "RUN-EVIDENCE.json"
+  ],
+  "conclusion": "No bounded root-cause hypothesis crossed the deterministic evidence threshold; preserve evidence and require further validation before repair."
+}

@@ -1,0 +1,427 @@
+{
+  "title": "Lumen Current",
+  "tagline": "Carry a living spark through a storming glass garden and awaken its three lost signals.",
+  "genre": "action",
+  "pitch": "Lumen Current is a compact top-down action-puzzle in a dark bioluminescent conservatory. Guide a responsive current of light through broad botanical signal lanes, then release a resonance bloom at each dormant node while storm pressure steadily narrows your margin for error. Every restored node brightens part of the garden and turns the next crossing into a more urgent, luminous push.",
+  "coreLoop": "Steer the light-current through the open conservatory toward the next dormant signal node, avoiding drifting storm ribbons and spending Space or Enter to resonate when inside its large activation ring. Each successful resonance restores a garden sector, raises score, increases pressure behavior, and reveals the next clear destination.",
+  "mechanics": [
+    {
+      "name": "Living Current Movement",
+      "description": "The player is a glowing orb with smooth top-down eight-direction movement on Arrow keys or WASD. It leaves a short flowing filament trail and remains readable against every surface."
+    },
+    {
+      "name": "Resonance Bloom",
+      "description": "Space or Enter creates a short-range circular resonance pulse. It activates a signal node only while the current is within that node's generous ring; it has no projectile, damage, weapon, or combat use."
+    },
+    {
+      "name": "Three Signal Lanes",
+      "description": "Three dormant nodes are arranged on wide, deterministic east, south, and west garden lanes. Ordinary directional sweeps naturally cross their activation rings, while the next node receives a strong beacon and root-line guide."
+    },
+    {
+      "name": "Storm Pressure",
+      "description": "A visible STORM PRESSURE meter steadily fills during play and rises faster after every restored node. Drifting translucent storm ribbons accelerate at escalation thresholds; touching one adds a small pressure burst and briefly slows the current."
+    },
+    {
+      "name": "Garden Restoration",
+      "description": "Activating a node permanently lights its surrounding circuit-vines, opens a glowing water-glass reflection patch, increments SIGNALS, and grants score. Restoring the third node immediately resolves the run successfully."
+    }
+  ],
+  "controls": {
+    "keyboard": "Arrow keys or WASD move. Space or Enter releases a resonance bloom. Enter starts a run and starts a fresh run after success or failure.",
+    "mouse": "Pointer position adds a subtle visual attraction trail only; clicks may also release the same resonance bloom.",
+    "touch": "Optional: drag to steer and tap to resonate."
+  },
+  "artDirection": {
+    "mood": "elegant bioluminescent conservatory",
+    "palette": [
+      "#071522",
+      "#103447",
+      "#54F5D2",
+      "#B9FF82"
+    ],
+    "shapes": "smooth-vector",
+    "backgroundFx": "A deep animated blue-green gradient sits behind slow parallax glass panes, drifting pollen motes, faint water caustics, and botanical circuit lines that illuminate sector by sector after restoration."
+  },
+  "audioDirection": {
+    "musicMood": "gentle glassy ambient pulse that gains a faster heartbeat as storm pressure rises",
+    "sfx": [
+      "soft flowing movement shimmer",
+      "round resonance chime",
+      "layered node-restoration bloom",
+      "crackling storm contact",
+      "bright three-note success resolve",
+      "low glass-pressure failure swell"
+    ]
+  },
+  "difficulty": {
+    "start": "The first node is a large, clearly beaconed ring on an open eastward lane with only slow, distant storm ribbons.",
+    "progression": "Each restoration increases ribbon drift speed, pressure gain, and the frequency of readable environmental pulse waves while retaining broad safe crossings and beacon guidance.",
+    "peak": "The final westward crossing has the quickest ribbons and strongest pulse rhythm, but a large activation ring and clear safe gap make completion dependent on decisive movement rather than precision."
+  },
+  "winLose": {
+    "win": "Activate all three signal nodes; the garden floods with connected light and the game enters success.",
+    "lose": "Storm Pressure reaches its visible maximum; the current dims beneath a glassy storm overlay and the game enters failure."
+  },
+  "juice": {
+    "screenShake": "A restrained 4px shake occurs on storm-ribbon contact and a 6px shake accompanies the final node restoration.",
+    "particles": "Resonance blooms emit radial motes; nodes release leaf-like light fragments and flowing root sparks; storm contact sheds brief violet static.",
+    "hitStop": "A 90ms hit-stop punctuates each node restoration, with a 130ms hold on the final restoration.",
+    "flash": "A low-alpha cyan ring flash marks a resonance, while each restored sector receives a brief mint glass-sheen flash."
+  },
+  "scopeNotes": "Do not build weapons, bullets, enemies, combat AI, health combat systems, shops, inventory, equipment, upgrades, currencies outside the current-run score, persistent unlocks, save/meta-progression, procedural maps, scrolling, dialogue trees, or additional objective types. Keep one 960x540 single-screen conservatory, exactly three objective nodes, and one resonance interaction.",
+  "acceptanceCriteria": [
+    {
+      "id": "AC-MH-01",
+      "ownerRequirementId": "MH-01",
+      "statement": "During playing, directional keyboard input changes the current's top-down position and Space or Enter releases its primary resonance action."
+    },
+    {
+      "id": "AC-MH-02",
+      "ownerRequirementId": "MH-02",
+      "statement": "A run activates exactly three signal nodes, with every signal_node_activated transition increasing numeric node progress and score while the HUD visibly updates SIGNALS."
+    },
+    {
+      "id": "AC-MH-03",
+      "ownerRequirementId": "MH-03",
+      "statement": "Completion of the third signal-node objective reaches the canonical success state with clear success UI."
+    },
+    {
+      "id": "AC-MH-04",
+      "ownerRequirementId": "MH-04",
+      "statement": "When the visible Storm Pressure meter is exhausted, the game reaches the canonical failure state with clear failure UI."
+    },
+    {
+      "id": "AC-MH-05",
+      "ownerRequirementId": "MH-05",
+      "statement": "After either terminal outcome, pressing Enter begins a fresh playing run whose numeric signal-node progress is reset to zero."
+    },
+    {
+      "id": "AC-MH-06",
+      "ownerRequirementId": "MH-06",
+      "statement": "The rendered HUD presents separate non-overlapping SIGNALS, STORM PRESSURE, and SCORE regions around the playfield perimeter, leaving the central arena unobscured."
+    },
+    {
+      "id": "AC-MH-07",
+      "ownerRequirementId": "MH-07",
+      "statement": "Restoring a node causes the real numeric storm-ribbon hazard speed to increase, producing meaningfully faster environmental pressure."
+    },
+    {
+      "id": "AC-NG-01",
+      "ownerRequirementId": "NG-01",
+      "statement": "No weapon-fire event occurs during a run because resonance is exclusively a proximity node-activation pulse and there is no shooting or combat loop."
+    },
+    {
+      "id": "AC-NG-02",
+      "ownerRequirementId": "NG-02",
+      "statement": "No shop-opening event occurs because the game contains no shop, inventory, equipment, or persistent meta-progression system."
+    },
+    {
+      "id": "AC-NG-03",
+      "ownerRequirementId": "NG-03",
+      "statement": "No idle node-activation event occurs; a node can activate only from a player-issued resonance while inside its activation ring."
+    }
+  ],
+  "probePlan": {
+    "roundSeconds": 90,
+    "expectedStates": [
+      "title",
+      "playing",
+      "success",
+      "failure"
+    ],
+    "scoreEvents": [
+      "signal_node_activated increases score by 100 multiplied by the restored node index and increments nodeProgress by one.",
+      "The generic directional sweeps cross the broad east, south, and west node lanes; periodic Space or Enter resonance activates each node and produces score progress."
+    ],
+    "requirementProbes": [
+      {
+        "id": "PR-MH-01",
+        "acceptanceId": "AC-MH-01",
+        "ownerRequirementId": "MH-01",
+        "kind": "event",
+        "eventType": "movement_and_resonance_input",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-02",
+        "acceptanceId": "AC-MH-02",
+        "ownerRequirementId": "MH-02",
+        "kind": "event_value_change",
+        "eventType": "signal_node_activated",
+        "beforeField": "nodeProgressBefore",
+        "afterField": "nodeProgressAfter"
+      },
+      {
+        "id": "PR-MH-03",
+        "acceptanceId": "AC-MH-03",
+        "ownerRequirementId": "MH-03",
+        "kind": "state_reached",
+        "state": "success"
+      },
+      {
+        "id": "PR-MH-04",
+        "acceptanceId": "AC-MH-04",
+        "ownerRequirementId": "MH-04",
+        "kind": "state_reached",
+        "state": "failure"
+      },
+      {
+        "id": "PR-MH-05",
+        "acceptanceId": "AC-MH-05",
+        "ownerRequirementId": "MH-05",
+        "kind": "restart_after_terminal",
+        "legacyEventType": "fresh_run_started"
+      },
+      {
+        "id": "PR-MH-06",
+        "acceptanceId": "AC-MH-06",
+        "ownerRequirementId": "MH-06",
+        "kind": "layout_no_overlap",
+        "minRegions": 3,
+        "requireScoreProgress": true
+      },
+      {
+        "id": "PR-MH-07",
+        "acceptanceId": "AC-MH-07",
+        "ownerRequirementId": "MH-07",
+        "kind": "event_value_change",
+        "eventType": "pressure_escalated",
+        "beforeField": "hazardSpeedBefore",
+        "afterField": "hazardSpeedAfter"
+      },
+      {
+        "id": "PR-NG-01",
+        "acceptanceId": "AC-NG-01",
+        "ownerRequirementId": "NG-01",
+        "kind": "event_absent",
+        "eventType": "weapon_fired"
+      },
+      {
+        "id": "PR-NG-02",
+        "acceptanceId": "AC-NG-02",
+        "ownerRequirementId": "NG-02",
+        "kind": "event_absent",
+        "eventType": "shop_opened"
+      },
+      {
+        "id": "PR-NG-03",
+        "acceptanceId": "AC-NG-03",
+        "ownerRequirementId": "NG-03",
+        "kind": "event_absent",
+        "eventType": "idle_node_activated"
+      }
+    ]
+  },
+  "proofPlan": {
+    "schemaVersion": "proof-plan-v2",
+    "baseSeconds": 12,
+    "maxProofSeconds": 125,
+    "declaredRoundSeconds": 90,
+    "timingSource": "typed-probePlan.roundSeconds",
+    "actionPolicy": {
+      "schemaVersion": "verifier-action-policy-v1",
+      "mode": "bounded-deterministic-directional-sweeps",
+      "guarantees": [
+        "deterministic",
+        "seeded",
+        "game-agnostic",
+        "no-target-knowledge",
+        "no-auto-pathfinding",
+        "no-teleport",
+        "no-hidden-test-hook",
+        "terminal-safe"
+      ],
+      "startImpulse": [
+        "Enter",
+        "pointer@640,400"
+      ],
+      "controls": {
+        "directionalAliases": [
+          {
+            "direction": "right",
+            "keys": [
+              "ArrowRight",
+              "KeyD"
+            ]
+          },
+          {
+            "direction": "down",
+            "keys": [
+              "ArrowDown",
+              "KeyS"
+            ]
+          },
+          {
+            "direction": "left",
+            "keys": [
+              "ArrowLeft",
+              "KeyA"
+            ]
+          },
+          {
+            "direction": "up",
+            "keys": [
+              "ArrowUp",
+              "KeyW"
+            ]
+          }
+        ],
+        "movementSegmentMs": 3200,
+        "movementGapMs": 160,
+        "actionKeys": [
+          "Space",
+          "Enter"
+        ],
+        "actionEveryMs": 750,
+        "pointerPath": [
+          [
+            420,
+            300
+          ],
+          [
+            640,
+            280
+          ],
+          [
+            820,
+            360
+          ],
+          [
+            700,
+            480
+          ],
+          [
+            480,
+            460
+          ],
+          [
+            560,
+            350
+          ]
+        ],
+        "pointerEveryMs": 450,
+        "clickEveryMs": 1300
+      },
+      "idleControl": "shared-start-impulse-only",
+      "designBoundary": "Required deterministic gameplay must be reachable under generic bounded directional sweeps and ordinary action/pointer input; do not depend on hidden routes, target coordinates, precision-only aim, or verifier-specific backdoors."
+    },
+    "scenarios": [
+      {
+        "id": "base",
+        "purpose": "technical-causality-and-active-layout",
+        "inputMode": "active+idle-control",
+        "seconds": 12,
+        "stopStates": [],
+        "restartAtEnd": false
+      },
+      {
+        "id": "success-proof",
+        "purpose": "prove real successful completion under deterministic active input",
+        "inputMode": "active",
+        "seconds": 95,
+        "stopStates": [
+          "success"
+        ],
+        "restartAtEnd": true
+      },
+      {
+        "id": "failure-proof",
+        "purpose": "prove real timeout/failure independently from success",
+        "inputMode": "idle",
+        "seconds": 95,
+        "stopStates": [
+          "failure"
+        ],
+        "restartAtEnd": true
+      }
+    ],
+    "coverage": [
+      {
+        "probeId": "PR-MH-01",
+        "ownerRequirementId": "MH-01",
+        "scenarioIds": [
+          "base",
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-02",
+        "ownerRequirementId": "MH-02",
+        "scenarioIds": [
+          "base",
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-03",
+        "ownerRequirementId": "MH-03",
+        "scenarioIds": [
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-04",
+        "ownerRequirementId": "MH-04",
+        "scenarioIds": [
+          "failure-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-05",
+        "ownerRequirementId": "MH-05",
+        "scenarioIds": [
+          "success-proof",
+          "failure-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-06",
+        "ownerRequirementId": "MH-06",
+        "scenarioIds": [
+          "base"
+        ]
+      },
+      {
+        "probeId": "PR-MH-07",
+        "ownerRequirementId": "MH-07",
+        "scenarioIds": [
+          "base",
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-NG-01",
+        "ownerRequirementId": "NG-01",
+        "scenarioIds": [
+          "base",
+          "success-proof",
+          "failure-proof"
+        ]
+      },
+      {
+        "probeId": "PR-NG-02",
+        "ownerRequirementId": "NG-02",
+        "scenarioIds": [
+          "base",
+          "success-proof",
+          "failure-proof"
+        ]
+      },
+      {
+        "probeId": "PR-NG-03",
+        "ownerRequirementId": "NG-03",
+        "scenarioIds": [
+          "base",
+          "success-proof",
+          "failure-proof"
+        ]
+      }
+    ],
+    "pass": true,
+    "errors": [],
+    "requiredTerminalStates": [
+      "success",
+      "failure"
+    ]
+  }
+}

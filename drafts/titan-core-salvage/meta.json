@@ -26,5 +26,15 @@
   "auditVerdict": "PASS",
   "auditSummary": "Titan Core: Salvage successfully passed all technical verification checks, demonstrating robust stability, correct interactivity, and frame rates above target. The playtest score of 7.5 safely exceeds the score gate threshold of 7.0. The project is approved for release.",
   "costUsd": 0,
-  "tokens": 206943
+  "tokens": 206943,
+  "previewHostSha256": "757cb6a28b83e89db68f90bee0a540604d0195d492dcc9c51f35dc7f6915ed3d",
+  "previewIsolation": {
+    "generatedCodeOrigin": "opaque-origin-via-sandboxed-srcdoc",
+    "sandboxTokens": [
+      "allow-scripts"
+    ],
+    "allowSameOrigin": false,
+    "externalNetworkInChild": false
+  },
+  "verifiedPayloadSha256": "e75d9e95d98e809cb32182c866dc18f21a58bfb84502be104431982cf079479d"
 }

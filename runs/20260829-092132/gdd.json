@@ -1,0 +1,427 @@
+{
+  "title": "Lumen Current: Signal Garden",
+  "tagline": "Carry the light through the storm before the garden goes dark.",
+  "genre": "action",
+  "pitch": "You are a living current of light drifting through a dark bioluminescent conservatory. Three signal nodes still flicker; a rising storm pressure drains your stability while drifting thorn-pulses sweep the garden. Reach each node, hold your light steady to ignite it, and restore the signal before the pressure runs out.",
+  "coreLoop": "Steer the light current across the dark playfield toward the next glowing signal node, dodging drifting thorn-pulses that accelerate as storm pressure climbs, then press Space while inside the node's ring to channel and activate it. Each activation restores a strip of the garden, awards score, and the storm surges harder.",
+  "mechanics": [
+    {
+      "name": "Light Current Movement",
+      "description": "Top-down free movement with Arrow keys or WASD; the player is a glowing comet-orb with a trailing ribbon. Momentum is light (fast accel, mild glide) so sweeps feel fluid but controllable."
+    },
+    {
+      "name": "Node Channeling",
+      "description": "Three signal nodes sit in fixed, generous activation rings (radius ~60px). Standing in a ring and pressing Space (or Enter) channels for ~0.4s and activates the node. Nodes must be activated in any order but only one glows as 'next' at a time; activation requires explicit player input — never automatic."
+    },
+    {
+      "name": "Storm Pressure",
+      "description": "A visible stability bar drains continuously over ~75 seconds. Touching a thorn-pulse drains an extra chunk and knocks the player back. At zero stability the run fails."
+    },
+    {
+      "name": "Escalating Storm",
+      "description": "Each node activation and each 25% pressure milestone increases thorn-pulse speed, spawn rate and pulse amplitude — a real numeric hazardSpeed value that gates gameplay difficulty, not a cosmetic tint."
+    },
+    {
+      "name": "Garden Restoration",
+      "description": "Each activated node ignites a luminous vine circuit that grows across the dark floor toward the next node, visually lighting the player's route — the world itself becomes the progress bar and subtly guides movement."
+    }
+  ],
+  "controls": {
+    "keyboard": "Arrow keys / WASD to move; Space or Enter to channel-activate a node; Enter to start a run and to restart after success or failure.",
+    "mouse": "Optional: pointer position exerts a gentle attraction nudge on the light current; click also channels when inside a node ring.",
+    "touch": "Optional: virtual joystick on left half, tap right half to channel."
+  },
+  "artDirection": {
+    "mood": "bioluminescent conservatory — dark glass-house night, elegant and luminous, never militaristic",
+    "palette": [
+      "#050b14",
+      "#0d2436",
+      "#3ef2c4",
+      "#ffd76a"
+    ],
+    "shapes": "smooth-vector",
+    "backgroundFx": "Two parallax layers: slow-drifting botanical circuit veins (faint teal filaments) beneath a layer of suspended glowing spores; subtle glass-house reflection sheen with slow color cycling and a soft animated radial gradient that brightens near activated nodes."
+  },
+  "audioDirection": {
+    "musicMood": "Ambient, warm synth pads with a soft pulse that quickens as pressure drops",
+    "sfx": [
+      "channel_hum",
+      "node_ignite_chime",
+      "pressure_hit_thud",
+      "storm_surge_riser",
+      "success_bloom",
+      "failure_darken"
+    ]
+  },
+  "difficulty": {
+    "start": "Calm garden: 2 slow thorn-pulses, generous node rings, stability drains slowly.",
+    "progression": "After each node and each pressure milestone, pulse speed and count rise stepwise (hazardSpeed 60 → 100 → 150 → 210 px/s), pulses emit wider shock rings, and stability drain accelerates.",
+    "peak": "Final stretch: 6+ fast criss-crossing pulses with expanding ring waves; the player must thread gaps to reach the last node with seconds to spare."
+  },
+  "winLose": {
+    "win": "Activate all three signal nodes before stability reaches zero — the garden blooms and the run ends in success.",
+    "lose": "Stability (storm pressure) is exhausted by time or thorn-pulse hits — the light gutters out and the run ends in failure."
+  },
+  "juice": {
+    "screenShake": "Small (≤6px, <0.3s) on pulse hit; medium burst on each node activation.",
+    "particles": "Burst of teal sparks on node ignite, amber scatter on pulse hit, gentle trailing motes behind the player at all times, petal-bloom particle cascade on success.",
+    "hitStop": "60ms hit-stop on node activation completion and on pulse hits for tactile weight.",
+    "flash": "Brief white-teal flash (alpha ≤0.5) on node ignite; red-amber vignette pulse when stability crosses 25%."
+  },
+  "scopeNotes": "Cut: any weapons/projectiles, enemies with health or combat, shops/inventory/upgrades/meta-progression, scrolling camera (single 960x540 screen), multi-level structure, pseudo-isometric perspective (pure top-down), touch-specific tuning, narrative cutscenes, boss entities. One screen, three nodes, one pressure bar, one hazard type with escalating behavior.",
+  "signatureMoment": "Node ignition: time dips for a beat, a chime blooms, and a luminous vine circuit visibly grows across the dark floor toward the next node while the storm answers with a rising surge — restoration and danger in one heartbeat.",
+  "acceptanceCriteria": [
+    {
+      "id": "AC-MH-01",
+      "ownerRequirementId": "MH-01",
+      "statement": "During a run the player orb moves on the top-down playfield in response to Arrow/WASD input, and pressing Space or Enter inside a node ring performs the primary channel-activation action."
+    },
+    {
+      "id": "AC-MH-02",
+      "ownerRequirementId": "MH-02",
+      "statement": "During a run the player activates three signal nodes; each activation emits node_activated with the run score increasing (e.g. +100) and the HUD node-progress count incrementing from its prior value."
+    },
+    {
+      "id": "AC-MH-03",
+      "ownerRequirementId": "MH-03",
+      "statement": "After the third node activation the game transitions to a success state with a visible 'SIGNAL RESTORED' result screen."
+    },
+    {
+      "id": "AC-MH-04",
+      "ownerRequirementId": "MH-04",
+      "statement": "When the visible stability/pressure bar reaches zero the game transitions to a failure state with a visible 'GARDEN DARK' result screen."
+    },
+    {
+      "id": "AC-MH-05",
+      "ownerRequirementId": "MH-05",
+      "statement": "Pressing Enter while in a terminal success or failure state starts a fresh run in which node progress is reset to 0 and the game is in the playing state."
+    },
+    {
+      "id": "AC-MH-06",
+      "ownerRequirementId": "MH-06",
+      "statement": "During active gameplay the HUD renders at least three non-overlapping, in-bounds regions showing node progress (e.g. 'NODES 1/3'), the stability bar with label, and the score, positioned along the top/bottom edges away from the central play area."
+    },
+    {
+      "id": "AC-MH-07",
+      "ownerRequirementId": "MH-07",
+      "statement": "During a run the numeric hazard speed value increases stepwise (e.g. 60 → 100 → 150) as pressure drops / nodes are activated, and thorn-pulse motion visibly accelerates accordingly."
+    },
+    {
+      "id": "AC-NG-01",
+      "ownerRequirementId": "NG-01",
+      "statement": "No projectile, shot or weapon event is ever emitted at any point in the game; the event stream contains no projectile_fired events."
+    },
+    {
+      "id": "AC-NG-02",
+      "ownerRequirementId": "NG-02",
+      "statement": "No shop, inventory, equipment or meta-progression UI or state exists at any point in the game; the event stream contains no shop_opened or inventory_changed events."
+    },
+    {
+      "id": "AC-NG-03",
+      "ownerRequirementId": "NG-03",
+      "statement": "Node activation only occurs as a direct result of a Space/Enter/click channel input; the event stream contains no node_auto_activated events and no node activates while the player is idle outside its ring."
+    }
+  ],
+  "probePlan": {
+    "roundSeconds": 90,
+    "expectedStates": [
+      "title",
+      "playing",
+      "success",
+      "failure"
+    ],
+    "scoreEvents": "Score increases by +100 for each of the three node activations (event node_activated carries before/after score), plus a small end-of-run stability bonus on success. Under the deterministic verifier sequence: Enter starts the run, directional sweeps carry the orb across node rings at fixed positions (right sweep reaches node A at ~700,300; down-left sweep reaches node B at ~250,420; up sweep reaches node C at ~480,120), and the every-750ms Space presses channel each node as the orb passes through its generous ring, yielding three score_change steps and the success state.",
+    "requirementProbes": [
+      {
+        "id": "PR-MH-01",
+        "acceptanceId": "AC-MH-01",
+        "ownerRequirementId": "MH-01",
+        "kind": "event",
+        "eventType": "player_moved",
+        "strength": "correlated_gameplay"
+      },
+      {
+        "id": "PR-MH-02",
+        "acceptanceId": "AC-MH-02",
+        "ownerRequirementId": "MH-02",
+        "kind": "event_value_change",
+        "eventType": "node_activated",
+        "beforeField": "score",
+        "afterField": "score"
+      },
+      {
+        "id": "PR-MH-03",
+        "acceptanceId": "AC-MH-03",
+        "ownerRequirementId": "MH-03",
+        "kind": "state_reached",
+        "state": "success"
+      },
+      {
+        "id": "PR-MH-04",
+        "acceptanceId": "AC-MH-04",
+        "ownerRequirementId": "MH-04",
+        "kind": "state_reached",
+        "state": "failure"
+      },
+      {
+        "id": "PR-MH-05",
+        "acceptanceId": "AC-MH-05",
+        "ownerRequirementId": "MH-05",
+        "kind": "event_value_change",
+        "eventType": "run_restarted",
+        "beforeField": "nodesActivated",
+        "afterField": "nodesActivated"
+      },
+      {
+        "id": "PR-MH-06",
+        "acceptanceId": "AC-MH-06",
+        "ownerRequirementId": "MH-06",
+        "kind": "layout_no_overlap",
+        "minRegions": 3,
+        "requireScoreProgress": true
+      },
+      {
+        "id": "PR-MH-07",
+        "acceptanceId": "AC-MH-07",
+        "ownerRequirementId": "MH-07",
+        "kind": "event_value_change",
+        "eventType": "storm_surge",
+        "beforeField": "hazardSpeed",
+        "afterField": "hazardSpeed"
+      },
+      {
+        "id": "PR-NG-01",
+        "acceptanceId": "AC-NG-01",
+        "ownerRequirementId": "NG-01",
+        "kind": "event_absent",
+        "eventType": "projectile_fired"
+      },
+      {
+        "id": "PR-NG-02",
+        "acceptanceId": "AC-NG-02",
+        "ownerRequirementId": "NG-02",
+        "kind": "event_absent",
+        "eventType": "shop_or_inventory_event"
+      },
+      {
+        "id": "PR-NG-03",
+        "acceptanceId": "AC-NG-03",
+        "ownerRequirementId": "NG-03",
+        "kind": "event_absent",
+        "eventType": "node_auto_activated"
+      }
+    ]
+  },
+  "proofPlan": {
+    "schemaVersion": "proof-plan-v2",
+    "baseSeconds": 12,
+    "maxProofSeconds": 125,
+    "declaredRoundSeconds": 90,
+    "timingSource": "typed-probePlan.roundSeconds",
+    "actionPolicy": {
+      "schemaVersion": "verifier-action-policy-v1",
+      "mode": "bounded-deterministic-directional-sweeps",
+      "guarantees": [
+        "deterministic",
+        "seeded",
+        "game-agnostic",
+        "no-target-knowledge",
+        "no-auto-pathfinding",
+        "no-teleport",
+        "no-hidden-test-hook",
+        "terminal-safe"
+      ],
+      "startImpulse": [
+        "Enter",
+        "pointer@640,400"
+      ],
+      "controls": {
+        "directionalAliases": [
+          {
+            "direction": "right",
+            "keys": [
+              "ArrowRight",
+              "KeyD"
+            ]
+          },
+          {
+            "direction": "down",
+            "keys": [
+              "ArrowDown",
+              "KeyS"
+            ]
+          },
+          {
+            "direction": "left",
+            "keys": [
+              "ArrowLeft",
+              "KeyA"
+            ]
+          },
+          {
+            "direction": "up",
+            "keys": [
+              "ArrowUp",
+              "KeyW"
+            ]
+          }
+        ],
+        "movementSegmentMs": 3200,
+        "movementGapMs": 160,
+        "actionKeys": [
+          "Space",
+          "Enter"
+        ],
+        "actionEveryMs": 750,
+        "pointerPath": [
+          [
+            420,
+            300
+          ],
+          [
+            640,
+            280
+          ],
+          [
+            820,
+            360
+          ],
+          [
+            700,
+            480
+          ],
+          [
+            480,
+            460
+          ],
+          [
+            560,
+            350
+          ]
+        ],
+        "pointerEveryMs": 450,
+        "clickEveryMs": 1300
+      },
+      "idleControl": "shared-start-impulse-only",
+      "designBoundary": "Required deterministic gameplay must be reachable under generic bounded directional sweeps and ordinary action/pointer input; do not depend on hidden routes, target coordinates, precision-only aim, or verifier-specific backdoors."
+    },
+    "scenarios": [
+      {
+        "id": "base",
+        "purpose": "technical-causality-and-active-layout",
+        "inputMode": "active+idle-control",
+        "seconds": 12,
+        "stopStates": [],
+        "restartAtEnd": false
+      },
+      {
+        "id": "success-proof",
+        "purpose": "prove real successful completion under deterministic active input",
+        "inputMode": "active",
+        "seconds": 95,
+        "stopStates": [
+          "success"
+        ],
+        "restartAtEnd": true
+      },
+      {
+        "id": "failure-proof",
+        "purpose": "prove real timeout/failure independently from success",
+        "inputMode": "idle",
+        "seconds": 95,
+        "stopStates": [
+          "failure"
+        ],
+        "restartAtEnd": true
+      }
+    ],
+    "coverage": [
+      {
+        "probeId": "PR-MH-01",
+        "ownerRequirementId": "MH-01",
+        "scenarioIds": [
+          "base",
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-02",
+        "ownerRequirementId": "MH-02",
+        "scenarioIds": [
+          "base",
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-03",
+        "ownerRequirementId": "MH-03",
+        "scenarioIds": [
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-04",
+        "ownerRequirementId": "MH-04",
+        "scenarioIds": [
+          "failure-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-05",
+        "ownerRequirementId": "MH-05",
+        "scenarioIds": [
+          "base",
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-MH-06",
+        "ownerRequirementId": "MH-06",
+        "scenarioIds": [
+          "base"
+        ]
+      },
+      {
+        "probeId": "PR-MH-07",
+        "ownerRequirementId": "MH-07",
+        "scenarioIds": [
+          "base",
+          "success-proof"
+        ]
+      },
+      {
+        "probeId": "PR-NG-01",
+        "ownerRequirementId": "NG-01",
+        "scenarioIds": [
+          "base",
+          "success-proof",
+          "failure-proof"
+        ]
+      },
+      {
+        "probeId": "PR-NG-02",
+        "ownerRequirementId": "NG-02",
+        "scenarioIds": [
+          "base",
+          "success-proof",
+          "failure-proof"
+        ]
+      },
+      {
+        "probeId": "PR-NG-03",
+        "ownerRequirementId": "NG-03",
+        "scenarioIds": [
+          "base",
+          "success-proof",
+          "failure-proof"
+        ]
+      }
+    ],
+    "pass": true,
+    "errors": [],
+    "requiredTerminalStates": [
+      "success",
+      "failure"
+    ]
+  }
+}
