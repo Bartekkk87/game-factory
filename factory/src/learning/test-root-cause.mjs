@@ -113,6 +113,55 @@ try {
   assert.match(directorProposal.text, /finite verifier state protocol/);
   assert.match(directorProposal.text, /Do not activate/);
 
+  const impossibleRunId = 'director-impossible-probe-fixture';
+  const impossibleRunDir = path.join(root, impossibleRunId);
+  fs.mkdirSync(impossibleRunDir, { recursive: true });
+  fs.writeFileSync(path.join(impossibleRunDir, 'RUN-EVIDENCE.json'), JSON.stringify({
+    run: { id: impossibleRunId, status: 'failed', reason: 'debug_exhausted' },
+    gates: { technical: { pass: true }, productFidelity: { pass: false } }
+  }, null, 2));
+  fs.writeFileSync(path.join(impossibleRunDir, 'FAILURE.json'), JSON.stringify({ reason: 'debug_exhausted' }, null, 2));
+  fs.writeFileSync(path.join(impossibleRunDir, 'gdd.json'), JSON.stringify({
+    probePlan: {
+      requirementProbes: [
+        { id: 'PR-MH-01', kind: 'event_value_change', eventType: 'player_moved', beforeField: 'playerX', afterField: 'playerX' },
+        { id: 'PR-MH-05', kind: 'event_value_change', eventType: 'run_restarted', beforeField: 'runCount', afterField: 'runCount' },
+        { id: 'PR-MH-07', kind: 'event_value_change', eventType: 'pressure_escalated', beforeField: 'hazardSpeed', afterField: 'hazardSpeed' }
+      ]
+    },
+    proofPlan: { pass: true, scenarios: [{ id: 'base', inputMode: 'active+idle-control', seconds: 12, stopStates: [], restartAtEnd: false }] }
+  }, null, 2));
+
+  const impossibleReport = analyzeFailedProductionRun({ runId: impossibleRunId, runsRoot: root });
+  assert.equal(impossibleReport.primaryFindingId, 'director-probe-contract-unsatisfiable');
+  assert.equal(impossibleReport.findings[0].confidence, 1);
+  assert.equal(impossibleReport.findings[0].targetLayer, 'control-plane');
+  assert.equal(impossibleReport.findings[0].role, 'director');
+  assert.equal(impossibleReport.unsatisfiableProbes.length, 3);
+  assert.match(impossibleReport.findings[0].summary, /PR-MH-01:playerX=playerX/);
+  assert.match(impossibleReport.findings[0].summary, /PR-MH-05:runCount=runCount/);
+  assert.match(impossibleReport.findings[0].summary, /PR-MH-07:hazardSpeed=hazardSpeed/);
+  const impossibleProposal = proposalFromRootCause(impossibleReport, 'candidate-impossible-probe');
+  assert.equal(impossibleProposal.targetLayer, 'control-plane');
+  assert.equal(impossibleProposal.role, 'director');
+  assert.match(impossibleProposal.text, /Reject unsatisfiable event_value_change probes/);
+
+  const earlyImpossibleRunId = 'director-early-impossible-probe-fixture';
+  const earlyImpossibleRunDir = path.join(root, earlyImpossibleRunId);
+  fs.mkdirSync(earlyImpossibleRunDir, { recursive: true });
+  fs.writeFileSync(path.join(earlyImpossibleRunDir, 'RUN-EVIDENCE.json'), JSON.stringify({
+    run: { id: earlyImpossibleRunId, status: 'failed', reason: 'director_failed' },
+    gates: { technical: { pass: false }, productFidelity: { pass: false } }
+  }, null, 2));
+  fs.writeFileSync(path.join(earlyImpossibleRunDir, 'FAILURE.json'), JSON.stringify({
+    reason: 'director_failed',
+    error: 'Director proof plan unreachable: probe PR-MH-01 event_value_change is unsatisfiable: beforeField and afterField are both playerX'
+  }, null, 2));
+  const earlyImpossibleReport = analyzeFailedProductionRun({ runId: earlyImpossibleRunId, runsRoot: root });
+  assert.equal(earlyImpossibleReport.primaryFindingId, 'director-probe-contract-unsatisfiable');
+  assert.deepEqual(earlyImpossibleReport.trajectory, []);
+  assert.match(earlyImpossibleReport.findings[0].summary, /PR-MH-01:playerX=playerX/);
+
   // Historical regressions must be immutable fixtures, never optional runtime
   // directories. Missing fixture evidence is therefore a hard test failure.
   const fixturePath = path.join(repoRoot, 'examples', 'fixtures', 'regressions', 'lumen-director-state-contract.json');
