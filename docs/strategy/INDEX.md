@@ -25,6 +25,11 @@ correction: two post-publication review passes adjusted severity on secondary fi
 withdrew an unauthoritative AC-PG-numbered scorecard in favor of qualitative control categories.
 Neither pass changed the NO-GO verdict or the three P0 findings.
 
+`PROJECT-GAME-MODE-V0.1-REMEDIATION-HANDOFF.md` closes the audit loop by Owner decision and is
+the authoritative bounded implementation handoff. It freezes the accepted findings, corrects
+the final Tree-SHA interpretation, defines the remediation order and requires executable
+negative regression tests before any blocker can be closed. No further broad audit is planned.
+
 ## Current Product experiment
 
 `LUMEN-CURRENT-A-B-CANARY-PLAN-2026-08-29.md` remains the Owner-authorized experiment record for the Lumen Current controlled model comparison. It freezes the canonical Owner brief and comparison controls. Later evidence must not silently change those controls.
