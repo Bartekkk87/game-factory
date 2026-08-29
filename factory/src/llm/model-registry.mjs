@@ -17,6 +17,7 @@ const caps = (overrides = {}) => Object.freeze({
   maxOutputTokens: null,
   promptCaching: false,
   continuation: false,
+  freeEndpoint: false,
   ...overrides
 });
 
@@ -229,6 +230,63 @@ const BUILTIN_MODELS = Object.freeze({
       outputUsdPerM: 0.50,
       source: 'openrouter-official-list-price-2026-08-29'
     }
+  }),
+  'openrouter:nvidia/nemotron-3.5-lightning:free': model({
+    provider: 'openrouter',
+    id: 'nvidia/nemotron-3.5-lightning:free',
+    versionLabel: 'NVIDIA Nemotron 3.5 Lightning Free',
+    aliasKind: 'stable-id',
+    benchmarkStatus: 'free-challenger',
+    capabilities: {
+      jsonObject: true,
+      structuredOutputs: false,
+      contextWindow: 1000000,
+      maxOutputTokens: 65536,
+      freeEndpoint: true
+    },
+    requestShape: {
+      tokenParam: 'max_tokens',
+      temperature: 'free',
+      jsonMode: 'prompt',
+      providerSort: 'throughput',
+      requestTimeoutMs: 360000,
+      contractSource: 'openrouter-official-nemotron-3.5-lightning-free-2026-08-29'
+    },
+    pricing: {
+      inputUsdPerM: 0,
+      cachedInputUsdPerM: 0,
+      outputUsdPerM: 0,
+      source: 'openrouter-official-free-endpoint-2026-08-29'
+    }
+  }),
+  'openrouter:nvidia/nemotron-3-ultra-550b-a55b:free': model({
+    provider: 'openrouter',
+    id: 'nvidia/nemotron-3-ultra-550b-a55b:free',
+    versionLabel: 'NVIDIA Nemotron 3 Ultra Free',
+    aliasKind: 'stable-id',
+    benchmarkStatus: 'free-challenger',
+    capabilities: {
+      jsonObject: true,
+      structuredOutputs: false,
+      reasoning: true,
+      contextWindow: 1000000,
+      maxOutputTokens: 65536,
+      freeEndpoint: true
+    },
+    requestShape: {
+      tokenParam: 'max_tokens',
+      temperature: 'free',
+      jsonMode: 'prompt',
+      providerSort: 'throughput',
+      requestTimeoutMs: 900000,
+      contractSource: 'openrouter-official-nemotron-3-ultra-free-2026-08-29'
+    },
+    pricing: {
+      inputUsdPerM: 0,
+      cachedInputUsdPerM: 0,
+      outputUsdPerM: 0,
+      source: 'openrouter-official-free-endpoint-2026-08-29'
+    }
   })
 });
 
@@ -288,7 +346,8 @@ function validRequestShape(value) {
   return value
     && ['max_tokens', 'max_completion_tokens'].includes(value.tokenParam)
     && ['free', 'unsupported'].includes(value.temperature)
-    && ['response_format', 'none'].includes(value.jsonMode)
+    && ['response_format', 'prompt', 'none'].includes(value.jsonMode)
+    && (value.requestTimeoutMs == null || (Number.isInteger(value.requestTimeoutMs) && value.requestTimeoutMs > 0))
     && typeof value.contractSource === 'string'
     && value.contractSource.trim().length > 0;
 }
