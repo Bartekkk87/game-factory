@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "game-factory.historical-regression-fixture/v1",
+  "id": "lumen-glm-b3-unsatisfiable-probes",
+  "origin": {
+    "runId": "20260829-101836",
+    "workflowRunId": 33247502298,
+    "evidenceCommitSha": "7f730e28eaa74be55428b4cae4f55690381ab18d",
+    "sourceRefs": [
+      {
+        "path": "runs/20260829-101836/gdd.json",
+        "gitBlobSha": "7676b79c77aa0f142c4b1bc4c49b3d5512749630"
+      },
+      {
+        "path": "runs/20260829-101836/attempt-02/evidence-fidelity.json",
+        "gitBlobSha": "cb296f7b101cb46848f5b212eed34640f8aa93cf"
+      },
+      {
+        "path": "runs/20260829-101836/attempt-02/telemetry.json",
+        "gitBlobSha": "343c9cda428b90909c8cd7e83642164ef68fb887"
+      }
+    ]
+  },
+  "gdd": {
+    "probePlan": {
+      "roundSeconds": 75,
+      "requirementProbes": [
+        {
+          "id": "PR-MH-01",
+          "ownerRequirementId": "MH-01",
+          "kind": "event_value_change",
+          "eventType": "player_moved",
+          "beforeField": "playerX",
+          "afterField": "playerX"
+        },
+        {
+          "id": "PR-MH-05",
+          "ownerRequirementId": "MH-05",
+          "kind": "event_value_change",
+          "eventType": "run_restarted",
+          "beforeField": "runCount",
+          "afterField": "runCount"
+        },
+        {
+          "id": "PR-MH-07",
+          "ownerRequirementId": "MH-07",
+          "kind": "event_value_change",
+          "eventType": "pressure_escalated",
+          "beforeField": "hazardSpeed",
+          "afterField": "hazardSpeed"
+        }
+      ]
+    }
+  },
+  "expected": {
+    "proofPlanPass": false,
+    "requiredErrorTerms": [
+      "PR-MH-01 event_value_change is unsatisfiable",
+      "PR-MH-05 event_value_change is unsatisfiable",
+      "PR-MH-07 event_value_change is unsatisfiable"
+    ],
+    "rootCausePrimaryFindingId": "director-probe-contract-unsatisfiable",
+    "classification": "director-to-verifier contract defect; not OpenRouter credential failure"
+  }
+}
