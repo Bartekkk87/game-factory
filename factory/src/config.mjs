@@ -22,6 +22,7 @@ export const LIMITS = {
   maxRepairCalls: count('GF_MAX_REPAIR_CALLS', 6),
   maxPolishRounds: count('GF_MAX_POLISH_ROUNDS', 3),
   maxFreshRebuilds: count('GF_MAX_FRESH_REBUILDS', 1),
+  directorMaxTokens: configuredNumber('GF_DIRECTOR_MAX_TOKENS', 8192, { min: 1, integer: true }),
   minOverallScore: nonNegative('GF_MIN_SCORE', 6.5),
   budgetUsd: positive('GF_BUDGET_USD', 10),
   repairBudgetUsd: nonNegative('GF_REPAIR_BUDGET_USD', 4),
