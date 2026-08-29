@@ -1,6 +1,6 @@
-# Lumen Current — GLM/OpenRouter post-repair retry GO
+# Lumen Current — GLM/OpenRouter 32k Director token-budget experiment GO
 
-Status: Owner-authorized single paid configured challenger retry.
+Status: Owner-authorized single paid diagnostic Production run.
 Date: 2026-08-29.
 
 Execution contract:
@@ -8,13 +8,14 @@ Execution contract:
 - provider lane: `openrouter` / `production`;
 - challenger model: current configured OpenRouter default `z-ai/glm-5.3-flash`;
 - hard run budget: `$10`;
+- Director and Director-repair max output budget: `32768` tokens (previous run: `8192`);
+- all other role token budgets remain unchanged;
 - GLM reasoning effort: `low`, reasoning details excluded;
 - OpenRouter routing: `throughput`, `require_parameters=true`;
-- includes merged PR #53 probe-contract satisfiability protection on main (`7323a6ebca1b4d1dcf54ea77742617a47a1b3ec1`);
-- existing verifier, release gate, repair/polish bounds and Owner Contract semantics remain unchanged;
+- existing verifier, release gate, repair/polish bounds, probe-contract satisfiability guard and Owner Contract semantics remain unchanged;
 - no Learning Candidate may be activated or promoted by this authorization;
 - authorization covers exactly one new paid Production run. No automatic additional retry is authorized.
 
-B1/B2/B3 remain immutable historical evidence. This run is explicitly labelled **post-repair configured challenger retry** and is not a pristine repetition of the untouched A/B experiment.
+Purpose: isolate the hypothesis that GLM-5.3-Flash exhausted the prior 8192-token Director/repair completion budget before emitting usable visible JSON. This run changes only the Director/Director-repair output ceiling to 32768 while preserving model, brief, provider, routing, budget and product gates.
 
-The dispatcher exists only because the connected GitHub control surface cannot issue a new `workflow_dispatch` request directly. It must verify that the frozen Lumen retry brief is still the latest idea before dispatching `produce.yml` with `provider=openrouter`, `budget_usd=10`, and blank manual idea input.
+Historical B1/B2/B3/post-repair failures remain immutable evidence. This run is explicitly labelled **32k Director token-budget experiment** and is not a pristine repetition of the original A/B experiment.
