@@ -4,9 +4,10 @@ import { compileProofPlan, validateProofPlan } from './proof-plan.mjs';
 const harborGdd = {
   title: 'Harbor Courier',
   mechanics: [
-    { name: 'Tide-clock', description: 'A visible 75-second countdown runs during play.' }
+    { name: 'Tide-clock', description: 'Flavor text mentions a 99-second dramatic window, but verifier timing must not be inferred from prose.' }
   ],
   probePlan: {
+    roundSeconds: 75,
     requirementProbes: [
       { id: 'PR-MH-02', ownerRequirementId: 'MH-02', kind: 'event', eventType: 'third_delivery_completed' },
       { id: 'PR-MH-03', ownerRequirementId: 'MH-03', kind: 'event', eventType: 'route_detour_completed' },
@@ -35,7 +36,7 @@ assert(legacy.errors.some((e) => e.includes('restart_after_terminal')));
 
 const plan = compileProofPlan({ gdd: harborGdd, baseSeconds: 12, maxProofSeconds: 125 });
 assert.equal(plan.pass, true);
-assert.equal(plan.declaredRoundSeconds, 75);
+assert.equal(plan.declaredRoundSeconds, 75, 'typed probePlan.roundSeconds is authoritative');
 const success = plan.scenarios.find((s) => s.id === 'success-proof');
 const failure = plan.scenarios.find((s) => s.id === 'failure-proof');
 assert(success && failure, 'success and failure require independent scenarios');
@@ -54,6 +55,12 @@ const restartCoverage = plan.coverage.find((c) => c.probeId === 'PR-MH-07');
 assert.deepEqual(successCoverage.scenarioIds, ['success-proof']);
 assert.deepEqual(failureCoverage.scenarioIds, ['failure-proof']);
 assert.deepEqual(restartCoverage.scenarioIds, ['success-proof', 'failure-proof']);
+
+const missingTypedTiming = structuredClone(harborGdd);
+delete missingTypedTiming.probePlan.roundSeconds;
+const missingTimingPlan = compileProofPlan({ gdd: missingTypedTiming, baseSeconds: 12, maxProofSeconds: 125 });
+assert.equal(missingTimingPlan.declaredRoundSeconds, null, 'prose timing must never be parsed as verifier authority');
+assert.equal(missingTimingPlan.scenarios.find((s) => s.id === 'success-proof').seconds, 125);
 
 const harborAliasGdd = structuredClone(harborGdd);
 harborAliasGdd.probePlan.requirementProbes.find((p) => p.id === 'PR-MH-04').state = 'failed';
@@ -78,4 +85,4 @@ const unknownStatePlan = compileProofPlan({ gdd: unknownStateGdd, baseSeconds: 1
 assert.equal(unknownStatePlan.pass, false, 'unknown verifier states must fail closed before Engineer spend');
 assert(unknownStatePlan.errors.some((e) => /unsupported verifier state dead/i.test(e)));
 
-console.log('proof reachability OK: terminal aliases canonicalized, unknown states fail closed, independent success/failure/restart scenarios compiled');
+console.log('proof reachability OK: typed timing is authoritative, prose timing ignored, terminal aliases canonicalized, unknown states fail closed, independent success/failure/restart scenarios compiled');

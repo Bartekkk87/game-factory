@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { ROOT } from '../config.mjs';
+import { isBinaryEvidencePath } from './binary-evidence.mjs';
 
 export const PROTECTED_PATH_PREFIXES = Object.freeze([
   '.github/',
@@ -70,6 +71,12 @@ export function disallowedRuntimeStatePaths(paths) {
   return outsideAllowlist(paths, RUNTIME_STATE_ALLOWLIST);
 }
 
+export function forbiddenBinaryStatePaths(paths) {
+  return [...new Set((paths || []).map(normalizeRepoPath).filter(Boolean))]
+    .filter(isBinaryEvidencePath)
+    .sort();
+}
+
 export function detectSecrets(text) {
   const value = String(text || '');
   return SECRET_PATTERNS.filter(({ re }) => re.test(value)).map(({ id }) => id);
@@ -101,17 +108,17 @@ function readStagedText(file) {
 export function assertRuntimeProtectedPathsClean() {
   const changed = gitLines(['diff', '--name-only', 'HEAD', '--', ...PROTECTED_PATH_PREFIXES]);
   const forbidden = forbiddenProtectedChanges(changed);
-  if (forbidden.length) {
-    throw new Error(`runtime modified protected paths: ${forbidden.join(', ')}`);
-  }
+  if (forbidden.length) throw new Error(`runtime modified protected paths: ${forbidden.join(', ')}`);
   return { pass: true, changed: [] };
 }
 
 export function assertStagedCommitPolicy(mode) {
   const staged = gitLines(['diff', '--cached', '--name-only', '--diff-filter=ACMRD']);
   const disallowed = disallowedStagedPaths(staged, mode);
-  if (disallowed.length) {
-    throw new Error(`staged paths outside ${mode} allowlist: ${disallowed.join(', ')}`);
+  if (disallowed.length) throw new Error(`staged paths outside ${mode} allowlist: ${disallowed.join(', ')}`);
+  const binary = forbiddenBinaryStatePaths(staged);
+  if (binary.length) {
+    throw new Error(`binary evidence must use GitHub Actions artifact storage, not runtime-state: ${binary.join(', ')}`);
   }
 
   const secretFindings = [];
@@ -134,9 +141,7 @@ export function assertRuntimeStateHistoryPolicy(baseRef, stateRef) {
   const mergeBase = gitValue(['merge-base', baseRef, stateRef]);
   const uniqueStateChanges = gitLines(['diff', '--name-only', mergeBase, stateRef, '--']);
   const disallowed = disallowedRuntimeStatePaths(uniqueStateChanges);
-  if (disallowed.length) {
-    throw new Error(`runtime-state contains non-state changes since merge-base: ${disallowed.join(', ')}`);
-  }
+  if (disallowed.length) throw new Error(`runtime-state contains non-state changes since merge-base: ${disallowed.join(', ')}`);
   return { pass: true, mergeBase, uniqueStateChanges };
 }
 
@@ -144,9 +149,7 @@ export function assertRuntimeStateTreePolicy(baseRef, stateRef) {
   if (!baseRef || !stateRef) throw new Error('runtime-state tree policy requires baseRef and stateRef');
   const treeChanges = gitLines(['diff', '--name-only', baseRef, stateRef, '--']);
   const disallowed = disallowedRuntimeStatePaths(treeChanges);
-  if (disallowed.length) {
-    throw new Error(`runtime-state tree differs from authoritative code outside state paths: ${disallowed.join(', ')}`);
-  }
+  if (disallowed.length) throw new Error(`runtime-state tree differs from authoritative code outside state paths: ${disallowed.join(', ')}`);
   return { pass: true, treeChanges };
 }
 

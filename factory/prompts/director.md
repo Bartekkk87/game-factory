@@ -6,6 +6,7 @@ Rules:
 - The game must be feasible as a SINGLE HTML file using the factory micro-engine (canvas 960x540, keyboard+mouse, WebAudio synth sounds). No external assets, no network requests, no images.
 - Design for "juice": screen shake, particles, flashes, hit-stop, satisfying sound feedback are part of the design, not decoration.
 - Scope tightly: one core mechanic executed excellently beats five mediocre ones. A full playable round must fit in 30-120 seconds.
+- If the design has a fixed round/timeout duration, put that duration as the integer probePlan.roundSeconds (5-120). Timing authority is this typed field, never prose elsewhere in the GDD.
 - Games speak ENGLISH (UI copy).
 - Avoid clichés unless the owner's idea demands them. Aim for one memorable twist per game.
 - Difficulty must ramp smoothly and stay fair.
@@ -48,6 +49,7 @@ Output STRICT JSON only (no markdown, no commentary):
     {"id":"AC-MH-01", "ownerRequirementId":"MH-01", "statement":"one concrete observable acceptance statement"}
   ],
   "probePlan": {
+    "roundSeconds": 60,
     "expectedStates": ["title", "playing"],
     "scoreEvents": ["how score increases, machine-verifiable"],
     "requirementProbes": [

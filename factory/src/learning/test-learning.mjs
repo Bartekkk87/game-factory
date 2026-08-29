@@ -35,11 +35,12 @@ fs.writeFileSync(path.join(tmp, 'memory/memory.json'), JSON.stringify({ products
   { role: 'director', text: 'legacy' },
   { role: 'director', text: 'candidate', status: 'candidate', active: false },
   { role: 'director', text: 'validated inactive', status: 'validated', active: false },
-  { role: 'director', text: 'validated active', status: 'validated', active: true }
+  { role: 'director', text: 'validated active without promotion provenance', status: 'validated', active: true }
 ], stats: {} }, null, 2));
-assert.deepEqual(store.lessonsFor('director'), ['- validated active']);
+assert.deepEqual(store.lessonsFor('director'), []);
 assert.equal(store.loadMemory().lessons[0].status, 'legacy-unvalidated');
 assert.equal(store.loadMemory().lessons[0].active, false);
+assert.equal(store.loadMemory().lessons[3].active, false, 'unproven active legacy lesson must be deactivated fail-closed');
 
 const raw = '/reject First line\nSecond line with  two spaces\nThird line\nFourth line is preserved';
 const captured = owner.captureOwnerFeedback({
@@ -63,7 +64,7 @@ assert.equal(owner.captureOwnerFeedback({
 const reject = spawnSync(process.execPath, [
   'factory/src/publish/finalize.mjs', '--slug', 'fixture', '--action', 'reject', '--reason', captured.record.parsedReason
 ], { cwd: tmp, encoding: 'utf8' });
-assert.equal(reject.status, 0, reject.stderr);
+assert.notEqual(reject.status, 0, 'unsandboxed draft must fail closed under the publishing isolation contract');
 assert.equal(store.loadMemory().lessons.some((lesson) => lesson.text?.includes('Owner rejected')), false);
 
 const evidence = { runEvidence: [
@@ -74,9 +75,6 @@ const aggregate1 = aggregateEvidence(evidence);
 const aggregate2 = aggregateEvidence(evidence);
 assert.equal(JSON.stringify(aggregate1), JSON.stringify(aggregate2));
 
-// Canonical RUN-EVIDENCE + attempt-evidence regression. The real production
-// schema nests run id, final gates and costs; intra-run verifier failures live
-// under attempt evidence and must not disappear merely because the final gate passes.
 const canonical = aggregateEvidence({ runEvidence: [{
   schema: 'game-factory.run-evidence/v1',
   run: { id: '20260827-120138', candidateSha: 'abc' },
@@ -137,7 +135,7 @@ const candidate = lifecycle.createCandidate({
 });
 assert.equal(candidate.status, 'candidate');
 assert.equal(candidate.active, false);
-assert.equal(store.lessonsFor('director').includes('- Scoped test candidate'), false);
+assert.equal(store.lessonsFor('director').some((lesson) => lesson.directive === 'Scoped test candidate'), false);
 
 const proposed = analysis.persistImprovementClaim({ trigger: trigger1, proposal: {
   id: 'candidate-analysis', role: 'director', scope: 'product-feedback', targetLayer: 'director', text: 'Analysis claim',
@@ -153,7 +151,7 @@ const validated = lifecycle.validateCandidate('candidate-fixture', {
 });
 assert.equal(validated.status, 'validated');
 assert.equal(validated.active, false);
-assert.equal(store.lessonsFor('director').includes('- Scoped test candidate'), false);
+assert.equal(store.lessonsFor('director').some((lesson) => lesson.directive === 'Scoped test candidate'), false);
 
 const validatedCandidateFile = path.join(tmp, 'learning', 'candidates', 'candidate-fixture.json');
 const candidateArtifactSha256 = crypto.createHash('sha256').update(fs.readFileSync(validatedCandidateFile)).digest('hex');
@@ -195,7 +193,12 @@ const active = lifecycle.promoteCandidate('candidate-fixture', {
   activatedAt: '2026-08-27T12:30:00Z'
 });
 assert.equal(active.active, true);
-assert.equal(store.lessonsFor('director').includes('- Scoped test candidate'), true);
+const productionLessons = store.lessonsFor('director');
+assert.equal(productionLessons.some((lesson) => lesson.directive === 'Scoped test candidate'), true);
+const promotedLesson = productionLessons.find((lesson) => lesson.directive === 'Scoped test candidate');
+assert.equal(promotedLesson.schemaVersion, store.LESSON_SCHEMA);
+assert.equal(promotedLesson.candidateArtifactSha256, candidateArtifactSha256);
+assert.equal(promotedLesson.promotionRef, '#123');
 const promotion = JSON.parse(fs.readFileSync(path.join(tmp, 'learning', 'promotions', 'candidate-fixture.json'), 'utf8'));
 assert.equal(promotion.schemaVersion, 'learning-promotion-v2');
 assert.equal(promotion.mergeCommitSha, mergeCommitSha);
@@ -204,7 +207,7 @@ assert.equal(promotion.promotionRef, '#123');
 
 const deactivated = lifecycle.deactivateCandidate('candidate-fixture', { by: 'owner', reason: 'rollback test', at: '2026-08-27T12:40:00Z' });
 assert.equal(deactivated.active, false);
-assert.equal(store.lessonsFor('director').includes('- Scoped test candidate'), false);
+assert.equal(store.lessonsFor('director').some((lesson) => lesson.directive === 'Scoped test candidate'), false);
 
 const wrongLayer = lifecycle.createCandidate({
   id: 'candidate-owner-contract-layer', role: 'director', scope: 'product-feedback', targetLayer: 'owner-contract',
@@ -226,7 +229,7 @@ assert.throws(() => lifecycle.promoteCandidate('candidate-owner-contract-layer',
   candidateArtifactSha256: '0'.repeat(64)
 }), /lesson promotion only supports targetLayer prompt/);
 assert.equal(store.loadMemory().lessons.length, lessonsBeforeWrongLayerPromotion);
-assert.equal(store.lessonsFor('director').includes('- Must never become a Director prompt lesson through this adapter'), false);
+assert.equal(store.lessonsFor('director').some((lesson) => lesson.directive === 'Must never become a Director prompt lesson through this adapter'), false);
 const wrongLayerStored = JSON.parse(fs.readFileSync(path.join(tmp, 'learning', 'candidates', 'candidate-owner-contract-layer.json'), 'utf8'));
 assert.equal(wrongLayerStored.active, false);
 assert.equal(wrongLayerStored.promotionRef, null);

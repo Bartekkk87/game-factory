@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "game-factory.golden-corpus-s2-baseline/v2",
+  "baselineId": "s2-audit-v2-a1-a2-reference-2026-08-29",
+  "baselineType": "audit-v2-contract-reference",
+  "evaluatedCommitSha": "0aa2333d2839db3d58a6ea2b855e5f0221b66c1a",
+  "supportingFullVerifier": null,
+  "executionEvidenceKind": "individual-case-oracle-executions",
+  "corpusContract": {
+    "registryGitBlobSha": "aff99fda16edccc45b8f2ae5ca8a28718c813b3c",
+    "s1ManifestGitBlobSha": "908b28981a67d1ab5af19b7ad1e8d7b81f28d00b",
+    "historicalRegistryGitBlobSha": "c3b295d1719ce3eae944388768d3ce0b24aa0569",
+    "caseOracleManifestGitBlobSha": "585b8e1833ab3628a8b5ca2802dda818b7bdf62b",
+    "seedCases": 20,
+    "variants": 14,
+    "totalCases": 34,
+    "independentObservationCount": 34,
+    "uniqueOracleScripts": 9,
+    "historicalRegressionCases": 5
+  },
+  "metrics": {
+    "totalCases": 34,
+    "matchedExpectedCount": 34,
+    "expectedMismatchCount": 0,
+    "expectedOutcomePassRate": 1,
+    "criticalFalsePassCount": 0,
+    "criticalMismatchCount": 0,
+    "independentObservationCount": 34,
+    "observationDeficit": 0
+  },
+  "policy": {
+    "criticalFalsePassTolerance": 0,
+    "baselineCorpusDriftAllowed": false,
+    "independentObservationRequiredPerCase": true
+  },
+  "notes": [
+    "This v2 reference pins the unchanged S0/S1 inventory plus the Audit-v2 historical-regression registry and case-oracle manifest.",
+    "Every active case must execute in its own Node process through run-corpus-case.mjs and a case-specific --case assertion; shared oracle source files do not reduce independentObservationCount.",
+    "Five existing production-derived failures are explicitly classified as historical-regression with origin run and fix commit provenance.",
+    "The reference contains no paid or model-backed execution. CI must prove the 34 independent observations before this architecture package is accepted."
+  ]
+}

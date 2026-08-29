@@ -21,6 +21,28 @@ function moveDir(src, dest) {
   catch { fs.cpSync(src, dest, { recursive: true }); fs.rmSync(src, { recursive: true, force: true }); }
 }
 
+function assertSandboxedCandidate(draftDir, meta) {
+  const candidateFile = path.join(draftDir, 'index.html');
+  if (!fs.existsSync(candidateFile)) throw new Error(`missing candidate: ${path.relative(ROOT, candidateFile)}`);
+  const host = fs.readFileSync(candidateFile, 'utf8');
+  const actualHostSha = sha256(Buffer.from(host));
+  if (!meta.previewHostSha256 || actualHostSha !== meta.previewHostSha256) {
+    throw new Error(`preview host SHA mismatch for ${meta.slug || path.basename(draftDir)}`);
+  }
+  if (!/^[0-9a-f]{64}$/.test(String(meta.candidateSha || ''))) throw new Error('verified candidate SHA is missing');
+  if (meta.verifiedPayloadSha256 !== meta.candidateSha) throw new Error('preview payload binding does not match verified candidate');
+  if (meta.previewIsolation?.generatedCodeOrigin !== 'opaque-origin-via-sandboxed-srcdoc' || meta.previewIsolation?.allowSameOrigin !== false) {
+    throw new Error('preview is not bound to opaque-origin sandbox policy');
+  }
+  if (!host.includes('sandbox="allow-scripts"') || /sandbox="[^"]*allow-same-origin/.test(host)) {
+    throw new Error('preview sandbox token policy is unsafe');
+  }
+  if (!host.includes(`data-verified-candidate-sha="${meta.candidateSha}"`)) {
+    throw new Error('preview host does not bind the verified candidate SHA');
+  }
+  return actualHostSha;
+}
+
 const slug = arg('--slug') || '';
 const action = arg('--action');
 const reason = (arg('--reason') || '').trim();
@@ -32,11 +54,7 @@ const draftDir = path.join(PATHS.drafts, slug);
 const meta = readJson(path.join(draftDir, 'meta.json'));
 if (!meta) throw new Error(`no meta.json found under drafts/${slug}`);
 if (meta.status !== 'awaiting-review') throw new Error(`draft is not awaiting review: ${meta.status}`);
-
-const candidateFile = path.join(draftDir, 'index.html');
-if (!fs.existsSync(candidateFile)) throw new Error(`missing candidate: drafts/${slug}/index.html`);
-const actualSha = sha256(fs.readFileSync(candidateFile));
-if (!meta.candidateSha || actualSha !== meta.candidateSha) throw new Error(`candidate SHA mismatch for ${slug}: expected ${meta.candidateSha || 'missing'}, got ${actualSha}`);
+assertSandboxedCandidate(draftDir, meta);
 
 if (action === 'approve') {
   const dest = path.join(PATHS.products, slug);
@@ -54,7 +72,5 @@ if (action === 'approve') {
   writeJson(path.join(dest, 'meta.json'), meta);
   registerProduct({ slug, title: meta.title, genre: meta.genre, date: meta.date, status: 'rejected', score: meta.overall });
   bumpStats({ rejected: 1 });
-  // Owner feedback is captured separately under learning/evidence/owner-feedback.
-  // Rejection is product state, never direct Production-learning authority.
   console.log(`ARCHIVED: ${path.relative(ROOT, dest)} (owner feedback stored separately; no active lesson created)`);
 }

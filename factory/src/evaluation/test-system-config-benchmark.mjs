@@ -11,9 +11,8 @@ import {
   validateOracleBundle,
   buildWorkerEnvelope,
   assertBenchmarkExecutionAuthorized,
-  validateBenchmarkTrace,
+  validateBenchmarkTrace
 } from './s5-benchmark-contract.mjs';
-
 import { buildBenchmarkResult, validateAdvisoryBenchmarkResult } from './s5-benchmark-result.mjs';
 
 const read = (relative) => JSON.parse(fs.readFileSync(path.join(ROOT, relative), 'utf8'));
@@ -55,7 +54,7 @@ validateOracleBundle(development, developmentOracle);
 validateOracleBundle(holdout, holdoutOracle);
 pass('canonical reference/challenger configurations and split datasets validate');
 
-for (const component of ['model', 'promptSkill', 'contextContract', 'verifier', 'retry', 'escalation']) {
+for (const component of ['model', 'promptSkill', 'contextContract', 'verifier', 'retry', 'escalation', 'sampling']) {
   expectReject(`missing required configuration component ${component}`, () => {
     const bad = clone(reference);
     delete bad[component];
@@ -91,6 +90,10 @@ expectReject('repo content hash mismatch rejects', () => {
 expectReject('evaluated commit mismatch rejects', () => {
   validateSystemConfiguration(reference, { evaluatedCommitSha: '0'.repeat(40) });
 });
+expectReject('sampling temperature incompatible with model request contract rejects', () => {
+  const bad = clone(reference); bad.sampling.operations.build.temperature = 0.3; sealConfig(bad);
+  validateSystemConfiguration(bad, { evaluatedCommitSha: bad.evaluatedCommitSha });
+});
 
 function overlapHoldout(field, value) {
   const bad = clone(holdout);
@@ -121,7 +124,8 @@ const workerSerialized = JSON.stringify(workerEnvelope).toLowerCase();
 assert.equal(workerSerialized.includes('expectedoutcome'), false);
 assert.equal(workerSerialized.includes('oracleref'), false);
 assert.equal(workerSerialized.includes('groundtruth'), false);
-pass('worker envelope structurally excludes evaluator oracle/expected outcome');
+assert.deepEqual(workerEnvelope.sampling, reference.sampling);
+pass('worker envelope structurally excludes evaluator oracle/expected outcome and pins sampling');
 
 expectReject('missing dataset version rejects', () => {
   const bad = clone(holdout); delete bad.version; sealDataset(bad); validateDataset(bad);
@@ -176,6 +180,7 @@ function makeTrace(config, dataset, caseId, suffix, { outcome = 'PASS', critical
     configuration: { id: config.id, version: config.version, sha256: config.configurationSha256 },
     dataset: { id: dataset.datasetId, version: dataset.version, sha256: dataset.datasetSha256, split: dataset.split, caseId },
     model: { provider: config.model.provider, id: config.model.id },
+    sampling: clone(config.sampling),
     promptRefs: clone(config.promptSkill.prompts),
     skillRefs: clone(config.promptSkill.skills),
     contextRefs: clone(config.contextContract.refs),
@@ -196,12 +201,13 @@ const referenceHoldTrace = makeTrace(referenceValidated, holdout, holdout.cases[
 const challengerDevTrace = makeTrace(challengerValidated, development, development.cases[0].id, 'challenger-dev');
 const challengerHoldTrace = makeTrace(challengerValidated, holdout, holdout.cases[0].id, 'challenger-hold', { criticalFalsePass: true });
 for (const trace of [referenceDevTrace, referenceHoldTrace, challengerDevTrace, challengerHoldTrace]) validateBenchmarkTrace(trace);
-pass('complete benchmark traces validate with exact configuration/dataset attribution');
+pass('complete benchmark traces validate with exact configuration/dataset/sampling attribution');
 
 const missingTraceFields = [
   ['configuration SHA', (t) => { delete t.configuration.sha256; }],
   ['evaluated commit', (t) => { delete t.evaluatedCommitSha; }],
   ['model identity', (t) => { delete t.model.id; }],
+  ['sampling', (t) => { delete t.sampling; }],
   ['prompt refs', (t) => { t.promptRefs = []; }],
   ['skill refs', (t) => { t.skillRefs = []; }],
   ['context refs', (t) => { t.contextRefs = []; }],
@@ -211,7 +217,9 @@ const missingTraceFields = [
   ['evaluator result', (t) => { delete t.evaluator; }],
   ['evidence refs', (t) => { t.evidenceRefs = []; }]
 ];
-for (const [label, mutate] of missingTraceFields) expectReject(`trace missing ${label} rejects`, () => { const bad = clone(referenceHoldTrace); mutate(bad); validateBenchmarkTrace(bad); });
+for (const [label, mutate] of missingTraceFields) expectReject(`trace missing ${label} rejects`, () => {
+  const bad = clone(referenceHoldTrace); mutate(bad); validateBenchmarkTrace(bad);
+});
 expectReject('trace hidden chain-of-thought field rejects', () => {
   const bad = clone(referenceHoldTrace); bad.chainOfThought = 'must never persist'; validateBenchmarkTrace(bad);
 });
@@ -220,6 +228,10 @@ expectReject('cost/latency observation without exact trial attribution rejects',
 });
 expectReject('trace model attribution that disagrees with configuration rejects during comparison', () => {
   const bad = clone(referenceHoldTrace); bad.model.id = challenger.model.id;
+  buildBenchmarkResult({ configurations: [referenceValidated, challengerValidated], traces: [referenceDevTrace, bad, challengerDevTrace, challengerHoldTrace] });
+});
+expectReject('trace sampling attribution that disagrees with configuration rejects during comparison', () => {
+  const bad = clone(referenceHoldTrace); bad.sampling.operations.build.maxOutputTokens = 42;
   buildBenchmarkResult({ configurations: [referenceValidated, challengerValidated], traces: [referenceDevTrace, bad, challengerDevTrace, challengerHoldTrace] });
 });
 
@@ -233,7 +245,9 @@ assert.equal(challengerMetric.criticalFalsePassCount, 1);
 assert.equal(result.criticalIntegrityPolicy.tolerance, 0);
 assert.equal(result.decision, 'human-review-required');
 assert.equal(result.productionMutationAuthorized, false);
-pass('critical false PASS remains explicit and cannot be hidden by aggregate metrics');
+assert.equal(Number.isFinite(challengerMetric.expectedOutcomePassRateVariance), true);
+assert.ok(challengerMetric.expectedOutcomePassRateWilson95);
+pass('critical false PASS and uncertainty remain explicit and cannot be hidden by aggregate metrics');
 
 expectReject('result omitting critical false PASS reporting rejects', () => {
   const bad = clone(result); delete bad.metrics[0].criticalFalsePassCount; validateAdvisoryBenchmarkResult(bad);

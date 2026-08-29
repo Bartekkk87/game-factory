@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "game-factory.golden-corpus-historical-regressions/v1",
+  "status": "active",
+  "cases": [
+    {
+      "id": "hr-harbor-repair-regression",
+      "schemaVersion": "game-factory.golden-corpus-case/v1",
+      "domain": "factory-reliability",
+      "failureClass": "repair-regression-best-attempt",
+      "varianceFamily": "repair-convergence",
+      "tier": 2,
+      "severity": "critical-integrity",
+      "sourceKind": "historical-regression",
+      "sourceRefs": ["run:20260827-203110", "factory/src/control/test-repair-policy.mjs"],
+      "expectedOutcome": { "caseResult": "PASS", "systemBehavior": "retain the best clean failed candidate across a 9 -> 5 -> 2 -> 8 repair regression and a later new-runtime-error regression" },
+      "historicalProvenance": {
+        "originRunId": "20260827-203110",
+        "fixCommitSha": "9e07c632bf12b8d117e41c176e200e4e5d15fdd9",
+        "fixRef": "PR#18"
+      },
+      "seed": true,
+      "active": true,
+      "notes": "Production-derived Harbor Courier repair-regression evidence, now explicit in Corpus provenance."
+    },
+    {
+      "id": "hr-harbor-proof-plan-unreachability",
+      "schemaVersion": "game-factory.golden-corpus-case/v1",
+      "domain": "game-production",
+      "failureClass": "proof-plan-reachability",
+      "varianceFamily": "terminal-proof-planning",
+      "tier": 2,
+      "severity": "critical-integrity",
+      "sourceKind": "historical-regression",
+      "sourceRefs": ["run:20260827-210323", "factory/src/verify/test-proof-reachability.mjs"],
+      "expectedOutcome": { "caseResult": "PASS", "systemBehavior": "reject the historical Harbor single-session proof as unreachable and compile independent success, failure and restart scenarios" },
+      "historicalProvenance": {
+        "originRunId": "20260827-210323",
+        "fixCommitSha": "11a02908b43805dd0e07ccfe7342262b2a6e0349",
+        "fixRef": "PR#19"
+      },
+      "seed": true,
+      "active": true,
+      "notes": "Production-derived Harbor Courier proof-plan failure made visible as a historical regression."
+    },
+    {
+      "id": "hr-lumen-director-state-contract",
+      "schemaVersion": "game-factory.golden-corpus-case/v1",
+      "domain": "factory-reliability",
+      "failureClass": "director-verifier-state-contract-mismatch",
+      "varianceFamily": "terminal-state-vocabulary",
+      "tier": 2,
+      "severity": "critical-integrity",
+      "sourceKind": "historical-regression",
+      "sourceRefs": ["run:20260828-201007", "examples/fixtures/regressions/lumen-director-state-contract.json"],
+      "expectedOutcome": { "caseResult": "PASS", "systemBehavior": "reproduce the immutable Lumen Director state-contract failure and diagnose restored/glass_breach as a verifier vocabulary mismatch" },
+      "historicalProvenance": {
+        "originRunId": "20260828-201007",
+        "fixCommitSha": "7af126e3300b23c19bd088ca32c08c7e81947d8b",
+        "fixRef": "PR#36"
+      },
+      "seed": true,
+      "active": true,
+      "notes": "Immutable A-2b fixture is the durable source; no runtime directory dependency."
+    },
+    {
+      "id": "hr-provider-max-completion-token-contract",
+      "schemaVersion": "game-factory.golden-corpus-case/v1",
+      "domain": "factory-reliability",
+      "failureClass": "provider-request-token-parameter",
+      "varianceFamily": "provider-request-contract",
+      "tier": 2,
+      "severity": "critical-integrity",
+      "sourceKind": "historical-regression",
+      "sourceRefs": ["run:20260827-111826", "factory/src/llm/test-request-contract.mjs"],
+      "expectedOutcome": { "caseResult": "PASS", "systemBehavior": "emit max_completion_tokens and never max_tokens for the OpenAI reasoning request contract that previously returned HTTP 400" },
+      "historicalProvenance": {
+        "originRunId": "20260827-111826",
+        "fixCommitSha": "3740483a9b95c14689f249761d86f3c92c417724",
+        "fixRef": "PR#37"
+      },
+      "seed": true,
+      "active": true,
+      "notes": "Zero-paid replay of the provider request-shape failure class; no provider call is made."
+    },
+    {
+      "id": "hr-provider-temperature-unsupported-contract",
+      "schemaVersion": "game-factory.golden-corpus-case/v1",
+      "domain": "factory-reliability",
+      "failureClass": "provider-request-temperature-parameter",
+      "varianceFamily": "provider-request-contract",
+      "tier": 2,
+      "severity": "critical-integrity",
+      "sourceKind": "historical-regression",
+      "sourceRefs": ["run:20260827-113631", "factory/src/llm/test-request-contract.mjs"],
+      "expectedOutcome": { "caseResult": "PASS", "systemBehavior": "omit temperature for the OpenAI reasoning request contract that previously returned HTTP 400 for temperature 0.9" },
+      "historicalProvenance": {
+        "originRunId": "20260827-113631",
+        "fixCommitSha": "3740483a9b95c14689f249761d86f3c92c417724",
+        "fixRef": "PR#37"
+      },
+      "seed": true,
+      "active": true,
+      "notes": "Zero-paid replay of the second provider request-shape failure class; no provider call is made."
+    }
+  ]
+}

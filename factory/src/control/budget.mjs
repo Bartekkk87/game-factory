@@ -1,7 +1,9 @@
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { getModelPricing, UnknownModelPricingError } from '../llm/model-registry.mjs';
 
 const roundUsd = (n) => Math.round((Number(n) + Number.EPSILON) * 1e6) / 1e6;
 const now = () => new Date().toISOString();
+const budgetContext = new AsyncLocalStorage();
 
 export class BudgetError extends Error {
   constructor(message, details = {}) {
@@ -13,14 +15,11 @@ export class BudgetError extends Error {
   }
 }
 
-let state = null;
-function active() { if (!state) throw new BudgetError('Run budget is not initialized', { reason: 'budget_not_initialized' }); return state; }
-function scopeFor(operation) { if (operation === 'repair') return 'repair'; if (operation === 'polish') return 'polish'; if (operation === 'rebuild') return 'freshRebuild'; return null; }
-function addViolation(reason, details = {}) { const s = active(); const violation = { reason, at: now(), ...details }; s.violations.push(violation); return violation; }
-function block(reason, message, details = {}) { const violation = addViolation(reason, details); throw new BudgetError(message, violation); }
-
-export function beginRunBudget({ runId, budgetUsd, stageBudgets = {} }) {
-  if (!Number.isFinite(Number(budgetUsd)) || Number(budgetUsd) <= 0) throw new BudgetError('Run budget must be a positive USD amount', { reason: 'invalid_run_budget', budgetUsd });
+function createLedger({ runId, budgetUsd, stageBudgets = {} }) {
+  if (!String(runId || '').trim()) throw new BudgetError('Run budget requires runId', { reason: 'invalid_run_id' });
+  if (!Number.isFinite(Number(budgetUsd)) || Number(budgetUsd) <= 0) {
+    throw new BudgetError('Run budget must be a positive USD amount', { reason: 'invalid_run_budget', budgetUsd });
+  }
   const normalizedStages = {};
   for (const name of ['repair', 'polish', 'freshRebuild']) {
     const cfg = stageBudgets[name] ?? {};
@@ -29,13 +28,49 @@ export function beginRunBudget({ runId, budgetUsd, stageBudgets = {} }) {
       maxUsd: Number.isFinite(Number(cfg.maxUsd)) ? Math.max(0, Number(cfg.maxUsd)) : null
     };
   }
-  state = {
-    schema: 'game-factory.cost-ledger/v1', runId, budgetUsd: Number(budgetUsd), startedAt: now(), spentUsd: 0, reservedUsd: 0,
-    accountingComplete: true, sequence: 0, logicalSequence: 0, stageBudgets: normalizedStages,
-    stageCalls: { repair: 0, polish: 0, freshRebuild: 0 }, stageSpentUsd: { repair: 0, polish: 0, freshRebuild: 0 },
-    stageReservedUsd: { repair: 0, polish: 0, freshRebuild: 0 }, logicalCalls: [], attempts: [], violations: []
+  return {
+    schema: 'game-factory.cost-ledger/v2',
+    runId: String(runId),
+    budgetUsd: Number(budgetUsd),
+    startedAt: now(),
+    spentUsd: 0,
+    reservedUsd: 0,
+    accountingComplete: true,
+    sequence: 0,
+    logicalSequence: 0,
+    stageBudgets: normalizedStages,
+    stageCalls: { repair: 0, polish: 0, freshRebuild: 0 },
+    stageSpentUsd: { repair: 0, polish: 0, freshRebuild: 0 },
+    stageReservedUsd: { repair: 0, polish: 0, freshRebuild: 0 },
+    logicalCalls: [],
+    attempts: [],
+    violations: []
   };
+}
+
+function current() { return budgetContext.getStore() || null; }
+function active() {
+  const ledger = current();
+  if (!ledger) throw new BudgetError('Run budget is not initialized in this async context', { reason: 'budget_not_initialized' });
+  return ledger;
+}
+function scopeFor(operation) { if (operation === 'repair') return 'repair'; if (operation === 'polish') return 'polish'; if (operation === 'rebuild') return 'freshRebuild'; return null; }
+function addViolation(reason, details = {}) { const s = active(); const violation = { reason, at: now(), ...details }; s.violations.push(violation); return violation; }
+function block(reason, message, details = {}) { const violation = addViolation(reason, details); throw new BudgetError(message, violation); }
+
+// Compatibility entry point for the existing Production pipeline. AsyncLocalStorage
+// propagates this ledger only through descendants of the current async execution.
+export function beginRunBudget(config) {
+  const ledger = createLedger(config);
+  budgetContext.enterWith(ledger);
   return costReport();
+}
+
+// Preferred explicit scope for tests, parallel orchestration and future callers.
+export function runWithBudget(config, fn) {
+  if (typeof fn !== 'function') throw new BudgetError('runWithBudget requires a function', { reason: 'invalid_budget_scope' });
+  const ledger = createLedger(config);
+  return budgetContext.run(ledger, fn);
 }
 
 function estimateInputTokens({ system = '', user = '', images = [] }) {
@@ -151,8 +186,13 @@ function aggregateAttempts(attempts, key) {
   for (const value of Object.values(out)) value.costUsd = roundUsd(value.costUsd); return out;
 }
 
+function emptyReport() {
+  return { schema: 'game-factory.cost-ledger/v2', runId: null, budgetUsd: 0, costUsd: 0, spentUsd: 0, remainingUsd: 0, tokens: 0, accountingComplete: false, pass: false, stageBudgets: {}, byRole: {}, byModel: {}, byOperation: {}, attempts: [], violations: [{ reason: 'budget_not_initialized' }] };
+}
+
 export function costReport() {
-  if (!state) return { schema: 'game-factory.cost-ledger/v1', runId: null, budgetUsd: 0, costUsd: 0, spentUsd: 0, remainingUsd: 0, tokens: 0, accountingComplete: false, pass: false, stageBudgets: {}, byRole: {}, byModel: {}, byOperation: {}, attempts: [], violations: [{ reason: 'budget_not_initialized' }] };
+  const state = current();
+  if (!state) return emptyReport();
   const settled = state.attempts; const totals = settled.reduce((acc, item) => { acc.input += item.usage?.inputTokens || 0; acc.cached += item.usage?.cachedInputTokens || 0; acc.output += item.usage?.outputTokens || 0; acc.total += item.usage?.totalTokens || 0; return acc; }, { input: 0, cached: 0, output: 0, total: 0 });
   const spent = roundUsd(state.spentUsd);
   return {

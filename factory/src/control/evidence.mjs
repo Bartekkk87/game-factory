@@ -1,4 +1,8 @@
 export const RUN_EVIDENCE_SCHEMA = 'game-factory.run-evidence/v1';
+const COST_LEDGER_SCHEMAS = new Set([
+  'game-factory.cost-ledger/v1',
+  'game-factory.cost-ledger/v2'
+]);
 
 export function validateRunEvidence(evidence) {
   const problems = [];
@@ -8,8 +12,11 @@ export function validateRunEvidence(evidence) {
   for (const gate of ['technical', 'productFidelity', 'experience', 'budget', 'release']) {
     if (typeof evidence?.gates?.[gate]?.pass !== 'boolean') problems.push(`gates.${gate}.pass`);
   }
-  if (evidence?.costs?.schema !== 'game-factory.cost-ledger/v1') problems.push('costs.schema');
+  if (!COST_LEDGER_SCHEMAS.has(evidence?.costs?.schema)) problems.push('costs.schema');
   if (!Array.isArray(evidence?.costs?.attempts)) problems.push('costs.attempts');
+  if (evidence?.costs?.schema === 'game-factory.cost-ledger/v2' && evidence?.costs?.runId !== evidence?.run?.id) {
+    problems.push('costs.runId');
+  }
   if (problems.length) throw new Error(`Invalid run evidence: ${problems.join(', ')}`);
   return evidence;
 }

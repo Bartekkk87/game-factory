@@ -36,16 +36,10 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin main runtime-state
           node factory/src/control/staged-commit-policy.mjs \
-            --mode review \
-            --check-state-history \
-            --base-ref origin/main \
-            --state-ref origin/runtime-state
+            --mode review --check-state-history --base-ref origin/main --state-ref origin/runtime-state
           git merge --no-edit origin/runtime-state
           node factory/src/control/staged-commit-policy.mjs \
-            --mode review \
-            --check-state-tree \
-            --base-ref origin/main \
-            --state-ref HEAD
+            --mode review --check-state-tree --base-ref origin/main --state-ref HEAD
 
       - id: parse
         env:
@@ -53,13 +47,9 @@ jobs:
           COMMENT: ${{ github.event.comment.body }}
         run: |
           SLUG=$(printf '%s' "$ISSUE_BODY" | grep -oE '\[slug:[a-z0-9-]+\]' | head -n 1 | tr -d '[]' | sed 's/^slug://')
-          if printf '%s' "$COMMENT" | grep -q '^/approve'; then
-            ACTION=approve
-          elif printf '%s' "$COMMENT" | grep -q '^/reject'; then
-            ACTION=reject
-          else
-            ACTION=feedback
-          fi
+          if printf '%s' "$COMMENT" | grep -q '^/approve'; then ACTION=approve
+          elif printf '%s' "$COMMENT" | grep -q '^/reject'; then ACTION=reject
+          else ACTION=feedback; fi
           echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
           echo "action=$ACTION" >> "$GITHUB_OUTPUT"
 
@@ -101,6 +91,41 @@ jobs:
         if: steps.parse.outputs.slug != ''
         run: node factory/src/control/staged-commit-policy.mjs --mode review --check-runtime
 
+      - name: Prepare review binary-evidence manifest
+        if: steps.parse.outputs.slug != ''
+        run: |
+          node factory/src/control/binary-evidence.mjs \
+            --mode prepare --roots drafts,products,archive \
+            --out "evaluation/results/BINARY-EVIDENCE-REVIEW-${{ github.run_id }}.json" \
+            --artifact-name "review-binary-evidence-${{ github.run_id }}" \
+            --workflow-run-id "${{ github.run_id }}" \
+            --retention-days 30
+
+      - name: Upload review binary evidence outside Git history
+        if: steps.parse.outputs.slug != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-binary-evidence-${{ github.run_id }}
+          path: |
+            drafts/**/*.png
+            drafts/**/*.jpg
+            drafts/**/*.jpeg
+            drafts/**/*.webp
+            products/**/*.png
+            products/**/*.jpg
+            products/**/*.jpeg
+            products/**/*.webp
+            archive/**/*.png
+            archive/**/*.jpg
+            archive/**/*.jpeg
+            archive/**/*.webp
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Remove review binaries before durable Git state
+        if: steps.parse.outputs.slug != ''
+        run: node factory/src/control/binary-evidence.mjs --mode purge --roots drafts,products,archive
+
       - name: Commit review state and evidence to runtime-state
         if: steps.parse.outputs.slug != ''
         run: |
@@ -108,10 +133,7 @@ jobs:
           node factory/src/control/staged-commit-policy.mjs --mode review --check-staged
           git diff --cached --quiet || git commit -m "review: ${{ steps.parse.outputs.action }} ${{ steps.parse.outputs.slug }}"
           node factory/src/control/staged-commit-policy.mjs \
-            --mode review \
-            --check-state-tree \
-            --base-ref origin/main \
-            --state-ref HEAD
+            --mode review --check-state-tree --base-ref origin/main --state-ref HEAD
           git push origin HEAD:runtime-state
 
       - name: Close verdict review issue

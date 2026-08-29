@@ -2,15 +2,28 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { buildCorpusCatalog } from './corpus-metrics.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../../..');
-const registry = JSON.parse(fs.readFileSync(path.join(root, 'evaluation/corpus/registry.json'), 'utf8'));
-const manifest = JSON.parse(fs.readFileSync(path.join(root, 'evaluation/corpus/s1-cases.json'), 'utf8'));
+
+function readJson(relPath) {
+  return JSON.parse(fs.readFileSync(path.join(root, relPath), 'utf8'));
+}
 
 function fail(message, code = 2) {
-  console.error(`S1 CASE EXECUTION ERROR: ${message}`);
+  console.error(`CASE EXECUTION ERROR: ${message}`);
   process.exit(code);
+}
+
+function safeOraclePath(script) {
+  const value = String(script || '');
+  if (!/^[A-Za-z0-9._/-]+\.mjs$/.test(value) || path.isAbsolute(value) || value.split('/').includes('..')) {
+    fail(`unsafe case oracle path: ${value}`);
+  }
+  const absolute = path.resolve(root, value);
+  if (!absolute.startsWith(`${root}${path.sep}`) || !fs.existsSync(absolute)) fail(`case oracle unavailable: ${value}`);
+  return absolute;
 }
 
 const args = process.argv.slice(2);
@@ -18,69 +31,39 @@ if (args.length !== 2 || args[0] !== '--case' || !args[1]) {
   fail('usage: node factory/src/evaluation/run-corpus-case.mjs --case <case-id>');
 }
 
+const registry = readJson('evaluation/corpus/registry.json');
+const manifest = readJson('evaluation/corpus/s1-cases.json');
+const historical = readJson('evaluation/corpus/historical-regressions.json');
+const oracles = readJson('evaluation/corpus/case-oracles.json');
+const catalog = buildCorpusCatalog(registry, manifest, historical, oracles);
 const caseId = args[1];
-const seed = registry.cases.find((entry) => entry.seed && entry.id === caseId);
-const variant = manifest.variants.find((entry) => entry.id === caseId);
-if (seed && variant) fail(`case id collision: ${caseId}`);
-if (!seed && !variant) fail(`unknown case id: ${caseId}`);
+const entry = catalog.find((row) => row.id === caseId);
+if (!entry) fail(`unknown or inactive case id: ${caseId}`);
 
-let entry;
-let execution;
-if (seed) {
-  const script = manifest.seedScripts?.[caseId];
-  if (!script) fail(`seed execution contract missing: ${caseId}`);
-  execution = { ...manifest.executionContract, script };
-  entry = {
-    id: seed.id,
-    expectedOutcome: seed.expectedOutcome,
-    parentSeedId: null,
-    varianceDimension: null,
-    controlType: 'seed',
-    corpusPopulation: manifest.corpusPopulation,
-    active: seed.active
-  };
-} else {
-  entry = {
-    ...variant,
-    corpusPopulation: manifest.corpusPopulation
-  };
-  execution = { ...manifest.executionContract, script: variant.script };
-}
-
-if (!entry.active) fail(`case is inactive: ${caseId}`);
-if (execution?.runner !== 'node-selftest') fail(`unsupported runner for ${caseId}`);
-if (execution?.oracle !== 'exit-code-zero') fail(`unsupported oracle for ${caseId}`);
-
-const script = String(execution?.script || '');
-if (!/^[A-Za-z0-9._/-]+\.mjs$/.test(script) || path.isAbsolute(script) || script.split('/').includes('..')) {
-  fail(`unsafe execution script for ${caseId}: ${script}`);
-}
-const absoluteScript = path.resolve(root, script);
-if (!absoluteScript.startsWith(`${root}${path.sep}`) || !fs.existsSync(absoluteScript)) {
-  fail(`execution script is unavailable for ${caseId}: ${script}`);
-}
-
-const child = spawnSync(process.execPath, [absoluteScript], {
+const absoluteOracle = safeOraclePath(entry.oracleScript);
+const child = spawnSync(process.execPath, [absoluteOracle, '--case', caseId], {
   cwd: root,
   encoding: 'utf8',
   env: process.env,
-  maxBuffer: 16 * 1024 * 1024
+  maxBuffer: 32 * 1024 * 1024
 });
-const exitCode = child.status ?? 1;
-const caseResult = exitCode === 0 ? 'PASS' : 'FAIL';
+const childExitCode = child.status ?? 1;
+const caseResult = childExitCode === 0 ? 'PASS' : 'FAIL';
 
 console.log(JSON.stringify({
-  schemaVersion: 'game-factory.case-execution-result/v1',
+  schemaVersion: 'game-factory.case-execution-result/v2',
   caseId: entry.id,
   parentSeedId: entry.parentSeedId,
   varianceDimension: entry.varianceDimension,
   controlType: entry.controlType,
-  corpusPopulation: entry.corpusPopulation,
-  runner: execution.runner,
-  script,
-  oracle: execution.oracle,
-  childExitCode: exitCode,
-  caseResult
+  corpusPopulation: entry.population,
+  sourceKind: entry.sourceKind,
+  runner: oracles.executionContract.runner,
+  oracle: oracles.executionContract.oracle,
+  oracleScript: entry.oracleScript,
+  childExitCode,
+  caseResult,
+  independentObservation: true
 }));
 
 if (caseResult !== entry.expectedOutcome?.caseResult) {
