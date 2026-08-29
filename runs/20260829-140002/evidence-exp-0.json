@@ -1,0 +1,48 @@
+{
+  "fidelityVerdict": "PASS",
+  "missingRequirements": [],
+  "fidelityCritique": [
+    "No mandatory UN-xx claims were supplied; deterministic MH/NG coverage is complete and passed, and screenshots independently corroborate the core loop: node rings, thorn hazards, player current with trail, and HUD (SIGNAL NODES 1/3→2/3, SCORE 100→200, STORM PRESSURE bar with numeric value).",
+    "Screenshot 1 shows the tutorial prompt 'Glide into a node ring and press SPACE to attune the signal' and screenshot 3 shows an in-ring 'PRESS SPACE' prompt near a node, consistent with player-driven attunement rather than idle progression.",
+    "Storm pressure visibly depletes (98 → 78 → 83 after node restore) and thorn speed escalation is machine-verified via hazard_speed_up events (70→196 in failure scenario), satisfying meaningful pressure escalation.",
+    "Art direction is coherent: dark teal bioluminescent palette, glowing node cores, dashed attunement rings, circuit-vein background, distinct red thorn hazards — no gray placeholder boxes.",
+    "Minor polish gaps: the player's trail is faint, node-activated 'permanent garden illumination' is not clearly distinguishable between screenshots, and the thorn orbs read as generic spiky shapes rather than botanical hazards."
+  ],
+  "independentClaimReviews": [],
+  "scores": {
+    "visuals": 8,
+    "uiClarity": 8,
+    "funProxy": 7,
+    "performance": 10
+  },
+  "overall": 8,
+  "critique": [
+    "Visuals are cohesive and luminous: dark teal field, glowing amber nodes with dashed rings, red thorn hazards, drifting motes and circuit veins — clearly above generic flat-shape baseline.",
+    "HUD is readable and non-obstructive: node pips with 1/3→2/3 counter, big centered score, BEST, and a labeled STORM PRESSURE bar with numeric value; central play area stays clear.",
+    "Cause-and-effect is visible across frames: score +100 and node pips fill on activation, pressure bar refills (78→83) after node 2, and hazard_speed_up telemetry confirms escalating thorn speed (70→91 during the winning run).",
+    "Fun proxy is decent but the winning run's 11s duration and the faint player trail suggest the challenge may be light; tension comes mostly from the pressure timer.",
+    "Performance is excellent: steady 60-62 fps across all snapshots with no errors or flags."
+  ],
+  "priorityFixes": [
+    "Strengthen the player current's luminous trail and activation shockwave so node attunement reads more dramatically in a still frame.",
+    "Make activated-node garden illumination (brightened circuit veins) more pronounced so world-state change from each activation is unmistakable.",
+    "Increase mid-run challenge (e.g., faster pressure drain or denser thorns after node 2) so a successful run approaches the 1-2 minute tension target rather than ~11 seconds."
+  ],
+  "reviewProvenance": {
+    "reviewerRole": "playtester",
+    "operation": "playtester",
+    "provider": "openrouter",
+    "requestedModel": "z-ai/glm-5.3-flash",
+    "actualModel": "z-ai/glm-5.3-flash",
+    "credentialLane": "production",
+    "stage": "post-build-independent-evidence-review",
+    "independenceBasis": "separate stateless reviewer call over captured screenshots and harness evidence; model diversity is not required"
+  },
+  "fullBriefCoverage": {
+    "independentReviewClaimIds": [],
+    "reviewed": false,
+    "failedClaimIds": [],
+    "pass": true,
+    "evidencePolicy": "independent-observation-required"
+  }
+}

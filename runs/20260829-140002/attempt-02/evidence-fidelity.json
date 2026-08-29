@@ -1,0 +1,1406 @@
+{
+  "pass": true,
+  "status": "passed",
+  "contractSha256": "1ad6151de1a644d47585271aea2ff14ad220f4cb292f3410ec8270e3bf0f23a1",
+  "requirementIds": [
+    "MH-01",
+    "MH-02",
+    "MH-03",
+    "MH-04",
+    "MH-05",
+    "MH-06",
+    "MH-07",
+    "NG-01",
+    "NG-02",
+    "NG-03"
+  ],
+  "criteria": [
+    {
+      "requirementId": "MH-01",
+      "acceptanceId": "AC-MH-01",
+      "probeId": "PR-MH-01",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "player_moved",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event player_moved changed gameplay value"
+    },
+    {
+      "requirementId": "MH-02",
+      "acceptanceId": "AC-MH-02",
+      "probeId": "PR-MH-02",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "node_activated",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event node_activated changed gameplay value"
+    },
+    {
+      "requirementId": "MH-03",
+      "acceptanceId": "AC-MH-03",
+      "probeId": "PR-MH-03",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": true,
+      "traceable": true,
+      "detail": "state success reached in verifier scenarios (observed=won)"
+    },
+    {
+      "requirementId": "MH-04",
+      "acceptanceId": "AC-MH-04",
+      "probeId": "PR-MH-04",
+      "kind": "state_reached",
+      "declaredKind": "state_reached",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed",
+      "pass": true,
+      "traceable": true,
+      "detail": "state failure reached in verifier scenarios (observed=gameover)"
+    },
+    {
+      "requirementId": "MH-05",
+      "acceptanceId": "AC-MH-05",
+      "probeId": "PR-MH-05",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "run_restarted",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event run_restarted changed gameplay value"
+    },
+    {
+      "requirementId": "MH-06",
+      "acceptanceId": "AC-MH-06",
+      "probeId": "PR-MH-06",
+      "kind": "layout_no_overlap",
+      "declaredKind": "layout_no_overlap",
+      "strength": null,
+      "eventType": null,
+      "evidenceSource": "harness-observed-canvas-geometry",
+      "pass": true,
+      "traceable": true,
+      "detail": "independent canvas layout observed at mid: 8 HUD regions, no overlap/out-of-bounds issues, with score progress"
+    },
+    {
+      "requirementId": "MH-07",
+      "acceptanceId": "AC-MH-07",
+      "probeId": "PR-MH-07",
+      "kind": "event_value_change",
+      "declaredKind": "event_value_change",
+      "strength": null,
+      "eventType": "hazard_speed_up",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event hazard_speed_up changed gameplay value"
+    },
+    {
+      "requirementId": "NG-01",
+      "acceptanceId": "AC-NG-01",
+      "probeId": "PR-NG-01",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "projectile_fired",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event projectile_fired absent"
+    },
+    {
+      "requirementId": "NG-02",
+      "acceptanceId": "AC-NG-02",
+      "probeId": "PR-NG-02",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "shop_opened",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event shop_opened absent"
+    },
+    {
+      "requirementId": "NG-03",
+      "acceptanceId": "AC-NG-03",
+      "probeId": "PR-NG-03",
+      "kind": "event_absent",
+      "declaredKind": "event_absent",
+      "strength": null,
+      "eventType": "node_auto_activated",
+      "evidenceSource": "generated-game-event-dependent",
+      "pass": true,
+      "traceable": true,
+      "detail": "event node_auto_activated absent"
+    }
+  ],
+  "failures": [],
+  "coverage": {
+    "evaluatedRequirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-03",
+      "MH-04",
+      "MH-05",
+      "MH-06",
+      "MH-07",
+      "NG-01",
+      "NG-02",
+      "NG-03"
+    ],
+    "harnessObservedRequirementIds": [
+      "MH-03",
+      "MH-04",
+      "MH-06"
+    ],
+    "canvasGeometryRequirementIds": [
+      "MH-06"
+    ],
+    "generatedGameEventDependentRequirementIds": [
+      "MH-01",
+      "MH-02",
+      "MH-05",
+      "MH-07",
+      "NG-01",
+      "NG-02",
+      "NG-03"
+    ],
+    "correlatedGeneratedGameEventRequirementIds": [],
+    "independentReviewClaimIds": [],
+    "independentReviewClaims": [],
+    "ambiguousUnknownClaimIdsExcluded": [],
+    "unstructuredBriefContentEvaluated": true,
+    "independentReviewRequired": false,
+    "scope": "Full-brief Product Fidelity routes structured MH/NG requirements to deterministic verifier evidence and every concrete non-ambiguous descriptive UN claim to mandatory independent screenshot/experience review. Ambiguous maybe/optional unknowns remain explicitly non-binding. Independent-review claims are not treated as deterministic PASS and cannot be waived by generated-game self-attestation."
+  },
+  "observedEvents": [
+    {
+      "seq": 1,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 2,
+      "type": "player_moved",
+      "time": 0.167,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 480,
+        "after": 511
+      }
+    },
+    {
+      "seq": 3,
+      "type": "player_moved",
+      "time": 0.317,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 511,
+        "after": 551
+      }
+    },
+    {
+      "seq": 4,
+      "type": "player_moved",
+      "time": 0.467,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 551,
+        "after": 590
+      }
+    },
+    {
+      "seq": 5,
+      "type": "player_moved",
+      "time": 0.633,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 590,
+        "after": 635
+      }
+    },
+    {
+      "seq": 6,
+      "type": "player_moved",
+      "time": 0.8,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 635,
+        "after": 679
+      }
+    },
+    {
+      "seq": 7,
+      "type": "score_changed",
+      "time": 0.817,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 0,
+        "after": 100,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 8,
+      "type": "node_activated",
+      "time": 0.817,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "nodesBefore": 0,
+        "nodesAfter": 1
+      }
+    },
+    {
+      "seq": 9,
+      "type": "player_moved",
+      "time": 0.966,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 679,
+        "after": 723
+      }
+    },
+    {
+      "seq": 10,
+      "type": "player_moved",
+      "time": 1.116,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 723,
+        "after": 763
+      }
+    },
+    {
+      "seq": 11,
+      "type": "player_moved",
+      "time": 1.266,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 763,
+        "after": 802
+      }
+    },
+    {
+      "seq": 12,
+      "type": "player_moved",
+      "time": 1.433,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 802,
+        "after": 847
+      }
+    },
+    {
+      "seq": 13,
+      "type": "player_moved",
+      "time": 1.583,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 847,
+        "after": 886
+      }
+    },
+    {
+      "seq": 14,
+      "type": "player_moved",
+      "time": 1.733,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 886,
+        "after": 926
+      }
+    },
+    {
+      "seq": 15,
+      "type": "player_moved",
+      "time": 1.883,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 926,
+        "after": 942
+      }
+    },
+    {
+      "seq": 16,
+      "type": "hazard_speed_up",
+      "time": 6.033,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "speedBefore": 70,
+        "speedAfter": 80.5
+      }
+    },
+    {
+      "seq": 17,
+      "type": "player_moved",
+      "time": 6.9,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 942,
+        "after": 907
+      }
+    },
+    {
+      "seq": 18,
+      "type": "player_moved",
+      "time": 7.066,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 907,
+        "after": 863
+      }
+    },
+    {
+      "seq": 19,
+      "type": "player_moved",
+      "time": 7.216,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 863,
+        "after": 823
+      }
+    },
+    {
+      "seq": 20,
+      "type": "player_moved",
+      "time": 7.383,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 823,
+        "after": 779
+      }
+    },
+    {
+      "seq": 21,
+      "type": "player_moved",
+      "time": 7.55,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 779,
+        "after": 734
+      }
+    },
+    {
+      "seq": 22,
+      "type": "hazard_speed_up",
+      "time": 7.666,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "speedBefore": 80.5,
+        "speedAfter": 91
+      }
+    },
+    {
+      "seq": 23,
+      "type": "player_moved",
+      "time": 7.716,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 734,
+        "after": 703
+      }
+    },
+    {
+      "seq": 24,
+      "type": "player_moved",
+      "time": 7.866,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 703,
+        "after": 679
+      }
+    },
+    {
+      "seq": 25,
+      "type": "player_moved",
+      "time": 8.033,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 679,
+        "after": 641
+      }
+    },
+    {
+      "seq": 26,
+      "type": "player_moved",
+      "time": 8.183,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 641,
+        "after": 603
+      }
+    },
+    {
+      "seq": 27,
+      "type": "player_moved",
+      "time": 8.35,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 603,
+        "after": 560
+      }
+    },
+    {
+      "seq": 28,
+      "type": "player_moved",
+      "time": 8.5,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 560,
+        "after": 521
+      }
+    },
+    {
+      "seq": 29,
+      "type": "player_moved",
+      "time": 8.65,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 521,
+        "after": 481
+      }
+    },
+    {
+      "seq": 30,
+      "type": "player_moved",
+      "time": 8.816,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 481,
+        "after": 437
+      }
+    },
+    {
+      "seq": 31,
+      "type": "player_moved",
+      "time": 8.983,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 437,
+        "after": 393
+      }
+    },
+    {
+      "seq": 32,
+      "type": "score_changed",
+      "time": 9.016,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 100,
+        "after": 200,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 33,
+      "type": "node_activated",
+      "time": 9.016,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "nodesBefore": 1,
+        "nodesAfter": 2
+      }
+    },
+    {
+      "seq": 34,
+      "type": "player_moved",
+      "time": 9.133,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 393,
+        "after": 353
+      }
+    },
+    {
+      "seq": 35,
+      "type": "player_moved",
+      "time": 9.299,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 353,
+        "after": 309
+      }
+    },
+    {
+      "seq": 36,
+      "type": "player_moved",
+      "time": 9.466,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 309,
+        "after": 265
+      }
+    },
+    {
+      "seq": 37,
+      "type": "player_moved",
+      "time": 9.616,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 265,
+        "after": 225
+      }
+    },
+    {
+      "seq": 38,
+      "type": "player_moved",
+      "time": 9.766,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 225,
+        "after": 185
+      }
+    },
+    {
+      "seq": 39,
+      "type": "player_moved",
+      "time": 9.933,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 185,
+        "after": 145
+      }
+    },
+    {
+      "seq": 40,
+      "type": "score_changed",
+      "time": 11.199,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 200,
+        "after": 300,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 41,
+      "type": "node_activated",
+      "time": 11.199,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "nodesBefore": 2,
+        "nodesAfter": 3
+      }
+    },
+    {
+      "seq": 42,
+      "type": "state_reached",
+      "time": 11.199,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "state": "success"
+      }
+    },
+    {
+      "seq": 43,
+      "type": "game_won",
+      "time": 11.199,
+      "state": "won",
+      "score": 300,
+      "data": {
+        "from": "playing",
+        "to": "won"
+      }
+    },
+    {
+      "seq": 1,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 2,
+      "type": "player_moved",
+      "time": 0.15,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 480,
+        "after": 507
+      }
+    },
+    {
+      "seq": 3,
+      "type": "player_moved",
+      "time": 0.3,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 507,
+        "after": 546
+      }
+    },
+    {
+      "seq": 4,
+      "type": "player_moved",
+      "time": 0.45,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 546,
+        "after": 586
+      }
+    },
+    {
+      "seq": 5,
+      "type": "player_moved",
+      "time": 0.617,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 586,
+        "after": 630
+      }
+    },
+    {
+      "seq": 6,
+      "type": "player_moved",
+      "time": 0.783,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 630,
+        "after": 674
+      }
+    },
+    {
+      "seq": 7,
+      "type": "score_changed",
+      "time": 0.817,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 0,
+        "after": 100,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 8,
+      "type": "node_activated",
+      "time": 0.817,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "nodesBefore": 0,
+        "nodesAfter": 1
+      }
+    },
+    {
+      "seq": 9,
+      "type": "player_moved",
+      "time": 0.933,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 674,
+        "after": 714
+      }
+    },
+    {
+      "seq": 10,
+      "type": "player_moved",
+      "time": 1.1,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 714,
+        "after": 758
+      }
+    },
+    {
+      "seq": 11,
+      "type": "player_moved",
+      "time": 1.25,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 758,
+        "after": 798
+      }
+    },
+    {
+      "seq": 12,
+      "type": "player_moved",
+      "time": 1.417,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 798,
+        "after": 842
+      }
+    },
+    {
+      "seq": 13,
+      "type": "player_moved",
+      "time": 1.583,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 842,
+        "after": 886
+      }
+    },
+    {
+      "seq": 14,
+      "type": "player_moved",
+      "time": 1.733,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 886,
+        "after": 926
+      }
+    },
+    {
+      "seq": 15,
+      "type": "player_moved",
+      "time": 1.9,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 926,
+        "after": 942
+      }
+    },
+    {
+      "seq": 16,
+      "type": "hazard_speed_up",
+      "time": 6.033,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "speedBefore": 70,
+        "speedAfter": 80.5
+      }
+    },
+    {
+      "seq": 17,
+      "type": "player_moved",
+      "time": 6.9,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 942,
+        "after": 902
+      }
+    },
+    {
+      "seq": 18,
+      "type": "player_moved",
+      "time": 7.05,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 902,
+        "after": 863
+      }
+    },
+    {
+      "seq": 19,
+      "type": "player_moved",
+      "time": 7.216,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 863,
+        "after": 818
+      }
+    },
+    {
+      "seq": 20,
+      "type": "player_moved",
+      "time": 7.366,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 818,
+        "after": 779
+      }
+    },
+    {
+      "seq": 21,
+      "type": "player_moved",
+      "time": 7.533,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 779,
+        "after": 734
+      }
+    },
+    {
+      "seq": 22,
+      "type": "hazard_speed_up",
+      "time": 7.65,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "speedBefore": 80.5,
+        "speedAfter": 91
+      }
+    },
+    {
+      "seq": 23,
+      "type": "player_moved",
+      "time": 7.7,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 734,
+        "after": 703
+      }
+    },
+    {
+      "seq": 24,
+      "type": "player_moved",
+      "time": 7.866,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 703,
+        "after": 675
+      }
+    },
+    {
+      "seq": 25,
+      "type": "player_moved",
+      "time": 8.033,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 675,
+        "after": 637
+      }
+    },
+    {
+      "seq": 26,
+      "type": "player_moved",
+      "time": 8.2,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 637,
+        "after": 595
+      }
+    },
+    {
+      "seq": 27,
+      "type": "player_moved",
+      "time": 8.35,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 595,
+        "after": 556
+      }
+    },
+    {
+      "seq": 28,
+      "type": "player_moved",
+      "time": 8.5,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 556,
+        "after": 516
+      }
+    },
+    {
+      "seq": 29,
+      "type": "player_moved",
+      "time": 8.666,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 516,
+        "after": 472
+      }
+    },
+    {
+      "seq": 30,
+      "type": "player_moved",
+      "time": 8.816,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 472,
+        "after": 432
+      }
+    },
+    {
+      "seq": 31,
+      "type": "player_moved",
+      "time": 8.966,
+      "state": "playing",
+      "score": 100,
+      "data": {
+        "before": 432,
+        "after": 393
+      }
+    },
+    {
+      "seq": 32,
+      "type": "score_changed",
+      "time": 9.016,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 100,
+        "after": 200,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 33,
+      "type": "node_activated",
+      "time": 9.016,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "nodesBefore": 1,
+        "nodesAfter": 2
+      }
+    },
+    {
+      "seq": 34,
+      "type": "player_moved",
+      "time": 9.133,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 393,
+        "after": 349
+      }
+    },
+    {
+      "seq": 35,
+      "type": "player_moved",
+      "time": 9.3,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 349,
+        "after": 304
+      }
+    },
+    {
+      "seq": 36,
+      "type": "player_moved",
+      "time": 9.45,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 304,
+        "after": 265
+      }
+    },
+    {
+      "seq": 37,
+      "type": "player_moved",
+      "time": 9.616,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 265,
+        "after": 220
+      }
+    },
+    {
+      "seq": 38,
+      "type": "player_moved",
+      "time": 9.766,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 220,
+        "after": 181
+      }
+    },
+    {
+      "seq": 39,
+      "type": "player_moved",
+      "time": 9.933,
+      "state": "playing",
+      "score": 200,
+      "data": {
+        "before": 181,
+        "after": 145
+      }
+    },
+    {
+      "seq": 40,
+      "type": "score_changed",
+      "time": 11.2,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "before": 200,
+        "after": 300,
+        "delta": 100
+      }
+    },
+    {
+      "seq": 41,
+      "type": "node_activated",
+      "time": 11.2,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "nodesBefore": 2,
+        "nodesAfter": 3
+      }
+    },
+    {
+      "seq": 42,
+      "type": "state_reached",
+      "time": 11.2,
+      "state": "playing",
+      "score": 300,
+      "data": {
+        "state": "success"
+      }
+    },
+    {
+      "seq": 43,
+      "type": "game_won",
+      "time": 11.2,
+      "state": "won",
+      "score": 300,
+      "data": {
+        "from": "playing",
+        "to": "won"
+      }
+    },
+    {
+      "seq": 44,
+      "type": "run_restarted",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "nodesBefore": 3,
+        "nodesAfter": 0
+      }
+    },
+    {
+      "seq": 1,
+      "type": "state_changed",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "from": "title",
+        "to": "playing",
+        "scene": "play"
+      }
+    },
+    {
+      "seq": 2,
+      "type": "hazard_speed_up",
+      "time": 5,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "speedBefore": 70,
+        "speedAfter": 91
+      }
+    },
+    {
+      "seq": 3,
+      "type": "player_moved",
+      "time": 5.133,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 480,
+        "after": 463
+      }
+    },
+    {
+      "seq": 4,
+      "type": "player_moved",
+      "time": 5.283,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 463,
+        "after": 457
+      }
+    },
+    {
+      "seq": 5,
+      "type": "player_moved",
+      "time": 5.433,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 457,
+        "after": 454
+      }
+    },
+    {
+      "seq": 6,
+      "type": "player_moved",
+      "time": 5.583,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 454,
+        "after": 453
+      }
+    },
+    {
+      "seq": 7,
+      "type": "hazard_speed_up",
+      "time": 5.9,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "speedBefore": 91,
+        "speedAfter": 101.5
+      }
+    },
+    {
+      "seq": 8,
+      "type": "player_moved",
+      "time": 6.033,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 453,
+        "after": 475
+      }
+    },
+    {
+      "seq": 9,
+      "type": "player_moved",
+      "time": 6.2,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 475,
+        "after": 484
+      }
+    },
+    {
+      "seq": 10,
+      "type": "player_moved",
+      "time": 6.367,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 484,
+        "after": 487
+      }
+    },
+    {
+      "seq": 11,
+      "type": "player_moved",
+      "time": 6.533,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "before": 487,
+        "after": 489
+      }
+    },
+    {
+      "seq": 12,
+      "type": "hazard_speed_up",
+      "time": 7.817,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "speedBefore": 101.5,
+        "speedAfter": 112
+      }
+    },
+    {
+      "seq": 13,
+      "type": "hazard_speed_up",
+      "time": 13.016,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "speedBefore": 112,
+        "speedAfter": 122.5
+      }
+    },
+    {
+      "seq": 14,
+      "type": "hazard_speed_up",
+      "time": 18.216,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "speedBefore": 122.5,
+        "speedAfter": 133
+      }
+    },
+    {
+      "seq": 15,
+      "type": "hazard_speed_up",
+      "time": 23.416,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "speedBefore": 133,
+        "speedAfter": 143.5
+      }
+    },
+    {
+      "seq": 16,
+      "type": "hazard_speed_up",
+      "time": 28.616,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "speedBefore": 143.5,
+        "speedAfter": 154
+      }
+    },
+    {
+      "seq": 17,
+      "type": "hazard_speed_up",
+      "time": 33.815,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "speedBefore": 154,
+        "speedAfter": 164.5
+      }
+    },
+    {
+      "seq": 18,
+      "type": "hazard_speed_up",
+      "time": 39.015,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "speedBefore": 164.5,
+        "speedAfter": 175
+      }
+    },
+    {
+      "seq": 19,
+      "type": "hazard_speed_up",
+      "time": 44.215,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "speedBefore": 175,
+        "speedAfter": 185.5
+      }
+    },
+    {
+      "seq": 20,
+      "type": "hazard_speed_up",
+      "time": 49.415,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "speedBefore": 185.5,
+        "speedAfter": 196
+      }
+    },
+    {
+      "seq": 21,
+      "type": "state_reached",
+      "time": 52.015,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "state": "failure"
+      }
+    },
+    {
+      "seq": 22,
+      "type": "game_over",
+      "time": 52.015,
+      "state": "gameover",
+      "score": 0,
+      "data": {
+        "from": "playing",
+        "to": "gameover"
+      }
+    },
+    {
+      "seq": 23,
+      "type": "run_restarted",
+      "time": 0,
+      "state": "playing",
+      "score": 0,
+      "data": {
+        "nodesBefore": 0,
+        "nodesAfter": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "improvement-analysis-v1",
+  "id": "auto-production-run-63c55d700880c1da",
+  "triggerRef": "learning/triggers/auto-production-run-63c55d700880c1da.json",
+  "aggregateRef": "learning/aggregates/auto-production-run-63c55d700880c1da.json",
+  "rootCauseRef": null,
+  "event": {
+    "kind": "production-run",
+    "id": "20260829-140002"
+  },
+  "scope": "engineering",
+  "authority": {
+    "may": [
+      "propose-scoped-learning-candidate"
+    ],
+    "mustNot": [
+      "validate-candidate",
+      "activate-candidate",
+      "promote-candidate",
+      "activate-production",
+      "edit-production",
+      "change-own-authority",
+      "weaken-release-gates",
+      "start-paid-work"
+    ]
+  },
+  "facts": [
+    "Recurring deterministic cross-run failure evidence involving current production event 20260829-140002: product-fidelity:MH-03:PR-MH-03:state_reached:failed x3 across 2 runs.",
+    "Independent source runs for those recurring signatures: 2."
+  ],
+  "findingIds": [],
+  "evaluationFailureClass": null,
+  "conclusion": "Evidence supports one inactive hypothesis candidate (candidate-production-run-63c55d700880c1da); validation and activation remain prohibited.",
+  "candidateId": "candidate-production-run-63c55d700880c1da",
+  "blocked": null,
+  "canValidate": false,
+  "canActivate": false
+}

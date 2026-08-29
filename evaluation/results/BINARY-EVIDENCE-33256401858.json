@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "game-factory.binary-evidence-manifest/v1",
+  "generatedAt": "2026-08-29T14:08:51.969Z",
+  "storage": {
+    "provider": "github-actions-artifact",
+    "artifactName": "run-binary-evidence-33256401858",
+    "workflowRunId": "33256401858",
+    "retentionDays": 30,
+    "durabilityClass": "bounded-retention-object-storage"
+  },
+  "files": [
+    {
+      "path": "drafts/lumen-current-signal-garden/activity-1-gameplay.png",
+      "sha256": "91bc972d3914dd53f7e964cd2e69488dc5d79bb2d4bff34b882ce1ecad7b934c",
+      "bytes": 366982
+    },
+    {
+      "path": "drafts/lumen-current-signal-garden/activity-2-gameplay.png",
+      "sha256": "a340c6b9e160d259cb2e8f44fa06f442a491b6416a09da2d29b0207c8012b6c6",
+      "bytes": 347396
+    },
+    {
+      "path": "drafts/lumen-current-signal-garden/shot-2-gameplay.png",
+      "sha256": "567ffa84f237e05c53a9fb9accb16caea3bd19b16297ab58b118570dce1f53f4",
+      "bytes": 338097
+    },
+    {
+      "path": "drafts/lumen-current-signal-garden/shot-3-gameplay.png",
+      "sha256": "96a1a6cf3c27c1a7a2d225d62a4bcba84700525e57a64185cd575728ef2ff156",
+      "bytes": 369992
+    },
+    {
+      "path": "runs/20260829-140002/attempt-01/shots/shot-1-title.png",
+      "sha256": "f721044efd1a99f40c875314b54f5d0a3fd1699c6830be1c9f348db188b37369",
+      "bytes": 45089
+    },
+    {
+      "path": "runs/20260829-140002/attempt-01/shots/shot-2-gameplay.png",
+      "sha256": "c80804413fe3e2b653fbdc190676b249544ea51b547f7fcd5a9fe8adbcc87d52",
+      "bytes": 323063
+    },
+    {
+      "path": "runs/20260829-140002/attempt-01/shots/shot-3-gameplay.png",
+      "sha256": "57689e474c18416c68c3fcc064a4c29baf3ec36cbee6fdea63c54328c06403a5",
+      "bytes": 318935
+    },
+    {
+      "path": "runs/20260829-140002/attempt-02/shots/shot-1-title.png",
+      "sha256": "f721044efd1a99f40c875314b54f5d0a3fd1699c6830be1c9f348db188b37369",
+      "bytes": 45089
+    },
+    {
+      "path": "runs/20260829-140002/attempt-02/shots/shot-2-gameplay.png",
+      "sha256": "567ffa84f237e05c53a9fb9accb16caea3bd19b16297ab58b118570dce1f53f4",
+      "bytes": 338097
+    },
+    {
+      "path": "runs/20260829-140002/attempt-02/shots/shot-3-gameplay.png",
+      "sha256": "96a1a6cf3c27c1a7a2d225d62a4bcba84700525e57a64185cd575728ef2ff156",
+      "bytes": 369992
+    }
+  ]
+}

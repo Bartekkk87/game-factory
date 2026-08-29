@@ -23,11 +23,19 @@
       "date": "2026-08-29T08:45:53.892Z",
       "status": "draft",
       "score": 7.1
+    },
+    {
+      "slug": "lumen-current-signal-garden",
+      "title": "Lumen Current: Signal Garden",
+      "genre": "action",
+      "date": "2026-08-29T14:08:51.724Z",
+      "status": "draft",
+      "score": 8
     }
   ],
   "lessons": [],
   "stats": {
-    "runs": 42,
+    "runs": 43,
     "published": 0,
     "rejected": 1,
     "failed": 32,
