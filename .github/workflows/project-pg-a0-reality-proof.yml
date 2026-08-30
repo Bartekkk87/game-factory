@@ -8,6 +8,7 @@ on:
       - '.github/project-pg-a0-reality-proof-trigger'
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 

@@ -17,6 +17,7 @@ import {
   validateTaskPrAuthorityRecord,
   validateTaskPrBinding
 } from './git-task-pr.mjs';
+import { dispatchTrustedProjectPr } from './trusted-pr-dispatch.mjs';
 
 function git(args, cwd, { allowFailure = false } = {}) {
   const result = spawnSync('git', args, { cwd, encoding: 'utf8' });
@@ -229,7 +230,9 @@ async function githubCreatePr({ repository, token, context, task, binding, fetch
   return response.json();
 }
 
-async function publishVerifiedTask({ context, task, promotion, repository, token, fetchImpl, push }) {
+async function publishVerifiedTask({
+  context, task, promotion, repository, token, fetchImpl, dispatchFetchImpl, push
+}) {
   assertTaskGitContext(context, task);
   const promoted = validatePromotedWorkspace(context, task, promotion);
   stagePromotedWorkspace(context, promoted);
@@ -259,7 +262,15 @@ async function publishVerifiedTask({ context, task, promotion, repository, token
   const durableBinding = parseTaskPrBindingBody(pull?.body);
   validateTaskPrAuthorityRecord(durableBinding, pull);
   validateTaskPrBinding(durableBinding, { task, promotion, expectedHeadSha: pull.head.sha });
-  return Object.freeze({ binding: durableBinding, pullRequest: pull });
+  const provenanceDispatch = await dispatchTrustedProjectPr({
+    repository,
+    token,
+    pull,
+    task,
+    trustedRef: context.baseBranch,
+    fetchImpl: dispatchFetchImpl
+  });
+  return Object.freeze({ binding: durableBinding, pullRequest: pull, provenanceDispatch });
 }
 
 function rollbackTaskGitBranch(context) {
@@ -320,6 +331,7 @@ export async function runPgA0Task({
   repository = process.env.GITHUB_REPOSITORY,
   token = process.env.GITHUB_TOKEN,
   fetchImpl = globalThis.fetch,
+  dispatchFetchImpl = fetchImpl,
   push = true,
   verifiedAt
 } = {}) {
@@ -362,6 +374,7 @@ export async function runPgA0Task({
       repository,
       token,
       fetchImpl,
+      dispatchFetchImpl,
       push
     });
     validateTaskPrBinding(published.binding, {
@@ -375,6 +388,7 @@ export async function runPgA0Task({
       contextSelectionSha256: contextEvidence.selectionSha256,
       promotion,
       binding: published.binding,
+      provenanceDispatch: published.provenanceDispatch,
       pullRequest: {
         number: published.pullRequest.number,
         htmlUrl: published.pullRequest.html_url,
