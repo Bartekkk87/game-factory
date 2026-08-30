@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "project-game.manifest/v1",
+  "projectId": "kepler-outpost",
+  "ownerVision": {
+    "text": "Prove Project Game Mode can autonomously evolve a persistent multi-file browser game across bounded milestones without whole-project regeneration.",
+    "sha256": "5767ad9c7f7856a4ca1dde2dac763417f8414826958564b01c0c6ef5a4a134da"
+  },
+  "projectContract": {
+    "requirements": [
+      {
+        "id": "REQ-KEPLER-CORE",
+        "statement": "The browser game exposes a deterministic power-and-mining core loop that is visibly playable."
+      },
+      {
+        "id": "REQ-KEPLER-PERSIST",
+        "statement": "Durable game state can be saved through the host-owned persistence bridge, survive a host-page reload, and be restored equivalently."
+      },
+      {
+        "id": "REQ-KEPLER-EVOLVE",
+        "statement": "A later bounded milestone can extend the project while preserving previously verified behavior through inherited regressions."
+      }
+    ],
+    "noGos": [
+      "Do not regenerate the whole project for a normal task.",
+      "Do not modify verification tests from an Engineer task.",
+      "Do not use external URLs or runtime assets.",
+      "Do not bypass the host-owned persistence bridge."
+    ],
+    "invariants": [
+      "Simulation actions are deterministic for identical input state and action.",
+      "Mining consumes one unit of power and produces one unit of ore.",
+      "Persisted durable state after reload equals the state that was saved."
+    ]
+  },
+  "layout": {
+    "sourceDir": "src",
+    "buildDir": "build",
+    "testsDir": "tests",
+    "dataDir": "data",
+    "assetsDir": "assets",
+    "persistenceDir": "persistence"
+  },
+  "runtimeAdapter": {
+    "id": "web-v0.1",
+    "contractRef": "persistence/web-runtime.json"
+  },
+  "moduleGraph": {
+    "src/play.html": [
+      "src/play.mjs"
+    ],
+    "src/play.mjs": [
+      "src/simulation.mjs",
+      "src/state.mjs"
+    ],
+    "src/simulation.mjs": [
+      "src/state.mjs"
+    ],
+    "src/state.mjs": []
+  },
+  "testMap": {
+    "src/play.html": [
+      "tests/browser.mjs"
+    ],
+    "src/play.mjs": [
+      "tests/browser.mjs",
+      "tests/integration.mjs"
+    ],
+    "src/simulation.mjs": [
+      "tests/integration.mjs",
+      "tests/regression.mjs",
+      "tests/unit.mjs"
+    ],
+    "src/state.mjs": [
+      "tests/integration.mjs",
+      "tests/regression.mjs",
+      "tests/unit.mjs"
+    ]
+  },
+  "contentSchemas": [],
+  "immutable": true,
+  "contractSha256": "48828f37bbc3a23b47f55d2a9d7e34af32c1a035c5372196eb81e66ab3b882e9"
+}

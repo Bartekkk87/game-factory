@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "project-game.roadmap/v1",
+  "projectId": "kepler-outpost",
+  "milestones": [
+    {
+      "id": "M1",
+      "title": "Persistent playable outpost core",
+      "status": "owner-approved"
+    }
+  ]
+}

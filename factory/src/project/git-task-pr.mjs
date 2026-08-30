@@ -1,4 +1,5 @@
 import { assertSafeId, assertSha256, validateTaskContract } from './contracts.mjs';
+import { PROJECT_BOOTSTRAP_TASK_ID, validateProjectBootstrapSpec } from './bootstrap-contract.mjs';
 
 const PR_BINDING_SCHEMA = 'project-game.task-pr-binding/v1';
 const GIT_COMMIT_SHA = /^[0-9a-f]{40}$/;
@@ -43,6 +44,36 @@ export function createTaskPrBinding({ task, promotion, baseRef, baseHeadSha, hea
     headSha: assertGitCommitSha(headSha, 'task PR binding headSha')
   });
   return validateTaskPrBinding(binding, { task: checkedTask, promotion, expectedHeadSha: binding.headSha });
+}
+
+export function createBootstrapPrBinding({
+  spec,
+  baselineTreeSha256,
+  evidenceSha256,
+  baseRef,
+  baseHeadSha,
+  headRef,
+  headSha
+} = {}) {
+  const checkedSpec = validateProjectBootstrapSpec(spec);
+  const binding = Object.freeze({
+    schemaVersion: PR_BINDING_SCHEMA,
+    projectId: checkedSpec.projectId,
+    taskId: PROJECT_BOOTSTRAP_TASK_ID,
+    taskContractSha256: checkedSpec.contractSha256,
+    baselineTreeSha256: assertSha256(baselineTreeSha256, 'bootstrap PR binding baselineTreeSha256'),
+    evidenceSha256: assertSha256(evidenceSha256, 'bootstrap PR binding evidenceSha256'),
+    baseRef: checkedRef(baseRef, 'bootstrap PR binding baseRef'),
+    baseHeadSha: assertGitCommitSha(baseHeadSha, 'bootstrap PR binding baseHeadSha'),
+    headRef: checkedRef(headRef, 'bootstrap PR binding headRef'),
+    headSha: assertGitCommitSha(headSha, 'bootstrap PR binding headSha')
+  });
+  return validateBootstrapPrBinding(binding, {
+    spec: checkedSpec,
+    baselineTreeSha256,
+    evidenceSha256,
+    expectedHeadSha: binding.headSha
+  });
 }
 
 export function taskPrBindingBody(binding) {
@@ -130,6 +161,36 @@ export function validateTaskPrBinding(binding, { task, promotion, expectedHeadSh
   assertGitCommitSha(binding.baseHeadSha, 'task PR binding baseHeadSha');
   if (expectedHeadSha && headSha !== assertGitCommitSha(expectedHeadSha, 'expected task PR head')) {
     throw new Error('task PR head moved after binding');
+  }
+  return binding;
+}
+
+export function validateBootstrapPrBinding(binding, {
+  spec,
+  baselineTreeSha256,
+  evidenceSha256,
+  expectedHeadSha = null
+} = {}) {
+  const checkedSpec = validateProjectBootstrapSpec(spec);
+  if (binding?.schemaVersion !== PR_BINDING_SCHEMA) throw new Error('bootstrap PR binding schema invalid');
+  if (binding.projectId !== checkedSpec.projectId) throw new Error('bootstrap PR binding project mismatch');
+  if (binding.taskId !== PROJECT_BOOTSTRAP_TASK_ID) throw new Error('bootstrap PR binding task mismatch');
+  if (binding.taskContractSha256 !== checkedSpec.contractSha256) {
+    throw new Error('bootstrap PR binding spec mismatch');
+  }
+  if (binding.baselineTreeSha256 !== assertSha256(baselineTreeSha256, 'bootstrap expected tree')) {
+    throw new Error('bootstrap PR binding baseline mismatch');
+  }
+  if (binding.evidenceSha256 !== assertSha256(evidenceSha256, 'bootstrap expected evidence')) {
+    throw new Error('bootstrap PR binding evidence mismatch');
+  }
+  const expectedRef = `project-task/${checkedSpec.projectId}/${PROJECT_BOOTSTRAP_TASK_ID}`;
+  if (binding.headRef !== expectedRef) throw new Error('bootstrap PR binding branch mismatch');
+  checkedRef(binding.baseRef, 'bootstrap PR binding baseRef');
+  const checkedHead = assertGitCommitSha(binding.headSha, 'bootstrap PR binding headSha');
+  assertGitCommitSha(binding.baseHeadSha, 'bootstrap PR binding baseHeadSha');
+  if (expectedHeadSha && checkedHead !== assertGitCommitSha(expectedHeadSha, 'bootstrap expected head')) {
+    throw new Error('bootstrap PR head moved after binding');
   }
   return binding;
 }

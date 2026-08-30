@@ -1,0 +1,45 @@
+name: Owner Project Bootstrap
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_id:
+        description: Factory-registered Owner-approved Project ID
+        required: true
+        type: string
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: project-bootstrap-${{ inputs.project_id }}
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout protected-main authority
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Configure governed bootstrap Git identity
+        run: |
+          git config user.name "Owner Project Bootstrap"
+          git config user.email "project-bootstrap@example.invalid"
+
+      - name: Execute bounded project bootstrap
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GF_PROJECT_BOOTSTRAP_ID: ${{ inputs.project_id }}
+        run: node factory/src/project/run-project-bootstrap.mjs

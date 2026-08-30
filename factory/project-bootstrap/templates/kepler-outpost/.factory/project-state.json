@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "project-game.state/v1",
+  "projectId": "kepler-outpost",
+  "baseline": null,
+  "baselineHistory": [],
+  "milestones": [],
+  "verifiedCapabilities": [],
+  "regressions": [],
+  "technicalDebt": [],
+  "relevantLessons": [],
+  "saveSchemaVersion": null,
+  "buildVersion": null,
+  "lastSuccessfulRegressionBaseline": null,
+  "inFlight": null
+}

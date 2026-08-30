@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "project-game.task/v1",
+  "taskId": "KEPLER-M1-T1",
+  "projectId": "kepler-outpost",
+  "milestoneId": "M1",
+  "title": "Establish playable persistent outpost core",
+  "scope": {
+    "add": [],
+    "modify": [
+      "src/play.html",
+      "src/play.mjs",
+      "src/simulation.mjs",
+      "src/state.mjs"
+    ],
+    "delete": [],
+    "protected": [
+      "persistence",
+      "tests"
+    ],
+    "maxFilesChanged": 4
+  },
+  "acceptance": [
+    {
+      "id": "AC-KEPLER-M1-SIM",
+      "statement": "Generate Power followed by Mine Ore deterministically yields power 1, ore 1, and turn 2 from the initial state."
+    },
+    {
+      "id": "AC-KEPLER-M1-UI",
+      "statement": "A real Chromium session boots the game, exposes visible power, ore, and turn state, and both core actions visibly update that state."
+    },
+    {
+      "id": "AC-KEPLER-M1-SAVE",
+      "statement": "After changing the game state, Save followed by host-page reload and Load restores the complete durable power, ore, and turn state."
+    }
+  ],
+  "verification": {
+    "checks": [
+      {
+        "id": "unit-core",
+        "level": "L2",
+        "kind": "command",
+        "acceptanceIds": [
+          "AC-KEPLER-M1-SIM"
+        ],
+        "command": "node tests/unit.mjs",
+        "invariantRef": null,
+        "regressionCapabilityIds": [],
+        "independent": true
+      },
+      {
+        "id": "integration-core",
+        "level": "L4",
+        "kind": "command",
+        "acceptanceIds": [
+          "AC-KEPLER-M1-SIM"
+        ],
+        "command": "node tests/integration.mjs",
+        "invariantRef": null,
+        "regressionCapabilityIds": [],
+        "independent": true
+      },
+      {
+        "id": "regression-core",
+        "level": "L5",
+        "kind": "command",
+        "acceptanceIds": [
+          "AC-KEPLER-M1-SIM"
+        ],
+        "command": "node tests/regression.mjs",
+        "invariantRef": null,
+        "regressionCapabilityIds": [],
+        "independent": true
+      },
+      {
+        "id": "browser-persistence",
+        "level": "L6",
+        "kind": "command",
+        "acceptanceIds": [
+          "AC-KEPLER-M1-SAVE",
+          "AC-KEPLER-M1-UI"
+        ],
+        "command": "node tests/browser.mjs",
+        "invariantRef": null,
+        "regressionCapabilityIds": [],
+        "independent": true
+      }
+    ]
+  },
+  "context": {
+    "targetFiles": [
+      "src/play.html",
+      "src/play.mjs",
+      "src/simulation.mjs",
+      "src/state.mjs"
+    ],
+    "dependencyRoots": [
+      "persistence/web-runtime.json"
+    ],
+    "testFiles": [
+      "tests/browser.mjs",
+      "tests/integration.mjs",
+      "tests/regression.mjs",
+      "tests/unit.mjs"
+    ],
+    "decisionTags": [],
+    "lessonTags": [],
+    "maxFiles": 20,
+    "maxBytes": 120000
+  },
+  "immutable": true,
+  "contractSha256": "8e073b8afd2c7a15cdfb4bddfb7b181be6ba5ca74e843ce60af50f3819a7054d"
+}
