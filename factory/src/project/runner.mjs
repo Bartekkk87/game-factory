@@ -25,6 +25,12 @@ function git(args, cwd, { allowFailure = false } = {}) {
   return { status: result.status, stdout: String(result.stdout || '').trim() };
 }
 
+function deepFreeze(value) {
+  if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
+  for (const child of Object.values(value)) deepFreeze(child);
+  return Object.freeze(value);
+}
+
 function projectRepoPath(repoRoot, projectRoot, projectId) {
   const relative = path.relative(path.resolve(repoRoot), path.resolve(projectRoot)).split(path.sep).join('/');
   if (!relative || relative.startsWith('../') || path.isAbsolute(relative)) {
@@ -77,6 +83,19 @@ function prepareTaskGitBranch({ repoRoot, projectRoot, task, baseBranch }) {
   return { root, projectPath, baseBranch, baseHeadSha, branchName, remotePushed: false };
 }
 
+function assertGitBaseUnchanged(context, { requireClean = false } = {}) {
+  const currentBranch = git(['rev-parse', '--abbrev-ref', 'HEAD'], context.root).stdout;
+  if (currentBranch !== context.branchName) throw new Error('task Git branch changed outside runner authority');
+  const currentHead = assertGitCommitSha(git(['rev-parse', 'HEAD'], context.root).stdout, 'task Git current head');
+  if (currentHead !== context.baseHeadSha) throw new Error('task Git head changed outside runner authority');
+  if (git(['diff', '--cached', '--name-only'], context.root).stdout) {
+    throw new Error('task Git index changed outside runner authority');
+  }
+  if (requireClean && git(['status', '--porcelain', '--untracked-files=all'], context.root).stdout) {
+    throw new Error('Engineer requester mutated repository outside returned patch operations');
+  }
+}
+
 function assertTaskGitContext(context, task) {
   const expectedProjectPath = projectRepoPath(
     context.root,
@@ -87,13 +106,7 @@ function assertTaskGitContext(context, task) {
   const expectedBranch = `project-task/${task.projectId}/${task.taskId}`;
   if (context.branchName !== expectedBranch) throw new Error('task Git branch identity changed');
   assertGitCommitSha(context.baseHeadSha, 'task Git base head');
-  const currentBranch = git(['rev-parse', '--abbrev-ref', 'HEAD'], context.root).stdout;
-  if (currentBranch !== context.branchName) throw new Error('task Git branch changed before publish');
-  const currentHead = assertGitCommitSha(git(['rev-parse', 'HEAD'], context.root).stdout, 'task Git pre-commit head');
-  if (currentHead !== context.baseHeadSha) throw new Error('task Git head changed before verified commit');
-  if (git(['diff', '--cached', '--name-only'], context.root).stdout) {
-    throw new Error('task Git index changed before verified commit');
-  }
+  assertGitBaseUnchanged(context);
 }
 
 function loadPromotedEvidence(projectRoot, task, promotion) {
@@ -238,6 +251,7 @@ function rollbackTaskGitBranch(context) {
   const currentBranch = git(['rev-parse', '--abbrev-ref', 'HEAD'], context.root, { allowFailure: true }).stdout;
   if (currentBranch === context.branchName) {
     git(['reset', '--hard', context.baseHeadSha], context.root);
+    git(['clean', '-fd', '--', context.projectPath], context.root);
     git(['switch', context.baseBranch], context.root);
   } else if (currentBranch && currentBranch !== context.baseBranch) {
     git(['switch', context.baseBranch], context.root, { allowFailure: true });
@@ -289,21 +303,24 @@ export async function runPgA0Task({
   const task = loadApprovedTask(projectRoot, manifest, taskId, ownerTaskContractSha256);
   const milestoneRef = `milestones/${task.milestoneId}.json`;
   const context = buildProjectContext({ projectRoot, manifest, task, milestoneRef });
+  const contextEvidence = Object.freeze({
+    schemaVersion: context.schemaVersion,
+    selectionSha256: context.selectionSha256,
+    selectedFileCount: context.selectedFileCount,
+    selectedBytes: context.selectedBytes
+  });
   const gitContext = prepareTaskGitBranch({ repoRoot, projectRoot, task, baseBranch });
 
   try {
-    const engineer = checkedEngineerResult(await requestEngineerPatch(Object.freeze({ manifest, task, context })));
+    const engineerRequest = deepFreeze(structuredClone({ manifest, task, context }));
+    const engineer = checkedEngineerResult(await requestEngineerPatch(engineerRequest));
+    assertGitBaseUnchanged(gitContext, { requireClean: true });
     const transaction = prepareTaskTransaction({ projectRoot, task, operations: engineer.operations });
     const promotion = commitVerifiedTransaction(transaction, {
       modelEvidence: engineer.modelEvidence,
       operationEvidence: {
         operation: 'project-task',
-        context: {
-          schemaVersion: context.schemaVersion,
-          selectionSha256: context.selectionSha256,
-          selectedFileCount: context.selectedFileCount,
-          selectedBytes: context.selectedBytes
-        }
+        context: contextEvidence
       },
       verifiedAt
     });
@@ -328,7 +345,7 @@ export async function runPgA0Task({
     return Object.freeze({
       status: 'pr-open',
       taskId: task.taskId,
-      contextSelectionSha256: context.selectionSha256,
+      contextSelectionSha256: contextEvidence.selectionSha256,
       promotion,
       binding: published.binding,
       pullRequest: {
