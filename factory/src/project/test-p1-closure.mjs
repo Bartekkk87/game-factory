@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import {
   createTaskContract,
   sha256
@@ -222,6 +223,8 @@ function modifyOperation() {
 
 function proveF2PrimitiveWorkspaceConfinement() {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'gf-p1-f2-'));
+  const gitInit = spawnSync('git', ['init'], { cwd: root, encoding: 'utf8' });
+  assert.equal(gitInit.status, 0, `git init failed: ${gitInit.stderr || gitInit.stdout}`);
   const projectRoot = initializeFixture(root, 'expected-project');
   const otherRoot = initializeFixture(root, 'other-project');
   const task = taskFor('expected-project', 'TASK-F2');
@@ -237,7 +240,7 @@ function proveF2PrimitiveWorkspaceConfinement() {
 
     assert.throws(
       () => prepareTaskTransaction({ projectRoot: root, task, operations: [modifyOperation()] }),
-      /repoRoot\/projects|inside repoRoot\/projects/
+      /exactly repoRoot\/projects\/expected-project/
     );
 
     const sibling = path.join(root, 'sibling');
@@ -255,6 +258,17 @@ function proveF2PrimitiveWorkspaceConfinement() {
       /exactly repoRoot\/projects\/expected-project/
     );
     assert.equal(fs.readFileSync(path.join(otherRoot, 'src', 'value.mjs'), 'utf8'), ORIGINAL_VALUE);
+
+    const fakeRepoShape = fs.mkdtempSync(path.join(os.tmpdir(), 'gf-p1-f2-fake-repo-'));
+    try {
+      const fakeProjectRoot = initializeFixture(fakeRepoShape, 'expected-project');
+      assert.throws(
+        () => prepareTaskTransaction({ projectRoot: fakeProjectRoot, task, operations: [modifyOperation()] }),
+        /inside a Git repository/
+      );
+    } finally {
+      fs.rmSync(fakeRepoShape, { recursive: true, force: true });
+    }
 
     assert.throws(
       () => applyPatchToStaging({
