@@ -16,23 +16,16 @@ function realDirectory(candidate, field) {
 
 function gitRepoRoot(projectRoot) {
   const result = spawnSync('git', ['-C', projectRoot, 'rev-parse', '--show-toplevel'], { encoding: 'utf8' });
-  if (result.status !== 0) return null;
+  if (result.status !== 0) throw new Error('project root must be inside a Git repository');
   const text = String(result.stdout || '').trim();
-  return text ? fs.realpathSync(path.resolve(text)) : null;
-}
-
-function fallbackRepoRoot(projectRoot) {
-  const projectsDir = path.dirname(projectRoot);
-  if (path.basename(projectsDir) !== 'projects') return null;
-  return path.dirname(projectsDir);
+  if (!text) throw new Error('Git repository root is missing');
+  return fs.realpathSync(path.resolve(text));
 }
 
 export function authorizeProjectWorkspace({ projectRoot, projectId } = {}) {
   const checkedProjectId = assertSafeId(projectId, 'workspace projectId');
   const supplied = realDirectory(projectRoot, 'project root');
-  const repoRoot = gitRepoRoot(supplied) || fallbackRepoRoot(supplied);
-  if (!repoRoot) throw new Error('project root is not inside repoRoot/projects');
-  const realRepoRoot = realDirectory(repoRoot, 'repo root');
+  const realRepoRoot = realDirectory(gitRepoRoot(supplied), 'repo root');
   const expectedPath = path.join(realRepoRoot, 'projects', checkedProjectId);
   const expected = realDirectory(expectedPath, 'expected project root');
   if (supplied !== expected) {
