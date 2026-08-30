@@ -309,11 +309,35 @@ async function proveRemotePushIsRolledBackOnGithubFailure() {
   }
 }
 
+async function proveRemoteCleanupFailureIsVisible() {
+  const fixture = initializeFixture({ withRemote: true });
+  try {
+    command(os.tmpdir(), 'git', [
+      '--git-dir', fixture.remoteRoot, 'config', 'receive.denyDeletes', 'true'
+    ]);
+    await assert.rejects(runPgA0Task(runOptions(fixture, {
+      requestEngineerPatch: async () => goodEngineerResult(),
+      fetchImpl: async () => ({ ok: false, status: 503 }),
+      push: true
+    })), (error) => {
+      assert.equal(error instanceof AggregateError, true);
+      assert.match(error.message, /GitHub task PR creation failed: HTTP 503/);
+      assert.match(error.message, /task rollback remote cleanup failed/);
+      return true;
+    });
+    assertRolledBack(fixture);
+    assert.notEqual(git(fixture.root, ['ls-remote', '--heads', 'origin', TASK_BRANCH]).stdout, '');
+  } finally {
+    cleanupFixture(fixture);
+  }
+}
+
 await proveEngineerMutationFailsClosed();
 await proveStagedOutsideProjectFailsClosed();
 await proveOutOfScopePatchFailsClosed();
 await proveWrongPrHeadFailsClosed();
 await proveWrongPrBaseFailsClosed();
 await proveRemotePushIsRolledBackOnGithubFailure();
+await proveRemoteCleanupFailureIsVisible();
 
 console.log('project PG-A0 negative trust-boundary selftest: PASS');
