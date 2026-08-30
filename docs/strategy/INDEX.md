@@ -8,7 +8,7 @@ This index prevents dated strategy snapshots from silently competing for authori
 2. `PROJECT-GAME-MODE-V0.1-ARCHITECTURE.md` — canonical scoped architecture for the parallel persistent Project Game execution layer.
 3. `PROJECT-GAME-MODE-V0.1-IMPLEMENTATION-CATALOG.md` — canonical bounded Foundation implementation catalog.
 4. `PROJECT-GAME-MODE-V0.1-FALSIFICATION.md` — canonical adversarial findings and scale boundary.
-5. `PROJECT-GAME-MODE-V0.1-HANDOFF.md` — current bounded Project Game continuation handoff.
+5. `PROJECT-GAME-MODE-V0.1-HANDOFF.md` — current bounded Project Game remediation evidence and continuation handoff for PR #66.
 6. `INDEPENDENT-REAUDIT-REMEDIATION-CLOSURE-2026-08-29.md` — canonical closure record for the independent re-audit residuals, including the trusted required-check root, hardened Learning provenance, repair-budget accounting, transient memory-state handling and exact-main verification.
 7. `PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md` — canonical project-progress snapshot for its role until a newer progress snapshot explicitly supersedes it.
 

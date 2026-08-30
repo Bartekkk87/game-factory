@@ -29,14 +29,22 @@
 - browser suites: not locally runnable because the Playwright Chromium download endpoint timed out; exact-head GitHub CI is required;
 - no historical evidence was changed and no fake PASS fixture was added.
 
+## Exact-head GitHub evidence
+
+The first pushed remediation code/docs head `9f01b933adf99bb5b4239af2d645cc835e45b86e` passed both authoritative checks:
+
+- Branch Verifier `33298437970`: SUCCESS, including Playwright browser proofs, existing Micro-Game verifier suites and Golden Corpus;
+- Trusted PR Selftest Gate `33298450479`: SUCCESS on the same candidate head.
+
+The final documentation-only head must pass those checks again. Because a commit cannot contain the workflow run ID that is created only after that commit exists, the final exact-head run IDs belong in PR #66, Issue #62 and the canonical Notion progress page.
+
 ## Required next actions
 
-1. Push reviewable commits to the remediation branch and open a new PR against current `main`.
-2. Require both branch verifier and Trusted Gate success on the exact PR head.
-3. Review the transaction trust boundary and confirm the negative tests fail against `e8228a7` and pass on the remediation head.
-4. Update Issue #62 and the canonical Notion page with exact head SHA, PR and workflow evidence.
-5. Merge only the remediation PR after review. Leave PR #64 and its historical evidence untouched.
-6. Only after merge, implement the zero-paid PG-A0 runner with task-PR Git-head binding. Do not start the Canary yet.
+1. Require both Branch Verifier and Trusted Gate success on the latest PR #66 head.
+2. Review the transaction trust boundary and confirm the negative tests fail against `e8228a7` and pass on the remediation head.
+3. Record the final exact-head SHA and workflow runs in Issue #62 and the canonical Notion page.
+4. Merge only PR #66 after review. Leave PR #64 and its historical evidence untouched.
+5. Only after merge, implement the zero-paid PG-A0 runner with task-PR Git-head binding. Do not start the Canary yet.
 
 ## Canary handoff after PG-A0 runner approval
 

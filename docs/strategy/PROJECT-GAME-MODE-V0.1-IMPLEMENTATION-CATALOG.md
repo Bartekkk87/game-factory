@@ -36,11 +36,11 @@ Remediation base: audited Foundation head `e8228a7ceca5462161d730880c5093c3c6349
 
 ## Owner Acceptance Criteria and evidence status
 
-These definitions are copied from the Owner assignment and are authoritative. `LOCAL PASS` means the deterministic test ran in the remediation worktree. It is not a merge decision. Browser and complete Micro-Game status remain `CI REQUIRED` until checks pass on the exact pushed head.
+These definitions are copied from the Owner assignment and are authoritative. `LOCAL PASS` means the deterministic test ran in the remediation worktree. `CI PASS @ 9f01b93` means the complete Branch Verifier and trusted required gate succeeded on the remediation code/docs head `9f01b933adf99bb5b4239af2d645cc835e45b86e`. Neither status is a merge decision.
 
 | ID | Authoritative requirement | Status on remediation worktree | Primary evidence |
 |---|---|---|---|
-| AC-PG-001 | Existing Micro-Game pipeline remains green | CI REQUIRED | 30/30 browser-free existing suites pass locally; exact-head browser/Golden Corpus workflow pending |
+| AC-PG-001 | Existing Micro-Game pipeline remains green | CI PASS @ 9f01b93 | Branch Verifier `33298437970`, including browser and Golden Corpus suites |
 | AC-PG-002 | Project Manifest can be deterministically created, validated and loaded | LOCAL PASS | `test-foundation.mjs`; strict unknown-field rejection in `test-remediation.mjs` |
 | AC-PG-003 | Development Task has immutable Task ID, scope and Acceptance Mapping | LOCAL PASS | contract hash/shape and mapping tests |
 | AC-PG-004 | Task can change only allowed project files | LOCAL PASS | patch scope positive/negative tests |
@@ -55,13 +55,13 @@ These definitions are copied from the Owner assignment and are authoritative. `L
 | AC-PG-013 | Save→reload→load verification scenario exists architecturally/in tests | LOCAL PASS | deterministic equivalence/reload test skeleton |
 | AC-PG-014 | Editable Source and Build Output are separate | LOCAL PASS | manifest/layout and build-scope rejection tests |
 | AC-PG-015 | Web Runtime Adapter is explicit | LOCAL PASS | adapter contract tests |
-| AC-PG-016 | Browser Boot Proof detects a blank-screen-like failure | CI REQUIRED | positive/blank Playwright fixtures exist; exact-head Chromium run pending |
+| AC-PG-016 | Browser Boot Proof detects a blank-screen-like failure | CI PASS @ 9f01b93 | positive/blank Playwright fixtures in Branch Verifier `33298437970` |
 | AC-PG-017 | Interrupted/failed task cannot promote a half-verified baseline | LOCAL PASS | failing check, final candidate drift, crash recovery tests |
 | AC-PG-018 | Rollback to last verified baseline is defined | LOCAL PASS | identity-checked journal recovery and concurrency tests |
 | AC-PG-019 | Task cannot alter Acceptance Criteria or Project Contract | LOCAL PASS | reserved authority paths, hashes and exact-shape validation |
 | AC-PG-020 | Audit Evidence explains task/model/operation/context/files/SHAs/tests/result/baselines | LOCAL PASS | transaction evidence assertions; caller-supplied records rejected |
 
-Final Foundation PASS requires AC-PG-001 and AC-PG-016 to become PASS on the exact remediation PR head, with all other checks remaining green.
+All twenty Foundation criteria have local or complete-CI evidence on the remediation implementation. Final merge eligibility still requires the Branch Verifier and Trusted Gate to remain green on the latest PR head after documentation updates.
 
 ## Deliberately not implemented
 
