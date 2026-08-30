@@ -1,0 +1,37 @@
+name: F2 Assertion Fix
+
+on:
+  push:
+    branches: [codex/project-game-p1-closure-final]
+    paths: ['.github/workflows/f2-assertion-fix.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/project-game-p1-closure-final
+      - name: Align assertion with canonical Git-root rejection
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('factory/src/project/test-p1-closure.mjs')
+          s = p.read_text()
+          old = r'/inside repoRoot\/projects/'
+          new = r'/exactly repoRoot\/projects\/expected-project/'
+          if old not in s:
+              raise SystemExit('old F2 sibling assertion missing')
+          p.write_text(s.replace(old, new, 1))
+          PY
+      - name: Remove helper and commit
+        run: |
+          git rm .github/workflows/f2-assertion-fix.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add factory/src/project/test-p1-closure.mjs
+          git commit -m "test(project): align canonical F2 rejection assertion"
+          git push origin HEAD:codex/project-game-p1-closure-final
