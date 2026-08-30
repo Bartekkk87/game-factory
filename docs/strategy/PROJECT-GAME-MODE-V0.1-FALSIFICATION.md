@@ -7,7 +7,7 @@ The original direction survives after two material corrections:
 1. **Project source and milestone baseline cannot live as mutable `runtime-state`.** They are Git/PR-authoritative; `runtime-state` remains evidence/state support, not project-code truth.
 2. **A verified promoted baseline is not enough by itself.** PG-A0 must bind the immutable task, promoted source tree, verification evidence and exact Git task-PR identity durably and fail closed when that identity moves.
 
-Foundation remediation PR #66 is merged. PG-A0 runner implementation is under review in PR #67. No Project Canary and no paid Project model/API run were executed.
+Foundation remediation PR #66 is merged. PG-A0 runner implementation is carried by PR #67; exact final review/merge evidence is recorded externally in Issue #62 and the canonical Notion progress page. No Project Canary and no paid Project model/API run were executed.
 
 ## Adversarial findings
 
@@ -31,7 +31,8 @@ Foundation remediation PR #66 is merged. PG-A0 runner implementation is under re
 | Verification PASS means Git commit is safe | Workspace changes between verification and commit | Re-capture promoted tree, state and evidence immediately before staging; exact staged set enforced | Very large trees may later need incremental hashing |
 | PR body is only explanatory text | Head moves after process exits and old in-memory binding is gone | Machine-readable durable authority record is serialized in PR body and reparsed against current PR refs/SHAs | A future workflow may automate continuous revalidation on every task-PR update |
 | Rollback can clean only project files | Engineer leaves foreign untracked repo file | PG-A0 requires clean start and rollback cleans untracked repository state after hard reset | Ignored files are intentionally outside normal Git cleanliness semantics |
-| PR creation failure after push is harmless | Orphan remote task branch survives | Runner records push state and deletes remote task branch best-effort during rollback | Remote deletion can itself fail due external Git/network permissions and must remain visible |
+| PR creation failure after push is harmless | Orphan remote task branch survives | Runner records push state and attempts remote task-branch deletion during rollback | Remote deletion can fail due external Git/network permissions |
+| Best-effort remote deletion is enough | Cleanup failure is silently treated as clean rollback | Local rollback still completes, but failed remote deletion is surfaced together with the original task failure as an explicit `AggregateError` | External remote branch may require human/authorized cleanup after a visible failure |
 
 ## Findings discovered after the first Foundation implementation
 
@@ -51,16 +52,20 @@ The PG-A0 implementation was attacked through the public `runPgA0Task()` path, n
 6. a PR-creation failure after a real push to a local bare remote rolls back the local commit/branch and removes the remote task branch;
 7. a staged foreign path cannot enter the verified task commit;
 8. a durable authority record rejects a subsequently moved PR head;
-9. low-level Git publication helpers are not exported as caller-controlled APIs.
+9. low-level Git publication helpers are not exported as caller-controlled APIs;
+10. if the remote refuses task-branch deletion during rollback, local rollback still completes but the cleanup failure is explicitly surfaced together with the original execution failure.
 
-During this falsification, one real rollback defect was found and corrected: untracked files outside `projects/<id>` could survive a failed task. Because PG-A0 requires a clean repository at entry, rollback now restores that repository-wide clean start state rather than cleaning only the Project subtree.
+During this falsification, two real rollback defects were found and corrected:
 
-The final pre-documentation falsification head is `e1cc7d3652fea37fb98115fd2f6ef6e3875bd0be`:
+1. untracked files outside `projects/<id>` could survive a failed task. Because PG-A0 requires a clean repository at entry, rollback now restores that repository-wide clean start state rather than cleaning only the Project subtree;
+2. a failed remote task-branch deletion was previously ignored. It is now visible as a rollback-cleanup failure and cannot be mistaken for a fully clean abort.
+
+The immutable pre-documentation falsification head is `e1cc7d3652fea37fb98115fd2f6ef6e3875bd0be`:
 
 - Branch Verifier `33301663951`: **SUCCESS**;
 - Trusted PR Selftest Gate `33301664166`: **SUCCESS** on the same head.
 
-Documentation changes necessarily move the PR head, so final merge eligibility still requires new exact-head checks on the completed documentation head.
+Later documentation/review hardening necessarily moved PR #67 beyond this SHA. These runs remain evidence for the implementation checkpoint, while exact final integration evidence belongs in Issue #62 and the canonical Notion progress page.
 
 ## Architecture entropy after many tasks
 
@@ -98,9 +103,10 @@ The hierarchy, data schemas and physical-goods invariants fit. It will first bre
 6. Use `allow-same-origin` for browser saves — rejected because it weakens the established generated-code isolation boundary.
 7. Treat browser deployment or a screenshot alone as boot PASS — rejected because Issue #63 demonstrates the gap.
 8. Treat a successful local promotion as sufficient Git authority — rejected because the exact task PR identity must be bound durably.
+9. Hide failed remote cleanup because the local repository is clean — rejected because an orphan remote branch is still operationally material evidence.
 
 ## Go/no-go
 
-**CONDITIONAL GO for merge review of PG-A0 PR #67 after final documentation and fresh exact-head CI. NO-GO for Kepler Outpost Canary or autonomous multi-milestone execution.**
+**GO for protected-main integration of PG-A0 only when the PR #67 merge gate defined in the canonical Handoff is closed. NO-GO for Kepler Outpost Canary or autonomous multi-milestone execution.**
 
-After PR #67 merges, the next required proof is **one real zero-paid scoped task PR end to end through the merged runner**. Only after that proof should the browser persistence host bridge be implemented/validated. Kepler Outpost M1–M2 begins only after those gates pass and under a separate explicit Owner authorization.
+After that merge gate closes, the next required proof is **one real zero-paid scoped task PR end to end through the merged runner**. Only after that proof should the browser persistence host bridge be implemented/validated. Kepler Outpost M1–M2 begins only after those gates pass and under a separate explicit Owner authorization.
