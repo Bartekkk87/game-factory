@@ -1,4 +1,4 @@
-name: Trusted Project PR Provenance Gate
+name: project-pr-provenance
 
 on:
   pull_request_target:
@@ -14,8 +14,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  project-pr-provenance:
-    name: project-pr-provenance
+  verify-project-pr:
+    name: verify-project-pr
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     timeout-minutes: 25
