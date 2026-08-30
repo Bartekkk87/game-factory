@@ -1,0 +1,164 @@
+name: Project PR Provenance Dispatch Migration
+
+on:
+  push:
+    branches:
+      - codex/project-pr-provenance-dispatch
+    paths:
+      - '.github/workflows/project-pr-provenance-dispatch-migration.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/project-pr-provenance-dispatch
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Patch runtime and tests
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              p = Path(path)
+              text = p.read_text()
+              if text.count(old) != 1:
+                  raise SystemExit(f"expected exactly one match in {path}, found {text.count(old)}")
+              p.write_text(text.replace(old, new, 1))
+
+          runner = 'factory/src/project/runner.mjs'
+          replace_once(
+              runner,
+              "} from './git-task-pr.mjs';\n",
+              "} from './git-task-pr.mjs';\nimport { dispatchTrustedProjectPr } from './trusted-pr-dispatch.mjs';\n"
+          )
+          replace_once(
+              runner,
+              "async function publishVerifiedTask({ context, task, promotion, repository, token, fetchImpl, push }) {",
+              "async function publishVerifiedTask({\n  context, task, promotion, repository, token, fetchImpl, dispatchFetchImpl, push\n}) {"
+          )
+          replace_once(
+              runner,
+              "  validateTaskPrAuthorityRecord(durableBinding, pull);\n  validateTaskPrBinding(durableBinding, { task, promotion, expectedHeadSha: pull.head.sha });\n  return Object.freeze({ binding: durableBinding, pullRequest: pull });",
+              "  validateTaskPrAuthorityRecord(durableBinding, pull);\n  validateTaskPrBinding(durableBinding, { task, promotion, expectedHeadSha: pull.head.sha });\n  const provenanceDispatch = await dispatchTrustedProjectPr({\n    repository,\n    token,\n    pull,\n    task,\n    trustedRef: context.baseBranch,\n    fetchImpl: dispatchFetchImpl\n  });\n  return Object.freeze({ binding: durableBinding, pullRequest: pull, provenanceDispatch });"
+          )
+          replace_once(
+              runner,
+              "  fetchImpl = globalThis.fetch,\n  push = true,",
+              "  fetchImpl = globalThis.fetch,\n  dispatchFetchImpl = fetchImpl,\n  push = true,"
+          )
+          replace_once(
+              runner,
+              "      token,\n      fetchImpl,\n      push",
+              "      token,\n      fetchImpl,\n      dispatchFetchImpl,\n      push"
+          )
+          replace_once(
+              runner,
+              "      promotion,\n      binding: published.binding,\n      pullRequest: {",
+              "      promotion,\n      binding: published.binding,\n      provenanceDispatch: published.provenanceDispatch,\n      pullRequest: {"
+          )
+
+          neg = 'factory/src/project/test-pg-a0-negative.mjs'
+          replace_once(
+              neg,
+              "function runOptions(fixture, { requestEngineerPatch, fetchImpl, push = false } = {}) {\n  return {",
+              "function runOptions(\n  fixture,\n  { requestEngineerPatch, fetchImpl, dispatchFetchImpl = async () => ({ ok: true, status: 204 }), push = false } = {}\n) {\n  return {"
+          )
+          replace_once(
+              neg,
+              "    fetchImpl,\n    push,",
+              "    fetchImpl,\n    dispatchFetchImpl,\n    push,"
+          )
+          marker = "async function proveRemoteCleanupFailureIsVisible() {"
+          insert = r'''async function proveTrustedDispatchFailureFailsClosed() {
+  const fixture = initializeFixture({ withRemote: true });
+  let closeRequested = false;
+  try {
+    await assert.rejects(runPgA0Task(runOptions(fixture, {
+      requestEngineerPatch: async () => goodEngineerResult(),
+      fetchImpl: successPullFetch(fixture),
+      dispatchFetchImpl: async (url, options) => {
+        if (url.includes('/actions/workflows/trusted-project-pr-provenance.yml/dispatches')) {
+          return {
+            ok: false,
+            status: 403,
+            json: async () => ({ message: 'Actions dispatch denied' })
+          };
+        }
+        if (url.endsWith('/pulls/88') && options?.method === 'PATCH') {
+          closeRequested = JSON.parse(options.body).state === 'closed';
+          return { ok: true, status: 200 };
+        }
+        throw new Error(`unexpected trusted dispatch cleanup request: ${url}`);
+      },
+      push: true
+    })), /trusted Project PR provenance dispatch failed: HTTP 403: Actions dispatch denied/);
+    assert.equal(closeRequested, true);
+    assertRolledBack(fixture);
+    assert.equal(git(fixture.root, ['ls-remote', '--heads', 'origin', TASK_BRANCH]).stdout, '');
+  } finally {
+    cleanupFixture(fixture);
+  }
+}
+
+'''
+          replace_once(neg, marker, insert + marker)
+          replace_once(
+              neg,
+              "await proveRemotePushIsRolledBackOnGithubFailure();\nawait proveRemoteCleanupFailureIsVisible();",
+              "await proveRemotePushIsRolledBackOnGithubFailure();\nawait proveTrustedDispatchFailureFailsClosed();\nawait proveRemoteCleanupFailureIsVisible();"
+          )
+
+          pos = 'factory/src/project/test-pg-a0.mjs'
+          replace_once(
+              pos,
+              "  let requestedContext = null;\n  let postedBody = null;",
+              "  let requestedContext = null;\n  let postedBody = null;\n  let dispatchedBody = null;"
+          )
+          replace_once(
+              pos,
+              "    fetchImpl: async (_url, options) => {\n      postedBody = JSON.parse(options.body);",
+              "    fetchImpl: async (_url, options) => {\n      postedBody = JSON.parse(options.body);"
+          )
+          replace_once(
+              pos,
+              "      };\n    }\n  });\n\n  assert.equal(result.status, 'pr-open');",
+              "      };\n    },\n    dispatchFetchImpl: async (url, options) => {\n      assert.match(url, /trusted-project-pr-provenance\\.yml\\/dispatches$/);\n      dispatchedBody = JSON.parse(options.body);\n      return { ok: true, status: 204 };\n    }\n  });\n\n  assert.equal(result.status, 'pr-open');"
+          )
+          replace_once(
+              pos,
+              "  assert.equal(result.binding.projectId, task.projectId);\n  assert.equal(result.binding.headRef, result.pullRequest.headRef);",
+              "  assert.equal(result.binding.projectId, task.projectId);\n  assert.equal(result.provenanceDispatch.prNumber, result.pullRequest.number);\n  assert.equal(result.provenanceDispatch.headSha, result.pullRequest.headSha);\n  assert.equal(dispatchedBody.ref, 'main');\n  assert.equal(dispatchedBody.inputs.pr_number, String(result.pullRequest.number));\n  assert.equal(dispatchedBody.inputs.expected_head_sha, result.pullRequest.headSha);\n  assert.equal(dispatchedBody.inputs.expected_base_sha, result.pullRequest.baseSha);\n  assert.equal(result.binding.headRef, result.pullRequest.headRef);"
+          )
+          PY
+
+      - name: Remove one-time migration workflow
+        run: rm .github/workflows/project-pr-provenance-dispatch-migration.yml
+
+      - name: Verify focused Project tests
+        run: |
+          node --check factory/src/project/runner.mjs
+          node --check factory/src/project/trusted-pr-dispatch.mjs
+          node factory/src/project/test-pg-a0.mjs
+          node factory/src/project/test-trusted-pr-provenance.mjs
+
+      - name: Commit migration result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add factory/src/project/runner.mjs \
+            factory/src/project/trusted-pr-dispatch.mjs \
+            factory/src/project/test-pg-a0.mjs \
+            factory/src/project/test-pg-a0-negative.mjs \
+            .github/workflows/project-pr-provenance-dispatch-migration.yml
+          git commit -m "feat(project): dispatch trusted provenance after task PR"
+          git push origin HEAD:codex/project-pr-provenance-dispatch
