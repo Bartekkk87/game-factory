@@ -11,7 +11,9 @@ import { commitVerifiedTransaction, prepareTaskTransaction } from './transaction
 import {
   assertGitCommitSha,
   createTaskPrBinding,
+  parseTaskPrBindingBody,
   taskPrBindingBody,
+  validateTaskPrAuthorityRecord,
   validateTaskPrBinding
 } from './git-task-pr.mjs';
 
@@ -204,7 +206,9 @@ async function publishVerifiedTask({ context, task, promotion, repository, token
   const binding = createTaskPrBinding({
     task,
     promotion,
+    baseRef: context.baseBranch,
     baseHeadSha: context.baseHeadSha,
+    headRef: context.branchName,
     headSha
   });
   if (push) {
@@ -220,7 +224,10 @@ async function publishVerifiedTask({ context, task, promotion, repository, token
   if (pull?.base?.sha !== context.baseHeadSha) {
     throw new Error('created task PR base head does not match bound base head');
   }
-  return Object.freeze({ binding, pullRequest: pull });
+  const durableBinding = parseTaskPrBindingBody(pull?.body);
+  validateTaskPrAuthorityRecord(durableBinding, pull);
+  validateTaskPrBinding(durableBinding, { task, promotion, expectedHeadSha: pull.head.sha });
+  return Object.freeze({ binding: durableBinding, pullRequest: pull });
 }
 
 function rollbackTaskGitBranch(context) {
