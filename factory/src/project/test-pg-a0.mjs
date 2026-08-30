@@ -199,5 +199,6 @@ try {
 }
 
 await import('./test-pg-a0-negative.mjs');
+await import('./test-p1-closure.mjs');
 
 console.log('project PG-A0 zero-paid task PR selftest: PASS');
