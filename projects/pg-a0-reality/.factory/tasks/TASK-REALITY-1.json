@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "project-game.task/v1",
+  "taskId": "TASK-REALITY-1",
+  "projectId": "pg-a0-reality",
+  "milestoneId": "M1",
+  "title": "Promote deterministic reality fixture value",
+  "scope": {
+    "add": [],
+    "modify": [
+      "src/value.mjs"
+    ],
+    "delete": [],
+    "protected": [
+      "tests"
+    ],
+    "maxFilesChanged": 1
+  },
+  "acceptance": [
+    {
+      "id": "AC-REALITY-1",
+      "statement": "The fixture exports value two."
+    }
+  ],
+  "verification": {
+    "checks": [
+      {
+        "id": "unit-value",
+        "level": "L2",
+        "kind": "command",
+        "acceptanceIds": [
+          "AC-REALITY-1"
+        ],
+        "command": "node tests/unit.mjs",
+        "invariantRef": null,
+        "regressionCapabilityIds": [],
+        "independent": true
+      },
+      {
+        "id": "integration-value",
+        "level": "L4",
+        "kind": "command",
+        "acceptanceIds": [
+          "AC-REALITY-1"
+        ],
+        "command": "node tests/integration.mjs",
+        "invariantRef": null,
+        "regressionCapabilityIds": [],
+        "independent": true
+      },
+      {
+        "id": "regression-value",
+        "level": "L5",
+        "kind": "command",
+        "acceptanceIds": [
+          "AC-REALITY-1"
+        ],
+        "command": "node tests/regression.mjs",
+        "invariantRef": null,
+        "regressionCapabilityIds": [],
+        "independent": true
+      }
+    ]
+  },
+  "context": {
+    "targetFiles": [
+      "src/value.mjs"
+    ],
+    "dependencyRoots": [],
+    "testFiles": [
+      "tests/integration.mjs",
+      "tests/regression.mjs",
+      "tests/unit.mjs"
+    ],
+    "decisionTags": [],
+    "lessonTags": [],
+    "maxFiles": 10,
+    "maxBytes": 50000
+  },
+  "immutable": true,
+  "contractSha256": "165204ed3144b488061dfb36a43a3a610ca63956cc7d92078d4c3bb39d0fa032"
+}
