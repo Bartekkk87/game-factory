@@ -5,6 +5,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createTaskContract, sha256 } from './contracts.mjs';
 import { initializeProjectWorkspace } from './manifest.mjs';
+import { createOwnerTaskApproval } from './owner-task-approval.mjs';
 import { runPgA0Task } from './runner.mjs';
 
 const ORIGINAL_VALUE = 'export const value = 1;\n';
@@ -120,16 +121,16 @@ function initializeFixture({ withRemote = false } = {}) {
     `${JSON.stringify(task, null, 2)}\n`
   );
 
+  const approval = createOwnerTaskApproval({
+    projectId: task.projectId,
+    taskId: task.taskId,
+    taskContractSha256: task.contractSha256,
+    approvedBy: 'owner-test-fixture',
+    authorityVersion: 'test-fixture/v1'
+  });
   fs.writeFileSync(
     path.join(projectRoot, '.factory', 'approvals', `${task.taskId}.json`),
-    `${JSON.stringify({`,
-      schemaVersion: 'project-game.owner-task-approval/v1',
-      projectId: task.projectId,
-      taskId: task.taskId,
-      taskContractSha256: task.contractSha256,
-      approvedBy: 'owner-test-fixture',
-      authorityVersion: 'test-fixture/v1'
-    }, null, 2)}\n`
+    `${JSON.stringify(approval, null, 2)}\n`
   );
 
   git(root, ['init']);
@@ -177,7 +178,6 @@ function runOptions(fixture, { requestEngineerPatch, fetchImpl, push = false } =
     repoRoot: fixture.root,
     projectRoot: fixture.projectRoot,
     taskId: fixture.task.taskId,
-    ownerTaskContractSha256: fixture.task.contractSha256,
     requestEngineerPatch,
     repository: 'example/game-factory',
     token: 'fixture-token',
