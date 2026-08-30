@@ -84,8 +84,10 @@ assert.throws(() => validateTrustedProjectPrProvenance({
   changedFiles
 }), /baseSha changed/);
 
-// AC-F3-06: a helper/side branch with the same candidate SHA cannot satisfy Project provenance.
+// AC-F3-06: even a self-consistent forged binding on a helper branch with the same SHA is rejected.
+const helperBinding = binding({ headRef: 'helper/fixture' });
 const helper = pull({
+  body: taskPrBindingBody(helperBinding),
   head: { sha: HEAD_SHA, ref: 'helper/fixture', repo: { full_name: REPOSITORY } }
 });
 assert.throws(() => validateTrustedProjectPrProvenance({
