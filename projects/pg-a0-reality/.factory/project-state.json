@@ -1,15 +1,52 @@
 {
   "schemaVersion": "project-game.state/v1",
   "projectId": "pg-a0-reality",
-  "baseline": null,
-  "baselineHistory": [],
+  "baseline": {
+    "id": "baseline-TASK-REALITY-1",
+    "taskId": "TASK-REALITY-1",
+    "treeSha256": "1e629827ab64bce477f94af35a66c1027bb2832a0da721ab5a0dbba22157bde1",
+    "evidenceSha256": "3d23d23e0db6f6f81019c958d8feb82a89d6f518f9e451600a7d6cf5ed69cbd7",
+    "gitCommitSha": null,
+    "verifiedAt": "2026-08-30T12:00:00.000Z"
+  },
+  "baselineHistory": [
+    {
+      "id": "baseline-TASK-REALITY-1",
+      "taskId": "TASK-REALITY-1",
+      "treeSha256": "1e629827ab64bce477f94af35a66c1027bb2832a0da721ab5a0dbba22157bde1",
+      "evidenceSha256": "3d23d23e0db6f6f81019c958d8feb82a89d6f518f9e451600a7d6cf5ed69cbd7",
+      "gitCommitSha": null,
+      "verifiedAt": "2026-08-30T12:00:00.000Z"
+    }
+  ],
   "milestones": [],
-  "verifiedCapabilities": [],
-  "regressions": [],
+  "verifiedCapabilities": [
+    {
+      "id": "AC-REALITY-1",
+      "taskId": "TASK-REALITY-1",
+      "statement": "The fixture exports value two.",
+      "acceptanceSha256": "fcd22879f175736c6c1dcce49d0c161c3b98c060f8ac01c9549132aedb99439c"
+    }
+  ],
+  "regressions": [
+    {
+      "checkId": "regression-value",
+      "definitionSha256": "ce4fe705f00ef4cc7c2ffce931a27c946ce4d0078e89d1190c1675ef6b3a20f7",
+      "capabilityIds": [
+        "AC-REALITY-1"
+      ],
+      "acceptanceIds": [
+        "AC-REALITY-1"
+      ],
+      "protectedPaths": [
+        "tests/regression.mjs"
+      ]
+    }
+  ],
   "technicalDebt": [],
   "relevantLessons": [],
   "saveSchemaVersion": null,
   "buildVersion": null,
-  "lastSuccessfulRegressionBaseline": null,
+  "lastSuccessfulRegressionBaseline": "baseline-TASK-REALITY-1",
   "inFlight": null
 }
