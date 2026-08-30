@@ -5,6 +5,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createTaskContract, sha256 } from './contracts.mjs';
 import { initializeProjectWorkspace } from './manifest.mjs';
+import { createOwnerTaskApproval } from './owner-task-approval.mjs';
 import { runPgA0Task } from './runner.mjs';
 import * as gitTaskPr from './git-task-pr.mjs';
 
@@ -86,16 +87,16 @@ try {
     `${JSON.stringify(task, null, 2)}\n`
   );
 
+  const approval = createOwnerTaskApproval({
+    projectId: task.projectId,
+    taskId: task.taskId,
+    taskContractSha256: task.contractSha256,
+    approvedBy: 'owner-test-fixture',
+    authorityVersion: 'test-fixture/v1'
+  });
   fs.writeFileSync(
     path.join(projectRoot, '.factory', 'approvals', `${task.taskId}.json`),
-    `${JSON.stringify({`,
-      schemaVersion: 'project-game.owner-task-approval/v1',
-      projectId: task.projectId,
-      taskId: task.taskId,
-      taskContractSha256: task.contractSha256,
-      approvedBy: 'owner-test-fixture',
-      authorityVersion: 'test-fixture/v1'
-    }, null, 2)}\n`
+    `${JSON.stringify(approval, null, 2)}\n`
   );
 
   git(['init']);
@@ -113,7 +114,6 @@ try {
     repoRoot: root,
     projectRoot,
     taskId: task.taskId,
-    ownerTaskContractSha256: task.contractSha256,
     requestEngineerPatch: async (request) => {
       requestedContext = request.context;
       return {
