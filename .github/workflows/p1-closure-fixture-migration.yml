@@ -1,0 +1,78 @@
+name: Project P1 Closure Fixture Migration
+
+on:
+  push:
+    branches: [codex/project-game-p1-closure]
+    paths:
+      - '.github/workflows/p1-closure-fixture-migration.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  migrate-fixtures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/project-game-p1-closure
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Migrate bounded Project Game fixtures
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+
+          function replaceOnce(file, before, after) {
+            const current = fs.readFileSync(file, 'utf8');
+            if (!current.includes(before)) throw new Error(`fixture pattern missing in ${file}`);
+            fs.writeFileSync(file, current.replace(before, after));
+          }
+
+          replaceOnce(
+            'factory/src/project/test-foundation.mjs',
+            "equivalenceProjection: ['world.ticks', 'inventory.metal']",
+            "transientStatePaths: ['transient']"
+          );
+          replaceOnce(
+            'factory/src/project/test-browser-persistence.mjs',
+            "equivalenceProjection: ['world.ticks', 'inventory.metal']",
+            "transientStatePaths: ['transient']"
+          );
+
+          const approvalBlock = (indent = '  ') => [
+            `${indent}fs.writeFileSync(`,
+            `${indent}  path.join(projectRoot, '.factory', 'approvals', \`${'${task.taskId}'}.json\`),`,
+            `${indent}  \`${'${JSON.stringify({'}\\n\` +`,
+            `${indent}  [`,
+            `${indent}    '  "schemaVersion": "project-game.owner-task-approval/v1",',`,
+            `${indent}    \`  "projectId": "${'${task.projectId}'}",\`,`,
+            `${indent}    \`  "taskId": "${'${task.taskId}'}",\`,`,
+            `${indent}    \`  "taskContractSha256": "${'${task.contractSha256}'}",\`,`,
+            `${indent}    '  "approvedBy": "owner-test-fixture",',`,
+            `${indent}    '  "authorityVersion": "test-fixture/v1"',`,
+            `${indent}    '}'`,
+            `${indent}  ].join('\\n') + '\\n'`,
+            `${indent});`
+          ].join('\n');
+
+          for (const file of ['factory/src/project/test-pg-a0.mjs', 'factory/src/project/test-pg-a0-negative.mjs']) {
+            const marker = "  git(['init']);";
+            const negativeMarker = "  git(root, ['init']);";
+            const current = fs.readFileSync(file, 'utf8');
+            const insertionPoint = current.includes(marker) ? marker : negativeMarker;
+            if (!current.includes(insertionPoint)) throw new Error(`git init marker missing in ${file}`);
+            fs.writeFileSync(file, current.replace(insertionPoint, `${approvalBlock()}\n\n${insertionPoint}`));
+          }
+          NODE
+      - name: Run existing Project Game positive regressions
+        run: node factory/src/control/test-architecture-finalization.mjs
+      - name: Commit migrated fixtures and remove helper workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/p1-closure-fixture-migration.yml
+          git add factory/src/project/test-foundation.mjs factory/src/project/test-browser-persistence.mjs factory/src/project/test-pg-a0.mjs factory/src/project/test-pg-a0-negative.mjs
+          git commit -m 'test(project): migrate P1 closure fixtures'
+          git push origin HEAD:codex/project-game-p1-closure
