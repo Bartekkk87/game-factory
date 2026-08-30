@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "project-game.state/v1",
+  "projectId": "pg-a0-reality",
+  "baseline": null,
+  "baselineHistory": [],
+  "milestones": [],
+  "verifiedCapabilities": [],
+  "regressions": [],
+  "technicalDebt": [],
+  "relevantLessons": [],
+  "saveSchemaVersion": null,
+  "buildVersion": null,
+  "lastSuccessfulRegressionBaseline": null,
+  "inFlight": null
+}

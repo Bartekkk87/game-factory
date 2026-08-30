@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "project-game.manifest/v1",
+  "projectId": "pg-a0-reality",
+  "ownerVision": {
+    "text": "Prove the merged PG-A0 runner against real GitHub boundaries without a paid model/API call.",
+    "sha256": "9378fefb41a91796bf56abd1a8ee6e57577c9a442a57502c8f90e9aa70fb5185"
+  },
+  "projectContract": {
+    "requirements": [
+      {
+        "id": "REQ-REALITY-1",
+        "statement": "The deterministic reality fixture exports value two after the approved task."
+      }
+    ],
+    "noGos": [
+      "No paid model or API call.",
+      "No Project Canary execution."
+    ],
+    "invariants": [
+      "Only the approved scoped file may be changed by the Engineer operation."
+    ]
+  },
+  "layout": {
+    "sourceDir": "src",
+    "buildDir": "build",
+    "testsDir": "tests",
+    "dataDir": "data",
+    "assetsDir": "assets",
+    "persistenceDir": "persistence"
+  },
+  "runtimeAdapter": {
+    "id": "web-v0.1",
+    "contractRef": "persistence/web-runtime.json"
+  },
+  "moduleGraph": {
+    "src/value.mjs": []
+  },
+  "testMap": {
+    "src/value.mjs": [
+      "tests/integration.mjs",
+      "tests/regression.mjs",
+      "tests/unit.mjs"
+    ]
+  },
+  "contentSchemas": [],
+  "immutable": true,
+  "contractSha256": "79b1228fd26b1b1a4f11c734ecc8abd0c13501b58fcaf74aacc502b26f1caee5"
+}

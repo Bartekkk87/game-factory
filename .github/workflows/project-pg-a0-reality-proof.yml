@@ -1,0 +1,43 @@
+name: Project PG-A0 Reality Proof
+
+on:
+  push:
+    branches:
+      - project-proof/dispatch
+    paths:
+      - '.github/project-pg-a0-reality-proof-trigger'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: project-pg-a0-reality-proof
+  cancel-in-progress: false
+
+jobs:
+  reality-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout protected-main baseline
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Configure deterministic Git identity
+        run: |
+          git config user.name "PG-A0 Reality Proof"
+          git config user.email "pg-a0-reality@example.invalid"
+
+      - name: Execute real zero-paid PG-A0 task PR proof
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node factory/src/project/run-pg-a0-reality-proof.mjs
