@@ -60,6 +60,56 @@ function requireText(value, field) {
   return text;
 }
 
+function assertExactKeys(value, expected, field) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error(`${field} must be an object`);
+  }
+  const actual = Object.keys(value).sort();
+  const allowed = [...expected].sort();
+  if (JSON.stringify(actual) !== JSON.stringify(allowed)) {
+    throw new Error(`${field} fields invalid`);
+  }
+}
+
+function assertManifestShape(manifest) {
+  assertExactKeys(manifest, [
+    'schemaVersion', 'projectId', 'ownerVision', 'projectContract', 'layout',
+    'runtimeAdapter', 'moduleGraph', 'testMap', 'contentSchemas', 'immutable',
+    'contractSha256'
+  ], 'project manifest');
+  assertExactKeys(manifest.ownerVision, ['text', 'sha256'], 'project manifest ownerVision');
+  assertExactKeys(manifest.projectContract, ['requirements', 'noGos', 'invariants'], 'project manifest projectContract');
+  for (const [index, requirement] of manifest.projectContract.requirements.entries()) {
+    assertExactKeys(requirement, ['id', 'statement'], `project manifest requirements[${index}]`);
+  }
+  assertExactKeys(manifest.layout, [
+    'sourceDir', 'buildDir', 'testsDir', 'dataDir', 'assetsDir', 'persistenceDir'
+  ], 'project manifest layout');
+  assertExactKeys(manifest.runtimeAdapter, ['id', 'contractRef'], 'project manifest runtimeAdapter');
+}
+
+function assertTaskShape(task) {
+  assertExactKeys(task, [
+    'schemaVersion', 'taskId', 'projectId', 'milestoneId', 'title', 'scope',
+    'acceptance', 'verification', 'context', 'immutable', 'contractSha256'
+  ], 'project task');
+  assertExactKeys(task.scope, ['add', 'modify', 'delete', 'protected', 'maxFilesChanged'], 'project task scope');
+  for (const [index, acceptance] of task.acceptance.entries()) {
+    assertExactKeys(acceptance, ['id', 'statement'], `project task acceptance[${index}]`);
+  }
+  assertExactKeys(task.verification, ['checks'], 'project task verification');
+  for (const [index, check] of task.verification.checks.entries()) {
+    assertExactKeys(check, [
+      'id', 'level', 'kind', 'acceptanceIds', 'command', 'invariantRef',
+      'regressionCapabilityIds', 'independent'
+    ], `project task verification.checks[${index}]`);
+  }
+  assertExactKeys(task.context, [
+    'targetFiles', 'dependencyRoots', 'testFiles', 'decisionTags', 'lessonTags',
+    'maxFiles', 'maxBytes'
+  ], 'project task context');
+}
+
 function normalizeAcceptance(items) {
   if (!Array.isArray(items) || !items.length) throw new Error('task acceptance criteria are required');
   const ids = new Set();
@@ -91,14 +141,22 @@ function normalizeCheck(check, index, acceptanceIds) {
   if (['L2', 'L3', 'L4', 'L5', 'L6', 'L7'].includes(level) && !independent) {
     throw new Error(`verification check ${id} must use independent evidence`);
   }
+  const command = check?.command ? requireText(check.command, `verification check ${id}.command`) : null;
+  const invariantRef = check?.invariantRef
+    ? normalizeProjectPath(check.invariantRef, `verification check ${id}.invariantRef`)
+    : null;
+  if (kind === 'command' && !command) throw new Error(`verification check ${id} requires command`);
+  if (kind === 'invariant' && !invariantRef) throw new Error(`verification check ${id} requires invariantRef`);
   return Object.freeze({
     id,
     level,
     kind,
     acceptanceIds: mapped,
-    command: check?.command ? requireText(check.command, `verification check ${id}.command`) : null,
-    invariantRef: check?.invariantRef ? normalizeProjectPath(check.invariantRef, `verification check ${id}.invariantRef`) : null,
-    regressionCapabilityIds: [...new Set((check?.regressionCapabilityIds || []).map(String))].sort(),
+    command,
+    invariantRef,
+    regressionCapabilityIds: [...new Set((check?.regressionCapabilityIds || []).map((value, capabilityIndex) => (
+      assertSafeId(value, `verification check ${id}.regressionCapabilityIds[${capabilityIndex}]`)
+    )))].sort(),
     independent
   });
 }
@@ -147,6 +205,7 @@ export function createProjectManifest(input = {}) {
 
 export function validateProjectManifest(manifest) {
   if (manifest?.schemaVersion !== PROJECT_MANIFEST_SCHEMA) throw new Error('project manifest schema invalid');
+  assertManifestShape(manifest);
   const rebuilt = createProjectManifest({
     projectId: manifest.projectId,
     ownerVision: manifest.ownerVision?.text,
@@ -223,6 +282,7 @@ export function createTaskContract(input = {}) {
 
 export function validateTaskContract(task, manifest = null) {
   if (task?.schemaVersion !== PROJECT_TASK_SCHEMA) throw new Error('project task schema invalid');
+  assertTaskShape(task);
   const rebuilt = createTaskContract(task);
   if (task.immutable !== true || rebuilt.contractSha256 !== task.contractSha256) {
     throw new Error('project task contract hash mismatch');

@@ -5,6 +5,7 @@ import { normalizeProjectPath, sha256 } from './contracts.mjs';
 const DEFAULT_EXCLUDES = Object.freeze([
   'build',
   '.factory/evidence',
+  '.factory/verification',
   '.factory/project-state.json',
   '.factory/transactions'
 ]);

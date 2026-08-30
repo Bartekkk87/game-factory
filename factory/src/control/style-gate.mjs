@@ -18,6 +18,7 @@ export const CRITICAL_STYLE_FILES = Object.freeze([
   'factory/src/project/patch-contract.mjs',
   'factory/src/project/transaction.mjs',
   'factory/src/project/verification-plan.mjs',
+  'factory/src/project/verification-runner.mjs',
   'factory/src/project/persistence-contract.mjs',
   'factory/src/project/web-runtime-adapter.mjs',
   'factory/src/evaluation/s5-benchmark-contract.mjs',

@@ -57,7 +57,7 @@ export function applyPatchToStaging({ projectRoot, task, operations, manifest = 
   const root = path.resolve(projectRoot);
   const patch = validatePatchContract({ task, operations, manifest });
   const treeOptions = manifest
-    ? { excludes: [manifest.layout.buildDir, '.factory/evidence', '.factory/project-state.json', '.factory/transactions'] }
+    ? { excludes: [manifest.layout.buildDir, '.factory/evidence', '.factory/verification', '.factory/project-state.json', '.factory/transactions'] }
     : {};
   const before = captureProjectTree(root, treeOptions);
 

@@ -53,18 +53,6 @@ function taskContract({ taskId, title, add = [], modify = [], checks = null, max
   });
 }
 
-function passingResults(task) {
-  return task.verification.checks.map((check) => ({
-    checkId: check.id,
-    pass: true,
-    evidenceSha256: sha256(`evidence:${task.taskId}:${check.id}`),
-    detail: 'deterministic fixture PASS',
-    runner: 'node',
-    producer: 'engineer',
-    verifier: 'deterministic-runner'
-  }));
-}
-
 try {
   const manifest = initializeProjectWorkspace(projectRoot, {
     projectId: 'canary',
@@ -96,6 +84,7 @@ try {
   write('tests/world.test.js', 'export const worldTest = true;\n');
   write('tests/regression.test.js', 'export const regressionTest = true;\n');
   write('tests/integration.test.js', 'export const integrationTest = true;\n');
+  write('tests/fail.test.js', 'process.exitCode = 1;\n');
   write('milestones/M001.json', `${JSON.stringify({ id: 'M001', title: 'World baseline' }, null, 2)}\n`);
   write('decisions/ADR-001.json', `${JSON.stringify({ id: 'ADR-001', tags: ['simulation'], decision: 'Fixed-step simulation.' }, null, 2)}\n`);
 
@@ -125,11 +114,8 @@ try {
   assert.equal(transaction.patchEvidence.filesChanged.length, 2);
   assert.equal(fs.readFileSync(path.join(projectRoot, 'src/world.js'), 'utf8'), oldWorld, 'staging must not mutate verified baseline');
   const committed = commitVerifiedTransaction(transaction, {
-    verificationResults: passingResults(firstTask),
     modelEvidence: { provider: 'fixture', requestedModel: 'none', actualModel: 'none', operation: 'scoped-task' },
     operationEvidence: { operation: 'scoped-task', context: { selectionSha256: context.selectionSha256 } },
-    capabilities: [{ id: 'CAP-WORLD', taskId: firstTask.taskId, statement: 'World ticks deterministically.' }],
-    regressions: [{ checkId: 'REG-WORLD', capabilityId: 'CAP-WORLD', protectedPaths: ['tests/regression.test.js'] }],
     saveSchemaVersion: '1.0.0',
     buildVersion: '0.1.0',
     verifiedAt: '2026-08-29T20:00:00.000Z'
@@ -138,20 +124,33 @@ try {
   assert.equal(fs.readFileSync(path.join(projectRoot, 'src/world.js'), 'utf8'), newWorld);
   const reloadedState = loadProjectState(projectRoot, manifest.projectId, { create: false });
   assert.equal(reloadedState.baseline.taskId, firstTask.taskId);
-  assert.equal(reloadedState.verifiedCapabilities.some((item) => item.id === 'CAP-WORLD'), true);
+  assert.equal(reloadedState.verifiedCapabilities.some((item) => item.id === 'AC-WORLD-01'), true);
   assert.equal(reloadedState.regressions.some((item) => item.checkId === 'REG-WORLD'), true);
 
   const secondTask = taskContract({ taskId: 'M001-T02', title: 'Rejected change', modify: ['src/world.js'] });
   const secondBefore = fs.readFileSync(path.join(projectRoot, 'src/world.js'), 'utf8');
   const secondAfter = 'export const world = { ticks: 999 };\n';
+  const failingTask = taskContract({
+    taskId: 'M001-T02F',
+    title: 'Deterministic verification failure',
+    modify: ['src/world.js'],
+    checks: [
+      { id: 'UNIT-FAIL', level: 'L2', kind: 'command', command: 'node tests/fail.test.js', acceptanceIds: ['AC-WORLD-01'] },
+      { id: 'INT-WORLD', level: 'L4', kind: 'command', command: 'node tests/integration.test.js', acceptanceIds: ['AC-WORLD-01'] },
+      { id: 'REG-WORLD', level: 'L5', kind: 'command', command: 'node tests/regression.test.js', acceptanceIds: ['AC-WORLD-01'] }
+    ]
+  });
   const failedTransaction = prepareTaskTransaction({
     projectRoot,
-    task: secondTask,
+    task: failingTask,
     operations: [{ operation: 'MODIFY', path: 'src/world.js', beforeSha256: sha256(Buffer.from(secondBefore)), afterSha256: sha256(Buffer.from(secondAfter)), content: secondAfter }]
   });
-  const failedResults = passingResults(secondTask).map((result, index) => index === 0 ? { ...result, pass: false } : result);
-  const rejected = commitVerifiedTransaction(failedTransaction, { verificationResults: failedResults });
+  const rejected = commitVerifiedTransaction(failedTransaction, {
+    modelEvidence: { provider: 'fixture', actualModel: 'none', operation: 'scoped-task' },
+    operationEvidence: { operation: 'scoped-task', context: { selectionSha256: context.selectionSha256 } }
+  });
   assert.equal(rejected.baselinePromoted, false);
+  assert.equal(rejected.reason, 'verification-failed');
   assert.equal(fs.readFileSync(path.join(projectRoot, 'src/world.js'), 'utf8'), secondBefore);
 
   const missingEvidenceTransaction = prepareTaskTransaction({
@@ -159,7 +158,7 @@ try {
     task: secondTask,
     operations: [{ operation: 'MODIFY', path: 'src/world.js', beforeSha256: sha256(Buffer.from(secondBefore)), afterSha256: sha256(Buffer.from(secondAfter)), content: secondAfter }]
   });
-  const missingEvidence = commitVerifiedTransaction(missingEvidenceTransaction, { verificationResults: passingResults(secondTask) });
+  const missingEvidence = commitVerifiedTransaction(missingEvidenceTransaction, {});
   assert.equal(missingEvidence.reason, 'model-evidence-missing');
   assert.equal(missingEvidence.baselinePromoted, false);
 
@@ -208,6 +207,20 @@ try {
     ]
   });
   assert.throws(() => createVerificationPlan({ manifest, task: fixtureRewriteTask, projectState: reloadedState }), /overlaps inherited regression fixture/);
+  const redefinedRegressionTask = taskContract({
+    taskId: 'M001-T06',
+    title: 'Reject inherited regression redefinition',
+    modify: ['src/world.js'],
+    checks: [
+      { id: 'UNIT-WORLD-3', level: 'L2', kind: 'command', command: 'node tests/world.test.js', acceptanceIds: ['AC-WORLD-01'] },
+      { id: 'INT-WORLD-3', level: 'L4', kind: 'command', command: 'node tests/integration.test.js', acceptanceIds: ['AC-WORLD-01'] },
+      { id: 'REG-WORLD', level: 'L5', kind: 'command', command: 'node tests/world.test.js', acceptanceIds: ['AC-WORLD-01'] }
+    ]
+  });
+  assert.throws(
+    () => createVerificationPlan({ manifest, task: redefinedRegressionTask, projectState: reloadedState }),
+    /redefines verified regression/
+  );
 
   const saveContract = createPersistenceContract({ schemaVersion: '1.0.0', slots: 2, maxBytes: 4096, equivalenceProjection: ['world.ticks', 'inventory.metal'] });
   let saved = null;
@@ -230,13 +243,30 @@ try {
 
   const beforeRecovery = captureProjectTree(projectRoot).treeSha256;
   const txDir = path.join(path.dirname(projectRoot), '.canary.transactions');
-  const backup = path.join(txDir, 'crash.backup');
-  const staging = path.join(txDir, 'crash.staging');
+  const crashId = 'crash-recovery';
+  const backup = path.join(txDir, `${crashId}.backup`);
   fs.mkdirSync(txDir, { recursive: true });
   fs.renameSync(projectRoot, backup);
-  fs.writeFileSync(path.join(txDir, 'crash.json'), `${JSON.stringify({ id: 'crash', projectRoot, staging, backup, phase: 'swapping' }, null, 2)}\n`);
+  fs.writeFileSync(path.join(txDir, '.lock.json'), `${JSON.stringify({
+    schemaVersion: 'project-game.transaction-lock/v1',
+    id: 'stale-lock',
+    projectRoot,
+    pid: 99999999,
+    acquiredAt: '2026-08-29T20:00:00.000Z'
+  }, null, 2)}\n`);
+  fs.writeFileSync(path.join(txDir, `${crashId}.json`), `${JSON.stringify({
+    schemaVersion: 'project-game.transaction/v1',
+    id: crashId,
+    taskId: secondTask.taskId,
+    projectId: manifest.projectId,
+    manifestSha256: manifest.contractSha256,
+    projectRoot,
+    baselineBefore: beforeRecovery,
+    candidateAfter: beforeRecovery,
+    phase: 'swapping'
+  }, null, 2)}\n`);
   const recovery = recoverProjectTransactions(projectRoot);
-  assert.deepEqual(recovery, [{ id: 'crash', action: 'rolled-back' }]);
+  assert.deepEqual(recovery, [{ id: crashId, action: 'rolled-back' }]);
   assert.equal(captureProjectTree(projectRoot).treeSha256, beforeRecovery);
 
   const aborted = prepareTaskTransaction({

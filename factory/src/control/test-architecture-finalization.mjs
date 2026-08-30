@@ -203,5 +203,6 @@ for (const document of chain.documents.filter((item) => item.status === 'canonic
 }
 
 await import('../project/test-foundation.mjs');
+await import('../project/test-remediation.mjs');
 
 console.log('architecture finalization hardening selftest: PASS');

@@ -1,4 +1,10 @@
-import { pathMatchesPrefix, sha256, validateProjectManifest, validateTaskContract } from './contracts.mjs';
+import {
+  normalizeProjectPath,
+  pathMatchesPrefix,
+  sha256,
+  validateProjectManifest,
+  validateTaskContract
+} from './contracts.mjs';
 
 export const VERIFICATION_LEVELS = Object.freeze({
   L1: 'syntax-build',
@@ -13,10 +19,25 @@ export const VERIFICATION_LEVELS = Object.freeze({
   L10: 'owner-acceptance'
 });
 
+export function verificationCheckDefinitionSha256(check) {
+  const definition = {
+    id: check.id,
+    level: check.level,
+    kind: check.kind,
+    acceptanceIds: [...check.acceptanceIds],
+    command: check.command,
+    invariantRef: check.invariantRef,
+    regressionCapabilityIds: [...check.regressionCapabilityIds],
+    independent: check.independent
+  };
+  return sha256(JSON.stringify(definition));
+}
+
 export function createVerificationPlan({ manifest, task, projectState = null } = {}) {
   const checkedManifest = validateProjectManifest(manifest);
   const checkedTask = validateTaskContract(task, checkedManifest);
-  const priorRegressionIds = [...new Set((projectState?.regressions || []).map((item) => item.checkId).filter(Boolean))].sort();
+  const priorRegressions = [...(projectState?.regressions || [])].sort((a, b) => a.checkId.localeCompare(b.checkId));
+  const priorRegressionIds = priorRegressions.map((item) => item.checkId);
   const scopedPaths = [...checkedTask.scope.add, ...checkedTask.scope.modify, ...checkedTask.scope.delete];
   for (const regression of projectState?.regressions || []) {
     for (const protectedPath of regression.protectedPaths || []) {
@@ -25,10 +46,19 @@ export function createVerificationPlan({ manifest, task, projectState = null } =
       }
     }
   }
-  const checks = checkedTask.verification.checks.map((check) => ({ ...check }));
+  const checks = checkedTask.verification.checks.map((check) => ({
+    ...check,
+    definitionSha256: verificationCheckDefinitionSha256(check)
+  }));
   const declaredIds = new Set(checks.map((check) => check.id));
-  for (const checkId of priorRegressionIds) {
-    if (!declaredIds.has(checkId)) throw new Error(`task omits verified regression requirement: ${checkId}`);
+  for (const regression of priorRegressions) {
+    if (!declaredIds.has(regression.checkId)) {
+      throw new Error(`task omits verified regression requirement: ${regression.checkId}`);
+    }
+    const declared = checks.find((check) => check.id === regression.checkId);
+    if (declared.definitionSha256 !== regression.definitionSha256) {
+      throw new Error(`task redefines verified regression requirement: ${regression.checkId}`);
+    }
   }
   const acceptanceCoverage = Object.fromEntries(checkedTask.acceptance.map((criterion) => [
     criterion.id,
@@ -47,38 +77,41 @@ export function createVerificationPlan({ manifest, task, projectState = null } =
   return Object.freeze({ ...plan, planSha256: sha256(JSON.stringify(plan)) });
 }
 
-export function evaluateVerificationResults(plan, results = []) {
-  if (plan?.schemaVersion !== 'project-game.verification-plan/v1') throw new Error('verification plan schema invalid');
-  if (!Array.isArray(results)) throw new Error('verification results must be an array');
-  const byId = new Map();
-  for (const result of results) {
-    if (byId.has(result?.checkId)) throw new Error(`duplicate verification result: ${result?.checkId}`);
-    byId.set(result?.checkId, result);
+function protectedPathForCheck(check) {
+  if (check.invariantRef) return check.invariantRef;
+  const match = /^node ([A-Za-z0-9._/-]+\.(?:mjs|js))$/.exec(String(check.command || ''));
+  return match ? normalizeProjectPath(match[1], `verification check ${check.id}.command target`) : null;
+}
+
+export function deriveVerifiedProjectRecords({ task, plan, verification } = {}) {
+  if (verification?.pass !== true || verification.planSha256 !== plan?.planSha256) {
+    throw new Error('verified project records require a passing matching verification');
   }
-  const checks = plan.checks.map((check) => {
-    const result = byId.get(check.id);
-    const evidenceSha256 = String(result?.evidenceSha256 || '').toLowerCase();
-    const independent = check.independent !== true || result?.producer !== result?.verifier;
-    const pass = result?.pass === true && /^[0-9a-f]{64}$/.test(evidenceSha256) && independent;
-    return {
-      id: check.id,
-      level: check.level,
-      pass,
-      independent,
-      evidenceSha256: /^[0-9a-f]{64}$/.test(evidenceSha256) ? evidenceSha256 : null,
-      detail: String(result?.detail || (result ? '' : 'missing result')),
-      runner: result?.runner || null,
-      producer: result?.producer || null,
-      verifier: result?.verifier || null
-    };
+  const passedIds = new Set(verification.checks.filter((check) => check.pass).map((check) => check.id));
+  const capabilities = task.acceptance.map((criterion) => {
+    const mapped = plan.acceptanceCoverage[criterion.id] || [];
+    if (!mapped.length || mapped.some((checkId) => !passedIds.has(checkId))) {
+      throw new Error(`acceptance is not fully verified: ${criterion.id}`);
+    }
+    return Object.freeze({
+      id: criterion.id,
+      taskId: task.taskId,
+      statement: criterion.statement,
+      acceptanceSha256: sha256(JSON.stringify(criterion))
+    });
   });
-  const failures = checks.filter((check) => !check.pass);
-  return Object.freeze({
-    schemaVersion: 'project-game.verification-result/v1',
-    planSha256: plan.planSha256,
-    taskId: plan.taskId,
-    pass: checks.length > 0 && failures.length === 0,
-    checks,
-    failures
+  const regressions = plan.checks.filter((check) => check.level === 'L5').map((check) => {
+    if (!passedIds.has(check.id)) throw new Error(`regression check did not pass: ${check.id}`);
+    const protectedPath = protectedPathForCheck(check);
+    return Object.freeze({
+      checkId: check.id,
+      definitionSha256: check.definitionSha256,
+      capabilityIds: check.regressionCapabilityIds.length
+        ? [...check.regressionCapabilityIds]
+        : [...check.acceptanceIds],
+      acceptanceIds: [...check.acceptanceIds],
+      protectedPaths: protectedPath ? [protectedPath] : []
+    });
   });
+  return Object.freeze({ capabilities, regressions });
 }

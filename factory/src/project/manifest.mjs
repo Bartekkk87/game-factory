@@ -1,12 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createProjectManifest, validateProjectManifest } from './contracts.mjs';
+import { initializeProjectState } from './project-state.mjs';
 
 const CONTROL_DIRS = Object.freeze([
   'decisions',
   'milestones',
   '.factory/tasks',
-  '.factory/evidence'
+  '.factory/evidence',
+  '.factory/verification'
 ]);
 
 export function initializeProjectWorkspace(projectRoot, input = {}) {
@@ -19,6 +21,7 @@ export function initializeProjectWorkspace(projectRoot, input = {}) {
   fs.writeFileSync(path.join(root, 'PROJECT.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   fs.writeFileSync(path.join(root, 'ROADMAP.json'), `${JSON.stringify({ schemaVersion: 'project-game.roadmap/v1', projectId: manifest.projectId, milestones: [] }, null, 2)}\n`);
   fs.writeFileSync(path.join(root, 'ARCHITECTURE.md'), `# ${manifest.projectId} Architecture\n\nProject-local architecture decisions belong in \`decisions/\`.\n`);
+  initializeProjectState(root, manifest.projectId);
   return manifest;
 }
 
