@@ -206,5 +206,6 @@ await import('../project/test-foundation.mjs');
 await import('../project/test-remediation.mjs');
 await import('../project/test-pg-a0.mjs');
 await import('../project/test-trusted-pr-provenance.mjs');
+await import('../project/test-p1-closure.mjs');
 
 console.log('architecture finalization hardening selftest: PASS');
