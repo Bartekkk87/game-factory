@@ -186,4 +186,6 @@ try {
   fs.rmSync(root, { recursive: true, force: true });
 }
 
+await import('./test-pg-a0-negative.mjs');
+
 console.log('project PG-A0 zero-paid task PR selftest: PASS');
