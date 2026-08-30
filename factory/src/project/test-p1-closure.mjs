@@ -249,7 +249,7 @@ function proveF2PrimitiveWorkspaceConfinement() {
     fs.writeFileSync(siblingSentinel, 'unchanged\n');
     assert.throws(
       () => prepareTaskTransaction({ projectRoot: sibling, task, operations: [modifyOperation()] }),
-      /inside repoRoot\/projects/
+      /exactly repoRoot\/projects\/expected-project/
     );
     assert.equal(fs.readFileSync(siblingSentinel, 'utf8'), 'unchanged\n');
 
