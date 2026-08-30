@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "project-game.owner-task-approval/v1",
+  "projectId": "pg-a0-reality",
+  "taskId": "TASK-REALITY-1",
+  "taskContractSha256": "165204ed3144b488061dfb36a43a3a610ca63956cc7d92078d4c3bb39d0fa032",
+  "approvedBy": "owner",
+  "authorityVersion": "pg-a0-slice-a/v1"
+}
