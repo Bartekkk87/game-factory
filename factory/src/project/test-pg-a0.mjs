@@ -6,7 +6,7 @@ import { spawnSync } from 'node:child_process';
 import { createTaskContract, sha256 } from './contracts.mjs';
 import { initializeProjectWorkspace } from './manifest.mjs';
 import { runPgA0Task } from './runner.mjs';
-import { validateTaskPrBinding } from './git-task-pr.mjs';
+import * as gitTaskPr from './git-task-pr.mjs';
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'gf-pg-a0-'));
 const projectRoot = path.join(root, 'projects', 'fixture');
@@ -17,6 +17,10 @@ const git = (args) => {
 };
 
 try {
+  assert.equal(Object.hasOwn(gitTaskPr, 'prepareTaskGitBranch'), false);
+  assert.equal(Object.hasOwn(gitTaskPr, 'publishTaskPullRequest'), false);
+  assert.equal(Object.hasOwn(gitTaskPr, 'rollbackTaskGitBranch'), false);
+
   const manifest = initializeProjectWorkspace(projectRoot, {
     projectId: 'fixture',
     ownerVision: 'Prove one bounded PG-A0 task without a paid model call.',
@@ -88,6 +92,7 @@ try {
   git(['config', 'user.email', 'pg-a0@example.invalid']);
   git(['add', '.']);
   git(['commit', '-m', 'fixture baseline']);
+  const baseHeadSha = git(['rev-parse', 'HEAD']);
 
   const newContent = 'export const value = 2;\n';
   let requestedContext = null;
@@ -129,7 +134,7 @@ try {
           html_url: 'https://github.example/pr/77',
           draft: postedBody.draft,
           head: { sha: headSha, ref: postedBody.head },
-          base: { ref: postedBody.base }
+          base: { sha: baseHeadSha, ref: postedBody.base }
         })
       };
     }
@@ -138,6 +143,7 @@ try {
   assert.equal(result.status, 'pr-open');
   assert.equal(result.pullRequest.draft, false);
   assert.equal(result.pullRequest.headSha, result.binding.headSha);
+  assert.equal(result.pullRequest.baseSha, result.binding.baseHeadSha);
   assert.equal(result.binding.baselineTreeSha256, result.promotion.state.baseline.treeSha256);
   assert.equal(result.binding.evidenceSha256, result.promotion.evidenceSha256);
   assert.equal(requestedContext.taskId, task.taskId);
@@ -150,7 +156,14 @@ try {
   assert.ok(committedFiles.length > 0);
   assert.equal(committedFiles.every((file) => file.startsWith('projects/fixture/')), true);
   assert.equal(committedFiles.some((file) => file.startsWith('runtime-state/')), false);
-  assert.throws(() => validateTaskPrBinding(result.binding, {
+  assert.deepEqual(committedFiles.sort(), [
+    'projects/fixture/.factory/evidence/TASK-1/'.concat(
+      fs.readdirSync(path.join(projectRoot, '.factory', 'evidence', 'TASK-1'))[0]
+    ),
+    'projects/fixture/.factory/project-state.json',
+    'projects/fixture/src/value.mjs'
+  ].sort());
+  assert.throws(() => gitTaskPr.validateTaskPrBinding(result.binding, {
     task,
     promotion: result.promotion,
     expectedHeadSha: 'f'.repeat(40)
