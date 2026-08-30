@@ -1,8 +1,15 @@
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
-import { assertSafeId, assertSha256, validateTaskContract } from './contracts.mjs';
+import { assertSha256, validateTaskContract } from './contracts.mjs';
 
 const PR_BINDING_SCHEMA = 'project-game.task-pr-binding/v1';
+const GIT_COMMIT_SHA = /^[0-9a-f]{40}$/;
+
+function assertGitCommitSha(value, field) {
+  const text = String(value || '').trim().toLowerCase();
+  if (!GIT_COMMIT_SHA.test(text)) throw new Error(`${field} must be a Git commit SHA`);
+  return text;
+}
 
 function git(args, cwd, { allowFailure = false } = {}) {
   const result = spawnSync('git', args, { cwd, encoding: 'utf8' });
@@ -44,7 +51,7 @@ export function prepareTaskGitBranch({ repoRoot, projectRoot, task, baseBranch =
   if (git(['status', '--porcelain', '--untracked-files=all'], root).stdout) {
     throw new Error('PG-A0 requires a clean repository before task execution');
   }
-  const baseHeadSha = git(['rev-parse', 'HEAD'], root).stdout;
+  const baseHeadSha = assertGitCommitSha(git(['rev-parse', 'HEAD'], root).stdout, 'base Git head');
   const branchName = `project-task/${checkedTask.projectId}/${checkedTask.taskId}`;
   const existing = git(['show-ref', '--verify', '--quiet', `refs/heads/${branchName}`], root, { allowFailure: true });
   if (existing.status === 0) throw new Error(`task branch already exists: ${branchName}`);
@@ -77,8 +84,11 @@ export function validateTaskPrBinding(binding, { task, promotion, expectedHeadSh
   if (binding.taskContractSha256 !== checkedTask.contractSha256) throw new Error('task PR binding contract mismatch');
   if (binding.baselineTreeSha256 !== baseline.treeSha256) throw new Error('task PR binding baseline mismatch');
   if (binding.evidenceSha256 !== baseline.evidenceSha256) throw new Error('task PR binding evidence mismatch');
-  assertSha256(binding.headSha, 'task PR binding headSha');
-  if (expectedHeadSha && binding.headSha !== expectedHeadSha) throw new Error('task PR head moved after binding');
+  const headSha = assertGitCommitSha(binding.headSha, 'task PR binding headSha');
+  assertGitCommitSha(binding.baseHeadSha, 'task PR binding baseHeadSha');
+  if (expectedHeadSha && headSha !== assertGitCommitSha(expectedHeadSha, 'expected task PR head')) {
+    throw new Error('task PR head moved after binding');
+  }
   return binding;
 }
 
@@ -123,7 +133,7 @@ export async function publishTaskPullRequest({
     throw new Error('task commit contains paths outside project workspace');
   }
   git(['commit', '-m', `project(${checkedTask.projectId}): ${checkedTask.taskId} ${checkedTask.title}`], context.root);
-  const headSha = git(['rev-parse', 'HEAD'], context.root).stdout;
+  const headSha = assertGitCommitSha(git(['rev-parse', 'HEAD'], context.root).stdout, 'task Git head');
   const binding = Object.freeze({
     schemaVersion: PR_BINDING_SCHEMA,
     taskId: checkedTask.taskId,
