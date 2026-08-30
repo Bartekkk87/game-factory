@@ -22,7 +22,11 @@ function git(args, cwd, { allowFailure = false } = {}) {
   if (!allowFailure && result.status !== 0) {
     throw new Error(`git ${args.join(' ')} failed: ${String(result.stderr || result.stdout || '').trim()}`);
   }
-  return { status: result.status, stdout: String(result.stdout || '').trim() };
+  return {
+    status: result.status,
+    stdout: String(result.stdout || '').trim(),
+    stderr: String(result.stderr || '').trim()
+  };
 }
 
 function deepFreeze(value) {
@@ -245,8 +249,13 @@ async function publishVerifiedTask({ context, task, promotion, repository, token
 
 function rollbackTaskGitBranch(context) {
   if (!context?.root || !context.baseHeadSha || !context.baseBranch || !context.branchName) return;
+  let remoteCleanupError = null;
   if (context.remotePushed) {
-    git(['push', 'origin', '--delete', context.branchName], context.root, { allowFailure: true });
+    const deletion = git(['push', 'origin', '--delete', context.branchName], context.root, { allowFailure: true });
+    if (deletion.status !== 0) {
+      const detail = deletion.stderr || deletion.stdout || 'unknown git error';
+      remoteCleanupError = new Error(`task rollback remote cleanup failed: ${detail}`);
+    }
   }
   const currentBranch = git(['rev-parse', '--abbrev-ref', 'HEAD'], context.root, { allowFailure: true }).stdout;
   if (currentBranch === context.branchName) {
@@ -257,6 +266,7 @@ function rollbackTaskGitBranch(context) {
     git(['switch', context.baseBranch], context.root, { allowFailure: true });
   }
   git(['branch', '-D', context.branchName], context.root, { allowFailure: true });
+  if (remoteCleanupError) throw remoteCleanupError;
 }
 
 function loadApprovedTask(projectRoot, manifest, taskId, ownerTaskContractSha256) {
@@ -359,7 +369,14 @@ export async function runPgA0Task({
       }
     });
   } catch (error) {
-    rollbackTaskGitBranch(gitContext);
+    try {
+      rollbackTaskGitBranch(gitContext);
+    } catch (rollbackError) {
+      throw new AggregateError(
+        [error, rollbackError],
+        `PG-A0 task failed and rollback cleanup failed: ${error.message}; ${rollbackError.message}`
+      );
+    }
     throw error;
   }
 }
