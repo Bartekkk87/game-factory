@@ -29,6 +29,8 @@ Neither pass changed the NO-GO verdict or the three P0 findings.
 the authoritative bounded implementation handoff. It freezes the accepted findings, corrects
 the final Tree-SHA interpretation, defines the remediation order and requires executable
 negative regression tests before any blocker can be closed. No further broad audit is planned.
+This index registration is the final change in the audit PR so the Branch Verifier and trusted
+required check bind to the exact handoff head rather than to an earlier documentation commit.
 
 ## Current Product experiment
 
