@@ -222,7 +222,7 @@ try {
     /redefines verified regression/
   );
 
-  const saveContract = createPersistenceContract({ schemaVersion: '1.0.0', slots: 2, maxBytes: 4096, equivalenceProjection: ['world.ticks', 'inventory.metal'] });
+  const saveContract = createPersistenceContract({ schemaVersion: '1.0.0', slots: 2, maxBytes: 4096, transientStatePaths: ['transient'] });
   let saved = null;
   let current = null;
   const adapter = {

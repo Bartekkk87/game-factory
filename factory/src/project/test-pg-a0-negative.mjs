@@ -120,6 +120,18 @@ function initializeFixture({ withRemote = false } = {}) {
     `${JSON.stringify(task, null, 2)}\n`
   );
 
+  fs.writeFileSync(
+    path.join(projectRoot, '.factory', 'approvals', `${task.taskId}.json`),
+    `${JSON.stringify({`,
+      schemaVersion: 'project-game.owner-task-approval/v1',
+      projectId: task.projectId,
+      taskId: task.taskId,
+      taskContractSha256: task.contractSha256,
+      approvedBy: 'owner-test-fixture',
+      authorityVersion: 'test-fixture/v1'
+    }, null, 2)}\n`
+  );
+
   git(root, ['init']);
   git(root, ['branch', '-M', 'main']);
   git(root, ['config', 'user.name', 'PG-A0 Negative Fixture']);
