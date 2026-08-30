@@ -3,34 +3,155 @@ name: project-pr-provenance
 on:
   pull_request_target:
     types: [opened, synchronize, reopened, ready_for_review, edited]
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: Repository owner/name bound to the Project Task PR
+        required: true
+        type: string
+      pr_number:
+        description: Project Task pull request number
+        required: true
+        type: string
+      project_id:
+        description: Bound Project identifier
+        required: true
+        type: string
+      task_id:
+        description: Bound Task identifier
+        required: true
+        type: string
+      expected_head_sha:
+        description: Exact candidate head SHA
+        required: true
+        type: string
+      expected_base_ref:
+        description: Exact expected base ref
+        required: true
+        type: string
+      expected_base_sha:
+        description: Exact expected base SHA
+        required: true
+        type: string
 
 permissions:
   actions: write
+  checks: write
   contents: read
   pull-requests: read
 
 concurrency:
-  group: trusted-project-pr-provenance-${{ github.event.pull_request.number }}
+  group: trusted-project-pr-provenance-${{ github.event.pull_request.number || inputs.pr_number || github.run_id }}
   cancel-in-progress: true
 
 jobs:
   verify-project-pr:
     name: verify-project-pr
-    if: github.event.pull_request.draft == false
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
+      - name: Resolve trusted invocation
+        id: invocation
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_REPOSITORY: ${{ inputs.repository }}
+          DISPATCH_PR_NUMBER: ${{ inputs.pr_number }}
+          DISPATCH_PROJECT_ID: ${{ inputs.project_id }}
+          DISPATCH_TASK_ID: ${{ inputs.task_id }}
+          DISPATCH_HEAD_SHA: ${{ inputs.expected_head_sha }}
+          DISPATCH_BASE_REF: ${{ inputs.expected_base_ref }}
+          DISPATCH_BASE_SHA: ${{ inputs.expected_base_sha }}
+          EVENT_PR_NUMBER: ${{ github.event.pull_request.number }}
+          EVENT_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          EVENT_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          EVENT_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          EVENT_BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            REPOSITORY="$DISPATCH_REPOSITORY"
+            PR_NUMBER="$DISPATCH_PR_NUMBER"
+            PROJECT_ID="$DISPATCH_PROJECT_ID"
+            TASK_ID="$DISPATCH_TASK_ID"
+            HEAD_SHA="${DISPATCH_HEAD_SHA,,}"
+            HEAD_REF="project-task/${PROJECT_ID}/${TASK_ID}"
+            BASE_REF="$DISPATCH_BASE_REF"
+            BASE_SHA="${DISPATCH_BASE_SHA,,}"
+            if ! [[ "$PROJECT_ID" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || ! [[ "$TASK_ID" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
+              echo "trusted Project PR dispatch project/task identity invalid" >&2
+              exit 1
+            fi
+          else
+            REPOSITORY="$GITHUB_REPOSITORY"
+            PR_NUMBER="$EVENT_PR_NUMBER"
+            PROJECT_ID=""
+            TASK_ID=""
+            HEAD_SHA="${EVENT_HEAD_SHA,,}"
+            HEAD_REF="$EVENT_HEAD_REF"
+            BASE_REF="$EVENT_BASE_REF"
+            BASE_SHA="${EVENT_BASE_SHA,,}"
+          fi
+          if [ "$REPOSITORY" != "$GITHUB_REPOSITORY" ]; then
+            echo "trusted Project PR dispatch repository mismatch" >&2
+            exit 1
+          fi
+          if ! [[ "$PR_NUMBER" =~ ^[1-9][0-9]*$ ]]; then
+            echo "trusted Project PR number invalid" >&2
+            exit 1
+          fi
+          if ! [[ "$HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || ! [[ "$BASE_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "trusted Project PR dispatch SHA invalid" >&2
+            exit 1
+          fi
+          if [ -z "$HEAD_REF" ] || [ -z "$BASE_REF" ]; then
+            echo "trusted Project PR dispatch ref invalid" >&2
+            exit 1
+          fi
+          {
+            echo "repository=$REPOSITORY"
+            echo "pr_number=$PR_NUMBER"
+            echo "project_id=$PROJECT_ID"
+            echo "task_id=$TASK_ID"
+            echo "head_sha=$HEAD_SHA"
+            echo "head_ref=$HEAD_REF"
+            echo "base_sha=$BASE_SHA"
+            echo "base_ref=$BASE_REF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Open candidate-head required check
+        id: candidate_check
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ steps.invocation.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+          RESPONSE=$(gh api -X POST \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/check-runs" \
+            -f name='verify-project-pr' \
+            -f head_sha="$HEAD_SHA" \
+            -f status='in_progress' \
+            -f started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)")
+          CHECK_ID=$(printf '%s' "$RESPONSE" | jq -r '.id')
+          if ! [[ "$CHECK_ID" =~ ^[1-9][0-9]*$ ]]; then
+            echo "trusted Project PR candidate check creation failed" >&2
+            exit 1
+          fi
+          echo "check_id=$CHECK_ID" >> "$GITHUB_OUTPUT"
+
       - name: Checkout trusted base
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.base.sha }}
+          ref: ${{ steps.invocation.outputs.base_sha }}
           path: trusted-base
           persist-credentials: false
 
       - name: Checkout candidate for immutable-control comparison
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ steps.invocation.outputs.head_sha }}
           path: candidate
           persist-credentials: false
 
@@ -39,6 +160,7 @@ jobs:
           node-version: '24'
 
       - name: Protect trusted provenance control plane
+        id: protect
         run: |
           set -euo pipefail
           for FILE in \
@@ -59,7 +181,15 @@ jobs:
         id: identity
         env:
           GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_NUMBER: ${{ steps.invocation.outputs.pr_number }}
+          EXPECTED_REPOSITORY: ${{ steps.invocation.outputs.repository }}
+          EXPECTED_PROJECT_ID: ${{ steps.invocation.outputs.project_id }}
+          EXPECTED_TASK_ID: ${{ steps.invocation.outputs.task_id }}
+          EXPECTED_HEAD_SHA: ${{ steps.invocation.outputs.head_sha }}
+          EXPECTED_HEAD_REF: ${{ steps.invocation.outputs.head_ref }}
+          EXPECTED_BASE_SHA: ${{ steps.invocation.outputs.base_sha }}
+          EXPECTED_BASE_REF: ${{ steps.invocation.outputs.base_ref }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
           set -euo pipefail
           gh api \
@@ -71,11 +201,30 @@ jobs:
             "/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files?per_page=100" \
             --jq '.[].filename' \
             > changed-files.txt
+          jq -n \
+            --argjson number "$PR_NUMBER" \
+            --arg repository "$EXPECTED_REPOSITORY" \
+            --arg headSha "$EXPECTED_HEAD_SHA" \
+            --arg headRef "$EXPECTED_HEAD_REF" \
+            --arg baseSha "$EXPECTED_BASE_SHA" \
+            --arg baseRef "$EXPECTED_BASE_REF" \
+            '{pull_request: {
+              number: $number,
+              head: {sha: $headSha, ref: $headRef, repo: {full_name: $repository}},
+              base: {sha: $baseSha, ref: $baseRef, repo: {full_name: $repository}}
+            }}' > expected-event.json
           node trusted-base/factory/src/project/trusted-pr-provenance.mjs \
-            --event "$GITHUB_EVENT_PATH" \
+            --event expected-event.json \
             --pull live-pr.json \
             --files changed-files.txt \
             --out initial-provenance.json
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            jq -e \
+              --arg projectId "$EXPECTED_PROJECT_ID" \
+              --arg taskId "$EXPECTED_TASK_ID" \
+              '.required == true and .projectId == $projectId and .taskId == $taskId' \
+              initial-provenance.json > /dev/null
+          fi
           cat initial-provenance.json
           echo "required=$(jq -r '.required' initial-provenance.json)" >> "$GITHUB_OUTPUT"
           echo "head_ref=$(jq -r '.headRef' initial-provenance.json)" >> "$GITHUB_OUTPUT"
@@ -136,9 +285,10 @@ jobs:
           exit 1
 
       - name: Revalidate PR head and base after verification
+        id: revalidate
         env:
           GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_NUMBER: ${{ steps.invocation.outputs.pr_number }}
           REQUIRED: ${{ steps.identity.outputs.required }}
           VERIFIER_RUN_ID: ${{ steps.verifier.outputs.run_id }}
           VERIFIER_RUN_URL: ${{ steps.verifier.outputs.run_url }}
@@ -149,7 +299,7 @@ jobs:
             "/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" \
             > live-pr-final.json
           node trusted-base/factory/src/project/trusted-pr-provenance.mjs \
-            --event "$GITHUB_EVENT_PATH" \
+            --event expected-event.json \
             --pull live-pr-final.json \
             --files changed-files.txt \
             --out final-provenance.json
@@ -175,10 +325,34 @@ jobs:
           cat trusted-project-pr-provenance-evidence.json
 
       - name: Preserve trusted PR provenance evidence
+        id: preserve
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: trusted-project-pr-provenance-${{ github.event.pull_request.number }}-${{ github.run_id }}
+          name: trusted-project-pr-provenance-${{ steps.invocation.outputs.pr_number }}-${{ github.run_id }}
           path: trusted-project-pr-provenance-evidence.json
           if-no-files-found: warn
           retention-days: 30
+
+      - name: Complete candidate-head required check
+        if: always() && github.event_name == 'workflow_dispatch' && steps.candidate_check.outputs.check_id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHECK_ID: ${{ steps.candidate_check.outputs.check_id }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          if [ "$JOB_STATUS" = "success" ]; then
+            CONCLUSION="success"
+          elif [ "$JOB_STATUS" = "cancelled" ]; then
+            CONCLUSION="cancelled"
+          else
+            CONCLUSION="failure"
+          fi
+          gh api -X PATCH \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/check-runs/${CHECK_ID}" \
+            -f status='completed' \
+            -f conclusion="$CONCLUSION" \
+            -f completed_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            > /dev/null
