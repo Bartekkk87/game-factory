@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "project-game.task-evidence/v1",
+  "projectId": "pg-a0-reality",
+  "taskId": "TASK-REALITY-1",
+  "taskContractSha256": "165204ed3144b488061dfb36a43a3a610ca63956cc7d92078d4c3bb39d0fa032",
+  "manifestSha256": "79b1228fd26b1b1a4f11c734ecc8abd0c13501b58fcaf74aacc502b26f1caee5",
+  "model": {
+    "provider": "deterministic-fixture",
+    "actualModel": "zero-paid-engineer-fixture",
+    "operation": "project-task"
+  },
+  "operation": {
+    "operation": "project-task",
+    "context": {
+      "schemaVersion": "project-game.context-selection/v1",
+      "selectionSha256": "da8b7004d3ae7fb37b9d6d2957746681a917c5359e3ff96fe779ae996e75817c",
+      "selectedFileCount": 8,
+      "selectedBytes": 3889
+    }
+  },
+  "context": {
+    "schemaVersion": "project-game.context-selection/v1",
+    "selectionSha256": "da8b7004d3ae7fb37b9d6d2957746681a917c5359e3ff96fe779ae996e75817c",
+    "selectedFileCount": 8,
+    "selectedBytes": 3889
+  },
+  "filesChanged": [
+    {
+      "path": "src/value.mjs",
+      "operation": "MODIFY",
+      "beforeSha256": "5d8f65d2774e206bc9f7a7a4ad39ca2dc563b5c31e46ab57ef4874961237ce29",
+      "afterSha256": "f4918c8ac9858f83b2c0307536179d6bd283bc7c20ba34b53074721f43611f4a",
+      "beforeBytes": 24,
+      "afterBytes": 24
+    }
+  ],
+  "baselineBefore": "5ce640e53c0f8ab98fd0580658775084f15da16e611ade30dfd2efdcf0b8b75e",
+  "baselineAfter": "d4037dad311b12ec058674f76e8c7316cd0ff2d478f72564f2cdbb770339fa6d",
+  "verification": {
+    "schemaVersion": "project-game.verification-result/v1",
+    "planSha256": "0dd800a21af1f73f7dc3be3b5a0d4f19fa4b33cef3447834eeaab220f9c58205",
+    "taskId": "TASK-REALITY-1",
+    "pass": true,
+    "checks": [
+      {
+        "id": "unit-value",
+        "level": "L2",
+        "pass": true,
+        "independent": true,
+        "evidenceSha256": "27f8727c1044f26ddd9b2afa799a321730e418b62291a0fc4fc38c69b2bf2c50",
+        "artifactPath": ".factory/verification/TASK-REALITY-1/unit-value.json",
+        "detail": "",
+        "runner": "node-direct/v1",
+        "producer": "verification-script-process/v1",
+        "verifier": "project-control-runner/v1"
+      },
+      {
+        "id": "integration-value",
+        "level": "L4",
+        "pass": true,
+        "independent": true,
+        "evidenceSha256": "267889e2a128ff66aa2fe7e74f0a37bf2de2a64267e1aae9e7b301af05120549",
+        "artifactPath": ".factory/verification/TASK-REALITY-1/integration-value.json",
+        "detail": "",
+        "runner": "node-direct/v1",
+        "producer": "verification-script-process/v1",
+        "verifier": "project-control-runner/v1"
+      },
+      {
+        "id": "regression-value",
+        "level": "L5",
+        "pass": true,
+        "independent": true,
+        "evidenceSha256": "56e8a55e60e1c6abca47982c29169d294211f89c7aa933176f59f2d171c0b5f5",
+        "artifactPath": ".factory/verification/TASK-REALITY-1/regression-value.json",
+        "detail": "",
+        "runner": "node-direct/v1",
+        "producer": "verification-script-process/v1",
+        "verifier": "project-control-runner/v1"
+      }
+    ],
+    "failures": []
+  },
+  "result": "PASS",
+  "verifiedAt": "2026-08-30T12:00:00.000Z"
+}
