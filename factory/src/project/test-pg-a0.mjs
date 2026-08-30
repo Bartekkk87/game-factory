@@ -132,6 +132,7 @@ try {
         json: async () => ({
           number: 77,
           html_url: 'https://github.example/pr/77',
+          body: postedBody.body,
           draft: postedBody.draft,
           head: { sha: headSha, ref: postedBody.head },
           base: { sha: baseHeadSha, ref: postedBody.base }
@@ -144,6 +145,9 @@ try {
   assert.equal(result.pullRequest.draft, false);
   assert.equal(result.pullRequest.headSha, result.binding.headSha);
   assert.equal(result.pullRequest.baseSha, result.binding.baseHeadSha);
+  assert.equal(result.binding.projectId, task.projectId);
+  assert.equal(result.binding.headRef, result.pullRequest.headRef);
+  assert.equal(result.binding.baseRef, result.pullRequest.baseRef);
   assert.equal(result.binding.baselineTreeSha256, result.promotion.state.baseline.treeSha256);
   assert.equal(result.binding.evidenceSha256, result.promotion.evidenceSha256);
   assert.equal(requestedContext.taskId, task.taskId);
@@ -163,6 +167,16 @@ try {
     'projects/fixture/.factory/project-state.json',
     'projects/fixture/src/value.mjs'
   ].sort());
+
+  const durable = gitTaskPr.parseTaskPrBindingBody(postedBody.body);
+  gitTaskPr.validateTaskPrAuthorityRecord(durable, {
+    head: { sha: result.pullRequest.headSha, ref: result.pullRequest.headRef },
+    base: { sha: result.pullRequest.baseSha, ref: result.pullRequest.baseRef }
+  });
+  assert.throws(() => gitTaskPr.validateTaskPrAuthorityRecord(durable, {
+    head: { sha: 'f'.repeat(40), ref: result.pullRequest.headRef },
+    base: { sha: result.pullRequest.baseSha, ref: result.pullRequest.baseRef }
+  }), /head moved/);
   assert.throws(() => gitTaskPr.validateTaskPrBinding(result.binding, {
     task,
     promotion: result.promotion,
