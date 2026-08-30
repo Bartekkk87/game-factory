@@ -1,33 +1,12 @@
-import { spawnSync } from 'node:child_process';
-import path from 'node:path';
 import { assertSha256, validateTaskContract } from './contracts.mjs';
 
 const PR_BINDING_SCHEMA = 'project-game.task-pr-binding/v1';
 const GIT_COMMIT_SHA = /^[0-9a-f]{40}$/;
 
-function assertGitCommitSha(value, field) {
+export function assertGitCommitSha(value, field) {
   const text = String(value || '').trim().toLowerCase();
   if (!GIT_COMMIT_SHA.test(text)) throw new Error(`${field} must be a Git commit SHA`);
   return text;
-}
-
-function git(args, cwd, { allowFailure = false } = {}) {
-  const result = spawnSync('git', args, { cwd, encoding: 'utf8' });
-  if (!allowFailure && result.status !== 0) {
-    throw new Error(`git ${args.join(' ')} failed: ${String(result.stderr || result.stdout || '').trim()}`);
-  }
-  return { status: result.status, stdout: String(result.stdout || '').trim() };
-}
-
-function projectRepoPath(repoRoot, projectRoot, projectId) {
-  const relative = path.relative(path.resolve(repoRoot), path.resolve(projectRoot)).split(path.sep).join('/');
-  if (!relative || relative.startsWith('../') || path.isAbsolute(relative)) {
-    throw new Error('project root must be inside repository');
-  }
-  if (relative !== `projects/${projectId}`) {
-    throw new Error(`PG-A0 project root must be projects/${projectId}`);
-  }
-  return relative;
 }
 
 function checkedPromotion(task, promotion) {
@@ -42,24 +21,22 @@ function checkedPromotion(task, promotion) {
   });
 }
 
-export function prepareTaskGitBranch({ repoRoot, projectRoot, task, baseBranch = 'main' } = {}) {
+export function createTaskPrBinding({ task, promotion, baseHeadSha, headSha } = {}) {
   const checkedTask = validateTaskContract(task);
-  const root = path.resolve(repoRoot);
-  const projectPath = projectRepoPath(root, projectRoot, checkedTask.projectId);
-  const currentBranch = git(['rev-parse', '--abbrev-ref', 'HEAD'], root).stdout;
-  if (currentBranch !== baseBranch) throw new Error(`PG-A0 must start on ${baseBranch}, found ${currentBranch}`);
-  if (git(['status', '--porcelain', '--untracked-files=all'], root).stdout) {
-    throw new Error('PG-A0 requires a clean repository before task execution');
-  }
-  const baseHeadSha = assertGitCommitSha(git(['rev-parse', 'HEAD'], root).stdout, 'base Git head');
-  const branchName = `project-task/${checkedTask.projectId}/${checkedTask.taskId}`;
-  const existing = git(['show-ref', '--verify', '--quiet', `refs/heads/${branchName}`], root, { allowFailure: true });
-  if (existing.status === 0) throw new Error(`task branch already exists: ${branchName}`);
-  git(['switch', '-c', branchName], root);
-  return Object.freeze({ root, projectPath, baseBranch, baseHeadSha, branchName });
+  const baseline = checkedPromotion(checkedTask, promotion);
+  const binding = Object.freeze({
+    schemaVersion: PR_BINDING_SCHEMA,
+    taskId: checkedTask.taskId,
+    taskContractSha256: checkedTask.contractSha256,
+    baselineTreeSha256: baseline.treeSha256,
+    evidenceSha256: baseline.evidenceSha256,
+    baseHeadSha: assertGitCommitSha(baseHeadSha, 'task PR binding baseHeadSha'),
+    headSha: assertGitCommitSha(headSha, 'task PR binding headSha')
+  });
+  return validateTaskPrBinding(binding, { task: checkedTask, promotion, expectedHeadSha: binding.headSha });
 }
 
-function bindingBody(binding) {
+export function taskPrBindingBody(binding) {
   return [
     '## Project Game Mode PG-A0 binding',
     '',
@@ -90,85 +67,6 @@ export function validateTaskPrBinding(binding, { task, promotion, expectedHeadSh
     throw new Error('task PR head moved after binding');
   }
   return binding;
-}
-
-async function githubCreatePr({ repository, token, baseBranch, branchName, title, body, fetchImpl }) {
-  if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(String(repository || ''))) {
-    throw new Error('GITHUB_REPOSITORY owner/name is required');
-  }
-  if (!String(token || '').trim()) throw new Error('GITHUB_TOKEN is required to create task PR');
-  const response = await fetchImpl(`https://api.github.com/repos/${repository}/pulls`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/vnd.github+json',
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      'X-GitHub-Api-Version': '2022-11-28'
-    },
-    body: JSON.stringify({ title, body, head: branchName, base: baseBranch, draft: false })
-  });
-  if (!response.ok) throw new Error(`GitHub task PR creation failed: HTTP ${response.status}`);
-  return response.json();
-}
-
-export async function publishTaskPullRequest({
-  gitContext,
-  task,
-  promotion,
-  repository = process.env.GITHUB_REPOSITORY,
-  token = process.env.GITHUB_TOKEN,
-  fetchImpl = globalThis.fetch,
-  push = true
-} = {}) {
-  const checkedTask = validateTaskContract(task);
-  const baseline = checkedPromotion(checkedTask, promotion);
-  const context = gitContext || {};
-  if (!context.root || !context.projectPath || !context.branchName || !context.baseHeadSha) {
-    throw new Error('task git context invalid');
-  }
-  git(['add', '--', context.projectPath], context.root);
-  const staged = git(['diff', '--cached', '--name-only'], context.root).stdout.split('\n').filter(Boolean);
-  if (!staged.length) throw new Error('verified baseline produced no Git changes');
-  if (staged.some((file) => file !== context.projectPath && !file.startsWith(`${context.projectPath}/`))) {
-    throw new Error('task commit contains paths outside project workspace');
-  }
-  git(['commit', '-m', `project(${checkedTask.projectId}): ${checkedTask.taskId} ${checkedTask.title}`], context.root);
-  const headSha = assertGitCommitSha(git(['rev-parse', 'HEAD'], context.root).stdout, 'task Git head');
-  const binding = Object.freeze({
-    schemaVersion: PR_BINDING_SCHEMA,
-    taskId: checkedTask.taskId,
-    taskContractSha256: checkedTask.contractSha256,
-    baselineTreeSha256: baseline.treeSha256,
-    evidenceSha256: baseline.evidenceSha256,
-    baseHeadSha: context.baseHeadSha,
-    headSha
-  });
-  validateTaskPrBinding(binding, { task: checkedTask, promotion, expectedHeadSha: headSha });
-  if (push) git(['push', '--set-upstream', 'origin', context.branchName], context.root);
-  if (typeof fetchImpl !== 'function') throw new Error('task PR fetch implementation missing');
-  const pull = await githubCreatePr({
-    repository,
-    token,
-    baseBranch: context.baseBranch,
-    branchName: context.branchName,
-    title: `[Project ${checkedTask.projectId}] ${checkedTask.taskId}: ${checkedTask.title}`,
-    body: bindingBody(binding),
-    fetchImpl
-  });
-  if (pull?.draft !== false) throw new Error('task PR must be non-draft');
-  if (pull?.head?.sha !== headSha) throw new Error('created task PR head does not match bound Git head');
-  if (pull?.head?.ref !== context.branchName || pull?.base?.ref !== context.baseBranch) {
-    throw new Error('created task PR branch binding mismatch');
-  }
-  return Object.freeze({ binding, pullRequest: pull });
-}
-
-export function rollbackTaskGitBranch(gitContext) {
-  const context = gitContext || {};
-  if (!context.root || !context.baseHeadSha || !context.baseBranch || !context.branchName) return;
-  git(['reset', '--hard', context.baseHeadSha], context.root);
-  git(['switch', context.baseBranch], context.root);
-  git(['branch', '-D', context.branchName], context.root, { allowFailure: true });
 }
 
 export const TASK_PR_BINDING_SCHEMA = PR_BINDING_SCHEMA;
