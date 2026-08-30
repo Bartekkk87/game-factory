@@ -77,14 +77,14 @@ export async function runSaveReloadProof({ contract, adapter, slot = 0, state } 
   const serialized = JSON.stringify({ schemaVersion: contract.saveSchemaVersion, state: expectedCanonical });
   if (Buffer.byteLength(serialized) > contract.maxBytes) throw new Error('save exceeds persistence size limit');
   const first = await adapter.createSession();
-  await first.setState(state);
+  await first.setState(expectedCanonical);
   await first.save(slot);
   await first.close();
   const reloaded = await adapter.reloadSession();
   await reloaded.load(slot);
   const actual = await reloaded.getState();
   await reloaded.close();
-  const comparison = comparePersistedState(contract, state, actual);
+  const comparison = comparePersistedState(contract, expectedCanonical, actual);
   const actualCanonical = deriveCanonicalDurableState(contract, actual);
   return Object.freeze({
     schemaVersion: 'project-game.save-reload-proof/v1',
