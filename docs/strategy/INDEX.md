@@ -5,10 +5,10 @@ This index prevents dated strategy snapshots from silently competing for authori
 ## Current authority
 
 1. `ARCHITECTURE.md` — canonical architecture and current proof boundary.
-2. `PROJECT-GAME-MODE-V0.1-ARCHITECTURE.md` — canonical scoped architecture for the parallel persistent Project Game execution layer.
-3. `PROJECT-GAME-MODE-V0.1-IMPLEMENTATION-CATALOG.md` — canonical bounded Foundation implementation catalog.
-4. `PROJECT-GAME-MODE-V0.1-FALSIFICATION.md` — canonical adversarial findings and scale boundary.
-5. `PROJECT-GAME-MODE-V0.1-HANDOFF.md` — current bounded Project Game remediation evidence and continuation handoff for PR #66.
+2. `PROJECT-GAME-MODE-V0.1-ARCHITECTURE.md` — canonical scoped architecture for the parallel persistent Project Game execution layer, including PG-A0 task execution and durable task-PR Git authority binding.
+3. `PROJECT-GAME-MODE-V0.1-IMPLEMENTATION-CATALOG.md` — canonical bounded Project Foundation + PG-A0 implementation catalog.
+4. `PROJECT-GAME-MODE-V0.1-FALSIFICATION.md` — canonical adversarial findings, PG-A0 trust-boundary falsification and scale boundary.
+5. `PROJECT-GAME-MODE-V0.1-HANDOFF.md` — durable PG-A0 merge gate and continuation handoff: protected-main integration evidence is recorded externally in Issue #62/Notion; after integration the next proof is one real zero-paid scoped task PR, then the Web persistence host bridge, then only separately authorized Kepler execution.
 6. `INDEPENDENT-REAUDIT-REMEDIATION-CLOSURE-2026-08-29.md` — canonical closure record for the independent re-audit residuals, including the trusted required-check root, hardened Learning provenance, repair-budget accounting, transient memory-state handling and exact-main verification.
 7. `PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md` — canonical project-progress snapshot for its role until a newer progress snapshot explicitly supersedes it.
 
@@ -45,6 +45,8 @@ The later role-token-ceiling / free-route hardening reached `main` through PR `#
 - PR #56 branch verifier `33252188281` — **SUCCESS**.
 - PR #56 trusted required selftest `33252189410` — **SUCCESS**.
 - Exact-main post-merge verifier `33252481657` — **SUCCESS**.
+
+For Project Game Mode, immutable PG-A0 implementation/falsification checkpoint evidence and the rule for final exact-head integration evidence are maintained in the four canonical PG-A0 documents above. Exact PR #67 final head/run IDs, merge SHA and post-merge `main` verification belong in Issue #62 and the canonical Notion progress page so repository documents do not become self-referential/stale.
 
 Nemotron Free Production Run #53 (`33252485756`, runtime `20260829-122640`) failed closed in the Director transport after exactly 360 seconds. This is transport/latency evidence, not Product-quality evidence and not authorization for a rerun.
 
