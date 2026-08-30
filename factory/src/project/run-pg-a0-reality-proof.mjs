@@ -46,7 +46,6 @@ const result = await runPgA0Task({
   repoRoot,
   projectRoot,
   taskId: TASK_ID,
-  ownerTaskContractSha256: TASK_SHA256,
   baseBranch: 'main',
   repository,
   token,
