@@ -14,7 +14,7 @@ const persistenceContract = createPersistenceContract({
   schemaVersion: '1.2.0',
   slots: 2,
   maxBytes: 512,
-  equivalenceProjection: ['world.ticks', 'inventory.metal']
+  transientStatePaths: ['transient']
 });
 const runtimeContract = {
   schemaVersion: WEB_RUNTIME_ADAPTER_SCHEMA,

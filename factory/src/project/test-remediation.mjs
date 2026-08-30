@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import {
   createTaskContract,
   sha256,
@@ -19,6 +20,8 @@ import {
 } from './transaction.mjs';
 
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'gf-project-remediation-'));
+const gitInit = spawnSync('git', ['init'], { cwd: temp, encoding: 'utf8' });
+assert.equal(gitInit.status, 0, `git init failed: ${gitInit.stderr || gitInit.stdout}`);
 
 function createProject(name) {
   const projectRoot = path.join(temp, 'projects', name);

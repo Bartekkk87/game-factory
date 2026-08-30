@@ -1,0 +1,30 @@
+name: Project P1 Persistence Proof
+
+on:
+  push:
+    paths:
+      - 'factory/src/project/persistence-contract.mjs'
+      - 'factory/src/project/persistence-host-bridge.mjs'
+      - 'factory/src/project/web-runtime-adapter.mjs'
+      - 'factory/src/project/test-browser-persistence.mjs'
+      - '.github/workflows/project-p1-persistence-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-persistence-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Prove Project browser persistence
+        run: node factory/src/project/test-browser-persistence.mjs

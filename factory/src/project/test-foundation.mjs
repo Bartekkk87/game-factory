@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { createTaskContract, sha256, validateTaskContract } from './contracts.mjs';
 import { initializeProjectWorkspace, loadProjectManifest, projectWorkspaceLayout } from './manifest.mjs';
 import { buildProjectContext } from './context-builder.mjs';
@@ -18,6 +19,8 @@ import {
 } from './transaction.mjs';
 
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'gf-project-foundation-'));
+const gitInit = spawnSync('git', ['init'], { cwd: temp, encoding: 'utf8' });
+assert.equal(gitInit.status, 0, `git init failed: ${gitInit.stderr || gitInit.stdout}`);
 const projectRoot = path.join(temp, 'projects', 'canary');
 
 function write(relative, content) {
@@ -222,7 +225,7 @@ try {
     /redefines verified regression/
   );
 
-  const saveContract = createPersistenceContract({ schemaVersion: '1.0.0', slots: 2, maxBytes: 4096, equivalenceProjection: ['world.ticks', 'inventory.metal'] });
+  const saveContract = createPersistenceContract({ schemaVersion: '1.0.0', slots: 2, maxBytes: 4096, transientStatePaths: ['transient'] });
   let saved = null;
   let current = null;
   const adapter = {
