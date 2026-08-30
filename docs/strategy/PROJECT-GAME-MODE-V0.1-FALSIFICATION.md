@@ -22,6 +22,12 @@ The original direction survives only after one material correction: **Project so
 | Web is engine-neutral by default | Control plane learns DOM/browser assumptions | Web logic is behind an explicit runtime adapter | Browser gameplay semantics remain Web-specific |
 | Existing agents need more specialist agents | Agent proliferation adds coordination without authority | No new agent; deterministic components carry project management/control duties | Director task decomposition quality must later be measured |
 
+## Findings discovered after the first implementation
+
+The first Foundation branch falsified its own GO conclusion. It accepted caller-declared verification results, trusted recovery paths from mutable journals, allowed concurrent transactions, and identified regressions only by mutable IDs. The remediation adds executable negative tests for all four defects. This is an architectural correction, not a documentation exception.
+
+One important limit remains: `project-state.json` stores a tree SHA, but v0.1 does not yet bind a promoted baseline to the later Git task-PR head. Every subsequent task re-captures the editable tree and compares it with the stored baseline during preparation, so ordinary continuation detects drift. Durable Git/PR identity binding is still required in the future PG-A0 runner.
+
 ## Architecture entropy after many tasks
 
 The current Foundation prevents silent file drift, but it does not by itself prevent poor architecture after many individually valid patches. The required future controls are:
@@ -60,6 +66,6 @@ The hierarchy, data schemas and physical-goods invariants fit. It will first bre
 
 ## Go/no-go
 
-**GO for Foundation v0.1 and a later PG-A0 Canary task. NO-GO for autonomous multi-milestone execution today.**
+**CONDITIONAL GO for review of the remediated Foundation only. NO-GO for PG-A0, a Canary task, or autonomous multi-milestone execution until the remediation PR passes exact-head CI and review.**
 
-The next evidence must prove one real scoped task PR end to end without paid retries, then a browser persistence bridge. Only after those pass should Kepler Outpost M1 begin.
+After merge, the next bounded implementation is the zero-paid PG-A0 task runner with exact Git/PR binding. It must then prove one real scoped task PR end to end, followed by the browser persistence bridge. Only after those pass should Kepler Outpost M1 begin.

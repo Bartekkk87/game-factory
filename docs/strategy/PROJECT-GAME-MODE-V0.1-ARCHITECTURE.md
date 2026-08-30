@@ -1,8 +1,24 @@
 # Project Game Mode v0.1 — Architecture
 
-Status: **Foundation implemented on a protected-main feature branch; no Project Canary and no paid model run authorized.**
+Status: **Foundation remediation implemented on a protected-main feature branch; exact-head CI and review are still required. No Project Canary and no paid model run are authorized.**
 
 Baseline analyzed: `main` at `8fdbf2952321f08832a75ba376f28a05594002e3`.
+Remediation base: audited Foundation head `e8228a7ceca5462161d730880c5093c3c6349dc4` from PR #64.
+
+## Audit-driven correction
+
+The first Foundation implementation was not safe to merge. Independent audit evidence proved four material defects: callers could declare verification PASS, recovery trusted journal-supplied paths, concurrent tasks had no project lock, and a later task could weaken an inherited regression while retaining its ID. The remediation makes these boundaries executable control-plane responsibilities:
+
+- the transaction invokes an allowlisted direct-Node verification runner itself and re-hashes persisted check evidence before grading;
+- callers cannot supply verification results, capabilities or regressions to baseline promotion;
+- transaction paths are derived from a validated transaction ID, never read from a journal;
+- an exclusive per-project lock covers prepare through commit/abort, including recovery;
+- inherited regression definitions are SHA-bound and semantic redefinition fails closed;
+- the candidate tree is re-hashed after verification and immediately before swap;
+- missing or invalid Project State aborts instead of creating a replacement baseline;
+- persisted Manifest and Task contracts reject unknown fields.
+
+These fixes have executable negative regressions in `factory/src/project/test-remediation.mjs`. They do not retroactively turn PR #64 into a merge candidate; remediation is reviewed on its own branch and PR.
 
 ## Decision
 
@@ -118,12 +134,15 @@ Git commit is the durable authority. The state file intentionally does not self-
 2. Copy the verified baseline into an isolated sibling staging directory.
 3. Validate and apply only declared operations.
 4. Compare whole editable trees and build SHA evidence.
-5. Execute the deterministic verification plan in staging.
-6. Write task evidence and the next Project State in staging only after PASS.
-7. Swap baseline directories with a recovery journal.
-8. Create a task commit/PR only from the promoted baseline.
+5. Execute allowlisted checks directly from the control plane, without a shell, and persist their output.
+6. Re-hash and grade persisted check evidence against the immutable plan.
+7. Derive capabilities and regression records from the verified task/plan; do not accept them from a caller.
+8. Write task evidence and the next Project State in staging only after PASS.
+9. Re-hash the complete editable candidate tree after checks have run.
+10. Swap baseline directories under an exclusive project lock and recovery journal.
+11. Create a task commit/PR only from the promoted baseline.
 
-A failed check deletes staging and leaves the prior baseline unchanged. A crash before the journal reaches `committed` rolls back to the backup. A crash after `committed` finishes cleanup. An uncertain swap therefore loses at most a valid candidate and never silently promotes it.
+A failed check deletes staging and leaves the prior baseline unchanged. A crash before the journal reaches `committed` rolls back to the SHA-validated backup. A crash after `committed` validates the installed candidate before cleanup. Journal filenames and workspace identities are validated before recovery touches a derived transaction path. An uncertain swap therefore loses at most a valid candidate and never silently promotes it.
 
 ## Bounded context
 
@@ -153,7 +172,9 @@ Each included file carries reason, SHA and byte count; optional exclusions recor
 | L9 | Audit | Existing role remains advisory |
 | L10 | Owner acceptance | Human authority; never auto-promoted |
 
-Each check produces an evidence SHA. Deterministic L2–L7 checks require independent evidence and fail if producer and verifier identity are the same. Previously verified regression checks are inherited, and their registered fixture paths cannot be changed by a later task. A task cannot edit its own Acceptance Criteria because task authority lives under reserved `.factory/tasks/` and is SHA-bound before engineering starts.
+Each executable v0.1 check is an exact `node tests/<script>.js|mjs` command. The control runner uses `spawnSync` with `shell: false`, a bounded timeout/output buffer and a sanitized environment. It writes the artifact itself; grading then re-reads and re-hashes that artifact and verifies plan, task, check and definition identity. Candidate-controlled test logic is not treated as an independent acceptance authority: immutable Acceptance Criteria remain Owner-controlled, and inherited L5 regression definitions and their protected test paths are SHA-bound. A later task cannot retain a regression ID while changing its semantics.
+
+The Foundation runner currently implements deterministic command checks. Other typed levels remain contract vocabulary until a level-specific trusted runner is connected; unsupported kinds fail closed. L10 remains human Owner authority.
 
 ## Persistence and Web runtime
 

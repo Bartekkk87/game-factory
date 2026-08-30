@@ -1,39 +1,44 @@
-# Project Game Mode v0.1 — Handoff
+# Project Game Mode v0.1 — Remediation Handoff
 
 ## Current checkpoint
 
-- Source baseline analyzed: `main` `8fdbf2952321f08832a75ba376f28a05594002e3`.
-- Project Game Foundation is implemented on branch `codex/project-game-mode-v0.1-foundation`.
-- Existing Micro Game pipeline is unchanged.
-- No paid model/API run was made.
-- No Project Canary, EXODUS, Helios or Space Colonia implementation was started.
-- Issue #63 remains a separate delivery bug.
+- Source `main`: `8fdbf2952321f08832a75ba376f28a05594002e3`.
+- Audited, rejected Foundation head: `e8228a7ceca5462161d730880c5093c3c6349dc4` (PR #64; remains NO-GO and must not be amended).
+- Remediation branch: `codex/project-game-mode-v0.1-remediation`.
+- Remediation implements the verification trust root, safe recovery, transaction locking and immutable regression semantics requested by the audit.
+- Existing Micro Game production code, budget/release authority, LLM routing and Learning governance are unchanged.
+- No paid model/API run was made. No Project Canary was started. Issue #63 remains separate.
 
-## Continue from GitHub truth
+## Implemented remediation
 
-1. Re-read current `main`, Issue #62, Issue #63 and this PR before changing anything.
-2. Confirm branch/trusted `selftest` on the exact PR head.
-3. Review the transaction, reserved-path and regression-inheritance logic independently.
-4. Do not merge if the blank-screen negative fixture passes or any existing Micro regression fails.
+1. The control plane executes allowlisted direct-Node checks and grades newly re-hashed persisted evidence. Caller-declared results/capabilities/regressions are rejected.
+2. Recovery journals contain identity only. Staging/backup paths are derived from a validated transaction ID and bound to project/manifest/tree SHAs.
+3. An exclusive per-project lock covers preparation through commit/abort and recovery.
+4. Inherited regression definitions are SHA-bound; reuse of an ID with changed semantics fails closed.
+5. Candidate source is re-hashed after verification immediately before swap.
+6. Missing Project State and unknown Manifest/Task fields fail closed.
+7. Every above correction is covered by executable negative regression tests in the required architecture-finalization gate.
 
-## Next bounded task: PG-A0 Runner
+## Evidence before push
 
-Build a zero-paid deterministic runner around the existing Foundation. It must:
+- syntax, diff and critical style gates: PASS;
+- Project Foundation selftest: PASS;
+- Project remediation adversarial selftest: PASS;
+- architecture-finalization selftest: PASS;
+- 30/30 browser-free existing workflow suites: PASS;
+- browser suites: not locally runnable because the Playwright Chromium download endpoint timed out; exact-head GitHub CI is required;
+- no historical evidence was changed and no fake PASS fixture was added.
 
-- load one Owner-approved Project Manifest and Development Task;
-- persist the immutable task before Engineer execution;
-- call the existing budget/router stack only after an explicit Owner budget authorization;
-- give Engineer only the context-builder output;
-- accept only the typed patch-operation JSON contract;
-- verify in staging;
-- promote the baseline only after all required checks PASS;
-- create a task branch/PR, never push Project source to `runtime-state` or `main`;
-- attach evidence containing task/model/operation/context/files/SHAs/tests/result/baselines;
-- stop after one task.
+## Required next actions
 
-Do not add a new agent. Do not build the Canary in the runner PR.
+1. Push reviewable commits to the remediation branch and open a new PR against current `main`.
+2. Require both branch verifier and Trusted Gate success on the exact PR head.
+3. Review the transaction trust boundary and confirm the negative tests fail against `e8228a7` and pass on the remediation head.
+4. Update Issue #62 and the canonical Notion page with exact head SHA, PR and workflow evidence.
+5. Merge only the remediation PR after review. Leave PR #64 and its historical evidence untouched.
+6. Only after merge, implement the zero-paid PG-A0 runner with task-PR Git-head binding. Do not start the Canary yet.
 
-## Canary handoff after runner approval
+## Canary handoff after PG-A0 runner approval
 
 Project: **Kepler Outpost**.
 
