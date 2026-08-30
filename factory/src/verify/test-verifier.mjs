@@ -212,6 +212,7 @@ await runRuntimeFidelityCase('runtime-green', 1.5, true);
 await runRuntimeFidelityCase('runtime-broken', 1, false);
 
 await import('../project/test-browser-proof.mjs');
+await import('../project/test-browser-persistence.mjs');
 
 if (!ok) {
   console.error('\ntest:verifier FAILED');
