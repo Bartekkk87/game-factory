@@ -1,6 +1,6 @@
 # Project Game Mode v0.1 — Architecture
 
-Status: **Foundation remediation is merged to `main` via PR #66. PG-A0 zero-paid one-task runner and durable task-PR Git binding are implemented in PR #67 and are awaiting final documentation-head CI/review. No Project Canary and no paid Project model/API run are authorized.**
+Status: **Foundation remediation is merged to `main` via PR #66. PG-A0 zero-paid one-task runner and durable task-PR Git binding are implemented through PR #67; exact final review/merge evidence is recorded externally in Issue #62 and the canonical Notion progress page. No Project Canary and no paid Project model/API run are authorized.**
 
 Foundation baseline analyzed: `main` at `8fdbf2952321f08832a75ba376f28a05594002e3`.
 Audited rejected Foundation head: `e8228a7ceca5462161d730880c5093c3c6349dc4` from historical PR #64.
@@ -249,13 +249,13 @@ The included negative fixture is deliberately blank and must fail.
 
 | Level | Scope | Promotion criteria |
 |---|---|---|
-| PG-A0 | Owner selects one task; deterministic Foundation + runner execute it | exact task contract; verified baseline; durable exact task-PR binding; Owner approves task/contract and PR |
+| PG-A0 | Owner selects one task; deterministic Foundation executes it | Foundation ACs pass; owner approves task/contract and PR |
 | PG-A1 | One task including bounded repair | repeated scope/transaction/regression proofs; repair never edits contract/tests outside scope; cost bound approved |
 | PG-A2 | One complete milestone | every task baseline committed; milestone regression + browser proof + audit; no unresolved high-risk debt |
 | PG-A3 | Multiple pre-approved milestones | at least one Canary has completed multiple milestones without capability loss; rollback drill passes |
 | PG-A4 | Project continuation | Owner-approved roadmap envelope, bounded task queue, stable context metrics, save migrations and long-run regression evidence |
 
-Promotion is an Owner decision supported by evidence. No level advances itself. PR #67 implements the PG-A0 mechanics; PG-A0 is not considered operationally proven on GitHub until one real zero-paid scoped task PR is produced end to end through the merged runner.
+Promotion is an Owner decision supported by evidence. No level advances itself.
 
 ## Project Canary
 
@@ -274,8 +274,6 @@ Working title: **Kepler Outpost**. It is a small deterministic sci-fi survival/e
 
 Each milestone is split into reviewable Development Tasks. The Canary question is whether later tasks preserve every earlier verified capability, not how many features fit into one run.
 
-**Kepler Outpost does not start directly after PR #67.** Required order is: merge PG-A0 after final exact-head review → prove one real zero-paid scoped task PR through the merged runner → implement/validate the browser persistence host bridge → only then seek separate Owner authorization for Kepler M1–M2.
-
 ## Scale boundary
 
 The architecture can support vertical slices toward EXODUS, Helios Industries and Space Colonia because simulation, data, persistence, project state and runtime adaptation are separate. It does not prove that Web v0.1 can deliver their full scale.
@@ -284,17 +282,6 @@ The architecture can support vertical slices toward EXODUS, Helios Industries an
 - Helios first stresses continuous simulation performance, offline catch-up determinism and economic reconciliation.
 - Space Colonia first stresses world-state volume, physical logistics pathfinding, multi-layer simulation and content/migration breadth.
 - A later Godot adapter would replace build, runtime launch, persistence transport and engine-specific browser checks. Owner authority, task contracts, scoped changes, context evidence, budget, learning governance and baseline promotion remain reusable.
-
-## Evidence checkpoint
-
-The final pre-documentation PG-A0 falsification head was `e1cc7d3652fea37fb98115fd2f6ef6e3875bd0be`:
-
-- Branch Verifier run `33301663951`: **SUCCESS**;
-- Trusted PR Selftest Gate run `33301664166`: **SUCCESS** on the same head;
-- no Canary;
-- no paid Project model/API run.
-
-Because the canonical documentation changes move PR #67's head, these runs remain the implementation/falsification checkpoint. Fresh exact-head checks are required again before merge.
 
 ## Sources
 
