@@ -48,6 +48,8 @@ The later role-token-ceiling / free-route hardening reached `main` through PR `#
 
 For Project Game Mode, immutable PG-A0 implementation/falsification checkpoint evidence and the rule for final exact-head integration evidence are maintained in the four canonical PG-A0 documents above. Exact PR #67 final head/run IDs, merge SHA and post-merge `main` verification belong in Issue #62 and the canonical Notion progress page so repository documents do not become self-referential/stale.
 
+`PROJECT-GAME-P1-PROVENANCE-BOOTSTRAP.md` is the bounded one-time evidence record for establishing the trusted F3 PR-provenance control plane on protected `main`. It is not new architecture authority and does not authorize a Project Canary.
+
 Nemotron Free Production Run #53 (`33252485756`, runtime `20260829-122640`) failed closed in the Director transport after exactly 360 seconds. This is transport/latency evidence, not Product-quality evidence and not authorization for a rerun.
 
 ## Fresh-chat handoff

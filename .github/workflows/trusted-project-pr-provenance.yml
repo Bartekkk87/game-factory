@@ -1,0 +1,184 @@
+name: Trusted Project PR Provenance Gate
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+
+permissions:
+  actions: write
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: trusted-project-pr-provenance-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  project-pr-provenance:
+    name: project-pr-provenance
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout trusted base
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: trusted-base
+          persist-credentials: false
+
+      - name: Checkout candidate for immutable-control comparison
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: candidate
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Protect trusted provenance control plane
+        run: |
+          set -euo pipefail
+          for FILE in \
+            .github/workflows/trusted-project-pr-provenance.yml \
+            factory/src/project/trusted-pr-provenance.mjs
+          do
+            if [ ! -f "trusted-base/$FILE" ] || [ ! -f "candidate/$FILE" ]; then
+              echo "trusted Project PR provenance authority file missing: $FILE" >&2
+              exit 1
+            fi
+            if ! cmp -s "trusted-base/$FILE" "candidate/$FILE"; then
+              echo "trusted Project PR provenance authority cannot modify itself: $FILE" >&2
+              exit 1
+            fi
+          done
+
+      - name: Bind live PR identity
+        id: identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" \
+            > live-pr.json
+          gh api --paginate \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files?per_page=100" \
+            --jq '.[].filename' \
+            > changed-files.txt
+          node trusted-base/factory/src/project/trusted-pr-provenance.mjs \
+            --event "$GITHUB_EVENT_PATH" \
+            --pull live-pr.json \
+            --files changed-files.txt \
+            --out initial-provenance.json
+          cat initial-provenance.json
+          echo "required=$(jq -r '.required' initial-provenance.json)" >> "$GITHUB_OUTPUT"
+          echo "head_ref=$(jq -r '.headRef' initial-provenance.json)" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$(jq -r '.headSha' initial-provenance.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch exact candidate verifier
+        id: verifier
+        if: steps.identity.outputs.required == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ steps.identity.outputs.head_ref }}
+          HEAD_SHA: ${{ steps.identity.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+          BEFORE_RUN=$(gh api -X GET \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/actions/workflows/verify.yml/runs" \
+            -f branch="$HEAD_REF" \
+            -f event=workflow_dispatch \
+            -f per_page=100 \
+            --jq '[.workflow_runs[].run_number] | max // 0')
+
+          gh api -X POST \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/actions/workflows/verify.yml/dispatches" \
+            -f ref="$HEAD_REF"
+
+          for ATTEMPT in $(seq 1 90); do
+            RESPONSE=$(gh api -X GET \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${GITHUB_REPOSITORY}/actions/workflows/verify.yml/runs" \
+              -f branch="$HEAD_REF" \
+              -f event=workflow_dispatch \
+              -f per_page=100)
+            RUN=$(printf '%s' "$RESPONSE" | jq -c \
+              --argjson before "$BEFORE_RUN" \
+              --arg sha "$HEAD_SHA" \
+              --arg ref "$HEAD_REF" \
+              '[.workflow_runs[] | select(.run_number > $before and .head_sha == $sha and .head_branch == $ref)] | sort_by(.run_number) | first // empty')
+            if [ -n "$RUN" ]; then
+              STATUS=$(printf '%s' "$RUN" | jq -r '.status')
+              CONCLUSION=$(printf '%s' "$RUN" | jq -r '.conclusion // ""')
+              RUN_ID=$(printf '%s' "$RUN" | jq -r '.id')
+              RUN_URL=$(printf '%s' "$RUN" | jq -r '.html_url')
+              if [ "$STATUS" = "completed" ]; then
+                if [ "$CONCLUSION" != "success" ]; then
+                  echo "exact Project candidate verifier concluded: $CONCLUSION" >&2
+                  exit 1
+                fi
+                echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+                echo "run_url=$RUN_URL" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+            fi
+            sleep 10
+          done
+          echo "exact Project candidate verifier did not complete inside trusted gate window" >&2
+          exit 1
+
+      - name: Revalidate PR head and base after verification
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REQUIRED: ${{ steps.identity.outputs.required }}
+          VERIFIER_RUN_ID: ${{ steps.verifier.outputs.run_id }}
+          VERIFIER_RUN_URL: ${{ steps.verifier.outputs.run_url }}
+        run: |
+          set -euo pipefail
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" \
+            > live-pr-final.json
+          node trusted-base/factory/src/project/trusted-pr-provenance.mjs \
+            --event "$GITHUB_EVENT_PATH" \
+            --pull live-pr-final.json \
+            --files changed-files.txt \
+            --out final-provenance.json
+          if ! cmp -s initial-provenance.json final-provenance.json; then
+            echo "Project PR provenance changed during verification" >&2
+            exit 1
+          fi
+          if [ "$REQUIRED" = "true" ]; then
+            jq \
+              --arg runId "$VERIFIER_RUN_ID" \
+              --arg runUrl "$VERIFIER_RUN_URL" \
+              --arg verifiedAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              '. + {
+                verifierWorkflow: "verify.yml",
+                verifierRunId: ($runId | tonumber),
+                verifierRunUrl: $runUrl,
+                verifiedAt: $verifiedAt
+              }' \
+              final-provenance.json > trusted-project-pr-provenance-evidence.json
+          else
+            cp final-provenance.json trusted-project-pr-provenance-evidence.json
+          fi
+          cat trusted-project-pr-provenance-evidence.json
+
+      - name: Preserve trusted PR provenance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trusted-project-pr-provenance-${{ github.event.pull_request.number }}-${{ github.run_id }}
+          path: trusted-project-pr-provenance-evidence.json
+          if-no-files-found: warn
+          retention-days: 30
