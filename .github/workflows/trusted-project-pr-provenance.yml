@@ -121,7 +121,6 @@ jobs:
 
       - name: Open candidate-head required check
         id: candidate_check
-        if: github.event_name == 'workflow_dispatch'
         env:
           GH_TOKEN: ${{ github.token }}
           HEAD_SHA: ${{ steps.invocation.outputs.head_sha }}
@@ -335,7 +334,7 @@ jobs:
           retention-days: 30
 
       - name: Complete candidate-head required check
-        if: always() && github.event_name == 'workflow_dispatch' && steps.candidate_check.outputs.check_id != ''
+        if: always() && steps.candidate_check.outputs.check_id != ''
         env:
           GH_TOKEN: ${{ github.token }}
           CHECK_ID: ${{ steps.candidate_check.outputs.check_id }}
