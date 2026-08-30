@@ -225,6 +225,25 @@ async function proveEngineerMutationFailsClosed() {
   }
 }
 
+async function proveStagedOutsideProjectFailsClosed() {
+  const fixture = initializeFixture();
+  const escapeFile = path.join(fixture.root, 'STAGED-OUTSIDE-PROJECT.tmp');
+  try {
+    await assert.rejects(runPgA0Task(runOptions(fixture, {
+      requestEngineerPatch: async () => {
+        fs.writeFileSync(escapeFile, 'must never enter the task commit\n');
+        git(fixture.root, ['add', 'STAGED-OUTSIDE-PROJECT.tmp']);
+        return goodEngineerResult();
+      },
+      fetchImpl: successPullFetch(fixture)
+    })), /Git index changed outside runner authority/);
+    assertRolledBack(fixture);
+    assert.equal(fs.existsSync(escapeFile), false);
+  } finally {
+    cleanupFixture(fixture);
+  }
+}
+
 async function proveOutOfScopePatchFailsClosed() {
   const fixture = initializeFixture();
   try {
@@ -291,6 +310,7 @@ async function proveRemotePushIsRolledBackOnGithubFailure() {
 }
 
 await proveEngineerMutationFailsClosed();
+await proveStagedOutsideProjectFailsClosed();
 await proveOutOfScopePatchFailsClosed();
 await proveWrongPrHeadFailsClosed();
 await proveWrongPrBaseFailsClosed();
