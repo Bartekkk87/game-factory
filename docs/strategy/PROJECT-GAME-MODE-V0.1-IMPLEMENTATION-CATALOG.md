@@ -1,7 +1,9 @@
 # Project Game Mode v0.1 — Implementation Catalog
 
-Baseline: `main` at `8fdbf2952321f08832a75ba376f28a05594002e3`.
-Remediation base: audited Foundation head `e8228a7ceca5462161d730880c5093c3c6349dc4`.
+Foundation baseline: `main` at `8fdbf2952321f08832a75ba376f28a05594002e3`.
+Audited rejected Foundation head: `e8228a7ceca5462161d730880c5093c3c6349dc4` (historical PR #64; NO-GO).
+Remediation PR #66: merged to `main` as `8ae9f9f1d0c47f7d9c6c082e9b24bcd007448d8b`.
+PG-A0 implementation is carried by PR #67 on `codex/project-game-mode-v0.1-pg-a0`; exact final review/merge evidence is recorded externally in Issue #62 and the canonical Notion progress page.
 
 ## Implemented Foundation
 
@@ -23,64 +25,71 @@ Remediation base: audited Foundation head `e8228a7ceca5462161d730880c5093c3c6349
 | Remediation tests | `factory/src/project/test-remediation.mjs` | Executable negative regressions for fabricated PASS, evidence tampering, hostile journals, concurrency, semantic regression weakening, final candidate drift and missing state | AC-PG-003–006, 010, 011, 017–020 |
 | Browser tests | `factory/src/project/test-browser-proof.mjs` | Visible playable fixture passes; blank iframe fixture fails | AC-PG-016 |
 
+## Implemented PG-A0 task runner — PR #67
+
+| Component | File | Responsibility | Evidence boundary |
+|---|---|---|---|
+| PG-A0 runner | `factory/src/project/runner.mjs` | Load exact Owner-approved task, build evidenced context, obtain scoped Engineer operations, execute the existing verified transaction, create task-only Git commit and non-draft PR | No implicit paid call; caller must inject the Engineer requester |
+| Task-PR authority binding | `factory/src/project/git-task-pr.mjs` | Bind Project/Task contract, promoted baseline SHA-256, evidence SHA-256, base/head refs and Git SHAs; serialize/parse durable PR authority record and reject moved refs/heads | Persistent binding can be revalidated after process restart |
+| Positive PG-A0 selftest | `factory/src/project/test-pg-a0.mjs` | Real temporary Git repository, deterministic zero-paid Engineer fixture, verified promotion, exact staged-file set and PR binding | Required architecture-finalization gate |
+| PG-A0 adversarial selftest | `factory/src/project/test-pg-a0-negative.mjs` | Engineer workspace/index mutation, out-of-scope patch, PR head/base mismatch, failed PR creation after push, remote/local rollback, remote-cleanup failure visibility and staged foreign-path rejection | Required architecture-finalization gate |
+
+### PG-A0 trust-boundary rules
+
+- Git branch/commit/PR write helpers are private to the runner; callers cannot supply a fabricated low-level Git context to a public publish function.
+- The Engineer receives a deep-frozen cloned request and may return only operations plus model evidence. Any direct Git/index/worktree mutation before transaction preparation fails closed.
+- Before Git commit, the runner re-derives the promoted editable tree, Project State and exact task evidence and compares them to the verified promotion.
+- Only task-scope paths plus the exact promoted Project State and evidence artifact are staged.
+- PR authority records include `projectId`, `taskId`, Task Contract SHA-256, promoted baseline tree SHA-256, evidence SHA-256, base/head refs and base/head Git SHAs.
+- A moved PR head/base/ref invalidates the authority record.
+- Failed execution restores the clean repository start state; if a task branch was pushed before PR creation failed, remote deletion is attempted and the local task branch is removed. A failed remote deletion is surfaced explicitly together with the original execution error rather than being treated as successful cleanup.
+- `projects/` remains outside `runtime-state`.
+
 ## Existing modules changed
 
 | File | Change | Governance effect |
 |---|---|---|
 | `factory/src/control/staged-commit-policy.mjs` | Adds `factory/src/project/` to protected runtime paths | Strengthens protection; runtime-state allowlists unchanged |
-| `factory/src/control/style-gate.mjs` | Adds Project control modules to critical style checks | Strengthens quality gate |
+| `factory/src/control/style-gate.mjs` | Adds Project control modules including PG-A0 runner/binding to critical style checks | Strengthens quality gate |
 | `factory/src/control/test-staged-commit-policy.mjs` | Verifies Project control protection | Regression coverage |
-| `factory/src/control/test-architecture-finalization.mjs` | Runs deterministic Project Foundation selftest | Uses an already-required workflow step; no workflow trust migration |
+| `factory/src/control/test-architecture-finalization.mjs` | Runs deterministic Foundation, remediation and PG-A0 selftests | Uses an already-required workflow step; no workflow trust migration |
 | `factory/src/verify/test-verifier.mjs` | Runs the real browser boot/blank-screen Project proof after Chromium installation | Adds regression without weakening Micro tests |
 | `.github/CODEOWNERS` | Owner covers Project control and project sources | Strengthens human ownership |
 
 ## Owner Acceptance Criteria and evidence status
 
-These definitions are copied from the Owner assignment and are authoritative. `LOCAL PASS` means the deterministic test ran in the remediation worktree. `CI PASS @ 9f01b93` means the complete Branch Verifier and trusted required gate succeeded on the remediation code/docs head `9f01b933adf99bb5b4239af2d645cc835e45b86e`. Neither status is a merge decision.
+The original twenty Foundation criteria remain satisfied by the remediated implementation. Remediation PR #66 was merged only after exact-head CI/review. The PG-A0 runner adds the previously missing task-PR Git identity layer without changing those criteria or weakening the Micro pipeline.
 
-| ID | Authoritative requirement | Status on remediation worktree | Primary evidence |
-|---|---|---|---|
-| AC-PG-001 | Existing Micro-Game pipeline remains green | CI PASS @ 9f01b93 | Branch Verifier `33298437970`, including browser and Golden Corpus suites |
-| AC-PG-002 | Project Manifest can be deterministically created, validated and loaded | LOCAL PASS | `test-foundation.mjs`; strict unknown-field rejection in `test-remediation.mjs` |
-| AC-PG-003 | Development Task has immutable Task ID, scope and Acceptance Mapping | LOCAL PASS | contract hash/shape and mapping tests |
-| AC-PG-004 | Task can change only allowed project files | LOCAL PASS | patch scope positive/negative tests |
-| AC-PG-005 | Scope escape fails closed | LOCAL PASS | undeclared/protected mutation tests |
-| AC-PG-006 | Before/after file state is SHA-evidenced | LOCAL PASS | patch/tree evidence assertions |
-| AC-PG-007 | Project State reloads after process restart | LOCAL PASS | durable state reload test; missing state now fails closed |
-| AC-PG-008 | Context is bounded/relevant and selection is documented | LOCAL PASS | bounded context and selection-SHA tests |
-| AC-PG-009 | Project Memory is separate from global Factory Learning | LOCAL PASS | project-local paths/state; global Learning modules unchanged |
-| AC-PG-010 | Unit, Integration and Regression verification map to a task | LOCAL PASS | required L2/L4/L5 plan plus direct runner execution |
-| AC-PG-011 | Earlier verified capability is a later regression requirement | LOCAL PASS | inherited L5 definition SHA and semantic-redefinition rejection |
-| AC-PG-012 | Persistence Contract supports versioned Save Schema | LOCAL PASS | persistence contract tests |
-| AC-PG-013 | Save→reload→load verification scenario exists architecturally/in tests | LOCAL PASS | deterministic equivalence/reload test skeleton |
-| AC-PG-014 | Editable Source and Build Output are separate | LOCAL PASS | manifest/layout and build-scope rejection tests |
-| AC-PG-015 | Web Runtime Adapter is explicit | LOCAL PASS | adapter contract tests |
-| AC-PG-016 | Browser Boot Proof detects a blank-screen-like failure | CI PASS @ 9f01b93 | positive/blank Playwright fixtures in Branch Verifier `33298437970` |
-| AC-PG-017 | Interrupted/failed task cannot promote a half-verified baseline | LOCAL PASS | failing check, final candidate drift, crash recovery tests |
-| AC-PG-018 | Rollback to last verified baseline is defined | LOCAL PASS | identity-checked journal recovery and concurrency tests |
-| AC-PG-019 | Task cannot alter Acceptance Criteria or Project Contract | LOCAL PASS | reserved authority paths, hashes and exact-shape validation |
-| AC-PG-020 | Audit Evidence explains task/model/operation/context/files/SHAs/tests/result/baselines | LOCAL PASS | transaction evidence assertions; caller-supplied records rejected |
+The immutable pre-documentation PG-A0 falsification checkpoint was:
 
-All twenty Foundation criteria have local or complete-CI evidence on the remediation implementation. Final merge eligibility still requires the Branch Verifier and Trusted Gate to remain green on the latest PR head after documentation updates.
+- exact head `e1cc7d3652fea37fb98115fd2f6ef6e3875bd0be`;
+- Branch Verifier run `33301663951`: **SUCCESS**, all required steps;
+- Trusted PR Selftest Gate run `33301664166`: **SUCCESS** on the same head;
+- no Canary and no paid model/API run.
+
+Later documentation/review hardening necessarily moved PR #67 beyond this SHA. These run IDs remain evidence for that implementation/negative-test checkpoint but are not the final integration evidence. Exact final head, final Branch Verifier/Trusted Gate, merge SHA and post-merge `main` verification are recorded externally in Issue #62 and the canonical Notion progress page.
 
 ## Deliberately not implemented
 
-- no Project LLM orchestration or paid call;
-- no full Project Canary;
-- no automatic task branch, commit or PR creation;
-- no Project publisher or gallery integration;
+- no implicit or autonomous paid Project LLM call;
+- no Project Canary execution;
+- no autonomous multi-task/multi-milestone queue;
+- until the next proof slice completes, no real GitHub end-to-end task PR generated through the merged runner; the current runner selftest uses a real local Git repository and deterministic mocked GitHub PR response;
+- no browser persistence host bridge product integration;
+- no Project Web build/publish adapter;
+- no Project publisher/gallery integration;
 - no change to current Micro build/repair/rebuild behavior;
 - no Project Learning intake or global Learning promotion;
 - no Godot adapter;
 - no Issue #63 payload repair;
 - no workflow modification or Required Check migration.
 
-## Next implementation slices
+## Next implementation slices after the PR #67 merge gate
 
-1. Merge the remediation only after exact-head CI and review; do not merge or amend PR #64.
-2. PG-A0 task runner: load an Owner-approved task, build evidenced context, request a scoped Engineer patch, bind the promoted baseline to the task-PR Git head, then create a non-draft task PR.
-3. Web persistence host: implement the validated `postMessage` protocol with schema/slot/size enforcement and browser reload proof.
+1. Verify the resulting protected `main` merge commit.
+2. Prove **one real zero-paid scoped task PR end to end through the merged runner**, with exact durable task-contract/baseline/evidence/Git-head binding. This is not the Kepler Canary.
+3. Web persistence host bridge: implement the validated `postMessage` protocol with schema/slot/size enforcement and browser reload proof.
 4. Project Web build/publish adapter: reproducible build output plus deployed browser proof before review eligibility.
-5. Canary M1–M2 only after the runner and host bridge are reviewed and merged.
+5. Only after the real task-PR proof and host bridge are reviewed/merged may Kepler Outpost M1–M2 begin under a separate explicit Owner authorization.
 
 No slice may add `projects/` to `runtime-state`. Verified project changes use protected-main task PRs.
