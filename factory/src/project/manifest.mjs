@@ -7,6 +7,7 @@ const CONTROL_DIRS = Object.freeze([
   'decisions',
   'milestones',
   '.factory/tasks',
+  '.factory/approvals',
   '.factory/evidence',
   '.factory/verification'
 ]);

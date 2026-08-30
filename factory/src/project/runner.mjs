@@ -4,8 +4,9 @@ import { spawnSync } from 'node:child_process';
 import { isDeepStrictEqual } from 'node:util';
 import { buildProjectContext } from './context-builder.mjs';
 import { captureProjectTree } from './file-state.mjs';
-import { assertSha256, sha256, validateTaskContract } from './contracts.mjs';
+import { sha256, validateTaskContract } from './contracts.mjs';
 import { loadProjectManifest } from './manifest.mjs';
+import { loadOwnerTaskApproval } from './owner-task-approval.mjs';
 import { loadProjectState } from './project-state.mjs';
 import { commitVerifiedTransaction, prepareTaskTransaction } from './transaction.mjs';
 import {
@@ -283,14 +284,17 @@ function rollbackTaskGitBranch(context) {
   if (remoteCleanupError) throw remoteCleanupError;
 }
 
-function loadApprovedTask(projectRoot, manifest, taskId, ownerTaskContractSha256) {
+function loadApprovedTask(projectRoot, manifest, taskId) {
   const safeTaskId = String(taskId || '').trim();
-  const expectedSha = assertSha256(ownerTaskContractSha256, 'ownerTaskContractSha256');
   const taskFile = path.join(path.resolve(projectRoot), '.factory', 'tasks', `${safeTaskId}.json`);
   if (!fs.existsSync(taskFile)) throw new Error(`Owner-selected task missing: ${safeTaskId}`);
   const task = validateTaskContract(JSON.parse(fs.readFileSync(taskFile, 'utf8')), manifest);
   if (task.taskId !== safeTaskId) throw new Error('Owner-selected task file identity mismatch');
-  if (task.contractSha256 !== expectedSha) throw new Error('Owner-selected task SHA does not match immutable task contract');
+  loadOwnerTaskApproval(projectRoot, {
+    projectId: task.projectId,
+    taskId: task.taskId,
+    taskContractSha256: task.contractSha256
+  });
   return task;
 }
 
@@ -311,7 +315,6 @@ export async function runPgA0Task({
   repoRoot,
   projectRoot,
   taskId,
-  ownerTaskContractSha256,
   requestEngineerPatch,
   baseBranch = 'main',
   repository = process.env.GITHUB_REPOSITORY,
@@ -324,7 +327,7 @@ export async function runPgA0Task({
     throw new Error('PG-A0 requires an explicit Engineer patch requester; no implicit paid call is allowed');
   }
   const manifest = loadProjectManifest(projectRoot);
-  const task = loadApprovedTask(projectRoot, manifest, taskId, ownerTaskContractSha256);
+  const task = loadApprovedTask(projectRoot, manifest, taskId);
   const milestoneRef = `milestones/${task.milestoneId}.json`;
   const context = buildProjectContext({ projectRoot, manifest, task, milestoneRef });
   const contextEvidence = Object.freeze({

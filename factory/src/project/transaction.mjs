@@ -14,6 +14,7 @@ import {
   sha256,
   validateTaskContract
 } from './contracts.mjs';
+import { assertAuthorizedMutationRoot, authorizeProjectWorkspace } from './workspace-boundary.mjs';
 
 const TRANSACTION_SCHEMA = 'project-game.transaction/v1';
 const LOCK_SCHEMA = 'project-game.transaction-lock/v1';
@@ -259,6 +260,7 @@ export function recoverProjectTransactions(projectRoot) {
 
 function checkedTransaction(transaction) {
   if (!transaction?.[TRANSACTION_TOKEN]) throw new Error('project transaction handle invalid');
+  assertAuthorizedMutationRoot(transaction.projectRoot, transaction.workspaceAuthority);
   const paths = transactionPaths(transaction.projectRoot, transaction.id);
   if (paths.staging !== transaction.staging
     || paths.backup !== transaction.backup
@@ -270,13 +272,18 @@ function checkedTransaction(transaction) {
 }
 
 export function prepareTaskTransaction({ projectRoot, task, operations } = {}) {
-  const root = path.resolve(projectRoot);
+  const preliminaryTask = validateTaskContract(task);
+  const workspaceAuthority = authorizeProjectWorkspace({
+    projectRoot,
+    projectId: preliminaryTask.projectId
+  });
+  const root = workspaceAuthority.projectRoot;
   const lock = acquireProjectLock(root);
   let transaction = null;
   try {
     recoverLocked(root);
     const manifest = loadProjectManifest(root);
-    const checkedTask = validateTaskContract(task, manifest);
+    const checkedTask = validateTaskContract(preliminaryTask, manifest);
     const id = crypto.randomUUID();
     const paths = transactionPaths(root, id);
     transaction = {
@@ -290,6 +297,7 @@ export function prepareTaskTransaction({ projectRoot, task, operations } = {}) {
       lock,
       manifest,
       task: checkedTask,
+      workspaceAuthority,
       patchEvidence: null
     };
     writeJournal(transaction, 'preparing');
@@ -298,7 +306,8 @@ export function prepareTaskTransaction({ projectRoot, task, operations } = {}) {
       projectRoot: paths.staging,
       task: checkedTask,
       operations,
-      manifest
+      manifest,
+      workspaceAuthority
     });
     writeJournal(transaction, 'prepared');
     return Object.freeze(transaction);

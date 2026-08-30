@@ -9,6 +9,7 @@ import {
   validateTaskContract
 } from './contracts.mjs';
 import { captureProjectTree, diffProjectTrees } from './file-state.mjs';
+import { assertAuthorizedMutationRoot } from './workspace-boundary.mjs';
 
 const OPERATIONS = new Set(['ADD', 'MODIFY', 'DELETE']);
 
@@ -53,8 +54,9 @@ export function validatePatchContract({ task, operations, manifest = null } = {}
   });
 }
 
-export function applyPatchToStaging({ projectRoot, task, operations, manifest = null } = {}) {
+export function applyPatchToStaging({ projectRoot, task, operations, manifest = null, workspaceAuthority } = {}) {
   const root = path.resolve(projectRoot);
+  assertAuthorizedMutationRoot(root, workspaceAuthority, { allowTransactionStaging: true });
   const patch = validatePatchContract({ task, operations, manifest });
   const treeOptions = manifest
     ? { excludes: [manifest.layout.buildDir, '.factory/evidence', '.factory/verification', '.factory/project-state.json', '.factory/transactions'] }
