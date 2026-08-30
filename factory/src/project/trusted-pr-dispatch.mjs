@@ -1,6 +1,10 @@
 const REPOSITORY = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const GIT_SHA = /^[0-9a-f]{40}$/;
 const SAFE_ID = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
+const TRUSTED_WORKFLOWS = Object.freeze([
+  Object.freeze({ file: 'trusted-project-pr-provenance.yml', label: 'provenance' }),
+  Object.freeze({ file: 'trusted-bot-selftest.yml', label: 'bot selftest' })
+]);
 
 function requiredText(value, field) {
   const text = String(value || '').trim();
@@ -48,6 +52,30 @@ async function closePullRequestBestEffort({ repository, token, pullNumber, fetch
   }
 }
 
+async function dispatchWorkflow({ repository, token, workflow, trustedRef, inputs, pullNumber, fetchImpl }) {
+  const response = await fetchImpl(
+    `https://api.github.com/repos/${repository}/actions/workflows/${workflow.file}/dispatches`,
+    {
+      method: 'POST',
+      headers: {
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'X-GitHub-Api-Version': '2022-11-28'
+      },
+      body: JSON.stringify({ ref: trustedRef, inputs })
+    }
+  );
+  if (!response?.ok) {
+    const detail = await githubFailureDetail(response);
+    await closePullRequestBestEffort({ repository, token, pullNumber, fetchImpl });
+    throw new Error(
+      `trusted Project PR ${workflow.label} dispatch failed: HTTP ${response?.status || 'unknown'}`
+      + `${detail ? `: ${detail}` : ''}`
+    );
+  }
+}
+
 export async function dispatchTrustedProjectPr({
   repository,
   token,
@@ -74,41 +102,31 @@ export async function dispatchTrustedProjectPr({
   if (headRef !== expectedHeadRef) throw new Error('trusted Project PR task branch mismatch');
   if (baseRef !== dispatchRef) throw new Error('trusted Project PR base ref mismatch');
 
-  const response = await fetchImpl(
-    `https://api.github.com/repos/${repo}/actions/workflows/trusted-project-pr-provenance.yml/dispatches`,
-    {
-      method: 'POST',
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${auth}`,
-        'Content-Type': 'application/json',
-        'X-GitHub-Api-Version': '2022-11-28'
-      },
-      body: JSON.stringify({
-        ref: dispatchRef,
-        inputs: {
-          repository: repo,
-          pr_number: String(prNumber),
-          project_id: projectId,
-          task_id: taskId,
-          expected_head_sha: headSha,
-          expected_base_ref: baseRef,
-          expected_base_sha: baseSha
-        }
-      })
-    }
-  );
-  if (!response?.ok) {
-    const detail = await githubFailureDetail(response);
-    await closePullRequestBestEffort({ repository: repo, token: auth, pullNumber: prNumber, fetchImpl });
-    throw new Error(
-      `trusted Project PR provenance dispatch failed: HTTP ${response?.status || 'unknown'}`
-      + `${detail ? `: ${detail}` : ''}`
-    );
+  const inputs = Object.freeze({
+    repository: repo,
+    pr_number: String(prNumber),
+    project_id: projectId,
+    task_id: taskId,
+    expected_head_sha: headSha,
+    expected_base_ref: baseRef,
+    expected_base_sha: baseSha
+  });
+
+  for (const workflow of TRUSTED_WORKFLOWS) {
+    await dispatchWorkflow({
+      repository: repo,
+      token: auth,
+      workflow,
+      trustedRef: dispatchRef,
+      inputs,
+      pullNumber: prNumber,
+      fetchImpl
+    });
   }
 
   return Object.freeze({
     workflow: 'trusted-project-pr-provenance.yml',
+    workflows: Object.freeze(TRUSTED_WORKFLOWS.map((item) => item.file)),
     trustedRef: dispatchRef,
     prNumber,
     projectId,
