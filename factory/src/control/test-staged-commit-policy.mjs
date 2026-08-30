@@ -22,6 +22,7 @@ assert.equal(RUNTIME_STATE_ALLOWLIST, COMMIT_ALLOWLISTS.review);
 assert.equal(PROTECTED_PATH_PREFIXES.includes('factory/prompts/'), true);
 assert.equal(PROTECTED_PATH_PREFIXES.includes('skills/'), true);
 assert.equal(PROTECTED_PATH_PREFIXES.includes('factory/src/control/'), true);
+assert.equal(PROTECTED_PATH_PREFIXES.includes('factory/src/project/'), true);
 assert.equal(PROTECTED_PATH_PREFIXES.includes('factory/src/verify/'), true);
 assert.equal(PROTECTED_PATH_PREFIXES.includes('.github/'), true);
 

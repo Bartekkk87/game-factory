@@ -202,4 +202,7 @@ for (const document of chain.documents.filter((item) => item.status === 'canonic
   canonicalByRole.set(document.role, document.path);
 }
 
+await import('../project/test-foundation.mjs');
+await import('../project/test-remediation.mjs');
+
 console.log('architecture finalization hardening selftest: PASS');

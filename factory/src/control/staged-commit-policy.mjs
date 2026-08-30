@@ -8,6 +8,7 @@ export const PROTECTED_PATH_PREFIXES = Object.freeze([
   '.github/',
   'factory/prompts/',
   'factory/src/control/',
+  'factory/src/project/',
   'factory/src/verify/',
   'skills/'
 ]);
