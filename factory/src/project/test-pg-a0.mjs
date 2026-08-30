@@ -110,7 +110,7 @@ try {
   const newContent = 'export const value = 2;\n';
   let requestedContext = null;
   let postedBody = null;
-  let dispatchedBody = null;
+  const dispatchedCalls = [];
   const result = await runPgA0Task({
     repoRoot: root,
     projectRoot,
@@ -153,8 +153,8 @@ try {
       };
     },
     dispatchFetchImpl: async (url, options) => {
-      assert.match(url, /trusted-project-pr-provenance\.yml\/dispatches$/);
-      dispatchedBody = JSON.parse(options.body);
+      assert.match(url, /trusted-(?:project-pr-provenance|bot-selftest)\.yml\/dispatches$/);
+      dispatchedCalls.push({ url, body: JSON.parse(options.body) });
       return { ok: true, status: 204 };
     }
   });
@@ -166,6 +166,15 @@ try {
   assert.equal(result.binding.projectId, task.projectId);
   assert.equal(result.provenanceDispatch.prNumber, result.pullRequest.number);
   assert.equal(result.provenanceDispatch.headSha, result.pullRequest.headSha);
+  assert.deepEqual(result.provenanceDispatch.workflows, [
+    'trusted-project-pr-provenance.yml',
+    'trusted-bot-selftest.yml'
+  ]);
+  assert.equal(dispatchedCalls.length, 2);
+  assert.match(dispatchedCalls[0].url, /trusted-project-pr-provenance\.yml\/dispatches$/);
+  assert.match(dispatchedCalls[1].url, /trusted-bot-selftest\.yml\/dispatches$/);
+  assert.deepEqual(dispatchedCalls[0].body, dispatchedCalls[1].body);
+  const dispatchedBody = dispatchedCalls[0].body;
   assert.equal(dispatchedBody.ref, 'main');
   assert.equal(dispatchedBody.inputs.pr_number, String(result.pullRequest.number));
   assert.equal(dispatchedBody.inputs.expected_head_sha, result.pullRequest.headSha);

@@ -121,4 +121,6 @@ const ordinary = validateTrustedProjectPrProvenance({
 });
 assert.equal(ordinary.required, false);
 
+await import('./test-trusted-bot-selftest.mjs');
+
 console.log('trusted Project PR provenance adversarial selftest: PASS');

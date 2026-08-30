@@ -1,0 +1,303 @@
+name: Trusted Bot Project Selftest Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: Repository owner/name bound to the Project Task PR
+        required: true
+        type: string
+      pr_number:
+        description: Project Task pull request number
+        required: true
+        type: string
+      project_id:
+        description: Bound Project identifier
+        required: true
+        type: string
+      task_id:
+        description: Bound Task identifier
+        required: true
+        type: string
+      expected_head_sha:
+        description: Exact candidate head SHA
+        required: true
+        type: string
+      expected_base_ref:
+        description: Exact expected base ref
+        required: true
+        type: string
+      expected_base_sha:
+        description: Exact expected base SHA
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  checks: write
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: trusted-bot-selftest-${{ inputs.pr_number }}-${{ inputs.expected_head_sha }}
+  cancel-in-progress: true
+
+jobs:
+  trusted-bot-selftest:
+    name: trusted-bot-selftest
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Validate trusted invocation
+        id: invocation
+        env:
+          REPOSITORY: ${{ inputs.repository }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+          PROJECT_ID: ${{ inputs.project_id }}
+          TASK_ID: ${{ inputs.task_id }}
+          HEAD_SHA: ${{ inputs.expected_head_sha }}
+          BASE_REF: ${{ inputs.expected_base_ref }}
+          BASE_SHA: ${{ inputs.expected_base_sha }}
+        run: |
+          set -euo pipefail
+          if [ "$REPOSITORY" != "$GITHUB_REPOSITORY" ]; then
+            echo "trusted bot selftest repository mismatch" >&2
+            exit 1
+          fi
+          if ! [[ "$PR_NUMBER" =~ ^[1-9][0-9]*$ ]]; then
+            echo "trusted bot selftest PR number invalid" >&2
+            exit 1
+          fi
+          if ! [[ "$PROJECT_ID" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || ! [[ "$TASK_ID" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
+            echo "trusted bot selftest project/task identity invalid" >&2
+            exit 1
+          fi
+          HEAD_SHA="${HEAD_SHA,,}"
+          BASE_SHA="${BASE_SHA,,}"
+          if ! [[ "$HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || ! [[ "$BASE_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "trusted bot selftest SHA invalid" >&2
+            exit 1
+          fi
+          if [ -z "$BASE_REF" ]; then
+            echo "trusted bot selftest base ref invalid" >&2
+            exit 1
+          fi
+          HEAD_REF="project-task/${PROJECT_ID}/${TASK_ID}"
+          {
+            echo "repository=$REPOSITORY"
+            echo "pr_number=$PR_NUMBER"
+            echo "project_id=$PROJECT_ID"
+            echo "task_id=$TASK_ID"
+            echo "head_sha=$HEAD_SHA"
+            echo "head_ref=$HEAD_REF"
+            echo "base_ref=$BASE_REF"
+            echo "base_sha=$BASE_SHA"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Open candidate-head required selftest check
+        id: candidate_check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ steps.invocation.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+          RESPONSE=$(gh api -X POST \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/check-runs" \
+            -f name='selftest' \
+            -f head_sha="$HEAD_SHA" \
+            -f status='in_progress' \
+            -f started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)")
+          CHECK_ID=$(printf '%s' "$RESPONSE" | jq -r '.id')
+          if ! [[ "$CHECK_ID" =~ ^[1-9][0-9]*$ ]]; then
+            echo "trusted bot selftest candidate check creation failed" >&2
+            exit 1
+          fi
+          echo "check_id=$CHECK_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout trusted base
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.invocation.outputs.base_sha }}
+          path: trusted-base
+          persist-credentials: false
+
+      - name: Checkout candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.invocation.outputs.head_sha }}
+          path: candidate
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Protect required-check root of trust
+        run: |
+          set -euo pipefail
+          for FILE in \
+            .github/workflows/trusted-selftest.yml \
+            .github/workflows/trusted-bot-selftest.yml \
+            .github/workflows/verify.yml
+          do
+            if [ ! -f "trusted-base/$FILE" ] || [ ! -f "candidate/$FILE" ]; then
+              echo "trusted bot selftest authority file missing: $FILE" >&2
+              exit 1
+            fi
+            if ! cmp -s "trusted-base/$FILE" "candidate/$FILE"; then
+              echo "trusted bot selftest authority changed by candidate: $FILE" >&2
+              exit 1
+            fi
+          done
+
+          ruby <<'RUBY'
+          require 'yaml'
+          Dir['candidate/.github/workflows/*.{yml,yaml}'].sort.each do |file|
+            doc = YAML.safe_load(File.read(file), permitted_classes: [], permitted_symbols: [], aliases: false) || {}
+            jobs = doc['jobs'].is_a?(Hash) ? doc['jobs'] : {}
+            jobs.each do |job_id, job|
+              job_name = job.is_a?(Hash) ? job['name'].to_s : ''
+              next unless job_id.to_s == 'selftest' || job_name == 'selftest'
+              allowed = File.basename(file) == 'trusted-selftest.yml' && job_id.to_s == 'selftest'
+              abort("competing selftest check authority in #{file}:#{job_id}") unless allowed
+            end
+          end
+          RUBY
+
+      - name: Bind live Project Task PR identity
+        id: identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.invocation.outputs.pr_number }}
+          EXPECTED_REPOSITORY: ${{ steps.invocation.outputs.repository }}
+          EXPECTED_PROJECT_ID: ${{ steps.invocation.outputs.project_id }}
+          EXPECTED_TASK_ID: ${{ steps.invocation.outputs.task_id }}
+          EXPECTED_HEAD_SHA: ${{ steps.invocation.outputs.head_sha }}
+          EXPECTED_HEAD_REF: ${{ steps.invocation.outputs.head_ref }}
+          EXPECTED_BASE_SHA: ${{ steps.invocation.outputs.base_sha }}
+          EXPECTED_BASE_REF: ${{ steps.invocation.outputs.base_ref }}
+        run: |
+          set -euo pipefail
+          gh api -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" > live-pr.json
+          gh api --paginate -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files?per_page=100" \
+            --jq '.[].filename' > changed-files.txt
+          jq -n \
+            --argjson number "$PR_NUMBER" \
+            --arg repository "$EXPECTED_REPOSITORY" \
+            --arg headSha "$EXPECTED_HEAD_SHA" \
+            --arg headRef "$EXPECTED_HEAD_REF" \
+            --arg baseSha "$EXPECTED_BASE_SHA" \
+            --arg baseRef "$EXPECTED_BASE_REF" \
+            '{pull_request: {number: $number, head: {sha: $headSha, ref: $headRef, repo: {full_name: $repository}}, base: {sha: $baseSha, ref: $baseRef, repo: {full_name: $repository}}}}' \
+            > expected-event.json
+          node trusted-base/factory/src/project/trusted-pr-provenance.mjs \
+            --event expected-event.json \
+            --pull live-pr.json \
+            --files changed-files.txt \
+            --out initial-provenance.json
+          jq -e \
+            --arg projectId "$EXPECTED_PROJECT_ID" \
+            --arg taskId "$EXPECTED_TASK_ID" \
+            '.required == true and .projectId == $projectId and .taskId == $taskId' \
+            initial-provenance.json > /dev/null
+          cat initial-provenance.json
+
+      - name: Require exact dispatched candidate verifier success
+        id: verifier
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ steps.invocation.outputs.head_ref }}
+          HEAD_SHA: ${{ steps.invocation.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+          for ATTEMPT in $(seq 1 90); do
+            RESPONSE=$(gh api -X GET \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${GITHUB_REPOSITORY}/actions/workflows/verify.yml/runs" \
+              -f branch="$HEAD_REF" \
+              -f event=workflow_dispatch \
+              -f per_page=100)
+            RUN=$(printf '%s' "$RESPONSE" | jq -c \
+              --arg sha "$HEAD_SHA" \
+              --arg ref "$HEAD_REF" \
+              '[.workflow_runs[] | select(.head_sha == $sha and .head_branch == $ref and .event == "workflow_dispatch")] | sort_by(.run_number) | last // empty')
+            if [ -n "$RUN" ]; then
+              STATUS=$(printf '%s' "$RUN" | jq -r '.status')
+              CONCLUSION=$(printf '%s' "$RUN" | jq -r '.conclusion // ""')
+              RUN_ID=$(printf '%s' "$RUN" | jq -r '.id')
+              RUN_URL=$(printf '%s' "$RUN" | jq -r '.html_url')
+              if [ "$STATUS" = "completed" ]; then
+                if [ "$CONCLUSION" != "success" ]; then
+                  echo "exact bot Project candidate verifier concluded: $CONCLUSION" >&2
+                  exit 1
+                fi
+                echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+                echo "run_url=$RUN_URL" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+            fi
+            sleep 10
+          done
+          echo "exact bot Project candidate verifier did not complete inside trusted gate window" >&2
+          exit 1
+
+      - name: Revalidate PR identity after verification
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.invocation.outputs.pr_number }}
+          VERIFIER_RUN_ID: ${{ steps.verifier.outputs.run_id }}
+          VERIFIER_RUN_URL: ${{ steps.verifier.outputs.run_url }}
+        run: |
+          set -euo pipefail
+          gh api -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" > live-pr-final.json
+          node trusted-base/factory/src/project/trusted-pr-provenance.mjs \
+            --event expected-event.json \
+            --pull live-pr-final.json \
+            --files changed-files.txt \
+            --out final-provenance.json
+          if ! cmp -s initial-provenance.json final-provenance.json; then
+            echo "bot Project PR identity changed during selftest verification" >&2
+            exit 1
+          fi
+          jq \
+            --arg runId "$VERIFIER_RUN_ID" \
+            --arg runUrl "$VERIFIER_RUN_URL" \
+            --arg verifiedAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            '. + {requiredCheck: "selftest", verifierWorkflow: "verify.yml", verifierRunId: ($runId | tonumber), verifierRunUrl: $runUrl, verifiedAt: $verifiedAt}' \
+            final-provenance.json > trusted-bot-selftest-evidence.json
+          cat trusted-bot-selftest-evidence.json
+
+      - name: Preserve trusted bot selftest evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trusted-bot-selftest-${{ steps.invocation.outputs.pr_number }}-${{ github.run_id }}
+          path: trusted-bot-selftest-evidence.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Complete candidate-head required selftest check
+        if: always() && steps.candidate_check.outputs.check_id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHECK_ID: ${{ steps.candidate_check.outputs.check_id }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          if [ "$JOB_STATUS" = "success" ]; then
+            CONCLUSION="success"
+          elif [ "$JOB_STATUS" = "cancelled" ]; then
+            CONCLUSION="cancelled"
+          else
+            CONCLUSION="failure"
+          fi
+          gh api -X PATCH \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/check-runs/${CHECK_ID}" \
+            -f status='completed' \
+            -f conclusion="$CONCLUSION" \
+            -f completed_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)" > /dev/null
