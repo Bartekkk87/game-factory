@@ -298,9 +298,13 @@ async function proveRemotePushIsRolledBackOnGithubFailure() {
   try {
     await assert.rejects(runPgA0Task(runOptions(fixture, {
       requestEngineerPatch: async () => goodEngineerResult(),
-      fetchImpl: async () => ({ ok: false, status: 503 }),
+      fetchImpl: async () => ({
+        ok: false,
+        status: 403,
+        json: async () => ({ message: 'GitHub Actions is not permitted to create or approve pull requests.' })
+      }),
       push: true
-    })), /GitHub task PR creation failed: HTTP 503/);
+    })), /GitHub task PR creation failed: HTTP 403: GitHub Actions is not permitted to create or approve pull requests\./);
     assertRolledBack(fixture);
     assert.equal(git(fixture.root, ['ls-remote', '--heads', 'origin', TASK_BRANCH]).stdout, '');
     assert.notEqual(git(fixture.root, ['ls-remote', '--heads', 'origin', 'main']).stdout, '');
