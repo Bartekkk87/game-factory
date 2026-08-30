@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { assertSafeId } from './contracts.mjs';
 
 const WORKSPACE_AUTHORITY = Symbol('project-game-workspace-authority');
+// Primitive mutation authority is anchored to the canonical Git repository root.
 
 function realDirectory(candidate, field) {
   const resolved = path.resolve(candidate);
