@@ -1,0 +1,58 @@
+name: Project Kepler Canary M1
+
+on:
+  push:
+    branches:
+      - project-canary/kepler-dispatch
+    paths:
+      - '.github/project-kepler-canary-trigger'
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: project-kepler-canary-m1
+  cancel-in-progress: false
+
+jobs:
+  canary-m1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout protected-main baseline
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Configure Project Canary Git identity
+        run: |
+          git config user.name "Project Kepler Canary"
+          git config user.email "project-kepler-canary@example.invalid"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Prove Project Engineer adapter boundary
+        run: node factory/src/project/test-engineer-requester.mjs
+
+      - name: Execute bounded zero-paid Kepler M1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          OPENROUTER_PRODUCTION: ${{ secrets.OPENROUTER_PRODUCTION }}
+          GF_LLM_PROVIDER_ENGINEER_PROJECT_TASK: openrouter
+          GF_MODEL_ENGINEER_PROJECT_TASK: nvidia/nemotron-3.5-lightning:free
+          GF_LLM_LANE_ENGINEER_PROJECT_TASK: production
+          GF_PROJECT_ENGINEER_MAX_TOKENS: '32768'
+        run: node factory/src/project/run-kepler-canary.mjs

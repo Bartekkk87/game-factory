@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "project-game.roadmap/v1",
+  "projectId": "kepler-outpost",
+  "milestones": [
+    {
+      "id": "M1",
+      "title": "Persistent playable outpost core",
+      "status": "owner-approved"
+    },
+    {
+      "id": "M2",
+      "title": "Bounded second-system evolution with inherited regressions",
+      "status": "planned-after-m1"
+    }
+  ]
+}
