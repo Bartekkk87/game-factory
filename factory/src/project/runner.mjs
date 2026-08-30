@@ -188,6 +188,17 @@ function stagePromotedWorkspace(context, promoted) {
   }
 }
 
+async function githubFailureDetail(response) {
+  if (typeof response?.json !== 'function') return '';
+  try {
+    const payload = await response.json();
+    if (typeof payload?.message !== 'string') return '';
+    return payload.message.replace(/\s+/g, ' ').trim().slice(0, 300);
+  } catch {
+    return '';
+  }
+}
+
 async function githubCreatePr({ repository, token, context, task, binding, fetchImpl }) {
   if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(String(repository || ''))) {
     throw new Error('GITHUB_REPOSITORY owner/name is required');
@@ -210,7 +221,10 @@ async function githubCreatePr({ repository, token, context, task, binding, fetch
       draft: false
     })
   });
-  if (!response.ok) throw new Error(`GitHub task PR creation failed: HTTP ${response.status}`);
+  if (!response.ok) {
+    const detail = await githubFailureDetail(response);
+    throw new Error(`GitHub task PR creation failed: HTTP ${response.status}${detail ? `: ${detail}` : ''}`);
+  }
   return response.json();
 }
 
