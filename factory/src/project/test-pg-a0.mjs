@@ -110,6 +110,7 @@ try {
   const newContent = 'export const value = 2;\n';
   let requestedContext = null;
   let postedBody = null;
+  let dispatchedBody = null;
   const result = await runPgA0Task({
     repoRoot: root,
     projectRoot,
@@ -150,6 +151,11 @@ try {
           base: { sha: baseHeadSha, ref: postedBody.base }
         })
       };
+    },
+    dispatchFetchImpl: async (url, options) => {
+      assert.match(url, /trusted-project-pr-provenance\.yml\/dispatches$/);
+      dispatchedBody = JSON.parse(options.body);
+      return { ok: true, status: 204 };
     }
   });
 
@@ -158,6 +164,12 @@ try {
   assert.equal(result.pullRequest.headSha, result.binding.headSha);
   assert.equal(result.pullRequest.baseSha, result.binding.baseHeadSha);
   assert.equal(result.binding.projectId, task.projectId);
+  assert.equal(result.provenanceDispatch.prNumber, result.pullRequest.number);
+  assert.equal(result.provenanceDispatch.headSha, result.pullRequest.headSha);
+  assert.equal(dispatchedBody.ref, 'main');
+  assert.equal(dispatchedBody.inputs.pr_number, String(result.pullRequest.number));
+  assert.equal(dispatchedBody.inputs.expected_head_sha, result.pullRequest.headSha);
+  assert.equal(dispatchedBody.inputs.expected_base_sha, result.pullRequest.baseSha);
   assert.equal(result.binding.headRef, result.pullRequest.headRef);
   assert.equal(result.binding.baseRef, result.pullRequest.baseRef);
   assert.equal(result.binding.baselineTreeSha256, result.promotion.state.baseline.treeSha256);

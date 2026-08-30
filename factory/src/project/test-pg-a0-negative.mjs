@@ -173,7 +173,10 @@ function goodEngineerResult() {
   };
 }
 
-function runOptions(fixture, { requestEngineerPatch, fetchImpl, push = false } = {}) {
+function runOptions(
+  fixture,
+  { requestEngineerPatch, fetchImpl, dispatchFetchImpl = async () => ({ ok: true, status: 204 }), push = false } = {}
+) {
   return {
     repoRoot: fixture.root,
     projectRoot: fixture.projectRoot,
@@ -182,6 +185,7 @@ function runOptions(fixture, { requestEngineerPatch, fetchImpl, push = false } =
     repository: 'example/game-factory',
     token: 'fixture-token',
     fetchImpl,
+    dispatchFetchImpl,
     push,
     verifiedAt: '2026-08-30T08:30:00.000Z'
   };
@@ -325,6 +329,37 @@ async function proveRemotePushIsRolledBackOnGithubFailure() {
   }
 }
 
+async function proveTrustedDispatchFailureFailsClosed() {
+  const fixture = initializeFixture({ withRemote: true });
+  let closeRequested = false;
+  try {
+    await assert.rejects(runPgA0Task(runOptions(fixture, {
+      requestEngineerPatch: async () => goodEngineerResult(),
+      fetchImpl: successPullFetch(fixture),
+      dispatchFetchImpl: async (url, options) => {
+        if (url.includes('/actions/workflows/trusted-project-pr-provenance.yml/dispatches')) {
+          return {
+            ok: false,
+            status: 403,
+            json: async () => ({ message: 'Actions dispatch denied' })
+          };
+        }
+        if (url.endsWith('/pulls/88') && options?.method === 'PATCH') {
+          closeRequested = JSON.parse(options.body).state === 'closed';
+          return { ok: true, status: 200 };
+        }
+        throw new Error('unexpected trusted dispatch cleanup request: ' + url);
+      },
+      push: true
+    })), /trusted Project PR provenance dispatch failed: HTTP 403: Actions dispatch denied/);
+    assert.equal(closeRequested, true);
+    assertRolledBack(fixture);
+    assert.equal(git(fixture.root, ['ls-remote', '--heads', 'origin', TASK_BRANCH]).stdout, '');
+  } finally {
+    cleanupFixture(fixture);
+  }
+}
+
 async function proveRemoteCleanupFailureIsVisible() {
   const fixture = initializeFixture({ withRemote: true });
   try {
@@ -354,6 +389,7 @@ await proveOutOfScopePatchFailsClosed();
 await proveWrongPrHeadFailsClosed();
 await proveWrongPrBaseFailsClosed();
 await proveRemotePushIsRolledBackOnGithubFailure();
+await proveTrustedDispatchFailureFailsClosed();
 await proveRemoteCleanupFailureIsVisible();
 
 console.log('project PG-A0 negative trust-boundary selftest: PASS');
