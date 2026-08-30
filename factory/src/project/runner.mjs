@@ -251,7 +251,7 @@ function rollbackTaskGitBranch(context) {
   const currentBranch = git(['rev-parse', '--abbrev-ref', 'HEAD'], context.root, { allowFailure: true }).stdout;
   if (currentBranch === context.branchName) {
     git(['reset', '--hard', context.baseHeadSha], context.root);
-    git(['clean', '-fd', '--', context.projectPath], context.root);
+    git(['clean', '-fd', '--', '.'], context.root);
     git(['switch', context.baseBranch], context.root);
   } else if (currentBranch && currentBranch !== context.baseBranch) {
     git(['switch', context.baseBranch], context.root, { allowFailure: true });
