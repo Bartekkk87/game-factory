@@ -25,15 +25,14 @@ const route = resolveRoleRoute({
   operation: 'project-task',
   requirements: { jsonObject: true, maxOutputTokens: maxTokens }
 });
-assert.equal(route.provider.id, 'openrouter', 'Kepler M1 must use the approved free OpenRouter route');
-assert.equal(route.model.id, 'nvidia/nemotron-3.5-lightning:free');
-assert.equal(route.model.capabilities.freeEndpoint, true, 'Kepler M1 model must be a registered free endpoint');
-assert.equal(Number(route.model.pricing.inputUsdPerM), 0);
-assert.equal(Number(route.model.pricing.outputUsdPerM), 0);
+assert.equal(route.provider.id, 'openrouter', 'Kepler M1 must use the approved OpenRouter production route');
+assert.equal(route.model.id, 'deepseek/deepseek-chat-v3.1');
+assert.ok(Number(route.model.pricing.inputUsdPerM) > 0, 'Kepler M1 model must have registered input pricing');
+assert.ok(Number(route.model.pricing.outputUsdPerM) > 0, 'Kepler M1 model must have registered output pricing');
 
 beginRunBudget({
   runId: `kepler-project-canary-${runId}`,
-  budgetUsd: 0.01,
+  budgetUsd: 0.05,
   stageBudgets: {
     repair: { maxCalls: 0, maxUsd: 0 },
     polish: { maxCalls: 0, maxUsd: 0 },
@@ -69,7 +68,7 @@ assert.equal(result.binding.taskContractSha256, TASK_SHA256);
 const cost = costReport();
 assert.equal(cost.pass, true, JSON.stringify(cost.violations));
 assert.equal(cost.accountingComplete, true);
-assert.equal(cost.costUsd, 0, 'Kepler M1 free endpoint must settle at zero USD');
+assert.ok(cost.costUsd >= 0 && cost.costUsd <= 0.05, 'Kepler M1 must remain within the approved five-cent budget');
 
 console.log(`KEPLER_PROJECT_CANARY_M1=${JSON.stringify({
   schemaVersion: 'project-game.canary-m1/v1',
@@ -88,6 +87,7 @@ console.log(`KEPLER_PROJECT_CANARY_M1=${JSON.stringify({
   pullRequestUrl: result.pullRequest.htmlUrl,
   model: route.model.id,
   provider: route.provider.id,
+  budgetUsd: 0.05,
   costUsd: cost.costUsd,
   tokens: cost.tokens
 })}`);

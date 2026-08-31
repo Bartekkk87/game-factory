@@ -42,12 +42,12 @@ jobs:
       - name: Prove bounded Project Engineer adapter
         run: node factory/src/project/test-engineer-requester.mjs
 
-      - name: Execute bounded zero-paid Kepler M1
+      - name: Execute bounded low-cost Kepler M1
         env:
           GITHUB_TOKEN: ${{ github.token }}
           OPENROUTER_PRODUCTION: ${{ secrets.OPENROUTER_PRODUCTION }}
           GF_LLM_PROVIDER_ENGINEER_PROJECT_TASK: openrouter
-          GF_MODEL_ENGINEER_PROJECT_TASK: nvidia/nemotron-3.5-lightning:free
+          GF_MODEL_ENGINEER_PROJECT_TASK: deepseek/deepseek-chat-v3.1
           GF_LLM_LANE_ENGINEER_PROJECT_TASK: production
           GF_PROJECT_ENGINEER_MAX_TOKENS: '32768'
         run: node factory/src/project/run-kepler-canary.mjs
