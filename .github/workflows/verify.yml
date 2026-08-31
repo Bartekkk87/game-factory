@@ -8,6 +8,7 @@ on:
       - 'evaluation/**'
       - 'factory/src/**'
       - 'factory/prompts/**'
+      - 'projects/**'
       - 'skills/**'
       - 'package.json'
       - 'package-lock.json'
