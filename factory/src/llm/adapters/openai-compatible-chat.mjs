@@ -99,10 +99,11 @@ export function buildOpenAiCompatibleChatRequest({
     };
   }
 
-  if (route.provider.id === 'openrouter' && shape.providerSort) {
+  const requireOpenRouterParameters = json && shape.jsonMode === 'response_format';
+  if (route.provider.id === 'openrouter' && (shape.providerSort || requireOpenRouterParameters)) {
     body.provider = {
-      sort: shape.providerSort,
-      ...(shape.providerRequireParameters === true ? { require_parameters: true } : {})
+      ...(shape.providerSort ? { sort: shape.providerSort } : {}),
+      ...((shape.providerRequireParameters === true || requireOpenRouterParameters) ? { require_parameters: true } : {})
     };
   }
 
