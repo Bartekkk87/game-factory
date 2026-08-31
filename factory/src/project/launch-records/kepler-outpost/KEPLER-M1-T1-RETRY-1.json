@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "project-game.autonomous-retry/v1",
+  "retryId": "KEPLER-M1-T1-ZERO-SPEND-RETRY-1",
+  "projectId": "kepler-outpost",
+  "taskId": "KEPLER-M1-T1",
+  "originalLaunchId": "KEPLER-M1-T1-AUTONOMOUS-1",
+  "failedWorkflowRunId": 33399897735,
+  "failedJobId": 99513414056,
+  "failedStep": "Execute bounded low-cost Kepler M1",
+  "failureMessage": "PG-A0 must start on main, found HEAD",
+  "modelRequestReached": false,
+  "baseAuthoritySha": "1e48d6531700d100dc67b5bde471207f5f6f6704",
+  "singleRetry": true
+}
