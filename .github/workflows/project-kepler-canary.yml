@@ -8,8 +8,11 @@ on:
       - 'factory/src/project/test-kepler-launch-gate.mjs'
       - 'factory/src/project/kepler-retry-gate.mjs'
       - 'factory/src/project/test-kepler-retry-gate.mjs'
+      - 'factory/src/project/kepler-owner-retry-gate.mjs'
+      - 'factory/src/project/test-kepler-owner-retry-gate.mjs'
       - 'factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1.json'
       - 'factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1-RETRY-1.json'
+      - 'factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1-OWNER-RETRY-2.json'
   workflow_run:
     workflows: ['Branch Verifier Selftest']
     branches: [main]
@@ -39,10 +42,11 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Prove fail-closed Kepler launch and retry contracts
+      - name: Prove fail-closed Kepler authorization contracts
         run: |
           node factory/src/project/test-kepler-launch-gate.mjs
           node factory/src/project/test-kepler-retry-gate.mjs
+          node factory/src/project/test-kepler-owner-retry-gate.mjs
 
       - name: Validate proposed Kepler authorization
         env:
@@ -51,12 +55,19 @@ jobs:
           set -euo pipefail
           LAUNCH_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1.json'
           RETRY_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1-RETRY-1.json'
+          OWNER_RETRY_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1-OWNER-RETRY-2.json'
           TASK_PATH='projects/kepler-outpost/.factory/tasks/KEPLER-M1-T1.json'
+          OWNER_APPROVAL_PATH='projects/kepler-outpost/.factory/approvals/KEPLER-M1-T1.json'
           HEAD_SHA=$(git rev-parse HEAD)
           LAUNCH_CHANGE=$(git diff --name-status "$BASE_SHA" "$HEAD_SHA" -- "$LAUNCH_PATH")
           RETRY_CHANGE=$(git diff --name-status "$BASE_SHA" "$HEAD_SHA" -- "$RETRY_PATH")
-          if [ -n "$LAUNCH_CHANGE" ] && [ -n "$RETRY_CHANGE" ]; then
-            echo "Kepler launch and retry authorization may not be changed together" >&2
+          OWNER_RETRY_CHANGE=$(git diff --name-status "$BASE_SHA" "$HEAD_SHA" -- "$OWNER_RETRY_PATH")
+          AUTH_CHANGE_COUNT=0
+          [ -n "$LAUNCH_CHANGE" ] && AUTH_CHANGE_COUNT=$((AUTH_CHANGE_COUNT + 1))
+          [ -n "$RETRY_CHANGE" ] && AUTH_CHANGE_COUNT=$((AUTH_CHANGE_COUNT + 1))
+          [ -n "$OWNER_RETRY_CHANGE" ] && AUTH_CHANGE_COUNT=$((AUTH_CHANGE_COUNT + 1))
+          if [ "$AUTH_CHANGE_COUNT" -gt 1 ]; then
+            echo "Kepler authorization records may not be published together" >&2
             exit 1
           fi
           if [ -n "$LAUNCH_CHANGE" ]; then
@@ -75,6 +86,19 @@ jobs:
             fi
             node factory/src/project/kepler-retry-gate.mjs \
               "$RETRY_PATH" "$LAUNCH_PATH" "$TASK_PATH" "$BASE_SHA"
+          fi
+          if [ -n "$OWNER_RETRY_CHANGE" ]; then
+            EXPECTED=$(printf 'A\t%s' "$OWNER_RETRY_PATH")
+            if [ "$OWNER_RETRY_CHANGE" != "$EXPECTED" ]; then
+              echo "Kepler owner retry record must be added exactly once and may not be modified or deleted" >&2
+              exit 1
+            fi
+            if [ -n "$(git diff --name-status "$BASE_SHA" "$HEAD_SHA" -- "$TASK_PATH" "$OWNER_APPROVAL_PATH")" ]; then
+              echo "Kepler task and owner approval must remain unchanged in owner retry publication" >&2
+              exit 1
+            fi
+            node factory/src/project/kepler-owner-retry-gate.mjs \
+              "$OWNER_RETRY_PATH" "$LAUNCH_PATH" "$RETRY_PATH" "$TASK_PATH" "$OWNER_APPROVAL_PATH" "$BASE_SHA"
           fi
 
   autonomous-preflight:
@@ -113,7 +137,9 @@ jobs:
           set -euo pipefail
           LAUNCH_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1.json'
           RETRY_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1-RETRY-1.json'
+          OWNER_RETRY_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1-OWNER-RETRY-2.json'
           TASK_PATH='projects/kepler-outpost/.factory/tasks/KEPLER-M1-T1.json'
+          OWNER_APPROVAL_PATH='projects/kepler-outpost/.factory/approvals/KEPLER-M1-T1.json'
           HEAD_SHA=$(git rev-parse HEAD)
           if [ "$HEAD_SHA" != "$VERIFIED_HEAD_SHA" ]; then
             echo "verified Kepler authorization head mismatch" >&2
@@ -133,11 +159,16 @@ jobs:
           echo "base_sha=$BASE_SHA" >> "$GITHUB_OUTPUT"
           LAUNCH_CHANGE=$(git diff --name-status "$BASE_SHA" "$HEAD_SHA" -- "$LAUNCH_PATH")
           RETRY_CHANGE=$(git diff --name-status "$BASE_SHA" "$HEAD_SHA" -- "$RETRY_PATH")
-          if [ -n "$LAUNCH_CHANGE" ] && [ -n "$RETRY_CHANGE" ]; then
-            echo "Kepler launch and retry authorization may not be published together" >&2
+          OWNER_RETRY_CHANGE=$(git diff --name-status "$BASE_SHA" "$HEAD_SHA" -- "$OWNER_RETRY_PATH")
+          AUTH_CHANGE_COUNT=0
+          [ -n "$LAUNCH_CHANGE" ] && AUTH_CHANGE_COUNT=$((AUTH_CHANGE_COUNT + 1))
+          [ -n "$RETRY_CHANGE" ] && AUTH_CHANGE_COUNT=$((AUTH_CHANGE_COUNT + 1))
+          [ -n "$OWNER_RETRY_CHANGE" ] && AUTH_CHANGE_COUNT=$((AUTH_CHANGE_COUNT + 1))
+          if [ "$AUTH_CHANGE_COUNT" -gt 1 ]; then
+            echo "Kepler authorization records may not be published together" >&2
             exit 1
           fi
-          if [ -z "$LAUNCH_CHANGE" ] && [ -z "$RETRY_CHANGE" ]; then
+          if [ "$AUTH_CHANGE_COUNT" -eq 0 ]; then
             echo 'launch=false' >> "$GITHUB_OUTPUT"
             echo 'authorization_kind=none' >> "$GITHUB_OUTPUT"
             echo "KEPLER_M1_AUTONOMOUS_TRIGGER_SKIPPED={\"reason\":\"no-new-launch-or-retry-record\",\"verifiedRunId\":\"$VERIFIED_RUN_ID\",\"headSha\":\"$HEAD_SHA\",\"baseSha\":\"$BASE_SHA\"}"
@@ -151,7 +182,7 @@ jobs:
             fi
             EVIDENCE=$(node factory/src/project/kepler-launch-gate.mjs "$LAUNCH_PATH" "$TASK_PATH" "$BASE_SHA")
             AUTHORIZATION_KIND='launch'
-          else
+          elif [ -n "$RETRY_CHANGE" ]; then
             EXPECTED=$(printf 'A\t%s' "$RETRY_PATH")
             if [ "$RETRY_CHANGE" != "$EXPECTED" ]; then
               echo "Kepler retry record must be added exactly once and may not be modified or deleted" >&2
@@ -160,6 +191,19 @@ jobs:
             EVIDENCE=$(node factory/src/project/kepler-retry-gate.mjs \
               "$RETRY_PATH" "$LAUNCH_PATH" "$TASK_PATH" "$BASE_SHA")
             AUTHORIZATION_KIND='retry'
+          else
+            EXPECTED=$(printf 'A\t%s' "$OWNER_RETRY_PATH")
+            if [ "$OWNER_RETRY_CHANGE" != "$EXPECTED" ]; then
+              echo "Kepler owner retry record must be added exactly once and may not be modified or deleted" >&2
+              exit 1
+            fi
+            if [ -n "$(git diff --name-status "$BASE_SHA" "$HEAD_SHA" -- "$TASK_PATH" "$OWNER_APPROVAL_PATH")" ]; then
+              echo "Kepler task and owner approval must remain unchanged in owner retry publication" >&2
+              exit 1
+            fi
+            EVIDENCE=$(node factory/src/project/kepler-owner-retry-gate.mjs \
+              "$OWNER_RETRY_PATH" "$LAUNCH_PATH" "$RETRY_PATH" "$TASK_PATH" "$OWNER_APPROVAL_PATH" "$BASE_SHA")
+            AUTHORIZATION_KIND='owner_retry'
           fi
           echo 'launch=true' >> "$GITHUB_OUTPUT"
           echo "authorization_kind=$AUTHORIZATION_KIND" >> "$GITHUB_OUTPUT"
@@ -204,7 +248,9 @@ jobs:
           set -euo pipefail
           LAUNCH_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1.json'
           RETRY_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1-RETRY-1.json'
+          OWNER_RETRY_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1-OWNER-RETRY-2.json'
           TASK_PATH='projects/kepler-outpost/.factory/tasks/KEPLER-M1-T1.json'
+          OWNER_APPROVAL_PATH='projects/kepler-outpost/.factory/approvals/KEPLER-M1-T1.json'
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD_SHA"
           test "$(git rev-parse "${EXPECTED_HEAD_SHA}^1")" = "$EXPECTED_BASE_SHA"
           if [ "$AUTHORIZATION_KIND" = 'launch' ]; then
@@ -213,6 +259,9 @@ jobs:
           elif [ "$AUTHORIZATION_KIND" = 'retry' ]; then
             node factory/src/project/kepler-retry-gate.mjs \
               "$RETRY_PATH" "$LAUNCH_PATH" "$TASK_PATH" "$EXPECTED_BASE_SHA"
+          elif [ "$AUTHORIZATION_KIND" = 'owner_retry' ]; then
+            node factory/src/project/kepler-owner-retry-gate.mjs \
+              "$OWNER_RETRY_PATH" "$LAUNCH_PATH" "$RETRY_PATH" "$TASK_PATH" "$OWNER_APPROVAL_PATH" "$EXPECTED_BASE_SHA"
           else
             echo "unknown Kepler authorization kind" >&2
             exit 1
