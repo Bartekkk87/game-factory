@@ -54,6 +54,10 @@ Nemotron Free Production Run #53 (`33252485756`, runtime `20260829-122640`) fail
 
 ## Fresh-chat handoff
 
-`NEXT-CHAT-HANDOFF-NEMOTRON-FREE-2026-08-29.md` is the current operational handoff for continuing the model/transport evaluation after PR #56 and Nemotron Free Run #53. It is not architectural authority and explicitly requires a live GitHub/Notion re-read before any next model-backed action.
+`CURRENT-HANDOFF.md` is the stable pointer to the newest operational handoff.
+
+`KEPLER-M1-CLOSURE-AND-HANDOFF-2026-08-31.md` is the **current operational handoff**. It records the verified `main` boundary after PR #103, the autonomous Kepler M1 execution chain, the final owner-authorized retry outcome, the protected browser-persistence rejection, the fact that no rejected candidate entered `main`, and the rule that no further paid retry is authorized without a new Owner decision.
+
+`NEXT-CHAT-HANDOFF-NEMOTRON-FREE-2026-08-29.md` is now a historical operational handoff for the earlier model/transport evaluation. It remains useful evidence but is no longer the current continuation entrypoint.
 
 `NEXT-CHAT-HANDOFF-FINAL-ARCHITECTURE-AUDIT-2026-08-29.md` remains a historical operational handoff used to initiate the independent re-audit. It is intentionally not architectural authority; its residuals are now closed by the canonical independent re-audit remediation record above.
