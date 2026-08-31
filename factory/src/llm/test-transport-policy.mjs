@@ -28,7 +28,7 @@ assert.equal(requestTimeoutMsForRoute({ provider: { id: 'openrouter' }, model: {
 assert.equal(requestTimeoutMsForRoute({
   provider: { id: 'openrouter' },
   model: getModelRecord('openrouter', 'nvidia/nemotron-3.5-lightning:free')
-}), 360000);
+}), 600000);
 assert.equal(requestTimeoutMsForRoute({
   provider: { id: 'openrouter' },
   model: getModelRecord('openrouter', 'nvidia/nemotron-3-ultra-550b-a55b:free')

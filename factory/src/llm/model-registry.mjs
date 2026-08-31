@@ -133,7 +133,7 @@ const BUILTIN_MODELS = Object.freeze({
   'openrouter:nvidia/nemotron-3.5-lightning:free': model({
     provider: 'openrouter', id: 'nvidia/nemotron-3.5-lightning:free', versionLabel: 'NVIDIA Nemotron 3.5 Lightning Free', aliasKind: 'stable-id', benchmarkStatus: 'free-challenger',
     capabilities: { jsonObject: true, structuredOutputs: false, contextWindow: 1000000, maxOutputTokens: 65536, freeEndpoint: true },
-    requestShape: { tokenParam: 'max_tokens', temperature: 'free', jsonMode: 'prompt', providerSort: 'throughput', requestTimeoutMs: 360000, contractSource: 'openrouter-official-nemotron-3.5-lightning-free-2026-08-29' },
+    requestShape: { tokenParam: 'max_tokens', temperature: 'free', jsonMode: 'prompt', providerSort: 'throughput', requestTimeoutMs: 600000, contractSource: 'openrouter-official-nemotron-3.5-lightning-free-2026-08-29' },
     pricing: { inputUsdPerM: 0, cachedInputUsdPerM: 0, outputUsdPerM: 0, source: 'openrouter-official-free-endpoint-2026-08-29' }
   }),
   'openrouter:nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free': model({

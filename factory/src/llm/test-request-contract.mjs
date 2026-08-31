@@ -113,7 +113,7 @@ for (const key of [
   assert.equal(nemotron.pricing.outputUsdPerM, 0, `${key} output pricing must be zero`);
   assert.equal(nemotron.requestShape.jsonMode, 'prompt', `${key} must not claim provider-enforced JSON`);
 }
-assert.equal(registry['openrouter:nvidia/nemotron-3.5-lightning:free'].requestShape.requestTimeoutMs, 360000);
+assert.equal(registry['openrouter:nvidia/nemotron-3.5-lightning:free'].requestShape.requestTimeoutMs, 600000);
 assert.equal(registry['openrouter:nvidia/nemotron-3-ultra-550b-a55b:free'].requestShape.requestTimeoutMs, 900000);
 
 const fixtureModel = structuredClone(entries[0][1]);
