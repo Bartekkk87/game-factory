@@ -1,32 +1,162 @@
 name: Project Kepler Canary M1
 
 on:
-  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/project-kepler-canary.yml'
+      - 'factory/src/project/kepler-launch-gate.mjs'
+      - 'factory/src/project/test-kepler-launch-gate.mjs'
+      - 'projects/kepler-outpost/.factory/launch/KEPLER-M1-T1.json'
+  workflow_run:
+    workflows: ['Branch Verifier Selftest']
+    branches: [main]
+    types: [completed]
 
 permissions:
-  actions: write
-  contents: write
-  pull-requests: write
+  contents: read
 
 concurrency:
   group: project-kepler-canary-m1
   cancel-in-progress: false
 
 jobs:
-  canary-m1:
+  launch-gate-selftest:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 5
     steps:
-      - name: Checkout protected-main baseline
+      - name: Checkout exact pull request head
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Prove fail-closed Kepler launch contract
+        run: node factory/src/project/test-kepler-launch-gate.mjs
+
+      - name: Validate launch record when proposed
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          LAUNCH_PATH='projects/kepler-outpost/.factory/launch/KEPLER-M1-T1.json'
+          TASK_PATH='projects/kepler-outpost/.factory/tasks/KEPLER-M1-T1.json'
+          if [ -f "$LAUNCH_PATH" ]; then
+            node factory/src/project/kepler-launch-gate.mjs "$LAUNCH_PATH" "$TASK_PATH" "$BASE_SHA"
+          fi
+
+  autonomous-preflight:
+    if: >-
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      launch: ${{ steps.gate.outputs.launch }}
+      head_sha: ${{ steps.gate.outputs.head_sha }}
+      base_sha: ${{ steps.gate.outputs.base_sha }}
+    steps:
+      - name: Checkout exact verified main head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0
 
       - name: Use Node.js 24
         uses: actions/setup-node@v4
         with:
           node-version: '24'
+
+      - name: Validate verified-main launch publication
+        id: gate
+        env:
+          VERIFIED_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          VERIFIED_RUN_ID: ${{ github.event.workflow_run.id }}
+          VERIFIED_RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          VERIFIED_EVENT: ${{ github.event.workflow_run.event }}
+        run: |
+          set -euo pipefail
+          LAUNCH_PATH='projects/kepler-outpost/.factory/launch/KEPLER-M1-T1.json'
+          TASK_PATH='projects/kepler-outpost/.factory/tasks/KEPLER-M1-T1.json'
+          HEAD_SHA=$(git rev-parse HEAD)
+          if [ "$HEAD_SHA" != "$VERIFIED_HEAD_SHA" ]; then
+            echo "verified Kepler launch head mismatch" >&2
+            exit 1
+          fi
+          if [ "$VERIFIED_EVENT" != 'push' ] || [ "$VERIFIED_RUN_ATTEMPT" != '1' ]; then
+            echo "Kepler launch requires the first automatic push verifier attempt" >&2
+            exit 1
+          fi
+          git fetch origin main --quiet
+          if [ "$(git rev-parse origin/main)" != "$HEAD_SHA" ]; then
+            echo "verified Kepler launch head is no longer current main" >&2
+            exit 1
+          fi
+          BASE_SHA=$(git rev-parse "${HEAD_SHA}^1")
+          echo "head_sha=$HEAD_SHA" >> "$GITHUB_OUTPUT"
+          echo "base_sha=$BASE_SHA" >> "$GITHUB_OUTPUT"
+          CHANGE=$(git diff --name-status "$BASE_SHA" "$HEAD_SHA" -- "$LAUNCH_PATH")
+          if [ -z "$CHANGE" ]; then
+            echo 'launch=false' >> "$GITHUB_OUTPUT"
+            echo "KEPLER_M1_AUTONOMOUS_TRIGGER_SKIPPED={\"reason\":\"no-new-launch-record\",\"verifiedRunId\":\"$VERIFIED_RUN_ID\",\"headSha\":\"$HEAD_SHA\",\"baseSha\":\"$BASE_SHA\"}"
+            exit 0
+          fi
+          EXPECTED=$(printf 'A\t%s' "$LAUNCH_PATH")
+          if [ "$CHANGE" != "$EXPECTED" ]; then
+            echo "Kepler launch record must be added exactly once and may not be modified or deleted" >&2
+            exit 1
+          fi
+          EVIDENCE=$(node factory/src/project/kepler-launch-gate.mjs "$LAUNCH_PATH" "$TASK_PATH" "$BASE_SHA")
+          echo 'launch=true' >> "$GITHUB_OUTPUT"
+          echo "KEPLER_M1_AUTONOMOUS_TRIGGER={\"verifiedRunId\":\"$VERIFIED_RUN_ID\",\"headSha\":\"$HEAD_SHA\",\"baseSha\":\"$BASE_SHA\",\"launch\":$EVIDENCE}"
+          {
+            echo '## Kepler M1 autonomous trigger'
+            echo
+            echo "- verifier run: $VERIFIED_RUN_ID"
+            echo "- verified head: $HEAD_SHA"
+            echo "- verified base: $BASE_SHA"
+            echo "- launch evidence: \`$EVIDENCE\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  canary-m1:
+    needs: autonomous-preflight
+    if: needs.autonomous-preflight.outputs.launch == 'true'
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact verified launch head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.autonomous-preflight.outputs.head_sha }}
+          fetch-depth: 0
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Revalidate bounded launch before setup
+        env:
+          EXPECTED_HEAD_SHA: ${{ needs.autonomous-preflight.outputs.head_sha }}
+          EXPECTED_BASE_SHA: ${{ needs.autonomous-preflight.outputs.base_sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD_SHA"
+          test "$(git rev-parse "${EXPECTED_HEAD_SHA}^1")" = "$EXPECTED_BASE_SHA"
+          node factory/src/project/kepler-launch-gate.mjs \
+            projects/kepler-outpost/.factory/launch/KEPLER-M1-T1.json \
+            projects/kepler-outpost/.factory/tasks/KEPLER-M1-T1.json \
+            "$EXPECTED_BASE_SHA"
 
       - name: Configure Project Canary Git identity
         run: |
@@ -41,6 +171,17 @@ jobs:
 
       - name: Prove bounded Project Engineer adapter
         run: node factory/src/project/test-engineer-requester.mjs
+
+      - name: Reconfirm current main before model spend
+        env:
+          EXPECTED_HEAD_SHA: ${{ needs.autonomous-preflight.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+          git fetch origin main --quiet
+          if [ "$(git rev-parse origin/main)" != "$EXPECTED_HEAD_SHA" ]; then
+            echo "main advanced after Kepler launch verification; refusing model spend" >&2
+            exit 1
+          fi
 
       - name: Execute bounded low-cost Kepler M1
         env:
