@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "project-game.web-runtime/v1",
+  "entry": "src/play.html",
+  "frameSelector": "#game-frame",
+  "readySelector": "[data-game-ready=\"true\"]",
+  "persistence": {
+    "schemaVersion": "project-game.persistence/v1",
+    "saveSchemaVersion": "1.0.0",
+    "slots": 1,
+    "maxBytes": 4096,
+    "corruptSaveBehavior": "quarantine-and-start-safe",
+    "migrations": [],
+    "canonicalDurableState": {
+      "strategy": "full-state-minus-transient/v1",
+      "transientStatePaths": []
+    },
+    "browserReloadProofRequired": true,
+    "bridge": {
+      "protocol": "project-game.persistence-bridge/v1",
+      "transport": "postMessage",
+      "childOrigin": "opaque",
+      "hostAuthority": true,
+      "allowSameOrigin": false
+    },
+    "contractSha256": "e40cfd16e26083cd206704e4b63e855feac8fc76acf8666de227b1c3164d4b1a"
+  }
+}
