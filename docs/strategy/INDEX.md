@@ -11,6 +11,7 @@ This index prevents dated strategy snapshots from silently competing for authori
 5. `PROJECT-GAME-MODE-V0.1-HANDOFF.md` — durable PG-A0 merge gate and continuation handoff: protected-main integration evidence is recorded externally in Issue #62/Notion; after integration the next proof is one real zero-paid scoped task PR, then the Web persistence host bridge, then only separately authorized Kepler execution.
 6. `INDEPENDENT-REAUDIT-REMEDIATION-CLOSURE-2026-08-29.md` — canonical closure record for the independent re-audit residuals, including the trusted required-check root, hardened Learning provenance, repair-budget accounting, transient memory-state handling and exact-main verification.
 7. `PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md` — canonical project-progress snapshot for its role until a newer progress snapshot explicitly supersedes it.
+8. `KEPLER-M1-STATUS-AND-AUTONOMY-HANDOFF-2026-08-31.md` — current operational record for Kepler M1, the approved USD 0.05 DeepSeek route, current PR #94 evidence, and the bounded autonomous-start gap.
 
 Machine-readable status and supersedes links live in `STATUS-CHAIN.json`.
 
@@ -54,6 +55,8 @@ Nemotron Free Production Run #53 (`33252485756`, runtime `20260829-122640`) fail
 
 ## Fresh-chat handoff
 
-`NEXT-CHAT-HANDOFF-NEMOTRON-FREE-2026-08-29.md` is the current operational handoff for continuing the model/transport evaluation after PR #56 and Nemotron Free Run #53. It is not architectural authority and explicitly requires a live GitHub/Notion re-read before any next model-backed action.
+`KEPLER-M1-STATUS-AND-AUTONOMY-HANDOFF-2026-08-31.md` is the current Kepler operational handoff. It requires a fresh live GitHub/Notion read, retains protected-main and all trusted gates, and forbids routine Owner GitHub actions.
 
-`NEXT-CHAT-HANDOFF-FINAL-ARCHITECTURE-AUDIT-2026-08-29.md` remains a historical operational handoff used to initiate the independent re-audit. It is intentionally not architectural authority; its residuals are now closed by the canonical independent re-audit remediation record above.
+`NEXT-CHAT-HANDOFF-NEMOTRON-FREE-2026-08-29.md` is the historical operational handoff for the earlier model/transport evaluation after PR #56 and Nemotron Free Run #53.
+
+`NEXT-CHAT-HANDOFF-FINAL-ARCHITECTURE-AUDIT-2026-08-29.md` remains a historical operational handoff used to initiate the independent re-audit. Its residuals are now closed by the canonical independent re-audit remediation record above.
