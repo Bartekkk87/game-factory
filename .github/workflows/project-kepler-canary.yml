@@ -6,7 +6,10 @@ on:
       - '.github/workflows/project-kepler-canary.yml'
       - 'factory/src/project/kepler-launch-gate.mjs'
       - 'factory/src/project/test-kepler-launch-gate.mjs'
+      - 'factory/src/project/kepler-retry-gate.mjs'
+      - 'factory/src/project/test-kepler-retry-gate.mjs'
       - 'factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1.json'
+      - 'factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1-RETRY-1.json'
   workflow_run:
     workflows: ['Branch Verifier Selftest']
     branches: [main]
@@ -29,24 +32,49 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
 
       - name: Use Node.js 24
         uses: actions/setup-node@v4
         with:
           node-version: '24'
 
-      - name: Prove fail-closed Kepler launch contract
-        run: node factory/src/project/test-kepler-launch-gate.mjs
+      - name: Prove fail-closed Kepler launch and retry contracts
+        run: |
+          node factory/src/project/test-kepler-launch-gate.mjs
+          node factory/src/project/test-kepler-retry-gate.mjs
 
-      - name: Validate launch record when proposed
+      - name: Validate proposed Kepler authorization
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
           LAUNCH_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1.json'
+          RETRY_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1-RETRY-1.json'
           TASK_PATH='projects/kepler-outpost/.factory/tasks/KEPLER-M1-T1.json'
-          if [ -f "$LAUNCH_PATH" ]; then
+          HEAD_SHA=$(git rev-parse HEAD)
+          LAUNCH_CHANGE=$(git diff --name-status "$BASE_SHA" "$HEAD_SHA" -- "$LAUNCH_PATH")
+          RETRY_CHANGE=$(git diff --name-status "$BASE_SHA" "$HEAD_SHA" -- "$RETRY_PATH")
+          if [ -n "$LAUNCH_CHANGE" ] && [ -n "$RETRY_CHANGE" ]; then
+            echo "Kepler launch and retry authorization may not be changed together" >&2
+            exit 1
+          fi
+          if [ -n "$LAUNCH_CHANGE" ]; then
+            EXPECTED=$(printf 'A\t%s' "$LAUNCH_PATH")
+            if [ "$LAUNCH_CHANGE" != "$EXPECTED" ]; then
+              echo "Kepler launch record must be added exactly once and may not be modified or deleted" >&2
+              exit 1
+            fi
             node factory/src/project/kepler-launch-gate.mjs "$LAUNCH_PATH" "$TASK_PATH" "$BASE_SHA"
+          fi
+          if [ -n "$RETRY_CHANGE" ]; then
+            EXPECTED=$(printf 'A\t%s' "$RETRY_PATH")
+            if [ "$RETRY_CHANGE" != "$EXPECTED" ]; then
+              echo "Kepler retry record must be added exactly once and may not be modified or deleted" >&2
+              exit 1
+            fi
+            node factory/src/project/kepler-retry-gate.mjs \
+              "$RETRY_PATH" "$LAUNCH_PATH" "$TASK_PATH" "$BASE_SHA"
           fi
 
   autonomous-preflight:
@@ -59,6 +87,7 @@ jobs:
     timeout-minutes: 5
     outputs:
       launch: ${{ steps.gate.outputs.launch }}
+      authorization_kind: ${{ steps.gate.outputs.authorization_kind }}
       head_sha: ${{ steps.gate.outputs.head_sha }}
       base_sha: ${{ steps.gate.outputs.base_sha }}
     steps:
@@ -83,45 +112,66 @@ jobs:
         run: |
           set -euo pipefail
           LAUNCH_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1.json'
+          RETRY_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1-RETRY-1.json'
           TASK_PATH='projects/kepler-outpost/.factory/tasks/KEPLER-M1-T1.json'
           HEAD_SHA=$(git rev-parse HEAD)
           if [ "$HEAD_SHA" != "$VERIFIED_HEAD_SHA" ]; then
-            echo "verified Kepler launch head mismatch" >&2
+            echo "verified Kepler authorization head mismatch" >&2
             exit 1
           fi
           if [ "$VERIFIED_EVENT" != 'push' ] || [ "$VERIFIED_RUN_ATTEMPT" != '1' ]; then
-            echo "Kepler launch requires the first automatic push verifier attempt" >&2
+            echo "Kepler authorization requires the first automatic push verifier attempt" >&2
             exit 1
           fi
           git fetch origin main --quiet
           if [ "$(git rev-parse origin/main)" != "$HEAD_SHA" ]; then
-            echo "verified Kepler launch head is no longer current main" >&2
+            echo "verified Kepler authorization head is no longer current main" >&2
             exit 1
           fi
           BASE_SHA=$(git rev-parse "${HEAD_SHA}^1")
           echo "head_sha=$HEAD_SHA" >> "$GITHUB_OUTPUT"
           echo "base_sha=$BASE_SHA" >> "$GITHUB_OUTPUT"
-          CHANGE=$(git diff --name-status "$BASE_SHA" "$HEAD_SHA" -- "$LAUNCH_PATH")
-          if [ -z "$CHANGE" ]; then
-            echo 'launch=false' >> "$GITHUB_OUTPUT"
-            echo "KEPLER_M1_AUTONOMOUS_TRIGGER_SKIPPED={\"reason\":\"no-new-launch-record\",\"verifiedRunId\":\"$VERIFIED_RUN_ID\",\"headSha\":\"$HEAD_SHA\",\"baseSha\":\"$BASE_SHA\"}"
-            exit 0
-          fi
-          EXPECTED=$(printf 'A\t%s' "$LAUNCH_PATH")
-          if [ "$CHANGE" != "$EXPECTED" ]; then
-            echo "Kepler launch record must be added exactly once and may not be modified or deleted" >&2
+          LAUNCH_CHANGE=$(git diff --name-status "$BASE_SHA" "$HEAD_SHA" -- "$LAUNCH_PATH")
+          RETRY_CHANGE=$(git diff --name-status "$BASE_SHA" "$HEAD_SHA" -- "$RETRY_PATH")
+          if [ -n "$LAUNCH_CHANGE" ] && [ -n "$RETRY_CHANGE" ]; then
+            echo "Kepler launch and retry authorization may not be published together" >&2
             exit 1
           fi
-          EVIDENCE=$(node factory/src/project/kepler-launch-gate.mjs "$LAUNCH_PATH" "$TASK_PATH" "$BASE_SHA")
+          if [ -z "$LAUNCH_CHANGE" ] && [ -z "$RETRY_CHANGE" ]; then
+            echo 'launch=false' >> "$GITHUB_OUTPUT"
+            echo 'authorization_kind=none' >> "$GITHUB_OUTPUT"
+            echo "KEPLER_M1_AUTONOMOUS_TRIGGER_SKIPPED={\"reason\":\"no-new-launch-or-retry-record\",\"verifiedRunId\":\"$VERIFIED_RUN_ID\",\"headSha\":\"$HEAD_SHA\",\"baseSha\":\"$BASE_SHA\"}"
+            exit 0
+          fi
+          if [ -n "$LAUNCH_CHANGE" ]; then
+            EXPECTED=$(printf 'A\t%s' "$LAUNCH_PATH")
+            if [ "$LAUNCH_CHANGE" != "$EXPECTED" ]; then
+              echo "Kepler launch record must be added exactly once and may not be modified or deleted" >&2
+              exit 1
+            fi
+            EVIDENCE=$(node factory/src/project/kepler-launch-gate.mjs "$LAUNCH_PATH" "$TASK_PATH" "$BASE_SHA")
+            AUTHORIZATION_KIND='launch'
+          else
+            EXPECTED=$(printf 'A\t%s' "$RETRY_PATH")
+            if [ "$RETRY_CHANGE" != "$EXPECTED" ]; then
+              echo "Kepler retry record must be added exactly once and may not be modified or deleted" >&2
+              exit 1
+            fi
+            EVIDENCE=$(node factory/src/project/kepler-retry-gate.mjs \
+              "$RETRY_PATH" "$LAUNCH_PATH" "$TASK_PATH" "$BASE_SHA")
+            AUTHORIZATION_KIND='retry'
+          fi
           echo 'launch=true' >> "$GITHUB_OUTPUT"
-          echo "KEPLER_M1_AUTONOMOUS_TRIGGER={\"verifiedRunId\":\"$VERIFIED_RUN_ID\",\"headSha\":\"$HEAD_SHA\",\"baseSha\":\"$BASE_SHA\",\"launch\":$EVIDENCE}"
+          echo "authorization_kind=$AUTHORIZATION_KIND" >> "$GITHUB_OUTPUT"
+          echo "KEPLER_M1_AUTONOMOUS_TRIGGER={\"verifiedRunId\":\"$VERIFIED_RUN_ID\",\"headSha\":\"$HEAD_SHA\",\"baseSha\":\"$BASE_SHA\",\"authorizationKind\":\"$AUTHORIZATION_KIND\",\"authorization\":$EVIDENCE}"
           {
             echo '## Kepler M1 autonomous trigger'
             echo
             echo "- verifier run: $VERIFIED_RUN_ID"
             echo "- verified head: $HEAD_SHA"
             echo "- verified base: $BASE_SHA"
-            echo "- launch evidence: \`$EVIDENCE\`"
+            echo "- authorization kind: $AUTHORIZATION_KIND"
+            echo "- authorization evidence: \`$EVIDENCE\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
   canary-m1:
@@ -145,18 +195,28 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Revalidate bounded launch before setup
+      - name: Revalidate bounded authorization before setup
         env:
           EXPECTED_HEAD_SHA: ${{ needs.autonomous-preflight.outputs.head_sha }}
           EXPECTED_BASE_SHA: ${{ needs.autonomous-preflight.outputs.base_sha }}
+          AUTHORIZATION_KIND: ${{ needs.autonomous-preflight.outputs.authorization_kind }}
         run: |
           set -euo pipefail
+          LAUNCH_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1.json'
+          RETRY_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1-RETRY-1.json'
+          TASK_PATH='projects/kepler-outpost/.factory/tasks/KEPLER-M1-T1.json'
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD_SHA"
           test "$(git rev-parse "${EXPECTED_HEAD_SHA}^1")" = "$EXPECTED_BASE_SHA"
-          node factory/src/project/kepler-launch-gate.mjs \
-            factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1.json \
-            projects/kepler-outpost/.factory/tasks/KEPLER-M1-T1.json \
-            "$EXPECTED_BASE_SHA"
+          if [ "$AUTHORIZATION_KIND" = 'launch' ]; then
+            node factory/src/project/kepler-launch-gate.mjs \
+              "$LAUNCH_PATH" "$TASK_PATH" "$EXPECTED_BASE_SHA"
+          elif [ "$AUTHORIZATION_KIND" = 'retry' ]; then
+            node factory/src/project/kepler-retry-gate.mjs \
+              "$RETRY_PATH" "$LAUNCH_PATH" "$TASK_PATH" "$EXPECTED_BASE_SHA"
+          else
+            echo "unknown Kepler authorization kind" >&2
+            exit 1
+          fi
 
       - name: Configure Project Canary Git identity
         run: |
@@ -172,16 +232,20 @@ jobs:
       - name: Prove bounded Project Engineer adapter
         run: node factory/src/project/test-engineer-requester.mjs
 
-      - name: Reconfirm current main before model spend
+      - name: Reconfirm and materialize exact main before model spend
         env:
           EXPECTED_HEAD_SHA: ${{ needs.autonomous-preflight.outputs.head_sha }}
         run: |
           set -euo pipefail
           git fetch origin main --quiet
           if [ "$(git rev-parse origin/main)" != "$EXPECTED_HEAD_SHA" ]; then
-            echo "main advanced after Kepler launch verification; refusing model spend" >&2
+            echo "main advanced after Kepler authorization verification; refusing model spend" >&2
             exit 1
           fi
+          git switch -C main "$EXPECTED_HEAD_SHA"
+          test "$(git branch --show-current)" = 'main'
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD_SHA"
+          test "$(git rev-parse origin/main)" = "$EXPECTED_HEAD_SHA"
 
       - name: Execute bounded low-cost Kepler M1
         env:
