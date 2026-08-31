@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "project-game.owner-authorized-retry/v1",
+  "retryId": "KEPLER-M1-T1-OWNER-RETRY-2",
+  "projectId": "kepler-outpost",
+  "taskId": "KEPLER-M1-T1",
+  "originalLaunchId": "KEPLER-M1-T1-AUTONOMOUS-1",
+  "priorRetryId": "KEPLER-M1-T1-ZERO-SPEND-RETRY-1",
+  "failedWorkflowRunId": 33403550650,
+  "failedJobId": 99525536760,
+  "failedStep": "Execute bounded low-cost Kepler M1",
+  "failureClass": "invalid-model-json",
+  "failureMessage": "No valid JSON found in LLM response",
+  "modelRequestReached": true,
+  "priorModelCostUsd": 0.005247,
+  "repairSha": "9ebc8a33eed50d6364078b14808b7a7ab705a286",
+  "ownerApprovalPath": "projects/kepler-outpost/.factory/approvals/KEPLER-M1-T1.json",
+  "ownerAuthorityVersion": "kepler-canary-go-2026-08-30/v1",
+  "baseAuthoritySha": "1ad30c04970002e7c8ac89cd6d3fdd000c6704b7",
+  "singleRetry": true
+}
