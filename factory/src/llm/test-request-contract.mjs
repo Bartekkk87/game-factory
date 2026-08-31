@@ -68,16 +68,43 @@ for (const [key, model] of entries) {
     assert.equal(Object.hasOwn(body, 'reasoning'), false, `${key} emitted unexpected reasoning contract`);
   }
 
-  if (model.requestShape.providerSort) {
+  const requiresOpenRouterParameters = model.provider === 'openrouter'
+    && model.requestShape.jsonMode === 'response_format';
+  if (model.requestShape.providerSort || requiresOpenRouterParameters) {
     assert.equal(model.provider, 'openrouter', `${key} provider routing contract must be OpenRouter-only`);
     assert.deepEqual(body.provider, {
-      sort: model.requestShape.providerSort,
-      ...(model.requestShape.providerRequireParameters === true ? { require_parameters: true } : {})
+      ...(model.requestShape.providerSort ? { sort: model.requestShape.providerSort } : {}),
+      ...((model.requestShape.providerRequireParameters === true || requiresOpenRouterParameters)
+        ? { require_parameters: true }
+        : {})
     }, `${key} OpenRouter provider routing contract mismatch`);
   } else {
     assert.equal(Object.hasOwn(body, 'provider'), false, `${key} emitted unexpected provider routing contract`);
   }
 }
+
+const deepseek = registry['openrouter:deepseek/deepseek-chat-v3.1'];
+const deepseekRequest = buildOpenAiCompatibleChatRequest({
+  route: {
+    provider: {
+      id: 'openrouter',
+      apiKey: 'test-key',
+      baseUrl: 'https://openrouter.ai/api/v1',
+      chatPath: '/chat/completions',
+      openRouterHeaders: true
+    },
+    model: deepseek
+  },
+  system: 'system',
+  user: 'user',
+  json: true,
+  temperature: 0.2,
+  maxTokens: 32768
+});
+const deepseekBody = JSON.parse(deepseekRequest.body);
+assert.equal(deepseekBody.max_tokens, 32768);
+assert.deepEqual(deepseekBody.response_format, { type: 'json_object' });
+assert.deepEqual(deepseekBody.provider, { require_parameters: true });
 
 const glm = registry['openrouter:z-ai/glm-5.3-flash'];
 const glmRequest = buildOpenAiCompatibleChatRequest({
