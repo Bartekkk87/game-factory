@@ -54,7 +54,17 @@ const result = await runPgA0Task({
   requestEngineerPatch: requestProjectEngineerPatch
 });
 
-assert.equal(result.status, 'pr-open');
+if (result.status !== 'pr-open') {
+  const promotion = result.promotion || null;
+  console.error(`KEPLER_PROJECT_CANARY_M1_REJECTED=${JSON.stringify({
+    schemaVersion: 'project-game.canary-m1-rejection/v1',
+    projectId: PROJECT_ID,
+    taskId: TASK_ID,
+    status: result.status,
+    promotion
+  })}`);
+  throw new Error(`Kepler M1 was not promoted: ${promotion?.reason || 'unknown-reason'}`);
+}
 assert.equal(result.binding.taskContractSha256, TASK_SHA256);
 const cost = costReport();
 assert.equal(cost.pass, true, JSON.stringify(cost.violations));
