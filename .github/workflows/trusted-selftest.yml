@@ -36,7 +36,7 @@ jobs:
 
       - name: Protect required-check root of trust
         env:
-          EXPECTED_VERIFY_MIGRATION_SHA256: 4c180691ea1e3575432dc6314303084e79061bc5ddf9929030f86a416d1daa77
+          EXPECTED_VERIFY_MIGRATION_SHA256: d7f4094d64b50463310daae1bc52016502c2d4efcf2352ae264a0cfd91b73760
         run: |
           set -euo pipefail
 
