@@ -8,7 +8,9 @@
     "docs/strategy/PROJECT-GAME-MODE-V0.1-FALSIFICATION.md",
     "docs/strategy/PROJECT-GAME-MODE-V0.1-HANDOFF.md",
     "docs/strategy/INDEPENDENT-REAUDIT-REMEDIATION-CLOSURE-2026-08-29.md",
-    "docs/strategy/PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md"
+    "docs/strategy/PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md",
+    "docs/strategy/CURRENT-HANDOFF.md",
+    "docs/strategy/KEPLER-M1-CLOSURE-AND-HANDOFF-2026-08-31.md"
   ],
   "documents": [
     {
@@ -87,6 +89,22 @@
       "status": "superseded",
       "supersededBy": "docs/strategy/PROJECT-PROGRESS-SNAPSHOT-POST-LUMEN-LEARNING-2026-08-28.md",
       "supersedes": []
+    },
+    {
+      "path": "docs/strategy/CURRENT-HANDOFF.md",
+      "role": "operational-handoff-pointer",
+      "status": "canonical",
+      "supersedes": []
+    },
+    {
+      "path": "docs/strategy/KEPLER-M1-CLOSURE-AND-HANDOFF-2026-08-31.md",
+      "role": "operational-handoff",
+      "status": "canonical",
+      "supersedes": [
+        "docs/strategy/NEXT-CHAT-HANDOFF-NEMOTRON-FREE-2026-08-29.md",
+        "docs/strategy/NEXT-CHAT-HANDOFF-FINAL-ARCHITECTURE-AUDIT-2026-08-29.md",
+        "docs/strategy/NEXT-CHAT-HANDOFF-2026-08-27.md"
+      ]
     }
   ]
 }
