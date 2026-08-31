@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "project-game.autonomous-launch/v1",
+  "launchId": "KEPLER-M1-T1-AUTONOMOUS-1",
+  "projectId": "kepler-outpost",
+  "taskId": "KEPLER-M1-T1",
+  "taskContractSha256": "8e073b8afd2c7a15cdfb4bddfb7b181be6ba5ca74e843ce60af50f3819a7054d",
+  "provider": "openrouter",
+  "model": "deepseek/deepseek-chat-v3.1",
+  "budgetUsd": 0.05,
+  "baseAuthoritySha": "3f55c4f5e724b4ebd5df5a9b93df8c27ec8ba365",
+  "singleRun": true
+}
