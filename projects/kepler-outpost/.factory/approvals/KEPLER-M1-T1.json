@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "project-game.owner-task-approval/v1",
+  "projectId": "kepler-outpost",
+  "taskId": "KEPLER-M1-T1",
+  "taskContractSha256": "8e073b8afd2c7a15cdfb4bddfb7b181be6ba5ca74e843ce60af50f3819a7054d",
+  "approvedBy": "owner",
+  "authorityVersion": "kepler-canary-go-2026-08-30/v1"
+}

@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "project-game.bootstrap-spec/v1",
+  "projectId": "kepler-outpost",
+  "bootstrapTaskId": "PROJECT-BOOTSTRAP",
+  "initialTaskId": "KEPLER-M1-T1",
+  "initialMilestoneId": "M1",
+  "sourceSlots": [
+    "src/play.html",
+    "src/play.mjs",
+    "src/simulation.mjs",
+    "src/state.mjs"
+  ],
+  "files": [
+    {
+      "path": ".factory/approvals/KEPLER-M1-T1.json",
+      "role": "initial-task-approval",
+      "sha256": "4747de298b5e957251693efaeb5edbb3daca821e0895b28ebf01e991dde165b3"
+    },
+    {
+      "path": ".factory/project-state.json",
+      "role": "project-state",
+      "sha256": "244caf75fcda434391d8adee154e3d72906217a6dd8332f67dae624b52c81ea7"
+    },
+    {
+      "path": ".factory/tasks/KEPLER-M1-T1.json",
+      "role": "initial-task",
+      "sha256": "c744e646b48186d86ba5dc4a7daf8b3a89bda6fb2c16dfa4ec14599fdb027b76"
+    },
+    {
+      "path": "ARCHITECTURE.md",
+      "role": "architecture",
+      "sha256": "01b3a2b25b905b190c7339038e51be12bc9a008d54e138fa3ebed37e94c86f91"
+    },
+    {
+      "path": "milestones/M1.json",
+      "role": "milestone",
+      "sha256": "b8b0413f364cffd9e760a8f1163c02e1a417eb04222087663b2d45d9699841fc"
+    },
+    {
+      "path": "persistence/web-runtime.json",
+      "role": "persistence-contract",
+      "sha256": "418926184e82ced229d283df332024c0b19f38c2ab7dd90020b872928a76702b"
+    },
+    {
+      "path": "PROJECT.json",
+      "role": "manifest",
+      "sha256": "be037cc9e5df5b26785899aa514fefcbb10a22bf61505b31c4a21188aa8e701c"
+    },
+    {
+      "path": "ROADMAP.json",
+      "role": "roadmap",
+      "sha256": "503cc7d9a13ebecea5d7dea732953c424548a73561d4ac787d055675a8f82065"
+    },
+    {
+      "path": "src/play.html",
+      "role": "source-slot",
+      "sha256": "6f20859763502a71154b9b387f551c86bdc33a812346215da4df7110db4b542f"
+    },
+    {
+      "path": "src/play.mjs",
+      "role": "source-slot",
+      "sha256": "6d637079372450271286d477c573234b2fc38996d198090a4a4ce41292ed9768"
+    },
+    {
+      "path": "src/simulation.mjs",
+      "role": "source-slot",
+      "sha256": "a238092e71fcc1048b5124d6381bbe8059fab98044149477494ada5e294e21de"
+    },
+    {
+      "path": "src/state.mjs",
+      "role": "source-slot",
+      "sha256": "5e2b7732b19c9b7f4d2ac9548b37028e8e66c855b23c16a00b34059cde37bd1a"
+    },
+    {
+      "path": "tests/browser.mjs",
+      "role": "verification-fixture",
+      "sha256": "6cc7e76cfc7d161ea6f4beef25822b7742c2296eb5f2028a19d6db9079a35275"
+    },
+    {
+      "path": "tests/integration.mjs",
+      "role": "verification-fixture",
+      "sha256": "300b4fbf6551ef6b0024eb5ee53df49ccf0a9ed547eb1e78feb0a7cff5cb6d46"
+    },
+    {
+      "path": "tests/regression.mjs",
+      "role": "verification-fixture",
+      "sha256": "60ffeaf6140767b6dab358c6dfebf61f2932fc3e6abc6fcb968d55b4c63965b7"
+    },
+    {
+      "path": "tests/unit.mjs",
+      "role": "verification-fixture",
+      "sha256": "976fdb6144a49b4439bf240ec670d4a12410fa4db46a5f6328c7d3fb91db4779"
+    }
+  ],
+  "immutable": true,
+  "contractSha256": "20ad1c31662f8fa3a631293717d073db47bfa125031609696e0ee4be970c099e"
+}

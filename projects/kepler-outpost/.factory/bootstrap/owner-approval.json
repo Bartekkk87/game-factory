@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "project-game.owner-bootstrap-approval/v1",
+  "projectId": "kepler-outpost",
+  "bootstrapTaskId": "PROJECT-BOOTSTRAP",
+  "bootstrapSpecSha256": "20ad1c31662f8fa3a631293717d073db47bfa125031609696e0ee4be970c099e",
+  "approvedBy": "owner",
+  "authorityVersion": "kepler-project-bootstrap-go-2026-08-30/v1"
+}
