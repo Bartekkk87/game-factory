@@ -6,7 +6,7 @@ on:
       - '.github/workflows/project-kepler-canary.yml'
       - 'factory/src/project/kepler-launch-gate.mjs'
       - 'factory/src/project/test-kepler-launch-gate.mjs'
-      - 'projects/kepler-outpost/.factory/launch/KEPLER-M1-T1.json'
+      - 'factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1.json'
   workflow_run:
     workflows: ['Branch Verifier Selftest']
     branches: [main]
@@ -43,7 +43,7 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
-          LAUNCH_PATH='projects/kepler-outpost/.factory/launch/KEPLER-M1-T1.json'
+          LAUNCH_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1.json'
           TASK_PATH='projects/kepler-outpost/.factory/tasks/KEPLER-M1-T1.json'
           if [ -f "$LAUNCH_PATH" ]; then
             node factory/src/project/kepler-launch-gate.mjs "$LAUNCH_PATH" "$TASK_PATH" "$BASE_SHA"
@@ -82,7 +82,7 @@ jobs:
           VERIFIED_EVENT: ${{ github.event.workflow_run.event }}
         run: |
           set -euo pipefail
-          LAUNCH_PATH='projects/kepler-outpost/.factory/launch/KEPLER-M1-T1.json'
+          LAUNCH_PATH='factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1.json'
           TASK_PATH='projects/kepler-outpost/.factory/tasks/KEPLER-M1-T1.json'
           HEAD_SHA=$(git rev-parse HEAD)
           if [ "$HEAD_SHA" != "$VERIFIED_HEAD_SHA" ]; then
@@ -154,7 +154,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD_SHA"
           test "$(git rev-parse "${EXPECTED_HEAD_SHA}^1")" = "$EXPECTED_BASE_SHA"
           node factory/src/project/kepler-launch-gate.mjs \
-            projects/kepler-outpost/.factory/launch/KEPLER-M1-T1.json \
+            factory/src/project/launch-records/kepler-outpost/KEPLER-M1-T1.json \
             projects/kepler-outpost/.factory/tasks/KEPLER-M1-T1.json \
             "$EXPECTED_BASE_SHA"
 
